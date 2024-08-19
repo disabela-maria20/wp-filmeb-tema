@@ -1,0 +1,31 @@
+// Neutras 
+$color-dark-gray: #222222;
+$color-light-gray: #E1DBDB;
+$color-medium-gray: #707070;
+$color-off-white: #F1F1F1;
+$color-lightest-gray: #E2E1E1;
+$color-black: #000000;
+$color-darker-gray: #DEDEDE;
+$color-lightest-gray-alt: #F5F5F5;
+$color-gray: #6C001B;
+
+// Cores de destaque
+$color-peach: #F9B679;
+$color-bright-red: #F20030;
+$color-yellow: #FFFF00;
+$color-white: #FFFFFF;
+
+// Cores alternativas
+$color-off-white-alt: #EFEFEF;
+
+// Breakpoints
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px,
+);
+
+$font-family: 'Gantari', sans-serif;

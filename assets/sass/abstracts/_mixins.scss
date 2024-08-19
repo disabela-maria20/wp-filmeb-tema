@@ -1,0 +1,72 @@
+@use "variables" as variable;
+
+@mixin media($breakpoint) {
+  @if $breakpoint == "xs" {
+    @media (min-width: map-get(variable.$grid-breakpoints, xs)) {
+      @content;
+    }
+  } @else if $breakpoint == "sm" {
+    @media (min-width: map-get(variable.$grid-breakpoints, sm)) {
+      @content;
+    }
+  } @else if $breakpoint == "md" {
+    @media (min-width: map-get(variable.$grid-breakpoints, md)) {
+      @content;
+    }
+  } @else if $breakpoint == "lg" {
+    @media (min-width: map-get(variable.$grid-breakpoints, lg)) {
+      @content;
+    }
+  } @else if $breakpoint == "xl" {
+    @media (min-width: map-get(variable.$grid-breakpoints, xl)) {
+      @content;
+    }
+  } @else if $breakpoint == "xxl" {
+    @media (min-width: map-get(variable.$grid-breakpoints, xxl)) {
+      @content;
+    }
+  } @else {
+    @error "Invalid breakpoint: #{$breakpoint}.";
+  }
+}
+
+@mixin container {
+//   width: 100%;
+  margin: 0 auto;
+  padding: 0 25px;
+  
+  @include media("sm") {
+    max-width: calc(map-get(variable.$grid-breakpoints, sm) - 10px);
+  }
+  
+  @include media("md") {
+    max-width: calc(map-get(variable.$grid-breakpoints, md) - 10px);
+  }
+  
+  @include media("lg") {
+    max-width: calc(map-get(variable.$grid-breakpoints, lg) - 10px);
+  }
+  
+  @include media("xl") {
+    max-width: calc(map-get(variable.$grid-breakpoints, xl) - 10px);
+  }
+  
+  @include media("xxl") {
+    max-width: calc(map-get(variable.$grid-breakpoints, xxl) - 10px);
+  }
+}
+
+.container {
+  @include container();
+}
+
+
+@mixin paragraph(){
+  font-family: variable.$font-family;
+  font-size: 1.6rem;
+  line-height: 1.21;
+  color: variable.$secondary-color-gray;
+  @include media(lg){
+    font-size: 1.8rem;
+  }
+}
