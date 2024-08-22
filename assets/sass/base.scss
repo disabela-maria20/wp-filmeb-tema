@@ -1,4 +1,13 @@
+@import './lib/reset';
+
+@import './lib/bootstrap.grid.min';
+@import './lib/owl.carousel.min';
+@import './lib/owl.theme.default.min';
+
 @import './abstracts/variables';
 @import './abstracts/mixins';
 
-@import './components/menu'
+@import './page/home';
+
+@import './components/menu';
+@import './components/slide';

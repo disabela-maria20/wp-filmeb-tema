@@ -1,6 +1,5 @@
 header#mobile {
   height: 80px;
-  margin-bottom: 35px;
   .area_menu {
     display: flex;
     justify-content: space-between;
@@ -23,8 +22,12 @@ header#mobile {
         flex-direction: column;
         width: 50px;
         height: 100%;
-        background-color: $color-off-white-alt;
+        transition: all 200ms ease;
         padding: 27px 11px;
+
+        &:hover{
+          background-color: $color-off-white-alt;
+        }
 
         span {
           display: block;
@@ -73,7 +76,7 @@ header#mobile {
       background-color: $color-off-white-alt;
       margin-top: 80px;
       padding: 20px 0;
-
+      z-index: 999;
       @include media(lg) {
         transform: initial;
         display: flex;
