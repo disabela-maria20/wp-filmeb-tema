@@ -1,5 +1,27 @@
-console.log('====================================');
-console.log('teste');
-console.log('====================================');
+const Menu = () => {
+  const menu_mobile = document.querySelector('.menu_burguer')
+  const nav_menu = document.querySelectorAll('.menu')
 
-alert('teste')
+  menu_mobile.addEventListener('click', () => {
+    menu_mobile.classList.toggle('active')
+    nav_menu.forEach((item) => {
+      item.classList.toggle('active')
+    })
+  })
+}
+
+Menu()
+
+
+const isMobile = () => {
+  const userAgent = typeof window.navigator === 'undefined' ? '' : navigator.userAgent
+  const isMobileDevice =
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(
+      userAgent
+    )
+  return isMobileDevice
+}
+
+const viewMenu = () => {
+  const mobile = document.querySelector('#')
+}

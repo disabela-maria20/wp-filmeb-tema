@@ -188,7 +188,7 @@ template {
   display: none;
 }
 
-*:focus {
+*:focus, *:focus-within {
   box-shadow: 0 0 0 0;
   border: 0 none;
   outline: 0;

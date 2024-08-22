@@ -1,5 +1,5 @@
 <?php
-// Template Name: Talentos
+// Template Name: Edições anteriores
 get_header();
 ?>
 <?php if (have_posts()):

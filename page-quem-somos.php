@@ -1,5 +1,5 @@
 <?php
-// Template Name: Boletim 
+// Template Name: Quem somos 
 get_header();
 ?>
 <?php if (have_posts()):

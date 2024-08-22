@@ -1,5 +1,5 @@
 <?php
-// Template Name: boletim
+// Template Name: Rapidinhas
 get_header();
 ?>
 <?php if (have_posts()):

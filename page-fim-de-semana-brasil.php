@@ -1,5 +1,5 @@
 <?php
-// Template Name: Talentos
+// Template Name: Fim de Semana Brasil
 get_header();
 ?>
 <?php if (have_posts()):

@@ -1,6 +1,4 @@
-<?php
-get_header();
-?>
+<?php get_header();?>
 
 <section class="introducao-interna introducao-blog">
 	<div class="container">

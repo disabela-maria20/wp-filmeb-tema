@@ -1,5 +1,5 @@
 <?php
-// Template Name: Talentos
+// Template Name: Opinião
 get_header();
 ?>
 <?php if (have_posts()):

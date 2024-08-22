@@ -2,10 +2,6 @@
 
 <?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
 
-<article>
-	sdsds
-</article>
-
 <?php endwhile; else: ?>
 
 	<section class="introducao-interna introducao-geral">
