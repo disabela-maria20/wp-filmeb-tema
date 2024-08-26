@@ -131,6 +131,7 @@ header#mobile {
 
           &:hover .sub-menu {
             display: block;
+            z-index: 999;
           }
         }
       }
