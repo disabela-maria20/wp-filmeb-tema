@@ -1,0 +1,47 @@
+footer.rodape {
+  .bg-filmeB {
+    padding: 35px 0;
+    background: linear-gradient(180deg, #{$color-bright-red}, #{$color-red-dark});
+
+    img {
+      display: block;
+      margin: 0 auto;
+    }
+  }
+
+  .area_saiba_mais {
+    display: block;
+    margin: 0 auto;
+    color: $color-bright-red;
+    max-width: 320px;
+    text-align: center;
+    margin: 55px auto;
+
+    h2 {
+      font-weight: bold;
+      font-size: 2rem;
+      line-height: 3.4rem;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 1.6rem;
+      line-height: 2rem;
+      margin-bottom: 32px;
+    }
+
+    a{
+      background-color: $color-bright-red;
+      color: $color-white;
+      font-size: 1.6rem;
+      line-height: 2rem;
+      padding: 10px 22px;
+      border-radius: 6px;
+      transition: all 400ms ease-in;
+      margin-top: 10px;
+      &:hover{
+        @include hoveBtn();
+      }
+    }
+  }
+}

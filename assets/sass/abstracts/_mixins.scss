@@ -204,3 +204,7 @@ $grid-breakpoints: (
 * {
   font-family: $font-family;
 }
+
+@mixin hoveBtn{
+  background-color: $color-red-dark;
+}
