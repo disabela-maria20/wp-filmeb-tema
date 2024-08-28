@@ -1,0 +1,7 @@
+.padding-banner{
+  padding: 35px;
+
+  @include media(lg){
+    padding: initial;
+  }
+}

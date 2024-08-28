@@ -11,7 +11,7 @@
 // Template Name: Home
 get_header();
 ?>
-<div class="container bannerMobile bg-gray p-5">
+<div class="container bannerMobile bg-gray padding-banner ">
   <div class="grid-banner-superior">
     <img src="<?php echo CFS()->get('banner_superior'); ?>" class="img-banner bannerDesktop" alt="banner">
     <img src="<?php echo CFS()->get('banner_inferior'); ?>" class="img-banner " alt="banner">

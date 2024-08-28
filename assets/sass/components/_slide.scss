@@ -14,17 +14,20 @@
     .owl-next {
       position: relative;
       left: 3%;
+      z-index: 1;
     }
 
     .owl-prev {
       position: relative;
       right: 3%;
+      z-index: 1;
     }
 
     button {
       i {
         color: $color-bright-red;
         font-size: 20px;
+
       }
     }
   }
@@ -35,7 +38,6 @@
     justify-content: center;
     gap: 10px;
     margin-top: 35px;
-    z-index: -1;
 
     button {
       width: 12px;
