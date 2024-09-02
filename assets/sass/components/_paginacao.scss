@@ -1,0 +1,28 @@
+.pagination {
+  ul {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 35px;
+    li {
+      span{
+        display: inline-block;
+        padding: 5px 10px;
+        color: $color-white;
+        background-color: $color-bright-red;
+        border: 2px solid $color-bright-red;
+        font-size: 1.6rem;
+        border-radius: 6px;
+      }
+      a{
+        display: inline-block;
+     
+        border-radius: 6px;
+        padding: 5px 10px;
+        color: $color-darker-gray;
+        background-color: $color-white;
+        border: 2px solid $color-bright-red;
+        font-size: 1.6rem;
+      }
+    }
+  }
+}

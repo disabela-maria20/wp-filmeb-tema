@@ -26,7 +26,7 @@ get_header();
 
 		      <?php
             $boletim_query = new WP_Query(array(
-                'category_name' => 'Nacional',
+                'category_name' => 'Boletim',
                 'posts_per_page' => 3,
             ));
 

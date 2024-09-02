@@ -11,12 +11,14 @@
 // Template Name: Home
 get_header();
 ?>
-<div class="container bannerMobile bg-gray padding-banner ">
-  <div class="grid-banner-superior">
-    <img src="<?php echo CFS()->get('banner_superior'); ?>" class="img-banner bannerDesktop" alt="banner">
-    <img src="<?php echo CFS()->get('banner_inferior'); ?>" class="img-banner " alt="banner">
+<section class="bg-gray padding-banner">
+  <div class="container bannerMobile bg-gray padding-banner ">
+    <div class="grid-banner-superior">
+      <img src="<?php echo CFS()->get('banner_superior'); ?>" class="img-banner bannerDesktop" alt="banner">
+      <img src="<?php echo CFS()->get('banner_inferior'); ?>" class="img-banner " alt="banner">
+    </div>
   </div>
-</div>
+</section>
 
 <?php if (have_posts()): while (have_posts()): the_post(); ?>
     <div class="container">

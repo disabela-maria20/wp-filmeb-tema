@@ -1,12 +1,14 @@
 <?php get_header(); ?>
 
-<?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
+<?php if (have_posts()) : while (have_posts()) : the_post(); ?>
+	<?php endwhile;
+else: ?>
 
-<?php endwhile; else: ?>
-
+	</article>
 	<section class="introducao-interna introducao-geral">
 		<div class="container">
-			<h1>Página não encontrada.</h1>
+			
+			<h1>Não</h1>
 		</div>
 	</section>
 

@@ -1,7 +1,8 @@
 .padding-banner{
   padding: 35px;
-
+  margin-bottom: 35px;
   @include media(lg){
     padding: initial;
+    margin: inherit;
   }
 }

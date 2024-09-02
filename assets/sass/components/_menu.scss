@@ -337,7 +337,7 @@ header#desktop {
 
             &:hover ul {
               display: block;
-
+              z-index: 999;
             }
 
             ul {
