@@ -1,6 +1,11 @@
 <?php
-$current_page_slug = basename(get_permalink()); 
-$category_slug = str_replace('boletim/', '', $current_page_slug); 
+// Template Name:  Categoria Boletim
+get_header();
+?>
+
+<?php
+$current_page_slug = basename(get_permalink());
+$category_slug = str_replace('boletim/', '', $current_page_slug);
 $banner_id = "184";
 
 $args = array(
@@ -29,11 +34,9 @@ if ($query->have_posts()) :
       </div>
     </div>
 
-    <?php
-    // Template Name:  Categoria Boletim
-    get_header();
-    ?>
-    
+    <?php get_template_part('components/MenuMobile/index'); ?>
+    <?php get_template_part('components/MenuDesktop/index'); ?>
+
 <?php
   endwhile;
   wp_reset_postdata();
@@ -109,7 +112,7 @@ endif;
     </div>
 <?php endwhile;
 endif; ?>
-
+<?php get_template_part('components/Footer/index'); ?>
 <?php get_footer(); ?>
 
 <?php

@@ -1,0 +1,126 @@
+.padrao {
+  h1 {
+    font-weight: bold;
+    font-size: 3rem;
+    line-height: 3.4rem;
+    text-align: left;
+    color: $color-bright-red;
+
+    @include media(lg) {
+      font-size: 4rem;
+      line-height: 4.4rem;
+    }
+  }
+
+  h2 {
+    font-weight: bold;
+    font-size: 2.5rem;
+    line-height: 3.5rem;
+    text-align: left;
+    color: $color-bright-red;
+
+    @include media(lg) {
+      font-size: 3.5rem;
+      line-height: 4.4rem;
+    }
+  }
+
+  h3{
+    font-weight: bold;
+    font-size: 1.8rem;
+    line-height: 3.5rem;
+    text-align: left;
+    color: $color-bright-red;
+
+    @include media(lg) {
+      font-size: 3.1rem;
+      line-height: 4.4rem;
+    }
+  }
+
+  h4,
+  h5,
+  h6 {
+    font-weight: bold;
+    font-size: 2.1rem;
+    line-height: 2.5rem;
+    text-align: left;
+    color: $color-bright-red;
+
+    @include media(lg) {
+      font-size: 2.8rem;
+      line-height: 3.4rem;
+    }
+  }
+
+  p{
+    color: $color-darker-gray;
+    font-size: 1.6rem;
+    line-height: 1.61;
+    margin: 20px 0;
+  }
+
+  img{
+    height: 225px;
+    object-fit: cover;
+
+    @include media(lg){
+      height: 450px;
+    }
+  }
+
+  ul {
+    padding-inline-start: 20px;
+
+    li {
+      color: $color-darker-gray;
+      font-size: 1.6rem;
+      line-height: 1.61;
+      margin: 20px 0;
+      list-style-type: disc;
+
+      &::marker {
+        color: $color-bright-red;
+      }
+
+      a {
+        font-weight: normal;
+        font-size: 1.7rem;
+        line-height: 2.1rem;
+        text-align: left;
+        color: $color-darker-gray;
+        transition: all 200ms ease-in;
+
+        &:hover{
+          color: $color-black;
+        }
+      }
+    }
+  }
+  .p-center{
+    @include media(lg){
+      padding: 0 25px;
+    }
+  }
+
+  #breadcrumbs {
+    margin:35px 0px 16px;
+  
+    a,
+    span {
+      font-weight: normal;
+      font-size: 1.4rem;
+      line-height: 2.4rem;
+      text-align: left;
+      color: $color-darker-gray;
+    }
+  }
+
+  .img-anuncie{
+    width: 100%;
+    height: initial;
+  }
+
+}
+
+

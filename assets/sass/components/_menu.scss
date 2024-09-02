@@ -314,7 +314,7 @@ header#desktop {
           gap: 50px;
           border-top: 1px solid $color-medium-gray;
           border-bottom: 1px solid $color-medium-gray;
-
+          z-index: 999;
           >li {
             display: flex;
             align-items: center;

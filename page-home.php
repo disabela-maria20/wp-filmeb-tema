@@ -1,3 +1,8 @@
+<?php
+// Template Name: Home
+get_header();
+?>
+
 <img src="<?php echo CFS()->get('banner_superior'); ?>" class="img-banner bannerMobile" alt="banner">
 
 <div class="container bannerDesktop">
@@ -7,10 +12,9 @@
   </div>
 </div>
 
-<?php
-// Template Name: Home
-get_header();
-?>
+<?php get_template_part('components/MenuMobile/index'); ?>
+<?php get_template_part('components/MenuDesktop/index'); ?>
+
 <section class="bg-gray padding-banner">
   <div class="container bannerMobile bg-gray padding-banner ">
     <div class="grid-banner-superior">
@@ -209,5 +213,5 @@ get_header();
     </div>
 <?php endwhile;
 else: endif; ?>
-
+<?php get_template_part('components/Footer/index'); ?>
 <?php get_footer(); ?>

@@ -41,6 +41,10 @@ if ($query->have_posts()) :
   wp_reset_postdata();
 endif;
 ?>
+
+<?php get_template_part('components/MenuMobile/index'); ?>
+<?php get_template_part('components/MenuDesktop/index'); ?>
+
 <section class="bg-gray padding-banner">
   <div class="container bannerMobile">
     <div class="grid-banner-superior">
@@ -95,5 +99,5 @@ endif;
 
 <?php endwhile;
 endif; ?>
-
+<?php get_template_part('components/Footer/index'); ?>
 <?php get_footer(); ?>

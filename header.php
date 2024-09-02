@@ -8,6 +8,5 @@
   </head>
 
   <body>
-    <?php get_template_part('components/MenuMobile/index'); ?>
-    <?php get_template_part('components/MenuDesktop/index'); ?>
+    
 
