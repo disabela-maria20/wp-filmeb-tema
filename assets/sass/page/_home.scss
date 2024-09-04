@@ -95,10 +95,19 @@
     }
   }
 
+  .grid {
+    .area {
+      border: 1px solid $color-medium-gray;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+  }
 
   table {
-    border: 1px solid $color-medium-gray;
+
     font-size: 1.2rem;
+    width: 100%;
 
     tbody {
       tr {
@@ -114,7 +123,7 @@
 
       .row-1 {
         td {
-
+          margin-top: 10px;
           font-weight: 700;
           color: $color-bright-red;
         }
@@ -196,9 +205,10 @@
 .home_lista_rapinhas {
   margin-bottom: 35px;
 
-  @include media(lg){
+  @include media(lg) {
     margin-bottom: 60px;
   }
+
   h2 {
     color: $color-bright-red;
     font-size: 2rem;

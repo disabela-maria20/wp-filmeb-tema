@@ -58,21 +58,27 @@ get_header();
         ?>
       </section>
       <section class="home_table">
-        <div class="grid grid-2-lg gap-32">
+        <div class="home_table grid grid-2-lg gap-32">
           <div>
-            <div class="titulo">
-              <h2>10 maiores bilheterias do ano no Brasil</h2>
-              <span></span>
+            <div class="area">
+              <div class="titulo">
+                <h2>10 maiores bilheterias do ano no Brasil</h2>
+                <span></span>
+              </div>
+              <?php echo do_shortcode('[table id=Brasil /]'); ?>
             </div>
-            <?php echo do_shortcode('[table id=Brasil /]'); ?>
+
             <span>De 08 a 12/05/2024 - Fonte: Filme B Box Office</span>
           </div>
           <div>
-            <div class="titulo">
-              <h2>10 maiores bilheterias do ano no Brasil</h2>
-              <span></span>
+            <div class="area">
+              <div class="titulo">
+                <h2>10 maiores bilheterias do ano no Brasil</h2>
+                <span></span>
+              </div>
+              <?php echo do_shortcode('[table id=Brasil /]'); ?>
             </div>
-            <?php echo do_shortcode('[table id=Brasil /]'); ?>
+
             <span>De 08 a 12/05/2024 - Fonte: Filme B Box Office</span>
           </div>
         </div>
