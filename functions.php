@@ -65,3 +65,9 @@ function flush_rewrite_rules_on_theme_activation()
   flush_rewrite_rules();
 }
 add_action('after_switch_theme', 'flush_rewrite_rules_on_theme_activation');
+
+
+function remove_tablepress_default_css() {
+  wp_deregister_style('tablepress-default');
+}
+add_action('wp_enqueue_scripts', 'remove_tablepress_default_css', 20);

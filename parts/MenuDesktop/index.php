@@ -21,17 +21,10 @@
 
             <ul class="user">
               <li>
-                <?php if(is_user_logged_in()) {?>
                 <a href="">
-                  <span>login</span>
+                  <span>Login</span>
                   <i class="bi bi-person-circle"></i>
                 </a>
-                <?php } else {?>
-                  <a href="/conta-da-assinatura/seu-perfil/">
-                    <span>Minha conta</span>
-                    <i class="bi bi-person-circle"></i>
-                  </a>
-                <?php }  ?>
               </li>
             </ul>
         </nav>

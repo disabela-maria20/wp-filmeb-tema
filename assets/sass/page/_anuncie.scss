@@ -1,0 +1,99 @@
+.anuncie {
+
+  h1 {
+    font-weight: bold;
+    font-size: 3rem;
+    line-height: 3.4rem;
+    text-align: left;
+    color: $color-bright-red;
+
+    @include media(lg) {
+      font-size: 4rem;
+      line-height: 4.4rem;
+    }
+  }
+
+  h2 {
+    font-weight: bold;
+    font-size: 1.8rem;
+    line-height: 24px;
+    text-align: left;
+    color: $color-darker-gray;
+    margin-top: 35px;
+    margin-bottom: 15px;
+
+    @include media(lg) {
+      margin-top: 75px;
+    }
+  }
+
+  #breadcrumbs {
+    margin: 35px 0px 16px;
+
+    a,
+    span {
+      font-weight: normal;
+      font-size: 1.4rem;
+      line-height: 2.4rem;
+      text-align: left;
+      color: $color-darker-gray;
+    }
+  }
+  .area-table{
+    width: 100%;
+    overflow: scroll;
+  }
+  #tablepress-Formatosdeannciospadro,
+  #tablepress-Formatosdeannciosespeciais,
+  #tablepress-NomedoanncioDimensespixelsPesoimagensPesoHTML5FormatosAplicaesDuplo600x360500KB600KBGIFJPEGeHTML5IntegradoaocontedodepginasexclusivasdoBoletimMdulo600x160500KB600KBGIFJPEGeHTML5IntegradoaocontedodepginasexclusivasdoBoletimPgina600x1000500KB600KBGIFJPEGeHTML5IntegradoaocontedodepginasexclusivasdoBoletimRetnguloGrande600x450500KB600KBGIFJPEGeHTML5IntegradoaocontedodepginasexclusivasdoBoletim {
+    font-family: $font-family;
+    width: 100%;
+    border: none;
+    border-spacing: 0;
+
+    thead {
+      tr {
+        background-color: $color-light-red;
+
+        th {
+          color: $color-darker-gray;
+          padding: 15px;
+          font-size: 1.2rem;
+        }
+      }
+    }
+
+    tbody {
+      td {
+        color: $color-darker-gray;
+        padding: 15px;
+        font-size: 1.2rem;
+        line-height: 2rem;
+        padding: 25px;
+      }
+    }
+  }
+
+  .area-info{
+    font-size: 1.2rem;
+    display: grid;
+    gap: 20px;
+    margin-top: 35px;
+    color: $color-darker-gray;
+
+    @include media(lg){
+      grid-template-columns: 1fr 3fr;
+    }
+    
+    .icon{
+      display: flex;
+      gap: 20px;
+      align-items: center;
+
+      i{
+        color: $color-bright-red;
+        font-size: 3.5rem;
+      }
+    }
+  }
+}
