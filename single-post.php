@@ -67,16 +67,11 @@ endif;
           } ?>
           <section class="post">
             <div>
-              <span class="data"><?php echo date_i18n('j \d\e F \d\e Y', strtotime(get_the_date())); ?></span>
+              <strong class="data"><?php echo date_i18n('j \d\e F \d\e Y', strtotime(get_the_date())); ?></strong>
               <img src="<?php echo esc_url(CFS()->get('imagem')); ?>" alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
-              <span><?php echo get_the_category_list(', '); ?></span>
-
-              <div>
+              <a href="" class="autor">
                 <img src="<?php echo get_avatar_url($author_id) ?>" alt="<?php get_the_author_meta('display_name', $author_id) ?>">
-                <a href="<?php ?>">
-
-                </a>
-              </div>
+              </a>
             </div>
             <div class="post-content">
               <h1><?php the_title(); ?></h1>

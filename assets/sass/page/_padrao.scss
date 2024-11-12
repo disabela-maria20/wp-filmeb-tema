@@ -25,7 +25,7 @@
     }
   }
 
-  h3{
+  h3 {
     font-weight: bold;
     font-size: 1.8rem;
     line-height: 3.5rem;
@@ -53,18 +53,18 @@
     }
   }
 
-  p{
+  p {
     color: $color-darker-gray;
     font-size: 1.6rem;
     line-height: 1.61;
     margin: 20px 0;
   }
 
-  img{
+  img {
     height: 225px;
     object-fit: cover;
 
-    @include media(lg){
+    @include media(lg) {
       height: 450px;
     }
   }
@@ -91,21 +91,21 @@
         color: $color-darker-gray;
         transition: all 200ms ease-in;
 
-        &:hover{
+        &:hover {
           color: $color-black;
         }
       }
     }
   }
-  .p-center{
-    @include media(lg){
+  .p-center {
+    @include media(lg) {
       padding: 0 25px;
     }
   }
 
   #breadcrumbs {
-    margin:35px 0px 16px;
-  
+    margin: 35px 0px 16px;
+
     a,
     span {
       font-weight: normal;
@@ -116,11 +116,15 @@
     }
   }
 
-  .img-anuncie{
+  .img-anuncie {
     width: 100%;
     height: initial;
   }
-
 }
 
-
+p {
+  color: $color-darker-gray;
+  font-size: 1.6rem;
+  line-height: 1.61;
+  margin: 20px 0;
+}

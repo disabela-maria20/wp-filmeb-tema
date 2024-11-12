@@ -57,10 +57,3 @@ jQuery(document).ready(function ($) {
   });
 });
 
-
-const Banner = () => {
-  console.log('teste');
-  
-}
-
-Banner()

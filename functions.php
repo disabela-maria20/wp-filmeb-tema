@@ -47,18 +47,7 @@ function register_my_menu()
 }
 add_action('init', 'register_my_menu');
 
-function custom_category_rewrite_rules()
-{
-  add_filter('term_link', function ($link, $term, $taxonomy) {
-    if ($taxonomy === 'category') {
-      return home_url('/' . $term->slug . '/');
-    }
-    return $link;
-  }, 10, 3);
 
-  add_rewrite_rule('^([^/]+)/?', 'index.php?category_name=$matches[1]', 'top');
-}
-add_action('init', 'custom_category_rewrite_rules');
 
 function flush_rewrite_rules_on_theme_activation()
 {
@@ -71,3 +60,17 @@ function remove_tablepress_default_css() {
   wp_deregister_style('tablepress-default');
 }
 add_action('wp_enqueue_scripts', 'remove_tablepress_default_css', 20);
+
+
+function custom_breadcrumb_category($links) {
+  if (is_single() && in_category('Rapidinhas')) {
+      foreach ($links as &$link) {
+          if ($link['text'] === 'Notícias') {
+              $link['text'] = 'Rapidinhas';
+              $link['url'] = get_category_link(get_cat_ID('Rapidinhas'));
+          }
+      }
+  }
+  return $links;
+}
+add_filter('wpseo_breadcrumb_links', 'custom_breadcrumb_category');

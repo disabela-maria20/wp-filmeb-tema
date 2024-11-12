@@ -1,5 +1,4 @@
 .anuncie {
-
   h1 {
     font-weight: bold;
     font-size: 3rem;
@@ -27,19 +26,7 @@
     }
   }
 
-  #breadcrumbs {
-    margin: 35px 0px 16px;
-
-    a,
-    span {
-      font-weight: normal;
-      font-size: 1.4rem;
-      line-height: 2.4rem;
-      text-align: left;
-      color: $color-darker-gray;
-    }
-  }
-  .area-table{
+  .area-table {
     width: 100%;
     overflow: scroll;
   }
@@ -74,23 +61,23 @@
     }
   }
 
-  .area-info{
+  .area-info {
     font-size: 1.2rem;
     display: grid;
     gap: 20px;
     margin-top: 35px;
     color: $color-darker-gray;
 
-    @include media(lg){
+    @include media(lg) {
       grid-template-columns: 1fr 3fr;
     }
-    
-    .icon{
+
+    .icon {
       display: flex;
       gap: 20px;
       align-items: center;
 
-      i{
+      i {
         color: $color-bright-red;
         font-size: 3.5rem;
       }

@@ -25,7 +25,7 @@ header#mobile {
         transition: all 200ms ease;
         padding: 27px 11px;
 
-        &:hover{
+        &:hover {
           background-color: $color-off-white-alt;
         }
 
@@ -39,7 +39,7 @@ header#mobile {
         }
 
         &.active span:nth-child(1) {
-          transform: rotate(44deg) translate(8px, 8px)
+          transform: rotate(44deg) translate(8px, 8px);
         }
 
         &.active span:nth-child(2) {
@@ -48,7 +48,7 @@ header#mobile {
         }
 
         &.active span:nth-child(3) {
-          transform: rotate(-47deg) translate(8px, -8px)
+          transform: rotate(-47deg) translate(8px, -8px);
         }
 
         @include media(lg) {
@@ -83,7 +83,6 @@ header#mobile {
         position: static;
         width: initial;
         margin: 0;
-
       }
 
       &.active {
@@ -99,7 +98,6 @@ header#mobile {
         &:nth-child(1) {
           width: 125%;
         }
-
       }
 
       ul {
@@ -140,12 +138,10 @@ header#mobile {
         @include Inputsearch();
       }
     }
-
-
   }
 
   #menu-item-39 {
-    >a {
+    > a {
       position: relative;
 
       &::before {
@@ -155,7 +151,7 @@ header#mobile {
         right: -20px;
 
         @include media(lg) {
-          content: '';
+          content: "";
         }
       }
     }
@@ -206,12 +202,10 @@ header#mobile {
       .text {
         h1 {
           @include media(lg) {
-
             line-height: 120%;
           }
 
           margin: 0;
-
         }
 
         p {
@@ -224,7 +218,6 @@ header#mobile {
         }
       }
     }
-
   }
 
   @include media(lg) {
@@ -248,7 +241,7 @@ header#desktop {
       img {
         width: 130px;
         height: 44px;
-        object-fit: contain
+        object-fit: contain;
       }
 
       form {
@@ -298,7 +291,6 @@ header#desktop {
               line-height: 24px;
               text-align: right;
               color: $color-darker-gray;
-
             }
           }
         }
@@ -315,7 +307,7 @@ header#desktop {
           border-top: 1px solid $color-medium-gray;
           border-bottom: 1px solid $color-medium-gray;
           z-index: 999;
-          >li {
+          > li {
             display: flex;
             align-items: center;
             height: 70px;
@@ -350,7 +342,6 @@ header#desktop {
               margin-top: 20px;
               width: 217px;
 
-
               li {
                 transition: all 150ms ease-in;
                 padding: 10px;
@@ -374,5 +365,6 @@ header#desktop {
   .img-banner {
     max-width: 100%;
     margin: 0 auto;
+    display: block;
   }
 }
