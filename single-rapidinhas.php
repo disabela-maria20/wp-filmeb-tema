@@ -1,10 +1,4 @@
 <?php 
-
-if (in_category('rapidinhas')) {
-  get_template_part('single', 'rapidinhas'); 
-  exit;
-}
-echo  get_template_part('single', 'rapidinhas'); 
 get_header();
 ?>
 

@@ -2,10 +2,9 @@
   <div class="container">
     <div class="grid_institucinal">
       <div>
-        <img
-          src="<?php echo get_template_directory_uri(); ?>/assets/images/logo-horizontal.png"
-          alt="logo cine B"
-        />
+        <a href="/">
+          <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo-horizontal.png" alt="logo cine B" />
+        </a>
       </div>
       <div>
         <?php get_template_part('components/Search/index'); ?>
@@ -19,14 +18,14 @@
               'container' => false
             )); ?>
 
-            <ul class="user">
-              <li>
-                <a href="">
-                  <span>Login</span>
-                  <i class="bi bi-person-circle"></i>
-                </a>
-              </li>
-            </ul>
+          <ul class="user">
+            <li>
+              <a href="">
+                <span>Login</span>
+                <i class="bi bi-person-circle"></i>
+              </a>
+            </li>
+          </ul>
         </nav>
       </div>
     </div>
@@ -40,6 +39,6 @@
           )); ?>
       </nav>
     </div>
-    </div>
+  </div>
   </div>
 </header>

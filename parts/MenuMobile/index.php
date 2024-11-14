@@ -6,10 +6,9 @@
         <span></span>
         <span></span>
       </div>
-      <img
-        src="<?php echo get_template_directory_uri(); ?>/assets/images/logo-horizontal.png"
-        alt="logo cine B"
-      />
+      <a href="<?php echo get_template_directory_uri(); ?>">
+        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo-horizontal.png" alt="logo cine B" />
+      </a>
       <i class="bi bi-person-circle"></i>
     </div>
     <div>
