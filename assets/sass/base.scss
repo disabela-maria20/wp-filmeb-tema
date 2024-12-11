@@ -2,6 +2,8 @@
 
 @import "./lib/owl.carousel.min";
 @import "./lib/owl.theme.default.min";
+@import "./lib/splide-default.min.scss";
+@import "./lib/splide.min.scss";
 
 @import "./abstracts/variables";
 @import "./abstracts/mixins";
@@ -12,6 +14,7 @@
 @import "./page/contato";
 @import "./page/anuncie";
 @import "./page/rapaidinhas";
+@import "./page/filmes";
 
 @import "./components/menu";
 @import "./components/slide";

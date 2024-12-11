@@ -1,0 +1,36 @@
+.page-filmes {
+  padding: 35px 0;
+
+  @include media(lg) {
+    padding: 60px 0;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 2.2rem;
+    color: $color-red-dark;
+    margin-bottom: 30px;
+  }
+
+  .grid-filtros-config {
+    display: grid;
+    justify-items: center;
+    gap: 5px;
+    @include media(md) {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      justify-items: initial;
+    }
+
+    .ordem {
+      display: flex;
+      gap: 10px;
+      button {
+        background: none;
+        border: none;
+        font-size: 2rem;
+        color: $color-bright-red;
+      }
+    }
+  }
+}

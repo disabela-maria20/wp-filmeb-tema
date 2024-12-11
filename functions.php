@@ -1,6 +1,7 @@
 <?php
 
 require_once(get_template_directory() . "/api/banner.php");
+require_once(get_template_directory() . "/api/Taxonomias.php");
 
 add_filter('wp_image_editors', 'wpb_image_editor_default_to_gd');
 
@@ -14,20 +15,13 @@ function wpb_image_editor_default_to_gd($editors)
 
 function use_scripts()
 {
-  // Carrega a folha de estilos base do tema
   wp_enqueue_style('base-style', get_template_directory_uri() . '/assets/css/base.min.css', array(), '1.0.0', 'all');
-
-  // Carrega o jQuery padrão do WordPress
   wp_enqueue_script('jquery');
-
-  // Carrega o script do Owl Carousel com dependência de jQuery
   wp_enqueue_script('owl-carousel', get_template_directory_uri() . '/assets/js/lib/owl.carousel.min.js', array('jquery'), '2.3.4', true);
-
-  // Carrega fontes do Google e ícones do Bootstrap
+  wp_enqueue_script('splide', get_template_directory_uri() . '/assets/js/lib/splide.min.js', array('jquery'), '2.3.4', true);
   wp_enqueue_style('google-fonts', 'https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap', array(), null, 'all');
   wp_enqueue_style('bootstrap-icons', 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css', array(), null, 'all');
 
-  // Carrega o script principal do tema com dependências
   wp_enqueue_script('main-script', get_template_directory_uri() . '/assets/js/main.js', array('jquery', 'owl-carousel'), null, true);
 }
 add_action('wp_enqueue_scripts', 'use_scripts');
@@ -74,3 +68,32 @@ function custom_breadcrumb_category($links) {
   return $links;
 }
 add_filter('wpseo_breadcrumb_links', 'custom_breadcrumb_category');
+
+
+function registrar_cpt_filmes()
+{
+    register_post_type('filmes', array(
+        'labels' => array(
+            'name'               => _x('Filmes', 'Post type general name', 'textdomain'),
+            'singular_name'      => _x('Filme', 'Post type singular name', 'textdomain'),
+            'add_new_item'       => __('Adicionar Novo Filme', 'textdomain'),
+            'edit_item'          => __('Editar Filme', 'textdomain'),
+            'new_item'           => __('Novo Filme', 'textdomain'),
+            'view_item'          => __('Ver Filme', 'textdomain'),
+            'search_items'       => __('Buscar Filmes', 'textdomain'),
+            'not_found'          => __('Nenhum Filme encontrado', 'textdomain'),
+            'not_found_in_trash' => __('Nenhum Filme encontrado na lixeira', 'textdomain'),
+        ),
+        'description'        => 'Gerenciar Filmes',
+        'public'             => true,
+        'show_ui'            => true,
+        'menu_position'      => 5,
+        'menu_icon'          => 'dashicons-video-alt',
+        'capability_type'    => 'post',
+        'rewrite'            => array('slug' => 'filmes', 'with_front' => true),
+        'supports'           => array('title', 'editor', 'thumbnail', 'excerpt'),
+        'has_archive'        => true,
+        'publicly_queryable' => true,
+    ));
+}
+add_action('init', 'registrar_cpt_filmes');

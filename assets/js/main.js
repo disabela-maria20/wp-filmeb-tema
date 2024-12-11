@@ -26,7 +26,7 @@ jQuery(document).ready(function ($) {
     loop: true,
     margin: 10,
     nav: true,
-    dots: true,
+    dots: false,
     mouseDrag: true,
     autoplay: true,
     autoplayTimeout: 3000,
@@ -57,3 +57,8 @@ jQuery(document).ready(function ($) {
   });
 });
 
+
+const datas = document.querySelector('.datas');
+var splide = new Splide('#datas');
+if (datas)
+  splide.mount();
