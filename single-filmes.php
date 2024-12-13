@@ -190,14 +190,16 @@ endif;
   </div>
 
 </section>
-<script>
-var splide = new Splide('#fotos', {
-  arrows: true,
-  pagination: false,
-});
-splide.mount();
-</script>
+
 <?php endwhile;
 endif; ?>
 <?php get_template_part('components/Footer/index'); ?>
 <?php get_footer(); ?>
+<script>
+var splide = new Splide('#fotos', {
+  arrows: true,
+  perPage: 2,
+  pagination: false,
+});
+splide.mount();
+</script>
