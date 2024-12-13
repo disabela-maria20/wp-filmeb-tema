@@ -80,43 +80,118 @@ endif;
         </ul>
       </div>
     </section>
-    <button>Ver lançamentos por distribuidora</button>
+    <div class="lancamento">
+      <button id="distribuidora">Ver lançamentos por distribuidora</button>
+    </div>
   </div>
   <section class="grid-select">
-    <div>
+    <div class="grid grid-7-xl gap-22">
       <select name="ano" id="ano">
-        Ano
+        <option value="">Ano</option>
       </select>
       <select name="mes" id="mes">
-        Mês
+        <option value="">Mês</option>
       </select>
       <select name="origem" id="origem">
-        Origem
+        <option value="">Origem</option>
       </select>
       <select name="distribuidor" id="distribuidor">
-        distribuidor
+        <option value="">Distribuidor</option>
       </select>
       <select name="genero" id="genero">
-        Gênero
+        <option value="">Gênero</option>
       </select>
       <select name="tecnologia" id="tecnologia">
-        Tecnologia
+        <option value="">Tecnologia</option>
       </select>
       <button>Filtrar</button>
     </div>
   </section>
   <section class="area-filmes">
-    <div class="lista-filmes">
-      <h2>Quinta-feira, 13/06/2024</h2>
+    <div class="lista-filmes" id="lista">
+      <h2> <i class="bi bi-calendar-check-fill"></i> Quinta-feira, 13/06/2024</h2>
       <div class="grid-filmes">
-        <div>
-          <div>
-            <h3>nome do filme</h3>
-            <p>Poster não disponível</p>
+        <div class="card">
+          <h3>nome do filme</h3>
+          <p class="indisponivel">Poster não disponível</p>
+          <img src="" alt="" class="poster">
 
-            <img src="" alt="" class="poster">
+          <div class="info">
+            <ul>
+              <li>Título: <strong>Grande Sertão</strong> </li>
+              <li>Distribuição: <strong>Downtown / Paris </strong></li>
+              <li>Direção <strong>Guel Arraes</strong></li>
+              <li>País: <strong>Brasil</strong></li>
+              <li>Gênero: <strong>Drama</strong></li>
+            </ul>
           </div>
-          <div>
+        </div>
+        <div class="card">
+          <h3>nome do filme</h3>
+          <p class="indisponivel">Poster não disponível</p>
+          <img src="" alt="" class="poster">
+
+          <div class="info">
+            <ul>
+              <li>Título: <strong>Grande Sertão</strong> </li>
+              <li>Distribuição: <strong>Downtown / Paris </strong></li>
+              <li>Direção <strong>Guel Arraes</strong></li>
+              <li>País: <strong>Brasil</strong></li>
+              <li>Gênero: <strong>Drama</strong></li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <h3>nome do filme</h3>
+          <p class="indisponivel">Poster não disponível</p>
+          <img src="" alt="" class="poster">
+
+          <div class="info">
+            <ul>
+              <li>Título: <strong>Grande Sertão</strong> </li>
+              <li>Distribuição: <strong>Downtown / Paris </strong></li>
+              <li>Direção <strong>Guel Arraes</strong></li>
+              <li>País: <strong>Brasil</strong></li>
+              <li>Gênero: <strong>Drama</strong></li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <h3>nome do filme</h3>
+          <p class="indisponivel">Poster não disponível</p>
+          <img src="" alt="" class="poster">
+
+          <div class="info">
+            <ul>
+              <li>Título: <strong>Grande Sertão</strong> </li>
+              <li>Distribuição: <strong>Downtown / Paris </strong></li>
+              <li>Direção <strong>Guel Arraes</strong></li>
+              <li>País: <strong>Brasil</strong></li>
+              <li>Gênero: <strong>Drama</strong></li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <h3>nome do filme</h3>
+          <p class="indisponivel">Poster não disponível</p>
+          <img src="" alt="" class="poster">
+
+          <div class="info">
+            <ul>
+              <li>Título: <strong>Grande Sertão</strong> </li>
+              <li>Distribuição: <strong>Downtown / Paris </strong></li>
+              <li>Direção <strong>Guel Arraes</strong></li>
+              <li>País: <strong>Brasil</strong></li>
+              <li>Gênero: <strong>Drama</strong></li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <h3>nome do filme</h3>
+          <p class="indisponivel">Poster não disponível</p>
+          <img src="" alt="" class="poster">
+
+          <div class="info">
             <ul>
               <li>Título: <strong>Grande Sertão</strong> </li>
               <li>Distribuição: <strong>Downtown / Paris </strong></li>
@@ -128,7 +203,108 @@ endif;
         </div>
       </div>
     </div>
+    <div class="tabela-filme" id="tabela">
+      <h2> <i class="bi bi-calendar-check-fill"></i> Quinta-feira, 13/06/2024</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Distribuição</th>
+            <th>Direção</th>
+            <th>País</th>
+            <th>Gênero</th>
+            <th>Duração</th>
+            <th>Elenco</th>
+            <th>Classificação</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="titulo">
+              Os observadores
+              <span>The watchers</span>
+            </td>
+            <td>Warner</td>
+            <td>Ishana Night
+              Shyamalan</td>
+            <td>Estados Unidos</td>
+            <td>Terror</td>
+            <td>102min</td>
+            <td>Dakota Fanning, Georgina Campbell</td>
+            <td>14 anos</td>
+          </tr>
+          <tr>
+            <td class="titulo">
+              Os observadores
+              <span>The watchers</span>
+            </td>
+            <td>Warner</td>
+            <td>Ishana Night
+              Shyamalan</td>
+            <td>Estados Unidos</td>
+            <td>Terror</td>
+            <td>102min</td>
+            <td>Dakota Fanning, Georgina Campbell</td>
+            <td>14 anos</td>
+          </tr>
+          <tr>
+            <td class="titulo">
+              Os observadores
+              <span>The watchers</span>
+            </td>
+            <td>Warner</td>
+            <td>Ishana Night
+              Shyamalan</td>
+            <td>Estados Unidos</td>
+            <td>Terror</td>
+            <td>102min</td>
+            <td>Dakota Fanning, Georgina Campbell</td>
+            <td>14 anos</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tabela-distribuidora" id="tableDistribuidora">
+      <table>
+        <thead>
+          <tr>
+            <th>Estreia</th>
+            <th>Disney</th>
+            <th>Paramount</th>
+            <th>Sony</th>
+            <th>Universal</th>
+            <th>Warner</th>
+            <th>Diamond</th>
+            <th>
+              <div>downtown</div>
+              <div>/ Paris</div>
+            </th>
+            <th>Imagem</th>
+            <th>Paris</th>
+            <th>
+              <div>Outras</div>
+              <div>Distribuidoras</div>
+            </th>
+          </tr>
 
+        </thead>
+        <tbody>
+          <tr>
+            <td>a</td>
+            <td>a</td>
+            <td>a</td>
+            <td>a</td>
+            <td>a</td>
+            <td>a</td>
+            <td>a</td>
+            <td>a</td>
+            <td>a</td>
+            <td>a</td>
+            <td>a</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </section>
 
 </div>

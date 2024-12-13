@@ -53,7 +53,7 @@ $grid-breakpoints: (
   display: grid;
 }
 
-@for $i from 1 through 5 {
+@for $i from 1 through 12 {
   $columns: 1 * $i;
 
   .grid-#{$i} {
@@ -103,34 +103,20 @@ $grid-breakpoints: (
 
   @if $size ==16 {
     font-size: 16px;
-  }
-
-  @else if $size ==22 {
+  } @else if $size ==22 {
     font-size: 22px;
     line-height: 39.6px;
-  }
-
-  @else if $size ==26 {
+  } @else if $size ==26 {
     font-size: 26px;
-  }
-
-  @else if $size ==38 {
+  } @else if $size ==38 {
     font-size: 38px;
-  }
-
-  @else if $size ==48 {
+  } @else if $size ==48 {
     font-size: 48px;
-  }
-
-  @else if $size ==58 {
+  } @else if $size ==58 {
     font-size: 58px;
-  }
-
-  @else if $size ==64 {
+  } @else if $size ==64 {
     font-size: 64px;
-  }
-
-  @else {
+  } @else {
     font-size: 14px;
   }
 }
@@ -205,6 +191,6 @@ $grid-breakpoints: (
   font-family: $font-family;
 }
 
-@mixin hoveBtn{
+@mixin hoveBtn {
   background-color: $color-red-dark;
 }

@@ -25,6 +25,24 @@ if ($query->have_posts()) :
     $super_banner = CFS()->get('super_banner', $banner_id);
 
 ?>
+
+<?php 
+function render_terms($field_key) {
+  $distribuicao = CFS()->get($field_key);
+  $output = '';
+  if (!empty($distribuicao)) {
+      foreach ($distribuicao as $term_id) {
+          $term = get_term($term_id);
+          if ($term && !is_wp_error($term)) {
+              $output .= '<div>' . esc_html($term->name) . '</div>';
+          }
+      }
+  }
+
+  return $output;
+}
+
+?>
 <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner bannerMobile" alt="banner">
 
 <div class="container bannerDesktop">
@@ -56,10 +74,129 @@ endif;
 
 <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
 
-<div class="container">
-  funcionando
-</div>
+<section class="page-filmes-aberta">
+  <div class="container">
+    <div class="banner" style=" background-image: url('<?php echo esc_url(CFS()->get('capa')); ?>')">
+      <h1>
+        <strong><?php the_title(); ?></strong>
+        <span><?php echo CFS()->get('titulo_original') ?></span>
+      </h1>
+    </div>
+    <h2>Ficha Técnica</h2>
+    <div class="grid-filmes">
+      <div class="item">
+        <img src="<?php echo esc_url(CFS()->get('cartaz')); ?>" class="cartaz">
+        <div class="area-poster">
+          <div class="dados">
+            <h3>Estreia</h3>
+            <?php
+              $estreia = CFS()->get('estreia');
 
+              if (!empty($estreia)) {
+                  $data_formatada = date_i18n('j \d\e F \d\e Y', strtotime($estreia));
+                  echo '<p>' . esc_html($data_formatada) . '</p>';
+              }
+              ?>
+          </div>
+          <div class="dados">
+            <h3>Trailer</h3>
+            <div class="video">
+              <iframe width="560" height="315" src="<?php echo esc_url(CFS()->get('trailer')); ?>"
+                title="YouTube video player" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+
+          </div>
+          <div class="dados">
+            <h3>Fotos</h3>
+            <section id="fotos" class="splide">
+              <div class="splide__track">
+                <ul class="splide__list">
+
+                  <?php $fields = CFS()->get('fotos'); ?>
+                  <?php if ($fields) { ?>
+                  <?php foreach ($fields as $field) { ?>
+                  <li class="splide__slide">
+                    <img src="<?php echo esc_html($field['foto']); ?>" alt="">
+                  </li>
+                  <?php } ?>
+                  <?php } ?>
+                </ul>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="grid grid-2-lg">
+          <div class="dados">
+            <table>
+              <tr>
+                <td class="titulo">Distribuição</td>
+                <td>
+                  <?php echo render_terms('distribuicao')?>
+                </td>
+              </tr>
+              <tr>
+                <td class="titulo">País</td>
+                <td><?php echo render_terms('paises')?></td>
+              </tr>
+              <tr>
+                <td class="titulo">Gênero</td>
+                <td><?php echo render_terms('generos')?></td>
+              </tr>
+            </table>
+          </div>
+          <div class="dados">
+            <table>
+              <tr>
+                <td class="titulo">Duração</td>
+                <td><?php echo CFS()->get('duracao_minutos'); ?>min</td>
+              </tr>
+              <tr>
+                <td class="titulo">Tecnologia</td>
+                <td><?php echo render_terms('tecnologias')?></td>
+              </tr>
+              <tr>
+                <td class="titulo">Classificação</td>
+                <td><?php echo render_terms('classificacao')?></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div class="dados">
+          <table>
+            <tr>
+              <td class="titulo">Sinopse</td>
+              <td> <?php the_content(); ?></td>
+            </tr>
+          </table>
+        </div>
+        <div class="dados">
+          <h3>Direção</h3>
+          <p><?php echo CFS()->get('direcao'); ?></p>
+        </div>
+        <div class="dados">
+          <h3>Roteiro</h3>
+          <p><?php echo CFS()->get('roteiro'); ?></p>
+        </div>
+        <div class="dados">
+          <h3>Elenco</h3>
+          <p><?php echo CFS()->get('elenco'); ?></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+<script>
+var splide = new Splide('#fotos', {
+  arrows: true,
+  pagination: false,
+});
+splide.mount();
+</script>
 <?php endwhile;
 endif; ?>
 <?php get_template_part('components/Footer/index'); ?>
