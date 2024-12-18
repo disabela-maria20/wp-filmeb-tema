@@ -99,3 +99,11 @@ endif;
 endif; ?>
 <?php get_template_part('components/Footer/index'); ?>
 <?php get_footer(); ?>
+
+<script>
+var splide = new Splide('#datas', {
+  arrows: true,
+  pagination: false,
+});
+splide.mount();
+</script>

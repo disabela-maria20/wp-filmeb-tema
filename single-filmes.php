@@ -27,6 +27,12 @@ if ($query->have_posts()) :
 ?>
 
 <?php 
+
+$termos = get_terms(array(
+  'taxonomy'   => 'Gêneros',
+  'hide_empty' => false, 
+));
+
 function render_terms($field_key) {
   $distribuicao = CFS()->get($field_key);
   $output = '';
@@ -78,8 +84,12 @@ endif;
   <div class="container">
     <div class="banner" style=" background-image: url('<?php echo esc_url(CFS()->get('capa')); ?>')">
       <h1>
-        <strong><?php the_title(); ?></strong>
-        <span><?php echo CFS()->get('titulo_original') ?></span>
+        <strong>
+          <?php the_title(); ?>
+        </strong>
+        <span>
+          <?php echo CFS()->get('titulo_original') ?>
+        </span>
       </h1>
     </div>
     <h2>Ficha Técnica</h2>
@@ -118,11 +128,19 @@ endif;
                   <?php if ($fields) { ?>
                   <?php foreach ($fields as $field) { ?>
                   <li class="splide__slide">
-                    <img src="<?php echo esc_html($field['foto']); ?>" alt="">
+                    <img src="<?php echo esc_html($field['foto']); ?>" class="img-slide" alt="">
                   </li>
                   <?php } ?>
                   <?php } ?>
                 </ul>
+              </div>
+            </section>
+            <section id="modalFilme" class="modal">
+              <div class="modal-body">
+                <button class="close" aria-label="Fechar">
+                  <i class="bi bi-x"></i>
+                </button>
+                <div class="modal-img"></div>
               </div>
             </section>
           </div>
@@ -140,11 +158,15 @@ endif;
               </tr>
               <tr>
                 <td class="titulo">País</td>
-                <td><?php echo render_terms('paises')?></td>
+                <td>
+                  <?php echo render_terms('paises')?>
+                </td>
               </tr>
               <tr>
                 <td class="titulo">Gênero</td>
-                <td><?php echo render_terms('generos')?></td>
+                <td>
+                  <?php echo render_terms('generos')?>
+                </td>
               </tr>
             </table>
           </div>
@@ -152,15 +174,21 @@ endif;
             <table>
               <tr>
                 <td class="titulo">Duração</td>
-                <td><?php echo CFS()->get('duracao_minutos'); ?>min</td>
+                <td>
+                  <?php echo CFS()->get('duracao_minutos'); ?>min
+                </td>
               </tr>
               <tr>
                 <td class="titulo">Tecnologia</td>
-                <td><?php echo render_terms('tecnologias')?></td>
+                <td>
+                  <?php echo render_terms('tecnologias')?>
+                </td>
               </tr>
               <tr>
                 <td class="titulo">Classificação</td>
-                <td><?php echo render_terms('classificacao')?></td>
+                <td>
+                  <?php echo render_terms('classificacao')?>
+                </td>
               </tr>
             </table>
           </div>
@@ -169,21 +197,29 @@ endif;
           <table>
             <tr>
               <td class="titulo">Sinopse</td>
-              <td> <?php the_content(); ?></td>
+              <td>
+                <?php the_content(); ?>
+              </td>
             </tr>
           </table>
         </div>
         <div class="dados">
           <h3>Direção</h3>
-          <p><?php echo CFS()->get('direcao'); ?></p>
+          <p>
+            <?php echo CFS()->get('direcao'); ?>
+          </p>
         </div>
         <div class="dados">
           <h3>Roteiro</h3>
-          <p><?php echo CFS()->get('roteiro'); ?></p>
+          <p>
+            <?php echo CFS()->get('roteiro'); ?>
+          </p>
         </div>
         <div class="dados">
           <h3>Elenco</h3>
-          <p><?php echo CFS()->get('elenco'); ?></p>
+          <p>
+            <?php echo CFS()->get('elenco'); ?>
+          </p>
         </div>
       </div>
     </div>
@@ -196,10 +232,39 @@ endif; ?>
 <?php get_template_part('components/Footer/index'); ?>
 <?php get_footer(); ?>
 <script>
-var splide = new Splide('#fotos', {
-  arrows: true,
-  perPage: 2,
-  pagination: false,
+document.addEventListener('DOMContentLoaded', function() {
+  // Inicializar o Splide
+  var splide = new Splide('#fotos', {
+    arrows: true,
+    perPage: 3,
+    gap: '30px',
+    pagination: false,
+  });
+  splide.mount();
+
+  const imgs = document.querySelectorAll('.img-slide');
+  const modal = document.querySelector('#modalFilme');
+  const modalBody = document.querySelector('.modal-img');
+  const close = document.querySelector('.close');
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.style.display = 'none';
+    }
+  });
+
+
+  imgs.forEach((img) => {
+    img.addEventListener('click', () => {
+      modalBody.innerHTML = `<img src="${img.src}" alt="">`
+      modal.style.display = 'flex';
+      modal.style.alignItems = 'center'
+      modal.style.justifyContent = 'center'
+    });
+  });
+
+  close.addEventListener('click', () => {
+    modal.style.display = 'none';
+  });
 });
-splide.mount();
 </script>

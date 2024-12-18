@@ -97,3 +97,66 @@ function registrar_cpt_filmes()
     ));
 }
 add_action('init', 'registrar_cpt_filmes');
+
+
+function formatar_data_estreia($estreia, $mostrar_dia_da_semana = false) {
+  $data = CFS()->get($estreia);
+
+  if (empty($data)) {
+      echo '<p>Campo de data vazio ou inexistente</p>';
+      return;
+  }
+
+  $timestamp = strtotime($data);
+
+  if ($timestamp === false) {
+      echo '<p>Formato de data inválido: ' . esc_html($data) . '</p>';
+      return;
+  }
+
+  $data_formatada = date_i18n('d \d\e F \d\e Y', $timestamp);
+
+  if ($mostrar_dia_da_semana) {
+      $dia_da_semana = date_i18n('l', $timestamp);
+      $data_formatada = $dia_da_semana . ', ' . $data_formatada;
+  }
+
+  echo '<p>' . esc_html($data_formatada) . '</p>';
+}
+
+
+add_action('wp_ajax_filtrar_filmes', 'filtrar_filmes');
+add_action('wp_ajax_nopriv_filtrar_filmes', 'filtrar_filmes');
+
+function filtrar_filmes() {
+  $mes = $_POST['mes'] ?? '';
+  $distribuidora = $_POST['distribuidora'] ?? '';
+  $genero = $_POST['genero'] ?? '';
+
+  $args = [
+    'post_type' => 'filmes',
+    'posts_per_page' => -1,
+    'tax_query' => []
+  ];
+
+  if ($genero) {
+    $args['tax_query'][] = ['taxonomy' => 'generos', 'field' => 'term_id', 'terms' => $genero];
+  }
+  if ($distribuidora) {
+    $args['tax_query'][] = ['taxonomy' => 'distribuidoras', 'field' => 'term_id', 'terms' => $distribuidora];
+  }
+
+  $query = new WP_Query($args);
+
+  if ($query->have_posts()) {
+    while ($query->have_posts()) {
+      $query->the_post();
+      echo '<div class="card">';
+      echo '<h3>' . get_the_title() . '</h3>';
+      echo '</div>';
+    }
+  } else {
+    echo '<p>Nenhum filme encontrado.</p>';
+  }
+  wp_die();
+}
