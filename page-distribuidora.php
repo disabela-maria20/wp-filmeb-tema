@@ -1,5 +1,6 @@
 <?php
 get_header();
+// Template Name: Distribuidora
 ?>
 
 <?php
@@ -37,20 +38,7 @@ $paises = get_terms(array(
   'hide_empty' => false, 
 ));
 
-$meses = [
-  'January' => 'Janeiro',
-  'February' => 'Fevereiro',
-  'March' => 'Março',
-  'April' => 'Abril',
-  'May' => 'Maio',
-  'June' => 'Junho',
-  'July' => 'Julho',
-  'August' => 'Agosto',
-  'September' => 'Setembro',
-  'October' => 'Outubro',
-  'November' => 'Novembro',
-  'December' => 'Dezembro',
-];
+
 
 $args = array(
   'post_type' => 'filmes', 
@@ -185,142 +173,46 @@ endif;
           </select>
         </div>
       </section>
-      <section class="area-filmes">
-        <div v-for="(filme, index) in FiltrarFilme" :key="index">
-          <div v-for="card in filme.months">
-            <div class="lista-filmes" v-if="ativoItem === 'lista'" id="lista">
-              <h2>
-                <i class="bi bi-calendar-check-fill"></i>
-                <span>{{traduzirMesParaPortugues(card.month)}}</span>
-              </h2>
-              <div class="grid-filmes">
-                <div v-for="item in card.movies">
-                  <a class="card" v-on:mousemove="hoverCard" :href="item.link">
-                    <div v-if="!item.cartaz">
-                      <h3>{{item.title}}</h3>
-                      <p class="indisponivel">Poster não disponível</p>
-                    </div>
-                    <div v-else>
-                      <img :src="item.cartaz" alt="<?php the_title(); ?>" class="poster">
-                    </div>
+      <div class="tabela-distribuidora" id="tableDistribuidora">
+        <table>
+          <thead>
+            <tr>
+              <th>Estreia</th>
+              <th>Disney</th>
+              <th>Paramount</th>
+              <th>Sony</th>
+              <th>Universal</th>
+              <th>Warner</th>
+              <th>Diamond</th>
+              <th>
+                <div>downtown</div>
+                <div>/ Paris</div>
+              </th>
+              <th>Imagem</th>
+              <th>Paris</th>
+              <th>
+                <div>Outras</div>
+                <div>Distribuidoras</div>
+              </th>
+            </tr>
 
-                    <div class="info">
-                      <ul>
-                        <li> <span>Título:</span> <strong>{{item.title}}</strong> </li>
-                        <li>
-                          <span>Distribuição:</span>
-                          <div>
-                            <strong v-for="(value, index) in item.distribuidoras" :key="index">{{value}}</strong>
-                          </div>
-                        </li>
-                        <li>
-                          <span>País:</span>
-                          <div>
-                            <strong v-for="(value, index) in item.paises" :key="index">{{value}}</strong>
-                          </div>
-                        </li>
-                        <li>
-                          <span>Gênero:</span>
-                          <div>
-                            <strong v-for="(value, index) in item.generos" :key="index">{{value}}</strong>
-                          </div>
-                        </li>
-                        <li> <span>Direção:</span> <strong>{{item.direcao}}</strong></li>
-                        <li> <span>Duração</span> <strong>{{item.duracao_minutos}}min</strong></li>
-                      </ul>
-                    </div>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        <div class="tabela-distribuidora" v-if="ativoItem === 'tableDistribuidora'" id="tableDistribuidora">
-          <table>
-            <thead>
-              <tr>
-                <th>Estreia</th>
-                <th>Disney</th>
-                <th>Paramount</th>
-                <th>Sony</th>
-                <th>Universal</th>
-                <th>Warner</th>
-                <th>Diamond</th>
-                <th>
-                  <div>downtown</div>
-                  <div>/ Paris</div>
-                </th>
-                <th>Imagem</th>
-                <th>Paris</th>
-                <th>
-                  <div>Outras</div>
-                  <div>Distribuidoras</div>
-                </th>
-              </tr>
-
-            </thead>
-            <tbody>
-              <tr>
-                <td>a</td>
-                <td>a</td>
-                <td>a</td>
-                <td>a</td>
-                <td>a</td>
-                <td>a</td>
-                <td>a</td>
-                <td>a</td>
-                <td>a</td>
-                <td>a</td>
-                <td>a</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-      <div class="tabela-filme" v-if="ativoItem === 'tabela'" id="tabela">
-        <div v-for="(filme, index) in FiltrarFilme" :key="index">
-          <div v-for="card in filme.months">
-            <h2>
-              <i class="bi bi-calendar-check-fill"></i>
-              <span>{{traduzirMesParaPortugues(card.month)}}</span>
-            </h2>
-            <table v-for="item in card.movies">
-              <thead>
-                <tr>
-                  <th>Título</th>
-                  <th>Distribuição</th>
-                  <th>Direção</th>
-                  <th>País</th>
-                  <th>Gênero</th>
-                  <th>Duração</th>
-                  <th>Elenco</th>
-                  <th>Classificação</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="titulo">
-                    <a :href="item.link">
-                      <h3>{{item.title}}</h3>
-                      <span>{{item.titulo_original}}</span>
-                    </a>
-                  </td>
-                  <td>
-                    <div v-for="(value, index) in item.distribuidoras" :key="index">{{value}}</div>
-                  </td>
-                  <td>{{item.direcao}}</td>
-                  <td v-for="(value, index) in item.paises" :key="index">{{value}}</td>
-                  <td v-for="(value, index) in item.generos" :key="index">{{value}}</td>
-                  <td>{{item.duracao_minutos}}min</td>
-                  <td>{{item.elenco}}</td>
-                  <td v-for="(value, index) in item.classificacoes" :key="index">{{value}}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+          </thead>
+          <tbody>
+            <tr>
+              <td>a</td>
+              <td>a</td>
+              <td>a</td>
+              <td>a</td>
+              <td>a</td>
+              <td>a</td>
+              <td>a</td>
+              <td>a</td>
+              <td>a</td>
+              <td>a</td>
+              <td>a</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -339,7 +231,7 @@ new Vue({
     filmes: [],
     anos: [],
     selectedFilters: {
-      ano: '', // Inicializado e será definido no created
+      ano: '',
       mes: '',
       origem: '',
       distribuidor: '',
@@ -367,7 +259,7 @@ new Vue({
         if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
         const data = await res.json();
 
-        this.anos = data; // Atualiza a lista de anos com os dados da API
+        this.anos = data;
       } catch (error) {
         console.error("Erro ao buscar anos:", error);
       }

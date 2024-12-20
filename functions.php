@@ -1,7 +1,7 @@
 <?php
 
 require_once(get_template_directory() . "/api/banner.php");
-require_once(get_template_directory() . "/api/Taxonomias.php");
+require_once(get_template_directory() . "/api/filmes.php");
 
 add_filter('wp_image_editors', 'wpb_image_editor_default_to_gd');
 

@@ -10,6 +10,10 @@
     font-size: 2.2rem;
     color: $color-red-dark;
     margin-bottom: 30px;
+
+    @include media(lg) {
+      margin-bottom: 0;
+    }
   }
 
   .grid-filtros-config {
@@ -111,12 +115,16 @@
   }
 
   .area-filmes {
+    max-width: 850px;
+    display: block;
+    margin: 0 auto;
     .lista-filmes {
       h2 {
         display: flex;
         align-items: center;
         gap: 10px;
         color: $color-red-dark;
+        padding: 15px 0;
       }
     }
 
@@ -124,14 +132,13 @@
       display: grid;
       gap: 20px;
       margin: 0 auto;
-      margin-top: 35px;
+      margin-top: 20px;
 
       @include media(md) {
         grid-template-columns: 1fr 1fr;
       }
       @include media(lg) {
         grid-template-columns: 1fr 1fr 1fr 1fr;
-        max-width: 850px;
       }
       .activa {
         grid-template-columns: 1fr 1fr 1fr;
@@ -205,7 +212,7 @@
       }
     }
 
-    .tabela-filme {
+    .tabela-distribuidora {
       h2 {
         display: flex;
         align-items: center;
@@ -243,39 +250,42 @@
         }
       }
     }
+  }
+  .tabela-filme {
+    h2 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: $color-red-dark;
+      margin: 15px 0;
+    }
 
-    .tabela-distribuidora {
-      h2 {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        color: $color-red-dark;
-        margin-bottom: 35px;
-      }
+    table {
+      border-spacing: 0;
+      width: 100%;
+      font-size: 1.4rem;
+      thead {
+        background-color: #fef3f6;
+        color: $color-darker-gray;
 
-      table {
-        border-spacing: 0;
-        width: 100%;
-        font-size: 1.4rem;
-        thead {
-          background-color: #fef3f6;
-          color: $color-darker-gray;
-
-          tr {
-            th {
-              padding: 10px;
-              text-align: left;
-            }
+        tr {
+          th {
+            padding: 10px;
+            text-align: left;
           }
         }
-        tbody {
-          tr {
-            &:nth-child(odd) td {
-              background-color: $color-off-white;
-            }
-            td {
-              padding: 20px 10px;
-              text-align: left;
+      }
+      tbody {
+        tr {
+          &:nth-child(odd) td {
+            background-color: $color-off-white;
+          }
+          td {
+            padding: 20px 10px;
+            text-align: left;
+            color: $color-darker-gray;
+
+            a {
               color: $color-darker-gray;
             }
           }
