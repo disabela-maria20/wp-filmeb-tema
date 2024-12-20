@@ -103,34 +103,7 @@ endif;
 
   <div id="app">
     <div class="container page-filmes">
-      <h1>Cine-semana</h1>
-
-      <div class="grid-filtros-config">
-        <div class="ordem">
-          <button aria-label="ordem 1" @click="setTabAtivo('lista')"><i class="bi bi-border-all"></i></button>
-          <button aria-label="ordem 2" @click="setTabAtivo('tabela')"><i class="bi bi-grid-1x2"></i></button>
-          <button aria-label="imprimir" onClick="window.print()"><i class="bi bi-printer"></i></button>
-        </div>
-        <section id="datas" class="splide">
-          <div class="splide__track">
-            <ul class="splide__list">
-              <li class="splide__slide">
-                Quinta-feira, 13/06/2024
-              </li>
-              <li class="splide__slide">
-                Quinta-feira, 13/06/2024
-              </li>
-              <li class="splide__slide">
-                Quinta-feira, 13/06/2024
-              </li>
-            </ul>
-          </div>
-        </section>
-        <div class="lancamento">
-          <button id="distribuidora" @click="setTabAtivo('tableDistribuidora')">Ver lançamentos por
-            distribuidora</button>
-        </div>
-      </div>
+      <h1>Lançamentos por Distribuidora</h1>
       <section class="grid-select">
         <div class="grid grid-7-xl gap-22 select-itens">
           <select id="ano" v-model="selectedFilters.ano">

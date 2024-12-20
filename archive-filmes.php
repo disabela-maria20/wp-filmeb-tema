@@ -139,8 +139,8 @@ endif;
           </div>
         </section>
         <div class="lancamento">
-          <button id="distribuidora" @click="setTabAtivo('tableDistribuidora')">Ver lançamentos por
-            distribuidora</button>
+          <a href="/lancamentos-por-distribuidora/" id="distribuidora">Ver lançamentos por
+            distribuidora</a>
         </div>
       </div>
       <section class="grid-select">
@@ -339,23 +339,46 @@ new Vue({
     filmes: [],
     anos: [],
     selectedFilters: {
-      ano: '', // Inicializado e será definido no created
+      ano: '',
       mes: '',
       origem: '',
       distribuidor: '',
       genero: '',
       tecnologia: ''
     },
-    filteredMovies: []
+    filteredMovies: [],
   },
   methods: {
     async getLitsaFilmes(ano = this.selectedFilters.ano) {
       try {
+        const cacheKey = `filmes_${ano}`;
+        const cacheExpirationTime = 2 * 60 * 60 * 1000;
+
+        // Verifica se os dados estão no localStorage
+        const cachedData = localStorage.getItem(cacheKey);
+        const cachedTime = localStorage.getItem(`${cacheKey}_time`);
+
+        if (cachedData && cachedTime) {
+          const currentTime = new Date().getTime();
+          const cacheAge = currentTime - parseInt(cachedTime);
+
+          if (cacheAge < cacheExpirationTime) {
+            this.filmes = JSON.parse(cachedData);
+            return;
+          } else {
+            localStorage.removeItem(cacheKey);
+            localStorage.removeItem(`${cacheKey}_time`);
+          }
+        }
+
+        console.log(`Fazendo requisição para o ano ${ano}`);
         const res = await fetch(`http://filme-b.local/wp-json/api/v1/filmes?ano=${ano}`);
         if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
         const data = await res.json();
 
         this.filmes = data;
+        localStorage.setItem(cacheKey, JSON.stringify(data));
+        localStorage.setItem(`${cacheKey}_time`, new Date().getTime().toString());
       } catch (error) {
         console.error("Erro ao buscar filmes:", error);
       }
@@ -367,7 +390,7 @@ new Vue({
         if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
         const data = await res.json();
 
-        this.anos = data; // Atualiza a lista de anos com os dados da API
+        this.anos = data;
       } catch (error) {
         console.error("Erro ao buscar anos:", error);
       }
@@ -398,14 +421,14 @@ new Vue({
     },
 
     hoverCard(e) {
-      const cards = this.$el.querySelectorAll(".card"); // Selecionando todos os cards
+      const cards = this.$el.querySelectorAll(".card");
 
       cards.forEach((card) => {
-        const rect = card.getBoundingClientRect(); // Obtendo o retângulo do card
+        const rect = card.getBoundingClientRect();
         const mouseX = ((e.clientX - rect.left) / rect.width) * 100;
         const mouseY = ((e.clientY - rect.top) / rect.height) * 100;
 
-        const cardInfo = card.querySelector(".info"); // Selecionando a info dentro de cada card
+        const cardInfo = card.querySelector(".info");
         if (cardInfo) {
           cardInfo.style.position = 'absolute';
           cardInfo.style.left = `${mouseX}%`;
@@ -417,17 +440,14 @@ new Vue({
   computed: {
     FiltrarFilme() {
       return this.filmes.filter((filme) => {
-        //  ano
         const filtroAno = this.selectedFilters.ano ?
           filme.year === this.selectedFilters.ano :
           true;
 
-        //  meses
         const filtroMes = this.selectedFilters.mes ?
           filme.months && filme.months.some((mes) => mes.month === this.selectedFilters.mes) :
           true;
 
-        // Paises
         const filtroOrigem = this.selectedFilters.origem ?
           filme.months &&
           filme.months.flatMap((mes) =>
@@ -435,31 +455,32 @@ new Vue({
           ).length > 0 :
           true;
 
-        //Distribuidor
         const filtroDistribuidor = this.selectedFilters.distribuidor ?
           filme.months?.some((mes) =>
             mes.movies.some((movie) => movie.distribuidoras.includes(this.selectedFilters.distribuidor))
           ) :
           true;
 
-        //Genero
         const filtroGenero = this.selectedFilters.genero ?
           filme.months?.some((mes) =>
             mes.movies.some((movie) => movie.generos.includes(this.selectedFilters.genero))
           ) :
           true;
 
-        //Tecnologia
         const filtroTecnologia = this.selectedFilters.tecnologia ?
           filme.months?.some((mes) =>
             mes.movies.some((movie) => movie.tecnologias.includes(this.selectedFilters.tecnologia))
           ) :
           true;
 
-
         return filtroAno && filtroMes && filtroOrigem && filtroDistribuidor && filtroGenero && filtroTecnologia;
       });
     },
+  },
+  watch: {
+    'selectedFilters.ano'(newVal) {
+      this.getLitsaFilmes(newVal);
+    }
   },
   created() {
     const anoAtual = new Date().getFullYear().toString();
