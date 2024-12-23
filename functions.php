@@ -2,7 +2,7 @@
 
 require_once(get_template_directory() . "/api/banner.php");
 require_once(get_template_directory() . "/api/filmes.php");
-
+require_once(get_template_directory() . "/api/distribuidora.php");
 add_filter('wp_image_editors', 'wpb_image_editor_default_to_gd');
 
 function wpb_image_editor_default_to_gd($editors)
@@ -127,36 +127,3 @@ function formatar_data_estreia($estreia, $mostrar_dia_da_semana = false) {
 
 add_action('wp_ajax_filtrar_filmes', 'filtrar_filmes');
 add_action('wp_ajax_nopriv_filtrar_filmes', 'filtrar_filmes');
-
-function filtrar_filmes() {
-  $mes = $_POST['mes'] ?? '';
-  $distribuidora = $_POST['distribuidora'] ?? '';
-  $genero = $_POST['genero'] ?? '';
-
-  $args = [
-    'post_type' => 'filmes',
-    'posts_per_page' => -1,
-    'tax_query' => []
-  ];
-
-  if ($genero) {
-    $args['tax_query'][] = ['taxonomy' => 'generos', 'field' => 'term_id', 'terms' => $genero];
-  }
-  if ($distribuidora) {
-    $args['tax_query'][] = ['taxonomy' => 'distribuidoras', 'field' => 'term_id', 'terms' => $distribuidora];
-  }
-
-  $query = new WP_Query($args);
-
-  if ($query->have_posts()) {
-    while ($query->have_posts()) {
-      $query->the_post();
-      echo '<div class="card">';
-      echo '<h3>' . get_the_title() . '</h3>';
-      echo '</div>';
-    }
-  } else {
-    echo '<p>Nenhum filme encontrado.</p>';
-  }
-  wp_die();
-}

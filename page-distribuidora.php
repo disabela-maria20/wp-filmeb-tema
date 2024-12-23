@@ -38,6 +38,20 @@ $paises = get_terms(array(
   'hide_empty' => false, 
 ));
 
+$meses = [
+  'January' => 'Janeiro',
+  'February' => 'Fevereiro',
+  'March' => 'Março',
+  'April' => 'Abril',
+  'May' => 'Maio',
+  'June' => 'Junho',
+  'July' => 'Julho',
+  'August' => 'Agosto',
+  'September' => 'Setembro',
+  'October' => 'Outubro',
+  'November' => 'Novembro',
+  'December' => 'Dezembro',
+];
 
 
 $args = array(
@@ -99,98 +113,177 @@ endif;
   </div>
 </section>
 
-<div class="container page-filmes">
+<div id="app">
+  <div class="container page-distribuidora">
+    <h1>Lançamentos por Distribuidora</h1>
+    <section class="grid-select">
+      <div class="grid grid-7-xl gap-22 select-itens">
+        <select id="ano" v-model="selectedFilters.ano">
+          <option value="">Ano</option>
+          <option v-for="ano in anos" :value="ano">{{ano}}</option>
+        </select>
+        <select v-model="selectedFilters.mes" id="mes">
+          <option disabled value="">Mês</option>
+          <?php foreach ($meses as $key => $value) { ?>
+          <option value="<?php echo esc_attr($key); ?>"><?php echo esc_html($value); ?></option>
+          <?php } ?>
+        </select>
+        <select v-model="selectedFilters.origem" id="origem">
+          <option disabled value="">Origem</option>
+          <?php foreach ($paises as $paise) {?>
+          <option value="<?php echo esc_html($paise->name); ?>"><?php echo $paise->name . PHP_EOL;?>
+          </option>
+          <?php } ?>
+        </select>
+        <select v-model="selectedFilters.distribuidor" id="distribuidor">
+          <option disabled value="">Distribuidor</option>
+          <?php foreach ($distribuidoras as $distribuidora) {?>
+          <option value="<?php echo esc_html($distribuidora->name); ?>"><?php echo $distribuidora->name . PHP_EOL;?>
+          </option>
+          <?php } ?>
+        </select>
+        <select v-model="selectedFilters.genero" id="genero">
+          <option disabled value="">Gênero</option>
+          <?php foreach ($termos as $termo) {?>
+          <option value="<?php echo esc_html($termo->name); ?>"><?php echo $termo->name . PHP_EOL;?></option>
+          <?php } ?>
+        </select>
+        <select v-model="selectedFilters.tecnologia" id="tecnologia">
+          <option disabled value="">Tecnologia</option>
+          <?php foreach ($tecnologias as $tecnologia) {?>
+          <option value="<?php echo esc_html($tecnologia->name); ?>"><?php echo $tecnologia->name . PHP_EOL;?>
+          </option>
+          <?php } ?>
+        </select>
+      </div>
+    </section>
+    <div class="tabela-distribuidora" id="tableDistribuidora">
+      <table>
+        <thead>
+          <tr>
+            <th>Estreia</th>
+            <th>Disney</th>
+            <th>Paramount</th>
+            <th>Sony</th>
+            <th>Universal</th>
+            <th>Warner</th>
+            <th>Diamond</th>
+            <th>
+              <div>downtown</div>
+              <div>/ Paris</div>
+            </th>
+            <th>Imagem</th>
+            <th>Paris</th>
+            <th>
+              <div>Outras</div>
+              <div>Distribuidoras</div>
+            </th>
+          </tr>
 
-  <div id="app">
-    <div class="container page-filmes">
-      <h1>Lançamentos por Distribuidora</h1>
-      <section class="grid-select">
-        <div class="grid grid-7-xl gap-22 select-itens">
-          <select id="ano" v-model="selectedFilters.ano">
-            <option disabled value="">Ano</option>
-            <option v-for="ano in anos" :value="ano">{{ano}}</option>
-          </select>
+        </thead>
+        <tbody>
+          <tr v-for="(filme, index) in FiltrarFilme" :key="index">
+            <td>
+              <span class="data" v-html="formatarData(filme.estreia)"></span>
+            </td>
+            <td>
+              <div v-for="(value, index) in filme.Disney" :key="index">
+                <div>
+                  <h3>{{value.title}}</h3>
+                  <h4>{{value.titulo_original}}</h4>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div v-for="(value, index) in filme.Paramount" :key="index">
+                <div>
+                  <h3>{{value.title}}</h3>
+                  <h4>{{value.titulo_original}}</h4>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div v-for="(value, index) in filme.Sony" :key="index">
+                <div>
+                  <h3>{{value.title}}</h3>
+                  <h4>{{value.titulo_original}}</h4>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div v-for="(value, index) in filme.Universal" :key="index">
+                <div>
+                  <h3>{{value.title}}</h3>
+                  <h4>{{value.titulo_original}}</h4>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div v-for="(value, index) in filme.Warner" :key="index">
+                <div>
+                  <h3>{{value.title}}</h3>
+                  <h4>{{value.titulo_original}}</h4>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div v-for="(value, index) in filme.Diamond" :key="index">
+                <div>
+                  <h3>{{value.title}}</h3>
+                  <h4>{{value.titulo_original}}</h4>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div v-for="(value, index) in filme.downtownParis" :key="index">
+                <div>
+                  <h3>{{value.title}}</h3>
+                  <h4>{{value.titulo_original}}</h4>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div v-for="(value, index) in filme.Imagem" :key="index">
+                <div>
+                  <h3>{{value.title}}</h3>
+                  <h4>{{value.titulo_original}}</h4>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div v-for="(value, index) in filme.Paris" :key="index">
+                <div>
+                  <h3>{{value.title}}</h3>
+                  <h4>{{value.titulo_original}}</h4>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div v-for="(value, index) in filme.OutrasDistribuidoras" :key="index">
+                <div>
+                  <h3>{{value.title}}</h3>
+                  <h4>{{value.titulo_original}}</h4>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="pagination">
+        <button :disabled="paginaAtual === 1" @click="navegarParaPagina(1)">
+          <i class="bi bi-chevron-left"></i>
+        </button>
 
-          <select v-model="selectedFilters.mes" id="mes">
-            <option disabled value="">Mês</option>
-            <?php foreach ($meses as $key => $value) { ?>
-            <option value="<?php echo esc_attr($key); ?>"><?php echo esc_html($value); ?></option>
-            <?php } ?>
-          </select>
-          <select v-model="selectedFilters.origem" id="origem">
-            <option disabled value="">Origem</option>
-            <?php foreach ($paises as $paise) {?>
-            <option value="<?php echo esc_html($paise->name); ?>"><?php echo $paise->name . PHP_EOL;?>
-            </option>
-            <?php } ?>
-          </select>
-          <select v-model="selectedFilters.distribuidor" id="distribuidor">
-            <option disabled value="">Distribuidor</option>
-            <?php foreach ($distribuidoras as $distribuidora) {?>
-            <option value="<?php echo esc_html($distribuidora->name); ?>"><?php echo $distribuidora->name . PHP_EOL;?>
-            </option>
-            <?php } ?>
-          </select>
-          <select v-model="selectedFilters.genero" id="genero">
-            <option disabled value="">Gênero</option>
-            <?php foreach ($termos as $termo) {?>
-            <option value="<?php echo esc_html($termo->name); ?>"><?php echo $termo->name . PHP_EOL;?></option>
-            <?php } ?>
-          </select>
-          <select v-model="selectedFilters.tecnologia" id="tecnologia">
-            <option disabled value="">Tecnologia</option>
-            <?php foreach ($tecnologias as $tecnologia) {?>
-            <option value="<?php echo esc_html($tecnologia->name); ?>"><?php echo $tecnologia->name . PHP_EOL;?>
-            </option>
-            <?php } ?>
-          </select>
-        </div>
-      </section>
-      <div class="tabela-distribuidora" id="tableDistribuidora">
-        <table>
-          <thead>
-            <tr>
-              <th>Estreia</th>
-              <th>Disney</th>
-              <th>Paramount</th>
-              <th>Sony</th>
-              <th>Universal</th>
-              <th>Warner</th>
-              <th>Diamond</th>
-              <th>
-                <div>downtown</div>
-                <div>/ Paris</div>
-              </th>
-              <th>Imagem</th>
-              <th>Paris</th>
-              <th>
-                <div>Outras</div>
-                <div>Distribuidoras</div>
-              </th>
-            </tr>
+        <button v-for="n in totalPaginas" :key="n" :class="{ active: n === paginaAtual }" @click="navegarParaPagina(n)">
+          {{ n }}
+        </button>
 
-          </thead>
-          <tbody>
-            <tr>
-              <td>a</td>
-              <td>a</td>
-              <td>a</td>
-              <td>a</td>
-              <td>a</td>
-              <td>a</td>
-              <td>a</td>
-              <td>a</td>
-              <td>a</td>
-              <td>a</td>
-              <td>a</td>
-            </tr>
-          </tbody>
-        </table>
+        <button :disabled="paginaAtual === totalPaginas" @click="navegarParaPagina(totalPaginas)">
+          <i class="bi bi-chevron-right"></i>
+        </button>
       </div>
     </div>
   </div>
-
-
 </div>
 <?php get_template_part('components/Footer/index'); ?>
 <?php get_footer(); ?>
@@ -199,8 +292,6 @@ endif;
 new Vue({
   el: "#app",
   data: {
-    teste: "teste",
-    ativoItem: 'lista',
     filmes: [],
     anos: [],
     selectedFilters: {
@@ -211,35 +302,26 @@ new Vue({
       genero: '',
       tecnologia: ''
     },
-    filteredMovies: []
+    filteredMovies: [],
+    paginaAtual: 1,
+    totalPaginas: 12,
+    filmesPorPagina: 1
   },
   methods: {
-    async getLitsaFilmes(ano = this.selectedFilters.ano) {
+    async getLitsaFilmes(ano = '', pagina = this.paginaAtual) {
       try {
-        const res = await fetch(`http://filme-b.local/wp-json/api/v1/filmes?ano=${ano}`);
+        const url =
+          `http://filme-b.local/wp-json/api/v1/distribuidoras?page=${pagina}&limit=${this.filmesPorPagina}${ano ? `&ano=${ano}` : ''}`;
+        const res = await fetch(url);
         if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
         const data = await res.json();
+        console.log(data);
 
-        this.filmes = data;
+        this.filmes = data.data;
+        this.totalPaginas = data.total_pages;
       } catch (error) {
         console.error("Erro ao buscar filmes:", error);
       }
-    },
-
-    async getListaAnos() {
-      try {
-        const res = await fetch('http://filme-b.local/wp-json/api/v1/anos-filmes');
-        if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
-        const data = await res.json();
-
-        this.anos = data;
-      } catch (error) {
-        console.error("Erro ao buscar anos:", error);
-      }
-    },
-
-    setTabAtivo(tab) {
-      this.ativoItem = tab;
     },
 
     traduzirMesParaPortugues(mesIngles) {
@@ -262,76 +344,76 @@ new Vue({
       }
     },
 
-    hoverCard(e) {
-      const cards = this.$el.querySelectorAll(".card"); // Selecionando todos os cards
+    async getListaAnos() {
+      try {
+        const res = await fetch('http://filme-b.local/wp-json/api/v1/anos-filmes');
+        if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
+        const data = await res.json();
 
-      cards.forEach((card) => {
-        const rect = card.getBoundingClientRect(); // Obtendo o retângulo do card
-        const mouseX = ((e.clientX - rect.left) / rect.width) * 100;
-        const mouseY = ((e.clientY - rect.top) / rect.height) * 100;
+        this.anos = data;
+      } catch (error) {
+        console.error("Erro ao buscar anos:", error);
+      }
+    },
 
-        const cardInfo = card.querySelector(".info"); // Selecionando a info dentro de cada card
-        if (cardInfo) {
-          cardInfo.style.position = 'absolute';
-          cardInfo.style.left = `${mouseX}%`;
-          cardInfo.style.top = `${mouseY}%`;
-        }
-      });
+    formatarData(data) {
+      const date = new Date(data);
+      const dia = date.getDate();
+      const mes = date.getMonth() + 1;
+      const ano = date.getFullYear();
+      const diaSemana = date.getDay();
+      const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro',
+        'Outubro', 'Novembro', 'Dezembro'
+      ];
+      const diasSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira',
+        'Sábado'
+      ];
+      return `
+            <div>
+              <div class="dia">${String(dia).padStart(2, '0')}</div>
+              <div class="mes">${meses[mes - 1]}</div>
+              <div class="ano">${ano}</div>
+              <div class="semana">${diasSemana[diaSemana]}</div>
+            </div>
+          `;
+    },
+
+    navegarParaPagina(pagina) {
+      this.paginaAtual = pagina;
+      this.getLitsaFilmes(this.selectedFilters.ano, pagina);
     }
   },
+
   computed: {
     FiltrarFilme() {
       return this.filmes.filter((filme) => {
-        //  ano
-        const filtroAno = this.selectedFilters.ano ?
-          filme.year === this.selectedFilters.ano :
+        const filtroAno = this.selectedFilters.ano ? filme.ano === this.selectedFilters.ano : true;
+        const filtroMes = this.selectedFilters.mes ? filme.mes === this.selectedFilters.mes : true;
+        const filtroOrigem = this.selectedFilters.origem ? filme.origem.includes(this.selectedFilters.origem) :
           true;
-
-        //  meses
-        const filtroMes = this.selectedFilters.mes ?
-          filme.months && filme.months.some((mes) => mes.month === this.selectedFilters.mes) :
+        const filtroDistribuidor = this.selectedFilters.distribuidor ? filme.distribuidoras.includes(this
+          .selectedFilters.distribuidor) : true;
+        const filtroGenero = this.selectedFilters.genero ? filme.genero.includes(this.selectedFilters.genero) :
           true;
-
-        // Paises
-        const filtroOrigem = this.selectedFilters.origem ?
-          filme.months &&
-          filme.months.flatMap((mes) =>
-            mes.movies.filter((movie) => movie.paises.includes(this.selectedFilters.origem))
-          ).length > 0 :
-          true;
-
-        //Distribuidor
-        const filtroDistribuidor = this.selectedFilters.distribuidor ?
-          filme.months?.some((mes) =>
-            mes.movies.some((movie) => movie.distribuidoras.includes(this.selectedFilters.distribuidor))
-          ) :
-          true;
-
-        //Genero
-        const filtroGenero = this.selectedFilters.genero ?
-          filme.months?.some((mes) =>
-            mes.movies.some((movie) => movie.generos.includes(this.selectedFilters.genero))
-          ) :
-          true;
-
-        //Tecnologia
-        const filtroTecnologia = this.selectedFilters.tecnologia ?
-          filme.months?.some((mes) =>
-            mes.movies.some((movie) => movie.tecnologias.includes(this.selectedFilters.tecnologia))
-          ) :
-          true;
-
+        const filtroTecnologia = this.selectedFilters.tecnologia ? filme.tecnologia.includes(this
+          .selectedFilters.genero) : true;
 
         return filtroAno && filtroMes && filtroOrigem && filtroDistribuidor && filtroGenero && filtroTecnologia;
       });
-    },
+    }
   },
+
   created() {
     const anoAtual = new Date().getFullYear().toString();
-    this.selectedFilters.ano = anoAtual;
-
+    this.selectedFilters.ano = '';
     this.getListaAnos();
-    this.getLitsaFilmes(anoAtual);
+    this.getLitsaFilmes('', 1);
   },
+
+  watch: {
+    paginaAtual(newPage) {
+      this.getLitsaFilmes(this.selectedFilters.ano, newPage);
+    }
+  }
 });
 </script>

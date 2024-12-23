@@ -1,6 +1,4 @@
-.page-filmes {
-  // padding: 35px 0;
-
+.page-distribuidora {
   @include media(lg) {
     padding: 60px 15px;
   }
@@ -12,7 +10,7 @@
     margin-bottom: 30px;
 
     @include media(lg) {
-      margin-bottom: 0;
+      margin-bottom: 45px;
     }
   }
 
@@ -64,8 +62,6 @@
         padding: 5px 10px;
         transition: all 400ms ease;
         cursor: pointer;
-        display: block;
-        text-align: center;
         &:hover {
           background-color: $color-red-dark;
         }
@@ -75,7 +71,9 @@
 
   .grid-select {
     padding: 20px 0;
-
+    @include media(lg) {
+      margin-bottom: 35px;
+    }
     .select-itens {
       width: 100%;
       display: flex;
@@ -253,7 +251,8 @@
       }
     }
   }
-  .tabela-filme {
+
+  .tabela-distribuidora {
     h2 {
       display: flex;
       align-items: center;
@@ -278,6 +277,10 @@
         }
       }
       tbody {
+        tr,
+        td {
+          border: 1px solid $color-lightest-gray-alt;
+        }
         tr {
           &:nth-child(odd) td {
             background-color: $color-off-white;
@@ -290,196 +293,35 @@
             a {
               color: $color-darker-gray;
             }
-          }
-        }
-      }
-    }
-  }
-}
 
-.page-filmes-aberta {
-  .banner {
-    height: 300px;
-    position: relative;
-    background-position: center;
-    background-size: cover;
+            .data {
+              text-align: center;
+              color: $color-red-dark;
+              .dia {
+                font-size: 2.2rem;
+                font-weight: 700;
+                margin-bottom: 5px;
+              }
+              .mes {
+                text-transform: uppercase;
+              }
+              .ano {
+                margin-top: 5px;
+              }
+            }
 
-    h1 {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      strong {
-        font-size: 2.4rem;
-        text-shadow: -2px 2px 4px #000;
-        color: $color-white;
-        display: block;
-      }
-      span {
-        color: $color-off-white;
-        font-weight: 300;
-        text-align: center;
-        display: block;
-        text-shadow: -2px 2px 4px #000;
-      }
-    }
-  }
-
-  h2 {
-    background-color: #fef3f6;
-    color: $color-red-dark;
-    padding: 15px 0;
-    text-align: center;
-    font-size: 2rem;
-    margin-bottom: 35px;
-  }
-  .item {
-    .cartaz {
-      position: relative;
-      width: 220px;
-      border-radius: 5px;
-      display: block;
-      margin: 0 auto;
-      padding: 20px 0;
-      @include media(lg) {
-        bottom: 20%;
-      }
-    }
-
-    .area-poster {
-      @include media(lg) {
-        margin-top: -35%;
-      }
-
-      .modal {
-        background-color: #00000075;
-        position: fixed;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 999;
-        display: none;
-        &.ativo {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .modal-body {
-          position: absolute;
-          background-color: $color-white;
-          max-width: 100%;
-          max-height: 100%;
-          border-radius: 5px;
-          padding: 10px;
-
-          .close {
-            position: absolute;
-            top: -15px;
-            right: -15px;
-            border: none;
-            background-color: none;
-            border-radius: 100%;
-            cursor: pointer;
-            i {
-              border: none;
-              color: $color-bright-red;
-              font-size: 4rem;
-              border: none;
-              width: 45px;
-              height: 45px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
+            h3 {
+              color: $color-red-dark;
+              text-align: center;
+            }
+            h4 {
+              color: $color-darker-gray;
+              font-weight: 500;
+              text-align: center;
             }
           }
-
-          img {
-            width: 750px;
-          }
         }
       }
-      #fotos {
-        margin-top: 20px;
-        img {
-          height: 100px;
-          object-fit: cover;
-          border-radius: 5px;
-        }
-      }
-    }
-  }
-
-  .video {
-    margin-top: 10px;
-    float: none;
-    clear: both;
-    width: 100%;
-    position: relative;
-    padding-bottom: 56.25%;
-    padding-top: 25px;
-    height: 0;
-
-    iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
-  }
-
-  .grid-filmes {
-    display: grid;
-    gap: 35px;
-    @include media(lg) {
-      padding: 0 15px;
-      grid-template-columns: 1fr 2fr;
-    }
-  }
-
-  .dados {
-    @include media(lg) {
-      margin-bottom: 35px;
-    }
-    h3 {
-      font-size: 1.6rem;
-      color: $color-red-dark;
-    }
-    p {
-      margin-top: 0 !important;
-      margin-bottom: 10px !important;
-    }
-  }
-}
-
-.pagination {
-  padding: 20px 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  button {
-    padding: 5px;
-    background-color: $color-white;
-    font-size: 1.6rem;
-    color: $color-red-dark;
-    border: 2px solid $color-red-dark;
-    border-radius: 5px;
-    transition: all 400ms;
-    cursor: pointer;
-
-    &:hover {
-      background-color: $color-light-red;
-    }
-
-    &.active {
-      background-color: $color-red-dark;
-      color: $color-white;
     }
   }
 }

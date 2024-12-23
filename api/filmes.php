@@ -139,7 +139,6 @@ function filme_scheme($post)
     return $filme;
 }
 
-
 function api_filmes_get($request)
 {
     $q = isset($request['q']) ? sanitize_text_field($request['q']) : '';
@@ -233,7 +232,6 @@ function api_filmes_get($request)
     $response->header('X-Total-Count', $total);
     return $response;
 }
-
 
 function register_filmes_api_endpoints()
 {
