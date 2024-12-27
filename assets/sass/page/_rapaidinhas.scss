@@ -8,13 +8,13 @@
 
   h1 {
     font-weight: bold;
-    font-size: 3rem;
+    font-size: 2rem;
     line-height: 3.4rem;
     text-align: left;
     color: $color-bright-red;
     margin-bottom: 35px;
     @include media(lg) {
-      font-size: 4rem;
+      font-size: 2rem;
       line-height: 4.4rem;
     }
   }
@@ -42,13 +42,13 @@
       a {
         display: block;
         margin-top: 5px;
-        font-size: 1.5rem;
+        font-size: 1.2rem;
         color: $color-darker-gray;
       }
 
       h2 {
         color: $color-darker-gray;
-        font-size: 2rem !important;
+        font-size: 1.8rem !important;
         line-height: 2.5rem;
       }
 
@@ -56,6 +56,26 @@
         color: $color-bright-red;
         font-size: 1.2rem;
       }
+    }
+  }
+  .edicoes {
+    display: flex;
+    align-items: center;
+    font-weight: 400;
+    color: $color-bright-red;
+    font-size: 1.4rem;
+  }
+
+  .opem {
+    font-weight: bold;
+    font-size: 2rem;
+    line-height: 3.4rem;
+    text-align: left;
+    color: $color-bright-red;
+    margin-bottom: 35px;
+    @include media(lg) {
+      font-size: 4rem;
+      line-height: 4.4rem;
     }
   }
 }

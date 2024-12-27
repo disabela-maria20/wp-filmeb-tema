@@ -3,6 +3,8 @@
 require_once(get_template_directory() . "/api/banner.php");
 require_once(get_template_directory() . "/api/filmes.php");
 require_once(get_template_directory() . "/api/distribuidora.php");
+require_once(get_template_directory() . "/api/rapidinhas.php");
+
 add_filter('wp_image_editors', 'wpb_image_editor_default_to_gd');
 
 function wpb_image_editor_default_to_gd($editors)
