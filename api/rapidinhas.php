@@ -25,29 +25,32 @@ function registrar_cpt_rapidinhas()
 add_action('init', 'registrar_cpt_rapidinhas');
 
 
-function registrar_cpt_boletim_da_semana()
+function registrar_cpt_edicoes()
 {
-    register_post_type('boletim_da_semana', array(
+    register_post_type('edicoes', array(
         'labels' => array(
-            'name' => _x('Boletins da Semana', 'Post type general name', 'textdomain'),
-            'singular_name' => _x('Boletim da Semana', 'Post type singular name', 'textdomain'),
-            'add_new_item' => _x('Adicionar Novo Boletim', 'Post type singular name', 'textdomain'),
-            'new_item' => _x('Novo Boletim', 'Post type singular name', 'textdomain'),
-            'edit_item' => _x('Editar Boletim', 'Post type singular name', 'textdomain'),
-            'view_item' => _x('Ver Boletim', 'Post type singular name', 'textdomain'),
+            'name' => _x('Edições', 'Post type general name', 'textdomain'),
+            'singular_name' => _x('Edição', 'Post type singular name', 'textdomain'),
+            'add_new_item' => _x('Adicionar Edição', 'Post type singular name', 'textdomain'),
+            'new_item' => _x('Nova Edição', 'Post type singular name', 'textdomain'),
+            'edit_item' => _x('Editar Edição', 'Post type singular name', 'textdomain'),
+            'view_item' => _x('Ver Edição', 'Post type singular name', 'textdomain'),
         ),
-        'description' => 'Gerenciar Boletins da Semana',
+        'description' => 'Gerenciar Edições',
         'public' => true,
         'show_ui' => true,
         'capability_type' => 'post',
-        'rewrite' => array('slug' => 'boletim-da-semana', 'with_front' => true),
+        'rewrite' => array('slug' => 'edicao', 'with_front' => true),
         'query_var' => true,
         'supports' => array('title', 'editor', 'thumbnail'),
         'publicly_queryable' => true,
-        'has_archive'=> true,
+        'has_archive' => true,
+        'menu_position' => 5,
+        'menu_icon' => 'dashicons-book-alt',
     ));
 }
-add_action('init', 'registrar_cpt_boletim_da_semana');
+add_action('init', 'registrar_cpt_edicoes');
+
 
 
 ?>
