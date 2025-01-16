@@ -98,14 +98,14 @@ endif;
       <!-- Carousel Mobile -->
       <section class="home_lista_rapinhas bannerMobile">
         <div class="owl-carousel rapidinhas">
-          <?php display_rapidinhas(); ?>
+          <?php get_template_part('components/RapidinhasMobile/index'); ?>
         </div>
       </section>
 
       <!-- Grid Desktop -->
       <section class="home_lista_rapinhas bannerDesktop">
         <div class="grid gap-32">
-          <?php display_rapidinhas(); ?>
+          <?php get_template_part('components/RapidinhasDesktop/index'); ?>
         </div>
       </section>
     </div>
