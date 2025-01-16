@@ -52,20 +52,22 @@ function flush_rewrite_rules_on_theme_activation()
 add_action('after_switch_theme', 'flush_rewrite_rules_on_theme_activation');
 
 
-function remove_tablepress_default_css() {
+function remove_tablepress_default_css()
+{
   wp_deregister_style('tablepress-default');
 }
 add_action('wp_enqueue_scripts', 'remove_tablepress_default_css', 20);
 
 
-function custom_breadcrumb_category($links) {
+function custom_breadcrumb_category($links)
+{
   if (is_single() && in_category('Rapidinhas')) {
-      foreach ($links as &$link) {
-          if ($link['text'] === 'Notícias') {
-              $link['text'] = 'Rapidinhas';
-              $link['url'] = get_category_link(get_cat_ID('Rapidinhas'));
-          }
+    foreach ($links as &$link) {
+      if ($link['text'] === 'Notícias') {
+        $link['text'] = 'Rapidinhas';
+        $link['url'] = get_category_link(get_cat_ID('Rapidinhas'));
       }
+    }
   }
   return $links;
 }
@@ -74,53 +76,55 @@ add_filter('wpseo_breadcrumb_links', 'custom_breadcrumb_category');
 
 function registrar_cpt_filmes()
 {
-    register_post_type('filmes', array(
-        'labels' => array(
-            'name'               => _x('Filmes', 'Post type general name', 'textdomain'),
-            'singular_name'      => _x('Filme', 'Post type singular name', 'textdomain'),
-            'add_new_item'       => __('Adicionar Novo Filme', 'textdomain'),
-            'edit_item'          => __('Editar Filme', 'textdomain'),
-            'new_item'           => __('Novo Filme', 'textdomain'),
-            'view_item'          => __('Ver Filme', 'textdomain'),
-            'search_items'       => __('Buscar Filmes', 'textdomain'),
-            'not_found'          => __('Nenhum Filme encontrado', 'textdomain'),
-            'not_found_in_trash' => __('Nenhum Filme encontrado na lixeira', 'textdomain'),
-        ),
-        'description'        => 'Gerenciar Filmes',
-        'public'             => true,
-        'show_ui'            => true,
-        'menu_position'      => 5,
-        'menu_icon'          => 'dashicons-video-alt',
-        'capability_type'    => 'post',
-        'rewrite'            => array('slug' => 'filmes', 'with_front' => true),
-        'supports'           => array('title', 'editor', 'thumbnail', 'excerpt'),
-        'has_archive'        => true,
-        'publicly_queryable' => true,
-    ));
+  register_post_type('filmes', array(
+    'labels' => array(
+      'name'               => _x('Filmes', 'Post type general name', 'textdomain'),
+      'singular_name'      => _x('Filme', 'Post type singular name', 'textdomain'),
+      'add_new_item'       => __('Adicionar Novo Filme', 'textdomain'),
+      'edit_item'          => __('Editar Filme', 'textdomain'),
+      'new_item'           => __('Novo Filme', 'textdomain'),
+      'view_item'          => __('Ver Filme', 'textdomain'),
+      'search_items'       => __('Buscar Filmes', 'textdomain'),
+      'not_found'          => __('Nenhum Filme encontrado', 'textdomain'),
+      'not_found_in_trash' => __('Nenhum Filme encontrado na lixeira', 'textdomain'),
+    ),
+    'description'        => 'Gerenciar Filmes',
+    'public'             => true,
+    'show_ui'            => true,
+    'menu_position'      => 5,
+    'menu_icon'          => 'dashicons-video-alt',
+    'capability_type'    => 'post',
+    'rewrite'            => array('slug' => 'filmes', 'with_front' => true),
+    'supports'           => array('title', 'editor', 'thumbnail', 'excerpt'),
+    'has_archive'        => true,
+    'publicly_queryable' => true,
+    'show_in_rest' => true,
+  ));
 }
 add_action('init', 'registrar_cpt_filmes');
 
 
-function formatar_data_estreia($estreia, $mostrar_dia_da_semana = false) {
+function formatar_data_estreia($estreia, $mostrar_dia_da_semana = false)
+{
   $data = CFS()->get($estreia);
 
   if (empty($data)) {
-      echo '<p>Campo de data vazio ou inexistente</p>';
-      return;
+    echo '<p>Campo de data vazio ou inexistente</p>';
+    return;
   }
 
   $timestamp = strtotime($data);
 
   if ($timestamp === false) {
-      echo '<p>Formato de data inválido: ' . esc_html($data) . '</p>';
-      return;
+    echo '<p>Formato de data inválido: ' . esc_html($data) . '</p>';
+    return;
   }
 
   $data_formatada = date_i18n('d \d\e F \d\e Y', $timestamp);
 
   if ($mostrar_dia_da_semana) {
-      $dia_da_semana = date_i18n('l', $timestamp);
-      $data_formatada = $dia_da_semana . ', ' . $data_formatada;
+    $dia_da_semana = date_i18n('l', $timestamp);
+    $data_formatada = $dia_da_semana . ', ' . $data_formatada;
   }
 
   echo '<p>' . esc_html($data_formatada) . '</p>';

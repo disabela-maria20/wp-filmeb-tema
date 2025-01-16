@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 function registrar_cpt_rapidinhas()
 {
@@ -19,7 +19,8 @@ function registrar_cpt_rapidinhas()
         'query_var' => true,
         'supports' => array('title', 'editor', 'thumbnail'),
         'publicly_queryable' => true,
-        'has_archive'=> true,
+        'has_archive' => true,
+        'show_in_rest' => true,
     ));
 }
 add_action('init', 'registrar_cpt_rapidinhas');
@@ -47,10 +48,7 @@ function registrar_cpt_edicoes()
         'has_archive' => true,
         'menu_position' => 5,
         'menu_icon' => 'dashicons-book-alt',
+        'show_in_rest' => true,
     ));
 }
 add_action('init', 'registrar_cpt_edicoes');
-
-
-
-?>

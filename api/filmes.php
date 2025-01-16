@@ -33,6 +33,7 @@ function registrar_taxonomias_filmes()
                 'show_in_menu' => true,
                 'show_in_rest' => true,
                 'rewrite'      => array('slug' => $slug),
+
             )
         );
     }
@@ -174,7 +175,7 @@ function api_filmes_get($request)
 
     foreach ($posts as $post) {
         $filme = filme_scheme($post);
-        $data_estreia = $filme->estreia; 
+        $data_estreia = $filme->estreia;
 
         if (!empty($data_estreia)) {
             $ano_filme = date('Y', strtotime($data_estreia));
@@ -186,7 +187,7 @@ function api_filmes_get($request)
                 ];
             }
 
-            $mes = date('F', strtotime($data_estreia)); 
+            $mes = date('F', strtotime($data_estreia));
             $mes_existe = false;
 
             foreach ($filmes_agrupados[$ano_filme]['months'] as &$item) {
@@ -281,5 +282,3 @@ function register_anos_filmes_api_endpoints()
     ]);
 }
 add_action('rest_api_init', 'register_anos_filmes_api_endpoints');
-
-?>
