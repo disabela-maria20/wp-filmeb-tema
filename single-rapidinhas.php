@@ -110,7 +110,7 @@ endif;
       <h2>Edições anteriores</h2>
       <?php
       $recent_posts_query = new WP_Query(array(
-        'post_type' => 'boletim_da_semana',
+        'post_type' => 'edicoes',
         'posts_per_page' => 10,
       ));
 

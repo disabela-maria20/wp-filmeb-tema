@@ -126,8 +126,7 @@ endif;
             'post_type' => 'edicoes',
             'posts_per_page' => 10,
           ));
-
-          if ($recent_posts_query->have_posts()) {  while ($recent_posts_query->have_posts()) { $recent_posts_query->the_post(); ?>
+      if ($recent_posts_query->have_posts()) {  while ($recent_posts_query->have_posts()) { $recent_posts_query->the_post(); ?>
       <div class="item-aside">
         <a href="<?php the_permalink(); ?>" class="edicoes">
           <i class="bi bi-arrow-right-short"></i>

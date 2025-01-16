@@ -132,12 +132,14 @@ endif;
 
       <h2>Edições anteriores</h2>
       <?php
-          $recent_posts_query = new WP_Query(array(
-            'post_type' => 'boletim_da_semana',
-            'posts_per_page' => 10,
-          ));
+      $recent_posts_query = new WP_Query(array(
+        'post_type' => 'edicoes',
+        'posts_per_page' => 10,
+      ));
 
-          if ($recent_posts_query->have_posts()) {  while ($recent_posts_query->have_posts()) { $recent_posts_query->the_post(); ?>
+      if ($recent_posts_query->have_posts()) { 
+        while ($recent_posts_query->have_posts()) { 
+          $recent_posts_query->the_post(); ?>
       <div class="item-aside">
         <a href="<?php the_permalink(); ?>" class="edicoes">
           <i class="bi bi-arrow-right-short"></i>
@@ -145,7 +147,11 @@ endif;
           <?php echo get_the_date('j \d\e F \d\e Y'); ?>
         </a>
       </div>
-      <?php }  wp_reset_postdata();}?>
+      <?php 
+        }
+        wp_reset_postdata();
+      }
+      ?>
     </aside>
   </div>
 

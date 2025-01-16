@@ -1,6 +1,9 @@
 <?php
 // Template Name: Notícias
 get_header();
+
+$rapidinhas_id = get_cat_ID('Rapidinhas');
+
 ?>
 <img src="<?php echo esc_url(CFS()->get('banner_moldura')); ?>" class="img-banner bannerMobile" alt="banner">
 
@@ -30,7 +33,9 @@ get_header();
       <div class="grid-list-post gap-124">
         <div>
           <img src="<?php echo esc_url(CFS()->get('full_banner')); ?>" class="img-banner" alt="banner">
-          <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/logo-boletim-filme-b-horizontal.png'); ?>" class="logo" alt="cine B" />
+          <img
+            src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/logo-boletim-filme-b-horizontal.png'); ?>"
+            class="logo" alt="cine B" />
 
           <?php if (function_exists('yoast_breadcrumb')) {
             yoast_breadcrumb('<div id="breadcrumbs">', '</div>');
@@ -51,7 +56,8 @@ get_header();
             <div class="posts">
               <?php while ($boletim_query->have_posts()): $boletim_query->the_post(); ?>
                 <div class="post">
-                  <img src="<?php echo esc_url(CFS()->get('imagem')); ?>" alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
+                  <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
+                    alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
                   <span><?php echo get_the_category_list(', '); ?></span>
                   <a href="<?php the_permalink(); ?>" class="read-more">
                     <h2><?php the_title(); ?></h2>
@@ -66,13 +72,13 @@ get_header();
           <?php endif; ?>
           <div class="pagination">
             <?php
-              echo paginate_links(array(
-                'total' => $boletim_query->max_num_pages,
-                'type' => 'list',
-                'prev_text' => __('<'),
-                'next_text' => __('>'),
-                'mid_size' => 3, 
-              ));
+            echo paginate_links(array(
+              'total' => $boletim_query->max_num_pages,
+              'type' => 'list',
+              'prev_text' => __('<'),
+              'next_text' => __('>'),
+              'mid_size' => 3,
+            ));
             ?>
           </div>
           <?php wp_reset_postdata(); ?>
@@ -83,14 +89,12 @@ get_header();
           <section class="home_lista_rapinhas bannerMobile">
             <div class="owl-carousel rapidinhas">
               <?php
-              $rapidinhas_id = get_cat_ID('Rapidinhas');
 
               $rapidinhas_posts_query = new WP_Query(array(
-                'post_type' => 'post',
+                'post_type' => 'rapidinhas',
                 'posts_per_page' => 9,
                 'orderby' => 'date',
                 'order' => 'DESC',
-                'category__in' => array($rapidinhas_id),
               ));
 
               if ($rapidinhas_posts_query->have_posts()) {
@@ -107,7 +111,8 @@ get_header();
                   }
               ?>
                   <div class="item-rapidinha">
-                    <img src="<?php echo esc_url(CFS()->get('imagem')); ?>" alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
+                    <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
+                      alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
                     <div>
                       <span class="data"><?php echo date_i18n('j \d\e F \d\e Y', strtotime(get_the_date())); ?></span>
                       <h3><?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?></h3>
@@ -130,18 +135,18 @@ get_header();
             <div class="grid gap-32">
               <?php
               $recent_posts_query = new WP_Query(array(
-                'post_type' => 'post',
+                'post_type' => 'rapidinhas',
                 'posts_per_page' => 10,
                 'orderby' => 'date',
                 'order' => 'DESC',
-                'category__in' => array($rapidinhas_id),
               ));
 
               if ($recent_posts_query->have_posts()) {
                 while ($recent_posts_query->have_posts()) {
                   $recent_posts_query->the_post(); ?>
                   <div class="item-rapidinha">
-                    <img src="<?php echo esc_url(CFS()->get('imagem')); ?>" alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
+                    <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
+                      alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
                     <div>
                       <span class="data"><?php echo date_i18n('j \d\e F \d\e Y', strtotime(get_the_date())); ?></span>
                       <h3><?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?></h3>
@@ -164,18 +169,25 @@ get_header();
           <h2>Boletim da semana</h2>
           <?php
           $recent_posts_query = new WP_Query(array(
-            'post_type' => 'post',
+            'post_type' => 'edicoes',
             'posts_per_page' => 5,
             'orderby' => 'date',
             'order' => 'DESC',
-            'category__in' => array($rapidinhas_id),
           ));
-
+          echo '<pre>';
+          var_dump(new WP_Query(array(
+            'post_type' => 'edicoes',
+            'posts_per_page' => 1,
+            'orderby' => 'date',
+            'order' => 'DESC',
+          )));
+          echo '</pre>';
           if ($recent_posts_query->have_posts()) {
             while ($recent_posts_query->have_posts()) {
               $recent_posts_query->the_post(); ?>
               <div class="item-aside">
-                <img src="<?php echo esc_url(CFS()->get('imagem')); ?>" alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
+                <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
+                  alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
                 <a href="<?php the_permalink(); ?>">
                   <h3><?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?></h3>
                 </a>

@@ -90,6 +90,16 @@ endif;
       </section>
       <img src="<?php echo esc_url($super_banner); ?>" class="img-banner" alt="banner">
       <h3 class="titulo">Rapidinha</h3>
+      <section class="home_lista_rapinhas bannerMobile">
+        <div class="owl-carousel rapidinhas">
+          <?php display_rapidinhas(); ?>
+        </div>
+      </section>
+      <section class="home_lista_rapinhas bannerDesktop">
+        <div class="grid gap-32">
+          <?php display_rapidinhas(); ?>
+        </div>
+      </section>
     </div>
     <?php get_template_part('components/Aside/index'); ?>
   </div>
@@ -97,6 +107,77 @@ endif;
 
 <?php endwhile;
 endif; ?>
+<?php
+// Função para exibir rapidinhas
+function display_rapidinhas()
+{
+  $rapidinhas_query = new WP_Query(array(
+    'post_type' => 'rapidinhas',
+    'posts_per_page' => 9,
+    'orderby' => 'date',
+    'order' => 'DESC',
+  ));
+
+  if ($rapidinhas_query->have_posts()) {
+    $post_count = 0;
+
+    while ($rapidinhas_query->have_posts()) {
+      $rapidinhas_query->the_post();
+
+      if ($post_count % 3 == 0) {
+        if ($post_count > 0) {
+          echo '</div></div>';
+        }
+        echo '<div class="item"><div class="grid grid-1-lg gap-32">';
+      }
+?>
+<div class="item-rapidinha">
+  <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
+    alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
+  <div>
+    <span class="data"><?php echo date_i18n('j \d\e F \d\e Y', strtotime(get_the_date())); ?></span>
+    <h3><?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?></h3>
+    <a href="<?php the_permalink(); ?>">Leia mais</a>
+  </div>
+</div>
+<?php
+      $post_count++;
+    }
+    echo '</div></div>';
+  } else {
+    echo '<p>Nenhum post encontrado.</p>';
+  }
+  wp_reset_postdata();
+}
+
+function display_aside_rapidinhas()
+{
+  $aside_query = new WP_Query(array(
+    'post_type' => 'rapidinhas',
+    'posts_per_page' => 5,
+    'orderby' => 'date',
+    'order' => 'DESC'
+  ));
+
+  if ($aside_query->have_posts()) {
+    while ($aside_query->have_posts()) {
+      $aside_query->the_post();
+    ?>
+<div class="item-aside">
+  <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
+    alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
+  <a href="<?php the_permalink(); ?>">
+    <h3><?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?></h3>
+  </a>
+</div>
+<?php
+    }
+  } else {
+    echo '<p>Nenhum post encontrado.</p>';
+  }
+  wp_reset_postdata();
+}
+?>
 <?php get_template_part('components/Footer/index'); ?>
 <?php get_footer(); ?>
 
