@@ -19,22 +19,22 @@ $query = new WP_Query($args);
 
 $termos = get_terms(array(
   'taxonomy'   => 'generos',
-  'hide_empty' => false, 
+  'hide_empty' => false,
 ));
 
 $tecnologias = get_terms(array(
   'taxonomy'   => 'tecnologias',
-  'hide_empty' => false, 
+  'hide_empty' => false,
 ));
 
 $distribuidoras = get_terms(array(
   'taxonomy'   => 'distribuidoras',
-  'hide_empty' => false, 
+  'hide_empty' => false,
 ));
 
 $paises = get_terms(array(
   'taxonomy'   => 'paises',
-  'hide_empty' => false, 
+  'hide_empty' => false,
 ));
 
 $meses = [
@@ -53,22 +53,23 @@ $meses = [
 ];
 
 $args = array(
-  'post_type' => 'filmes', 
-  'posts_per_page' => -1, 
-  'post_status' => 'publish' 
+  'post_type' => 'filmes',
+  'posts_per_page' => -1,
+  'post_status' => 'publish'
 );
 $filmes = new WP_Query($args);
 
-function render_terms($field_key) {
+function render_terms($field_key)
+{
   $distribuicao = CFS()->get($field_key);
   $output = '';
   if (!empty($distribuicao)) {
-      foreach ($distribuicao as $term_id) {
-          $term = get_term($term_id);
-          if ($term && !is_wp_error($term)) {
-              $output .= '<div>' . esc_html($term->name) . '</div>';
-          }
+    foreach ($distribuicao as $term_id) {
+      $term = get_term($term_id);
+      if ($term && !is_wp_error($term)) {
+        $output .= '<div>' . esc_html($term->name) . '</div>';
       }
+    }
   }
 
   return $output;
@@ -84,14 +85,14 @@ if ($query->have_posts()) :
     $super_banner = CFS()->get('super_banner', $banner_id);
 
 ?>
-<img src="<?php echo esc_url($banner_superior); ?>" class="img-banner bannerMobile" alt="banner">
+    <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner bannerMobile" alt="banner">
 
-<div class="container bannerDesktop">
-  <div class="grid-banner-superior">
-    <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner" alt="banner">
-    <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
-  </div>
-</div>
+    <div class="container bannerDesktop">
+      <div class="grid-banner-superior">
+        <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner" alt="banner">
+        <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
+      </div>
+    </div>
 
 <?php
   endwhile;
@@ -153,34 +154,34 @@ endif;
           <select v-model="selectedFilters.mes" id="mes">
             <option disabled value="">Mês</option>
             <?php foreach ($meses as $key => $value) { ?>
-            <option value="<?php echo esc_attr($key); ?>"><?php echo esc_html($value); ?></option>
+              <option value="<?php echo esc_attr($key); ?>"><?php echo esc_html($value); ?></option>
             <?php } ?>
           </select>
           <select v-model="selectedFilters.origem" id="origem">
             <option disabled value="">Origem</option>
-            <?php foreach ($paises as $paise) {?>
-            <option value="<?php echo esc_html($paise->name); ?>"><?php echo $paise->name . PHP_EOL;?>
-            </option>
+            <?php foreach ($paises as $paise) { ?>
+              <option value="<?php echo esc_html($paise->name); ?>"><?php echo $paise->name . PHP_EOL; ?>
+              </option>
             <?php } ?>
           </select>
           <select v-model="selectedFilters.distribuidor" id="distribuidor">
             <option disabled value="">Distribuidor</option>
-            <?php foreach ($distribuidoras as $distribuidora) {?>
-            <option value="<?php echo esc_html($distribuidora->name); ?>"><?php echo $distribuidora->name . PHP_EOL;?>
-            </option>
+            <?php foreach ($distribuidoras as $distribuidora) { ?>
+              <option value="<?php echo esc_html($distribuidora->name); ?>"><?php echo $distribuidora->name . PHP_EOL; ?>
+              </option>
             <?php } ?>
           </select>
           <select v-model="selectedFilters.genero" id="genero">
             <option disabled value="">Gênero</option>
-            <?php foreach ($termos as $termo) {?>
-            <option value="<?php echo esc_html($termo->name); ?>"><?php echo $termo->name . PHP_EOL;?></option>
+            <?php foreach ($termos as $termo) { ?>
+              <option value="<?php echo esc_html($termo->name); ?>"><?php echo $termo->name . PHP_EOL; ?></option>
             <?php } ?>
           </select>
           <select v-model="selectedFilters.tecnologia" id="tecnologia">
             <option disabled value="">Tecnologia</option>
-            <?php foreach ($tecnologias as $tecnologia) {?>
-            <option value="<?php echo esc_html($tecnologia->name); ?>"><?php echo $tecnologia->name . PHP_EOL;?>
-            </option>
+            <?php foreach ($tecnologias as $tecnologia) { ?>
+              <option value="<?php echo esc_html($tecnologia->name); ?>"><?php echo $tecnologia->name . PHP_EOL; ?>
+              </option>
             <?php } ?>
           </select>
         </div>
@@ -331,163 +332,163 @@ endif;
 <?php get_footer(); ?>
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <script>
-new Vue({
-  el: "#app",
-  data: {
-    teste: "teste",
-    ativoItem: 'lista',
-    filmes: [],
-    anos: [],
-    selectedFilters: {
-      ano: '',
-      mes: '',
-      origem: '',
-      distribuidor: '',
-      genero: '',
-      tecnologia: ''
+  new Vue({
+    el: "#app",
+    data: {
+      teste: "teste",
+      ativoItem: 'lista',
+      filmes: [],
+      anos: [],
+      selectedFilters: {
+        ano: '',
+        mes: '',
+        origem: '',
+        distribuidor: '',
+        genero: '',
+        tecnologia: ''
+      },
+      filteredMovies: [],
     },
-    filteredMovies: [],
-  },
-  methods: {
-    async getLitsaFilmes(ano = this.selectedFilters.ano) {
-      try {
-        const cacheKey = `filmes_${ano}`;
-        const cacheExpirationTime = 2 * 60 * 60 * 1000;
+    methods: {
+      async getLitsaFilmes(ano = this.selectedFilters.ano) {
+        try {
+          const cacheKey = `filmes_${ano}`;
+          const cacheExpirationTime = 2 * 60 * 60 * 1000;
 
-        // Verifica se os dados estão no localStorage
-        const cachedData = localStorage.getItem(cacheKey);
-        const cachedTime = localStorage.getItem(`${cacheKey}_time`);
+          // Verifica se os dados estão no localStorage
+          const cachedData = localStorage.getItem(cacheKey);
+          const cachedTime = localStorage.getItem(`${cacheKey}_time`);
 
-        if (cachedData && cachedTime) {
-          const currentTime = new Date().getTime();
-          const cacheAge = currentTime - parseInt(cachedTime);
+          if (cachedData && cachedTime) {
+            const currentTime = new Date().getTime();
+            const cacheAge = currentTime - parseInt(cachedTime);
 
-          if (cacheAge < cacheExpirationTime) {
-            this.filmes = JSON.parse(cachedData);
-            return;
-          } else {
-            localStorage.removeItem(cacheKey);
-            localStorage.removeItem(`${cacheKey}_time`);
+            if (cacheAge < cacheExpirationTime) {
+              this.filmes = JSON.parse(cachedData);
+              return;
+            } else {
+              localStorage.removeItem(cacheKey);
+              localStorage.removeItem(`${cacheKey}_time`);
+            }
           }
+
+          console.log(`Fazendo requisição para o ano ${ano}`);
+          const res = await fetch(`${window.location.origin}/wp-json/api/v1/filmes?ano=${ano}`);
+          if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
+          const data = await res.json();
+
+          this.filmes = data;
+          localStorage.setItem(cacheKey, JSON.stringify(data));
+          localStorage.setItem(`${cacheKey}_time`, new Date().getTime().toString());
+        } catch (error) {
+          console.error("Erro ao buscar filmes:", error);
         }
+      },
 
-        console.log(`Fazendo requisição para o ano ${ano}`);
-        const res = await fetch(`http://filme-b.local/wp-json/api/v1/filmes?ano=${ano}`);
-        if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
-        const data = await res.json();
+      async getListaAnos() {
+        try {
+          const res = await fetch(`${window.location.origin}/wp-json/api/v1/anos-filmes`);
+          if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
+          const data = await res.json();
 
-        this.filmes = data;
-        localStorage.setItem(cacheKey, JSON.stringify(data));
-        localStorage.setItem(`${cacheKey}_time`, new Date().getTime().toString());
-      } catch (error) {
-        console.error("Erro ao buscar filmes:", error);
-      }
-    },
-
-    async getListaAnos() {
-      try {
-        const res = await fetch('http://filme-b.local/wp-json/api/v1/anos-filmes');
-        if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
-        const data = await res.json();
-
-        this.anos = data;
-      } catch (error) {
-        console.error("Erro ao buscar anos:", error);
-      }
-    },
-
-    setTabAtivo(tab) {
-      this.ativoItem = tab;
-    },
-
-    traduzirMesParaPortugues(mesIngles) {
-      const mesesIngles = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-      ];
-
-      const mesesPortugues = [
-        "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-        "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-      ];
-
-      const index = mesesIngles.indexOf(mesIngles.charAt(0).toUpperCase() + mesIngles.slice(1));
-
-      if (index !== -1) {
-        return mesesPortugues[index];
-      } else {
-        return "Mês inválido";
-      }
-    },
-
-    hoverCard(e) {
-      const cards = this.$el.querySelectorAll(".card");
-
-      cards.forEach((card) => {
-        const rect = card.getBoundingClientRect();
-        const mouseX = ((e.clientX - rect.left) / rect.width) * 100;
-        const mouseY = ((e.clientY - rect.top) / rect.height) * 100;
-
-        const cardInfo = card.querySelector(".info");
-        if (cardInfo) {
-          cardInfo.style.position = 'absolute';
-          cardInfo.style.left = `${mouseX}%`;
-          cardInfo.style.top = `${mouseY}%`;
+          this.anos = data;
+        } catch (error) {
+          console.error("Erro ao buscar anos:", error);
         }
-      });
-    }
-  },
-  computed: {
-    FiltrarFilme() {
-      return this.filmes.filter((filme) => {
-        const filtroAno = this.selectedFilters.ano ?
-          filme.year === this.selectedFilters.ano :
-          true;
+      },
 
-        const filtroMes = this.selectedFilters.mes ?
-          filme.months && filme.months.some((mes) => mes.month === this.selectedFilters.mes) :
-          true;
+      setTabAtivo(tab) {
+        this.ativoItem = tab;
+      },
 
-        const filtroOrigem = this.selectedFilters.origem ?
-          filme.months &&
-          filme.months.flatMap((mes) =>
-            mes.movies.filter((movie) => movie.paises.includes(this.selectedFilters.origem))
-          ).length > 0 :
-          true;
+      traduzirMesParaPortugues(mesIngles) {
+        const mesesIngles = [
+          "January", "February", "March", "April", "May", "June",
+          "July", "August", "September", "October", "November", "December"
+        ];
 
-        const filtroDistribuidor = this.selectedFilters.distribuidor ?
-          filme.months?.some((mes) =>
-            mes.movies.some((movie) => movie.distribuidoras.includes(this.selectedFilters.distribuidor))
-          ) :
-          true;
+        const mesesPortugues = [
+          "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+          "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+        ];
 
-        const filtroGenero = this.selectedFilters.genero ?
-          filme.months?.some((mes) =>
-            mes.movies.some((movie) => movie.generos.includes(this.selectedFilters.genero))
-          ) :
-          true;
+        const index = mesesIngles.indexOf(mesIngles.charAt(0).toUpperCase() + mesIngles.slice(1));
 
-        const filtroTecnologia = this.selectedFilters.tecnologia ?
-          filme.months?.some((mes) =>
-            mes.movies.some((movie) => movie.tecnologias.includes(this.selectedFilters.tecnologia))
-          ) :
-          true;
+        if (index !== -1) {
+          return mesesPortugues[index];
+        } else {
+          return "Mês inválido";
+        }
+      },
 
-        return filtroAno && filtroMes && filtroOrigem && filtroDistribuidor && filtroGenero && filtroTecnologia;
-      });
+      hoverCard(e) {
+        const cards = this.$el.querySelectorAll(".card");
+
+        cards.forEach((card) => {
+          const rect = card.getBoundingClientRect();
+          const mouseX = ((e.clientX - rect.left) / rect.width) * 100;
+          const mouseY = ((e.clientY - rect.top) / rect.height) * 100;
+
+          const cardInfo = card.querySelector(".info");
+          if (cardInfo) {
+            cardInfo.style.position = 'absolute';
+            cardInfo.style.left = `${mouseX}%`;
+            cardInfo.style.top = `${mouseY}%`;
+          }
+        });
+      }
     },
-  },
-  watch: {
-    'selectedFilters.ano'(newVal) {
-      this.getLitsaFilmes(newVal);
-    }
-  },
-  created() {
-    const anoAtual = new Date().getFullYear().toString();
-    this.selectedFilters.ano = anoAtual;
+    computed: {
+      FiltrarFilme() {
+        return this.filmes.filter((filme) => {
+          const filtroAno = this.selectedFilters.ano ?
+            filme.year === this.selectedFilters.ano :
+            true;
 
-    this.getListaAnos();
-    this.getLitsaFilmes(anoAtual);
-  },
-});
+          const filtroMes = this.selectedFilters.mes ?
+            filme.months && filme.months.some((mes) => mes.month === this.selectedFilters.mes) :
+            true;
+
+          const filtroOrigem = this.selectedFilters.origem ?
+            filme.months &&
+            filme.months.flatMap((mes) =>
+              mes.movies.filter((movie) => movie.paises.includes(this.selectedFilters.origem))
+            ).length > 0 :
+            true;
+
+          const filtroDistribuidor = this.selectedFilters.distribuidor ?
+            filme.months?.some((mes) =>
+              mes.movies.some((movie) => movie.distribuidoras.includes(this.selectedFilters.distribuidor))
+            ) :
+            true;
+
+          const filtroGenero = this.selectedFilters.genero ?
+            filme.months?.some((mes) =>
+              mes.movies.some((movie) => movie.generos.includes(this.selectedFilters.genero))
+            ) :
+            true;
+
+          const filtroTecnologia = this.selectedFilters.tecnologia ?
+            filme.months?.some((mes) =>
+              mes.movies.some((movie) => movie.tecnologias.includes(this.selectedFilters.tecnologia))
+            ) :
+            true;
+
+          return filtroAno && filtroMes && filtroOrigem && filtroDistribuidor && filtroGenero && filtroTecnologia;
+        });
+      },
+    },
+    watch: {
+      'selectedFilters.ano'(newVal) {
+        this.getLitsaFilmes(newVal);
+      }
+    },
+    created() {
+      const anoAtual = new Date().getFullYear().toString();
+      this.selectedFilters.ano = anoAtual;
+
+      this.getListaAnos();
+      this.getLitsaFilmes(anoAtual);
+    },
+  });
 </script>
