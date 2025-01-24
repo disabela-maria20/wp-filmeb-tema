@@ -17,6 +17,10 @@ function wpb_image_editor_default_to_gd($editors)
 
 function use_scripts()
 {
+  if (!is_page('filmes')) {
+    wp_enqueue_style('base-style', get_template_directory_uri() . '/assets/css/base.min.css', array(), '1.0.0', 'all');
+  }
+
   wp_enqueue_style('base-style', get_template_directory_uri() . '/assets/css/base.min.css', array(), '1.0.0', 'all');
   wp_enqueue_script('jquery');
   wp_enqueue_script('owl-carousel', get_template_directory_uri() . '/assets/js/lib/owl.carousel.min.js', array('jquery'), '2.3.4', true);

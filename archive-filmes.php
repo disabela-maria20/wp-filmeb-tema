@@ -332,6 +332,9 @@ endif;
 <?php get_footer(); ?>
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <script>
+  const isLocalHost = window.location.host == "http://localhost/" ? 'http://localhost/FilmeB' :
+    'https://filmeb.isabelamribeiro.com.br/'
+
   new Vue({
     el: "#app",
     data: {
@@ -373,7 +376,7 @@ endif;
           }
 
           console.log(`Fazendo requisição para o ano ${ano}`);
-          const res = await fetch(`${window.location.origin}/wp-json/api/v1/filmes?ano=${ano}`);
+          const res = await fetch(`${isLocalHost}/wp-json/api/v1/filmes?ano=${ano}`);
           if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
           const data = await res.json();
 
@@ -386,8 +389,9 @@ endif;
       },
 
       async getListaAnos() {
+
         try {
-          const res = await fetch(`${window.location.origin}/wp-json/api/v1/anos-filmes`);
+          const res = await fetch(`${isLocalHost}/wp-json/api/v1/anos-filmes`);
           if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
           const data = await res.json();
 
