@@ -1,5 +1,4 @@
 <?php
-// Registrar Custom Post Type "Filmes"
 add_action('init', 'registrar_taxonomias_filmes');
 function registrar_taxonomias_filmes()
 {
@@ -28,12 +27,11 @@ function registrar_taxonomias_filmes()
                     'new_item_name'     => "Novo $nome",
                     'menu_name'         => $nome,
                 ),
-                'hierarchical' => true, // True para categorias, False para tags
+                'hierarchical' => true,
                 'show_ui'      => true,
                 'show_in_menu' => true,
                 'show_in_rest' => true,
                 'rewrite'      => array('slug' => $slug),
-
             )
         );
     }
@@ -42,7 +40,7 @@ function registrar_taxonomias_filmes()
 function filme_scheme($post)
 {
     $filme = new stdClass();
-    $filme->title =  get_the_title($post);
+    $filme->title = get_the_title($post);
     $filme->link = get_permalink($post);
     $filme->titulo_original = cfs()->get('titulo_original', $post->ID);
     $filme->trailer = esc_url(cfs()->get('trailer', $post->ID));
@@ -65,76 +63,18 @@ function filme_scheme($post)
     $filme->estreia = sanitize_text_field(cfs()->get('estreia', $post->ID));
     $filme->duracao_minutos = intval(cfs()->get('duracao_minutos', $post->ID));
 
-    // Distribuidoras
-    $distribuidoras = cfs()->get('distribuicao', $post->ID);
-    $filme->distribuidoras = [];
-    if (is_array($distribuidoras)) {
-        foreach ($distribuidoras as $distribuidora) {
-            $term = get_term($distribuidora);
-            if ($term && !is_wp_error($term)) {
-                $filme->distribuidoras[] = $term->name;
-            }
-        }
-    }
 
-    // Países
-    $paises = cfs()->get('paises', $post->ID);
-    $filme->paises = [];
-    if (is_array($paises)) {
-        foreach ($paises as $pais) {
-            $term = get_term($pais);
-            if ($term && !is_wp_error($term)) {
-                $filme->paises[] = $term->name;
-            }
-        }
-    }
+    $data_estreia = $filme->estreia;
+    if (!empty($data_estreia)) {
+        $ano_estreia = date('Y', strtotime($data_estreia));
+        $mes_estreia = date('F', strtotime($data_estreia));
 
-    // Gêneros
-    $generos = cfs()->get('generos', $post->ID);
-    $filme->generos = [];
-    if (is_array($generos)) {
-        foreach ($generos as $genero) {
-            $term = get_term($genero);
-            if ($term && !is_wp_error($term)) {
-                $filme->generos[] = $term->name;
-            }
-        }
-    }
+        $filme->ano = (int)$ano_estreia;
+        $filme->mes = $mes_estreia;
+    } else {
 
-    // Classificações
-    $classificacoes = cfs()->get('classificacao', $post->ID);
-    $filme->classificacoes = [];
-    if (is_array($classificacoes)) {
-        foreach ($classificacoes as $classificacao) {
-            $term = get_term($classificacao);
-            if ($term && !is_wp_error($term)) {
-                $filme->classificacoes[] = $term->name;
-            }
-        }
-    }
-
-    // Tecnologias
-    $tecnologias = cfs()->get('tecnologias', $post->ID);
-    $filme->tecnologias = [];
-    if (is_array($tecnologias)) {
-        foreach ($tecnologias as $tecnologia) {
-            $term = get_term($tecnologia);
-            if ($term && !is_wp_error($term)) {
-                $filme->tecnologias[] = $term->name;
-            }
-        }
-    }
-
-    // Feriados
-    $feriados = cfs()->get('feriados', $post->ID);
-    $filme->feriados = [];
-    if (is_array($feriados)) {
-        foreach ($feriados as $feriado) {
-            $term = get_term($feriado);
-            if ($term && !is_wp_error($term)) {
-                $filme->feriados[] = $term->name;
-            }
-        }
+        $filme->ano = null;
+        $filme->mes = null;
     }
 
     return $filme;
@@ -143,11 +83,10 @@ function filme_scheme($post)
 function api_filmes_get($request)
 {
     $q = isset($request['q']) ? sanitize_text_field($request['q']) : '';
-    $ano = isset($request['ano']) ? sanitize_text_field($request['ano']) : ''; // Captura o parâmetro "ano"
+    $ano = isset($request['ano']) ? sanitize_text_field($request['ano']) : '';
     $page = isset($request['page']) ? sanitize_text_field($request['page']) : 1;
     $limit = isset($request['limit']) ? sanitize_text_field($request['limit']) : 20;
 
-    // Configura a consulta
     $query = array(
         'post_type' => 'filmes',
         'posts_per_page' => $limit,
@@ -155,13 +94,12 @@ function api_filmes_get($request)
         's' => $q,
     );
 
-    // Se o parâmetro "ano" for fornecido, adiciona à consulta
     if ($ano) {
         $query['meta_query'] = array(
             array(
-                'key' => 'estreia', // Ou o campo de data que você usa para armazenar o ano
+                'key' => 'estreia',
                 'value' => $ano,
-                'compare' => 'LIKE', // O 'LIKE' pode ser utilizado para verificar o ano na data
+                'compare' => 'LIKE',
                 'type' => 'CHAR'
             )
         );
@@ -171,80 +109,23 @@ function api_filmes_get($request)
     $posts = $loop->posts;
     $total = $loop->found_posts;
 
-    $filmes_agrupados = [];
+    $filmes = [];
 
     foreach ($posts as $post) {
         $filme = filme_scheme($post);
-        $data_estreia = $filme->estreia;
-
-        if (!empty($data_estreia)) {
-            $ano_filme = date('Y', strtotime($data_estreia));
-
-            if (!isset($filmes_agrupados[$ano_filme])) {
-                $filmes_agrupados[$ano_filme] = [
-                    'year' => $ano_filme,
-                    'months' => []
-                ];
-            }
-
-            $mes = date('F', strtotime($data_estreia));
-            $mes_existe = false;
-
-            foreach ($filmes_agrupados[$ano_filme]['months'] as &$item) {
-                if ($item['month'] === $mes) {
-                    $item['movies'][] = $filme;
-                    $mes_existe = true;
-                    break;
-                }
-            }
-
-            if (!$mes_existe) {
-                $filmes_agrupados[$ano_filme]['months'][] = [
-                    'month' => $mes,
-                    'movies' => [$filme]
-                ];
-            }
-        } else {
-            if (!isset($filmes_agrupados['sem_data'])) {
-                $filmes_agrupados['sem_data'] = [
-                    'year' => 'sem_data',
-                    'movies' => []
-                ];
-            }
-            $filmes_agrupados['sem_data']['movies'][] = $filme;
-        }
+        $filmes[] = $filme;
     }
 
-    // Organiza os filmes por ano
-    $result = array_values($filmes_agrupados); // Converte os anos para um array contínuo
-    usort($result, function ($a, $b) {
-        return $b['year'] - $a['year']; // Ordena os anos de forma decrescente
+    usort($filmes, function ($a, $b) {
+        return $b->ano - $a->ano;
     });
 
-    // Ordena os meses dentro de cada ano
-    foreach ($result as &$ano_filmes) {
-        usort($ano_filmes['months'], function ($a, $b) {
-            return strcmp($a['month'], $b['month']);
-        });
-    }
-
-    // Resposta com a estrutura desejada
-    $response = rest_ensure_response($result);
+    $response = rest_ensure_response($filmes);
     $response->header('X-Total-Count', $total);
     return $response;
 }
 
-function register_filmes_api_endpoints()
-{
-    register_rest_route('api/v1', '/filmes', [
-        'methods' => 'GET',
-        'callback' => 'api_filmes_get'
-    ]);
-}
-add_action('rest_api_init', 'register_filmes_api_endpoints');
-
-
-function api_anos_filmes_get($request)
+function api_anos_filmes_get()
 {
     $query = array(
         'post_type' => 'filmes',
@@ -274,11 +155,77 @@ function api_anos_filmes_get($request)
     return rest_ensure_response($anos_filmes);
 }
 
-function register_anos_filmes_api_endpoints()
+function api_filmes_post($request)
 {
+    $data = $request->get_json_params();
+
+    $titulo = isset($data['titulo']) ? sanitize_text_field($data['titulo']) : '';
+    $titulo_original = isset($data['titulo_original']) ? sanitize_text_field($data['titulo_original']) : '';
+    $trailer = isset($data['trailer']) ? esc_url_raw($data['trailer']) : '';
+    $cartaz = isset($data['cartaz']) ? esc_url_raw($data['cartaz']) : '';
+    $capa = isset($data['capa']) ? esc_url_raw($data['capa']) : '';
+    $estreia = isset($data['estreia']) ? sanitize_text_field($data['estreia']) : '';
+    $duracao_minutos = isset($data['duracao_minutos']) ? intval($data['duracao_minutos']) : 0;
+    $direcao = isset($data['direcao']) ? sanitize_text_field($data['direcao']) : '';
+    $roteiro = isset($data['roteiro']) ? sanitize_text_field($data['roteiro']) : '';
+    $elenco = isset($data['elenco']) ? sanitize_text_field($data['elenco']) : '';
+    $fotos = isset($data['fotos']) ? $data['fotos'] : [];
+
+
+    $post_data = [
+        'post_type'    => 'filmes',
+        'post_title'   => $titulo,
+        'post_status'  => 'publish',
+        'post_content' => '',
+    ];
+
+
+    $post_id = wp_insert_post($post_data);
+
+    if ($post_id) {
+
+        $field_data = [
+            'titulo_original' => $titulo_original,
+            'trailer' => $trailer,
+            'cartaz' => $cartaz,
+            'capa' => $capa,
+            'estreia' => $estreia,
+            'duracao_minutos' => $duracao_minutos,
+            'direcao' => $direcao,
+            'roteiro' => $roteiro,
+            'elenco' => $elenco,
+            'fotos' => $fotos,
+        ];
+
+
+        $teste =  CFS()->save($field_data, ['ID' => $post_id]);
+        echo $teste;
+        return rest_ensure_response([
+            'message' => 'Filme criado com sucesso!',
+            'post_id' => $post_id,
+        ]);
+    }
+
+    return new WP_Error('filme_nao_criado', 'Erro ao criar o filme', ['status' => 500]);
+}
+
+
+
+function register_filmes_api_endpoints()
+{
+    register_rest_route('api/v1', '/filmes', [
+        'methods' => 'GET',
+        'callback' => 'api_filmes_get',
+    ]);
+
+    register_rest_route('api/v1', '/filmes', [
+        'methods' => 'POST',
+        'callback' => 'api_filmes_post',
+    ]);
+
     register_rest_route('api/v1', '/anos-filmes', [
         'methods' => 'GET',
         'callback' => 'api_anos_filmes_get'
     ]);
 }
-add_action('rest_api_init', 'register_anos_filmes_api_endpoints');
+add_action('rest_api_init', 'register_filmes_api_endpoints');
