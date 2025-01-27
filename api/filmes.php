@@ -77,6 +77,79 @@ function filme_scheme($post)
         $filme->mes = null;
     }
 
+
+    $distribuidoras = cfs()->get('distribuicao', $post->ID);
+    $filme->distribuidoras = [];
+    if (is_array($distribuidoras)) {
+        foreach ($distribuidoras as $distribuidora) {
+            $term = get_term($distribuidora);
+            if ($term && !is_wp_error($term)) {
+                $filme->distribuidoras[] = $term->name;
+            }
+        }
+    }
+
+
+
+
+    $paises = cfs()->get('paises', $post->ID);
+    $filme->paises = [];
+    if (is_array($paises)) {
+        foreach ($paises as $pais) {
+            $term = get_term($pais);
+            if ($term && !is_wp_error($term)) {
+                $filme->paises[] = $term->name;
+            }
+        }
+    }
+
+
+    $generos = cfs()->get('generos', $post->ID);
+    $filme->generos = [];
+    if (is_array($generos)) {
+        foreach ($generos as $genero) {
+            $term = get_term($genero);
+            if ($term && !is_wp_error($term)) {
+                $filme->generos[] = $term->name;
+            }
+        }
+    }
+
+
+    $classificacoes = cfs()->get('classificacao', $post->ID);
+    $filme->classificacoes = [];
+    if (is_array($classificacoes)) {
+        foreach ($classificacoes as $classificacao) {
+            $term = get_term($classificacao);
+            if ($term && !is_wp_error($term)) {
+                $filme->classificacoes[] = $term->name;
+            }
+        }
+    }
+
+
+    $tecnologias = cfs()->get('tecnologias', $post->ID);
+    $filme->tecnologias = [];
+    if (is_array($tecnologias)) {
+        foreach ($tecnologias as $tecnologia) {
+            $term = get_term($tecnologia);
+            if ($term && !is_wp_error($term)) {
+                $filme->tecnologias[] = $term->name;
+            }
+        }
+    }
+
+
+    $feriados = cfs()->get('feriados', $post->ID);
+    $filme->feriados = [];
+    if (is_array($feriados)) {
+        foreach ($feriados as $feriado) {
+            $term = get_term($feriado);
+            if ($term && !is_wp_error($term)) {
+                $filme->feriados[] = $term->name;
+            }
+        }
+    }
     return $filme;
 }
 
@@ -87,6 +160,14 @@ function api_filmes_get($request)
     $page = isset($request['page']) ? sanitize_text_field($request['page']) : 1;
     $limit = isset($request['limit']) ? sanitize_text_field($request['limit']) : 20;
 
+    // Filtros adicionais
+    $distribuicao = isset($request['distribuicao']) ? $request['distribuicao'] : '';
+    $paises = isset($request['paises']) ? $request['paises'] : '';
+    $generos = isset($request['generos']) ? $request['generos'] : '';
+    $classificacoes = isset($request['classificacoes']) ? $request['classificacoes'] : '';
+    $tecnologias = isset($request['tecnologias']) ? $request['tecnologias'] : '';
+    $feriados = isset($request['feriados']) ? $request['feriados'] : '';
+
     $query = array(
         'post_type' => 'filmes',
         'posts_per_page' => $limit,
@@ -94,17 +175,79 @@ function api_filmes_get($request)
         's' => $q,
     );
 
+    // Filtro de ano
     if ($ano) {
-        $query['meta_query'] = array(
-            array(
-                'key' => 'estreia',
-                'value' => $ano,
-                'compare' => 'LIKE',
-                'type' => 'CHAR'
-            )
+        $query['meta_query'][] = array(
+            'key' => 'estreia',
+            'value' => $ano,
+            'compare' => 'LIKE',
+            'type' => 'CHAR'
         );
     }
 
+    // Filtros de taxonomias (somente se fornecidos)
+    $tax_query = [];
+
+    if ($distribuicao) {
+        $tax_query[] = array(
+            'taxonomy' => 'distribuicao',
+            'field' => 'id',
+            'terms' => $distribuicao,
+            'operator' => 'IN',
+        );
+    }
+
+    if ($paises) {
+        $tax_query[] = array(
+            'taxonomy' => 'paises',
+            'field' => 'id',
+            'terms' => $paises,
+            'operator' => 'IN',
+        );
+    }
+
+    if ($generos) {
+        $tax_query[] = array(
+            'taxonomy' => 'generos',
+            'field' => 'id',
+            'terms' => $generos,
+            'operator' => 'IN',
+        );
+    }
+
+    if ($classificacoes) {
+        $tax_query[] = array(
+            'taxonomy' => 'classificacao',
+            'field' => 'id',
+            'terms' => $classificacoes,
+            'operator' => 'IN',
+        );
+    }
+
+    if ($tecnologias) {
+        $tax_query[] = array(
+            'taxonomy' => 'tecnologias',
+            'field' => 'id',
+            'terms' => $tecnologias,
+            'operator' => 'IN',
+        );
+    }
+
+    if ($feriados) {
+        $tax_query[] = array(
+            'taxonomy' => 'feriados',
+            'field' => 'id',
+            'terms' => $feriados,
+            'operator' => 'IN',
+        );
+    }
+
+    // Se houver filtros de taxonomia, adiciona ao query
+    if (!empty($tax_query)) {
+        $query['tax_query'] = $tax_query;
+    }
+
+    // Realiza a consulta
     $loop = new WP_Query($query);
     $posts = $loop->posts;
     $total = $loop->found_posts;
@@ -124,6 +267,7 @@ function api_filmes_get($request)
     $response->header('X-Total-Count', $total);
     return $response;
 }
+
 
 function api_anos_filmes_get()
 {
@@ -155,6 +299,31 @@ function api_anos_filmes_get()
     return rest_ensure_response($anos_filmes);
 }
 
+function obter_term_ids($itens, $taxonomia)
+{
+    $ids = [];
+
+    foreach ($itens as $item) {
+        if (is_numeric($item)) {
+
+            $ids[] = intval($item);
+        } else {
+
+            $term = get_term_by('name', $item, $taxonomia);
+
+            if ($term && !is_wp_error($term)) {
+
+                $ids[] = $term->term_id;
+            } else {
+
+                error_log('Termo não encontrado para ' . $taxonomia . ': ' . $item);
+            }
+        }
+    }
+
+    return $ids;
+}
+
 function api_filmes_post($request)
 {
     $data = $request->get_json_params();
@@ -170,6 +339,21 @@ function api_filmes_post($request)
     $roteiro = isset($data['roteiro']) ? sanitize_text_field($data['roteiro']) : '';
     $elenco = isset($data['elenco']) ? sanitize_text_field($data['elenco']) : '';
     $fotos = isset($data['fotos']) ? $data['fotos'] : [];
+    $distribuicao = isset($data['distribuicao']) ? (array) $data['distribuicao'] : [];
+    $paises = isset($data['paises']) ? (array) $data['paises'] : [];
+
+    $generos = isset($data['generos']) ? (array) $data['generos'] : [];
+    $classificacoes = isset($data['classificacao']) ? (array) $data['classificacao'] : [];
+    $tecnologias = isset($data['tecnologias']) ? (array) $data['tecnologias'] : [];
+    $feriados = isset($data['feriados']) ? (array) $data['paisesferiados'] : [];
+
+    $distribuicao_ids = obter_term_ids($distribuicao, 'distribuidoras');
+    $paises_ids = obter_term_ids($paises, 'paises');
+    $genero_ids = obter_term_ids($generos, 'generos');
+    $classificacao_ids = obter_term_ids($classificacoes, 'classificacoes');
+    $tecnologia_ids = obter_term_ids($tecnologias, 'tecnologias');
+    $feriado_ids = obter_term_ids($feriados, 'feriados');
+
 
 
     $post_data = [
@@ -178,7 +362,6 @@ function api_filmes_post($request)
         'post_status'  => 'publish',
         'post_content' => '',
     ];
-
 
     $post_id = wp_insert_post($post_data);
 
@@ -195,11 +378,17 @@ function api_filmes_post($request)
             'roteiro' => $roteiro,
             'elenco' => $elenco,
             'fotos' => $fotos,
+            'distribuicao' => $distribuicao_ids,
+            'paises' => $paises_ids,
+            'generos' => $genero_ids,
+            'classificacoes' => $classificacao_ids,
+            'tecnologias' => $tecnologia_ids,
+            'feriados' => $feriado_ids,
         ];
 
 
-        $teste =  CFS()->save($field_data, ['ID' => $post_id]);
-        echo $teste;
+        CFS()->save($field_data, ['ID' => $post_id]);
+
         return rest_ensure_response([
             'message' => 'Filme criado com sucesso!',
             'post_id' => $post_id,
@@ -208,8 +397,6 @@ function api_filmes_post($request)
 
     return new WP_Error('filme_nao_criado', 'Erro ao criar o filme', ['status' => 500]);
 }
-
-
 
 function register_filmes_api_endpoints()
 {
