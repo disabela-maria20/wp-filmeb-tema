@@ -146,48 +146,51 @@ endif;
       </div>
       <section class="grid-select">
         <div class="grid grid-7-xl gap-22 select-itens">
-          <select id="ano" v-model="selectedFilters.ano">
+          <select id="ano" v-model="selectedFilters.ano" @change="getListaFilmes">
             <option disabled value="">Ano</option>
-            <option v-for="ano in anos" :value="ano">{{ano}}</option>
+            <option v-for="ano in anos" :value="ano" :key="ano">{{ ano }}</option>
           </select>
 
-          <select v-model="selectedFilters.mes" id="mes">
+          <select v-model="selectedFilters.mes" id="mes" @change="getListaFilmes">
             <option disabled value="">Mês</option>
             <?php foreach ($meses as $key => $value) { ?>
               <option value="<?php echo esc_attr($key); ?>"><?php echo esc_html($value); ?></option>
             <?php } ?>
           </select>
-          <select v-model="selectedFilters.origem" id="origem">
+
+          <select v-model="selectedFilters.origem" id="origem" @change="getListaFilmes">
             <option disabled value="">Origem</option>
             <?php foreach ($paises as $paise) { ?>
-              <option value="<?php echo esc_html($paise->name); ?>"><?php echo $paise->name . PHP_EOL; ?>
-              </option>
+              <option value="<?php echo esc_html($paise->name); ?>"><?php echo esc_html($paise->name); ?></option>
             <?php } ?>
           </select>
-          <select v-model="selectedFilters.distribuidor" id="distribuidor">
+
+          <select v-model="selectedFilters.distribuidor" id="distribuidor" @change="getListaFilmes">
             <option disabled value="">Distribuidor</option>
             <?php foreach ($distribuidoras as $distribuidora) { ?>
-              <option value="<?php echo esc_html($distribuidora->name); ?>"><?php echo $distribuidora->name . PHP_EOL; ?>
+              <option value="<?php echo esc_html($distribuidora->name); ?>"><?php echo esc_html($distribuidora->name); ?>
               </option>
             <?php } ?>
           </select>
-          <select v-model="selectedFilters.genero" id="genero">
+
+          <select v-model="selectedFilters.genero" id="genero" @change="getListaFilmes">
             <option disabled value="">Gênero</option>
             <?php foreach ($termos as $termo) { ?>
-              <option value="<?php echo esc_html($termo->name); ?>"><?php echo $termo->name . PHP_EOL; ?></option>
+              <option value="<?php echo esc_html($termo->name); ?>"><?php echo esc_html($termo->name); ?></option>
             <?php } ?>
           </select>
-          <select v-model="selectedFilters.tecnologia" id="tecnologia">
+
+          <select v-model="selectedFilters.tecnologia" id="tecnologia" @change="getListaFilmes">
             <option disabled value="">Tecnologia</option>
             <?php foreach ($tecnologias as $tecnologia) { ?>
-              <option value="<?php echo esc_html($tecnologia->name); ?>"><?php echo $tecnologia->name . PHP_EOL; ?>
+              <option value="<?php echo esc_html($tecnologia->name); ?>"><?php echo esc_html($tecnologia->name); ?>
               </option>
             <?php } ?>
           </select>
         </div>
       </section>
       <section class="area-filmes">
-        <div v-for="(filme, index) in FiltrarFilme" :key="index">
+        <!-- <div v-for="(filme, index) in FiltrarFilme" :key="index">
           <div v-for="card in filme.months">
             <div class="lista-filmes" v-if="ativoItem === 'lista'" id="lista">
               <h2>
@@ -236,7 +239,7 @@ endif;
             </div>
           </div>
 
-        </div>
+        </div> -->
 
         <div class="tabela-distribuidora" v-if="ativoItem === 'tableDistribuidora'" id="tableDistribuidora">
           <table>
@@ -281,7 +284,7 @@ endif;
         </div>
       </section>
       <div class="tabela-filme" v-if="ativoItem === 'tabela'" id="tabela">
-        <div v-for="(filme, index) in FiltrarFilme" :key="index">
+        <!-- <div v-for="(filme, index) in FiltrarFilme" :key="index">
           <div v-for="card in filme.months">
             <h2>
               <i class="bi bi-calendar-check-fill"></i>
@@ -321,7 +324,7 @@ endif;
               </tbody>
             </table>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -332,17 +335,18 @@ endif;
 <?php get_footer(); ?>
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <script>
-  const isLocalHost = window.location.host == "http://localhost/" ? 'http://localhost/FilmeB' :
-    'https://filmeb.isabelamribeiro.com.br/'
-
   new Vue({
     el: "#app",
     data: {
-      teste: "teste",
       ativoItem: 'lista',
       filmes: [],
       anos: [],
+      currentPage: 1, // Página atual
+      totalPages: 0, // Total de páginas
+      totalFilmes: 0, // Total de filmes
+      limit: 20, // Número de filmes por página
       selectedFilters: {
+        q: "",
         ano: '',
         mes: '',
         origem: '',
@@ -353,45 +357,35 @@ endif;
       filteredMovies: [],
     },
     methods: {
-      async getLitsaFilmes(ano = this.selectedFilters.ano) {
+      async getListaFilmes() {
+        console.log(this.selectedFilters.mes);
+
         try {
-          const cacheKey = `filmes_${ano}`;
-          const cacheExpirationTime = 2 * 60 * 60 * 1000;
+          const query = new URLSearchParams({
+            q: this.selectedFilters.q,
+            ano: this.selectedFilters.ano,
+            distribuicao: this.selectedFilters.distribuidor,
+            generos: this.selectedFilters.genero,
+            tecnologias: this.selectedFilters.tecnologia,
+            page: this.currentPage,
+            limit: this.limit,
+          }).toString();
 
-          // Verifica se os dados estão no localStorage
-          const cachedData = localStorage.getItem(cacheKey);
-          const cachedTime = localStorage.getItem(`${cacheKey}_time`);
-
-          if (cachedData && cachedTime) {
-            const currentTime = new Date().getTime();
-            const cacheAge = currentTime - parseInt(cachedTime);
-
-            if (cacheAge < cacheExpirationTime) {
-              this.filmes = JSON.parse(cachedData);
-              return;
-            } else {
-              localStorage.removeItem(cacheKey);
-              localStorage.removeItem(`${cacheKey}_time`);
-            }
-          }
-
-          console.log(`Fazendo requisição para o ano ${ano}`);
-          const res = await fetch(`${isLocalHost}/wp-json/api/v1/filmes?ano=${ano}`);
-          if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
+          const res = await fetch(`http://localhost/FilmeB/wp-json/api/v1/filmes?${query}`);
+          if (!res.ok) throw new Error("Erro ao buscar filmes");
           const data = await res.json();
 
-          this.filmes = data;
-          localStorage.setItem(cacheKey, JSON.stringify(data));
-          localStorage.setItem(`${cacheKey}_time`, new Date().getTime().toString());
+          this.filmes = data.filmes || data; // Verifique a estrutura dos dados retornados
+          this.totalFilmes = res.headers.get("X-Total-Count") || data.total || 0;
+          this.totalPages = Math.ceil(this.totalFilmes / this.limit);
         } catch (error) {
           console.error("Erro ao buscar filmes:", error);
         }
       },
 
       async getListaAnos() {
-
         try {
-          const res = await fetch(`${isLocalHost}/wp-json/api/v1/anos-filmes`);
+          const res = await fetch(`http://localhost/FilmeB/wp-json/api/v1/anos-filmes`);
           if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
           const data = await res.json();
 
@@ -443,48 +437,14 @@ endif;
       }
     },
     computed: {
-      FiltrarFilme() {
-        return this.filmes.filter((filme) => {
-          const filtroAno = this.selectedFilters.ano ?
-            filme.year === this.selectedFilters.ano :
-            true;
 
-          const filtroMes = this.selectedFilters.mes ?
-            filme.months && filme.months.some((mes) => mes.month === this.selectedFilters.mes) :
-            true;
-
-          const filtroOrigem = this.selectedFilters.origem ?
-            filme.months &&
-            filme.months.flatMap((mes) =>
-              mes.movies.filter((movie) => movie.paises.includes(this.selectedFilters.origem))
-            ).length > 0 :
-            true;
-
-          const filtroDistribuidor = this.selectedFilters.distribuidor ?
-            filme.months?.some((mes) =>
-              mes.movies.some((movie) => movie.distribuidoras.includes(this.selectedFilters.distribuidor))
-            ) :
-            true;
-
-          const filtroGenero = this.selectedFilters.genero ?
-            filme.months?.some((mes) =>
-              mes.movies.some((movie) => movie.generos.includes(this.selectedFilters.genero))
-            ) :
-            true;
-
-          const filtroTecnologia = this.selectedFilters.tecnologia ?
-            filme.months?.some((mes) =>
-              mes.movies.some((movie) => movie.tecnologias.includes(this.selectedFilters.tecnologia))
-            ) :
-            true;
-
-          return filtroAno && filtroMes && filtroOrigem && filtroDistribuidor && filtroGenero && filtroTecnologia;
-        });
-      },
     },
     watch: {
-      'selectedFilters.ano'(newVal) {
-        this.getLitsaFilmes(newVal);
+      'selectedFilters.ano': {
+        handler() {
+          this.getListaFilmes();
+        },
+        immediate: true, // Garante que o watcher execute na criação do componente
       }
     },
     created() {
@@ -492,7 +452,7 @@ endif;
       this.selectedFilters.ano = anoAtual;
 
       this.getListaAnos();
-      this.getLitsaFilmes(anoAtual);
+      this.getListaFilmes();
     },
   });
 </script>

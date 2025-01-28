@@ -42,6 +42,7 @@ function filme_scheme($post)
     $filme = new stdClass();
     $filme->title = get_the_title($post);
     $filme->link = get_permalink($post);
+    $filme->descricao = get_the_content(null, false, $post);
     $filme->titulo_original = cfs()->get('titulo_original', $post->ID);
     $filme->trailer = esc_url(cfs()->get('trailer', $post->ID));
     $filme->cartaz = esc_url(cfs()->get('cartaz', $post->ID));
@@ -138,18 +139,6 @@ function filme_scheme($post)
             }
         }
     }
-
-
-    $feriados = cfs()->get('feriados', $post->ID);
-    $filme->feriados = [];
-    if (is_array($feriados)) {
-        foreach ($feriados as $feriado) {
-            $term = get_term($feriado);
-            if ($term && !is_wp_error($term)) {
-                $filme->feriados[] = $term->name;
-            }
-        }
-    }
     return $filme;
 }
 
@@ -175,7 +164,6 @@ function api_filmes_get($request)
         's' => $q,
     );
 
-    // Filtro de ano
     if ($ano) {
         $query['meta_query'][] = array(
             'key' => 'estreia',
@@ -184,8 +172,6 @@ function api_filmes_get($request)
             'type' => 'CHAR'
         );
     }
-
-    // Filtros de taxonomias (somente se fornecidos)
     $tax_query = [];
 
     if ($distribuicao) {
@@ -242,7 +228,6 @@ function api_filmes_get($request)
         );
     }
 
-    // Se houver filtros de taxonomia, adiciona ao query
     if (!empty($tax_query)) {
         $query['tax_query'] = $tax_query;
     }
@@ -259,9 +244,9 @@ function api_filmes_get($request)
         $filmes[] = $filme;
     }
 
-    usort($filmes, function ($a, $b) {
-        return $b->ano - $a->ano;
-    });
+    // usort($filmes, function ($a, $b) {
+    //     return $b->ano - $a->ano;
+    // });
 
     $response = rest_ensure_response($filmes);
     $response->header('X-Total-Count', $total);
@@ -329,6 +314,8 @@ function api_filmes_post($request)
     $data = $request->get_json_params();
 
     $titulo = isset($data['titulo']) ? sanitize_text_field($data['titulo']) : '';
+    $descricao = isset($data['descricao']) ? sanitize_textarea_field($data['descricao']) : '';
+
     $titulo_original = isset($data['titulo_original']) ? sanitize_text_field($data['titulo_original']) : '';
     $trailer = isset($data['trailer']) ? esc_url_raw($data['trailer']) : '';
     $cartaz = isset($data['cartaz']) ? esc_url_raw($data['cartaz']) : '';
@@ -343,14 +330,14 @@ function api_filmes_post($request)
     $paises = isset($data['paises']) ? (array) $data['paises'] : [];
 
     $generos = isset($data['generos']) ? (array) $data['generos'] : [];
-    $classificacoes = isset($data['classificacao']) ? (array) $data['classificacao'] : [];
+    $classificacao = isset($data['classificacoes']) ? (array) $data['classificacoes'] : [];
     $tecnologias = isset($data['tecnologias']) ? (array) $data['tecnologias'] : [];
     $feriados = isset($data['feriados']) ? (array) $data['paisesferiados'] : [];
 
     $distribuicao_ids = obter_term_ids($distribuicao, 'distribuidoras');
     $paises_ids = obter_term_ids($paises, 'paises');
     $genero_ids = obter_term_ids($generos, 'generos');
-    $classificacao_ids = obter_term_ids($classificacoes, 'classificacoes');
+    $classificacao_ids = obter_term_ids($classificacao, 'classificacoes');
     $tecnologia_ids = obter_term_ids($tecnologias, 'tecnologias');
     $feriado_ids = obter_term_ids($feriados, 'feriados');
 
@@ -360,11 +347,10 @@ function api_filmes_post($request)
         'post_type'    => 'filmes',
         'post_title'   => $titulo,
         'post_status'  => 'publish',
-        'post_content' => '',
+        'post_content' => $descricao
     ];
 
     $post_id = wp_insert_post($post_data);
-
     if ($post_id) {
 
         $field_data = [
@@ -381,7 +367,7 @@ function api_filmes_post($request)
             'distribuicao' => $distribuicao_ids,
             'paises' => $paises_ids,
             'generos' => $genero_ids,
-            'classificacoes' => $classificacao_ids,
+            'classificacao' => $classificacao_ids,
             'tecnologias' => $tecnologia_ids,
             'feriados' => $feriado_ids,
         ];
@@ -392,6 +378,7 @@ function api_filmes_post($request)
         return rest_ensure_response([
             'message' => 'Filme criado com sucesso!',
             'post_id' => $post_id,
+            // 'data' => $field_data['classificacao'],
         ]);
     }
 
