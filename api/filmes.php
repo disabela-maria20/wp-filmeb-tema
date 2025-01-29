@@ -32,6 +32,8 @@ function registrar_taxonomias_filmes()
                 'show_in_menu' => true,
                 'show_in_rest' => true,
                 'rewrite'      => array('slug' => $slug),
+                'rest_controller_class' => 'WP_REST_Terms_Controller',
+
             )
         );
     }
@@ -146,112 +148,33 @@ function api_filmes_get($request)
 {
     $q = isset($request['q']) ? sanitize_text_field($request['q']) : '';
     $ano = isset($request['ano']) ? sanitize_text_field($request['ano']) : '';
-    $page = isset($request['page']) ? sanitize_text_field($request['page']) : 1;
-    $limit = isset($request['limit']) ? sanitize_text_field($request['limit']) : 20;
-
-    // Filtros adicionais
-    $distribuicao = isset($request['distribuicao']) ? $request['distribuicao'] : '';
-    $paises = isset($request['paises']) ? $request['paises'] : '';
-    $generos = isset($request['generos']) ? $request['generos'] : '';
-    $classificacoes = isset($request['classificacoes']) ? $request['classificacoes'] : '';
-    $tecnologias = isset($request['tecnologias']) ? $request['tecnologias'] : '';
-    $feriados = isset($request['feriados']) ? $request['feriados'] : '';
 
     $query = array(
         'post_type' => 'filmes',
-        'posts_per_page' => $limit,
-        'paged' => $page,
-        's' => $q,
+        's'         => $q,
+        'nopaging'  => true,
     );
 
-    if ($ano) {
+    if (!empty($ano)) {
         $query['meta_query'][] = array(
-            'key' => 'estreia',
-            'value' => $ano,
-            'compare' => 'LIKE',
-            'type' => 'CHAR'
-        );
-    }
-    $tax_query = [];
-
-    if ($distribuicao) {
-        $tax_query[] = array(
-            'taxonomy' => 'distribuicao',
-            'field' => 'id',
-            'terms' => $distribuicao,
-            'operator' => 'IN',
+            'key'     => 'estreia',
+            'value'   => $ano,
+            'compare' => '=',
+            'type'    => 'NUMERIC',
         );
     }
 
-    if ($paises) {
-        $tax_query[] = array(
-            'taxonomy' => 'paises',
-            'field' => 'id',
-            'terms' => $paises,
-            'operator' => 'IN',
-        );
-    }
-
-    if ($generos) {
-        $tax_query[] = array(
-            'taxonomy' => 'generos',
-            'field' => 'id',
-            'terms' => $generos,
-            'operator' => 'IN',
-        );
-    }
-
-    if ($classificacoes) {
-        $tax_query[] = array(
-            'taxonomy' => 'classificacao',
-            'field' => 'id',
-            'terms' => $classificacoes,
-            'operator' => 'IN',
-        );
-    }
-
-    if ($tecnologias) {
-        $tax_query[] = array(
-            'taxonomy' => 'tecnologias',
-            'field' => 'id',
-            'terms' => $tecnologias,
-            'operator' => 'IN',
-        );
-    }
-
-    if ($feriados) {
-        $tax_query[] = array(
-            'taxonomy' => 'feriados',
-            'field' => 'id',
-            'terms' => $feriados,
-            'operator' => 'IN',
-        );
-    }
-
-    if (!empty($tax_query)) {
-        $query['tax_query'] = $tax_query;
-    }
-
-    // Realiza a consulta
     $loop = new WP_Query($query);
-    $posts = $loop->posts;
-    $total = $loop->found_posts;
-
     $filmes = [];
 
-    foreach ($posts as $post) {
-        $filme = filme_scheme($post);
-        $filmes[] = $filme;
+    foreach ($loop->posts as $post) {
+        $filmes[] = filme_scheme($post);
     }
 
-    // usort($filmes, function ($a, $b) {
-    //     return $b->ano - $a->ano;
-    // });
-
-    $response = rest_ensure_response($filmes);
-    $response->header('X-Total-Count', $total);
-    return $response;
+    return rest_ensure_response($filmes);
 }
+
+
 
 
 function api_anos_filmes_get()

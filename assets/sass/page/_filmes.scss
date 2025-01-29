@@ -186,11 +186,16 @@
           color: #feadc3;
           font-weight: 500;
           font-size: 1rem;
+          text-align: center;
+          display: block;
+          width: 100%;
         }
 
         h3 {
           font-size: 1.6rem;
           color: $color-darker-gray;
+          text-align: center;
+          display: block;
         }
         &:hover .info {
           display: block;
