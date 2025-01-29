@@ -190,7 +190,7 @@ endif;
         <div class="lista-filmes" v-if="ativoItem === 'lista'" id="lista">
 
           <div class="grid-filmes">
-            <div v-for="(filme, index) in filmes" :key="index">
+            <div v-for="(filme, index) in FiltrarFilme" :key="index">
               <a class="card" v-on:mousemove="hoverCard" :href="filme.link" :key="index">
                 <div v-if="!filme.cartaz">
                   <h3>{{filme.title}}</h3>
@@ -231,49 +231,44 @@ endif;
         </div>
 
       </section>
-      <!-- <div class="tabela-filme" v-if="ativoItem === 'tabela'" id="tabela">
-        <div v-for="(filme, index) in FiltrarFilme" :key="index">
-          <div v-for="card in filme.months">
-            <h2>
-              <i class="bi bi-calendar-check-fill"></i>
-              <span>{{traduzirMesParaPortugues(card.month)}}</span>
-            </h2>
-            <table v-for="item in card.movies">
-              <thead>
-                <tr>
-                  <th>Título</th>
-                  <th>Distribuição</th>
-                  <th>Direção</th>
-                  <th>País</th>
-                  <th>Gênero</th>
-                  <th>Duração</th>
-                  <th>Elenco</th>
-                  <th>Classificação</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="titulo">
-                    <a :href="item.link">
-                      <h3>{{item.title}}</h3>
-                      <span>{{item.titulo_original}}</span>
-                    </a>
-                  </td>
-                  <td>
-                    <div v-for="(value, index) in item.distribuidoras" :key="index">{{value}}</div>
-                  </td>
-                  <td>{{item.direcao}}</td>
-                  <td v-for="(value, index) in item.paises" :key="index">{{value}}</td>
-                  <td v-for="(value, index) in item.generos" :key="index">{{value}}</td>
-                  <td>{{item.duracao_minutos}}min</td>
-                  <td>{{item.elenco}}</td>
-                  <td v-for="(value, index) in item.classificacoes" :key="index">{{value}}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+      <div class="tabela-filme" v-if="ativoItem === 'tabela'" id="tabela">
+
+        <div :key="index">
+          <table>
+            <thead>
+              <tr>
+                <th>Título</th>
+                <th>Distribuição</th>
+                <th>Direção</th>
+                <th>País</th>
+                <th>Gênero</th>
+                <th>Duração</th>
+                <th>Elenco</th>
+                <th>Classificação</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(filme, index) in FiltrarFilme">
+                <td class="titulo">
+                  <a :href="filme.link">
+                    <h3>{{filme.title}}</h3>
+                    <span>{{filme.titulo_original}}</span>
+                  </a>
+                </td>
+                <td>
+                  <div v-for="(value, index) in filme.distribuidoras" :key="index">{{value}}</div>
+                </td>
+                <td>{{filme.direcao}}</td>
+                <td v-for="(value, index) in filme.paises" :key="index">{{value}}</td>
+                <td v-for="(value, index) in filme.generos" :key="index">{{value}}</td>
+                <td>{{filme.duracao_minutos}}min</td>
+                <td>{{filme.elenco}}</td>
+                <td v-for="(value, index) in filme.classificacoes" :key="index">{{value}}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-      </div> -->
+      </div>
     </div>
   </div>
 
@@ -301,27 +296,26 @@ endif;
         genero: '',
         tecnologia: ''
       },
-      filteredMovies: [],
+      filteredMovies: [], // Adicionando a lista filtrada
     },
     methods: {
-      async getLitsaFilmes(ano = this.selectedFilters.ano) {
+      async getLitsaFilmes() {
         try {
-
-          const res = await fetch(`${isLocalHost}/wp-json/api/v1/filmes?ano=${ano}`);
+          const res = await fetch(`http://localhost/FilmeB/wp-json/api/v1/filmes`);
           if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
           const data = await res.json();
-          console.log(data);
 
+          console.log("Filmes carregados:", data);
           this.filmes = data;
+          this.filteredMovies = data; // Inicializando a lista filtrada com todos os filmes
         } catch (error) {
           console.error("Erro ao buscar filmes:", error);
         }
       },
 
       async getListaAnos() {
-
         try {
-          const res = await fetch(`${isLocalHost}/wp-json/api/v1/anos-filmes`);
+          const res = await fetch(`http://localhost/FilmeB/wp-json/api/v1/anos-filmes`);
           if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
           const data = await res.json();
 
@@ -374,43 +368,22 @@ endif;
     },
     computed: {
       FiltrarFilme() {
-        return this.filmes.filter((filme) => {
-          const filtroAno = this.selectedFilters.ano ?
-            filme.year === this.selectedFilters.ano :
-            true;
-
-          const filtroMes = this.selectedFilters.mes ?
-            filme.mes === this.selectedFilters.mes :
-            true;
-
-
-          const filtroDistribuidor = this.selectedFilters.distribuidor ?
-            filme.distribuidor === this.selectedFilters.distribuidor :
-            true;
-
-          const filtroGenero = this.selectedFilters.genero ?
-            filme.genero === this.selectedFilters.genero :
-            true;
-
-          const filtroTecnologia = this.selectedFilters.tecnologia ?
-            filme.tecnologia === this.selectedFilters.tecnologia :
-            true;
-
-          return filtroAno && filtroMes && filtroOrigem && filtroDistribuidor && filtroGenero && filtroTecnologia;
+        return this.filmes.filter(filme => {
+          return (
+            (this.selectedFilters.ano ? filme.ano.toString() === this.selectedFilters.ano : true) &&
+            (this.selectedFilters.mes ? filme.mes === this.selectedFilters.mes : true) &&
+            (this.selectedFilters.origem ? filme.origem === this.selectedFilters.origem : true) &&
+            (this.selectedFilters.distribuidor ? filme.distribuidor === this.selectedFilters.distribuidor :
+              true) &&
+            (this.selectedFilters.genero ? filme.genero === this.selectedFilters.genero : true) &&
+            (this.selectedFilters.tecnologia ? filme.tecnologia === this.selectedFilters.tecnologia : true)
+          );
         });
-      },
-    },
-    watch: {
-      'selectedFilters.ano'(newVal) {
-        this.getLitsaFilmes(newVal);
       }
     },
     created() {
-      const anoAtual = new Date().getFullYear().toString();
-      this.selectedFilters.ano = anoAtual;
-
       this.getListaAnos();
-      this.getLitsaFilmes(anoAtual);
+      this.getLitsaFilmes();
     },
   });
 </script>
