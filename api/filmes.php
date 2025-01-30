@@ -4,11 +4,11 @@ function registrar_taxonomias_filmes()
 {
     $taxonomias = [
         'distribuidoras' => 'Distribuidoras',
-        'paises'         => 'Países',
-        'generos'        => 'Gêneros',
+        'paises' => 'Países',
+        'generos' => 'Gêneros',
         'classificacoes' => 'Classificações',
-        'tecnologias'    => 'Tecnologias',
-        'feriados'       => 'Feriados',
+        'tecnologias' => 'Tecnologias',
+        'feriados' => 'Feriados',
     ];
 
     foreach ($taxonomias as $slug => $nome) {
@@ -17,21 +17,21 @@ function registrar_taxonomias_filmes()
             'filmes',
             array(
                 'labels' => array(
-                    'name'              => $nome,
-                    'singular_name'     => $nome,
-                    'search_items'      => "Buscar $nome",
-                    'all_items'         => "Todos os $nome",
-                    'edit_item'         => "Editar $nome",
-                    'update_item'       => "Atualizar $nome",
-                    'add_new_item'      => "Adicionar Novo $nome",
-                    'new_item_name'     => "Novo $nome",
-                    'menu_name'         => $nome,
+                    'name' => $nome,
+                    'singular_name' => $nome,
+                    'search_items' => "Buscar $nome",
+                    'all_items' => "Todos os $nome",
+                    'edit_item' => "Editar $nome",
+                    'update_item' => "Atualizar $nome",
+                    'add_new_item' => "Adicionar Novo $nome",
+                    'new_item_name' => "Novo $nome",
+                    'menu_name' => $nome,
                 ),
                 'hierarchical' => true,
-                'show_ui'      => true,
+                'show_ui' => true,
                 'show_in_menu' => true,
                 'show_in_rest' => true,
-                'rewrite'      => array('slug' => $slug),
+                'rewrite' => array('slug' => $slug),
                 'rest_controller_class' => 'WP_REST_Terms_Controller',
 
             )
@@ -50,11 +50,14 @@ function filme_scheme($post)
     $filme->cartaz = esc_url(cfs()->get('cartaz', $post->ID));
     $filme->capa = esc_url(cfs()->get('capa', $post->ID));
 
-    $fotos = cfs()->get('fotos', $post->ID);
+    $fotos = cfs()->get('title', $post->ID);
+   
     $filme->fotos = [];
     if ($fotos) {
         foreach ($fotos as $foto) {
+            
             $filme->fotos[] = [
+                
                 'foto' => esc_url($foto['foto'] ?? ''),
             ];
         }
@@ -72,7 +75,7 @@ function filme_scheme($post)
         $ano_estreia = date('Y', strtotime($data_estreia));
         $mes_estreia = date('F', strtotime($data_estreia));
 
-        $filme->ano = (int)$ano_estreia;
+        $filme->ano = (int) $ano_estreia;
         $filme->mes = $mes_estreia;
     } else {
 
@@ -141,7 +144,8 @@ function filme_scheme($post)
             }
         }
     }
-    return $filme;
+    echo var_dump($filme);
+    // return $filme;
 }
 
 function api_filmes_get($request)
@@ -151,16 +155,16 @@ function api_filmes_get($request)
 
     $query = array(
         'post_type' => 'filmes',
-        's'         => $q,
-        'nopaging'  => true,
+        's' => $q,
+        'nopaging' => true,
     );
 
     if (!empty($ano)) {
         $query['meta_query'][] = array(
-            'key'     => 'estreia',
-            'value'   => $ano,
+            'key' => 'estreia',
+            'value' => $ano,
             'compare' => '=',
-            'type'    => 'NUMERIC',
+            'type' => 'NUMERIC',
         );
     }
 
@@ -173,9 +177,6 @@ function api_filmes_get($request)
 
     return rest_ensure_response($filmes);
 }
-
-
-
 
 function api_anos_filmes_get()
 {
@@ -248,14 +249,18 @@ function api_filmes_post($request)
     $direcao = isset($data['direcao']) ? sanitize_text_field($data['direcao']) : '';
     $roteiro = isset($data['roteiro']) ? sanitize_text_field($data['roteiro']) : '';
     $elenco = isset($data['elenco']) ? sanitize_text_field($data['elenco']) : '';
-    $fotos = isset($data['fotos']) ? $data['fotos'] : [];
+
+    // Ajuste para obter corretamente as URLs das fotos
+    $fotos = isset($data['fotos']) && is_array($data['fotos']) 
+        ? array_map(fn($foto) => esc_url_raw($foto['foto'] ?? ''), $data['fotos'])
+        : [];
+
     $distribuicao = isset($data['distribuicao']) ? (array) $data['distribuicao'] : [];
     $paises = isset($data['paises']) ? (array) $data['paises'] : [];
-
     $generos = isset($data['generos']) ? (array) $data['generos'] : [];
     $classificacao = isset($data['classificacoes']) ? (array) $data['classificacoes'] : [];
     $tecnologias = isset($data['tecnologias']) ? (array) $data['tecnologias'] : [];
-    $feriados = isset($data['feriados']) ? (array) $data['paisesferiados'] : [];
+    $feriados = isset($data['feriados']) ? (array) $data['feriados'] : [];
 
     $distribuicao_ids = obter_term_ids($distribuicao, 'distribuidoras');
     $paises_ids = obter_term_ids($paises, 'paises');
@@ -264,29 +269,62 @@ function api_filmes_post($request)
     $tecnologia_ids = obter_term_ids($tecnologias, 'tecnologias');
     $feriado_ids = obter_term_ids($feriados, 'feriados');
 
+    // Upload de imagens
+    if (empty($cartaz)) {
+        return new WP_Error('no_cartaz_url', 'Nenhuma URL de cartaz fornecida.', ['status' => 400]);
+    }
+    $cartaz_id = upload_image_from_url($cartaz);
+    if (is_wp_error($cartaz_id)) {
+        return new WP_Error('upload_error', 'Erro ao baixar a imagem do cartaz.', ['status' => 500, 'data' => $cartaz]);
+    }
 
+    if (empty($capa)) {
+        return new WP_Error('no_capa_url', 'Nenhuma URL de capa fornecida.', ['status' => 400]);
+    }
+    $capa_id = upload_image_from_url($capa);
+    if (is_wp_error($capa_id)) {
+        return new WP_Error('upload_error', 'Erro ao baixar a imagem da capa.', ['status' => 500, 'data' => $capa]);
+    }
 
+    
+   
+
+    // Upload das fotos
+    $fotos_id = [];
+    foreach ($fotos as $foto_url) {
+        if (!empty($foto_url)) {
+            $foto_id = upload_image_from_url($foto_url);
+            if (!is_wp_error($foto_id)) {
+                $fotos_id[] = $foto_id;
+            }
+        }
+    }
+   
+
+    // Criar post
     $post_data = [
-        'post_type'    => 'filmes',
-        'post_title'   => $titulo,
-        'post_status'  => 'publish',
+        'post_type' => 'filmes',
+        'post_title' => $titulo,
+        'post_status' => 'publish',
         'post_content' => $descricao
     ];
 
     $post_id = wp_insert_post($post_data);
+    
     if ($post_id) {
+        set_post_thumbnail($post_id, $cartaz_id); // Apenas cartaz como thumbnail principal
 
         $field_data = [
             'titulo_original' => $titulo_original,
             'trailer' => $trailer,
-            'cartaz' => $cartaz,
-            'capa' => $capa,
+            'cartaz' => wp_get_attachment_url($cartaz_id),
+            'capa' => wp_get_attachment_url($capa_id),
             'estreia' => $estreia,
             'duracao_minutos' => $duracao_minutos,
             'direcao' => $direcao,
             'roteiro' => $roteiro,
             'elenco' => $elenco,
-            'fotos' => $fotos,
+            'fotos' => $fotos_id,
             'distribuicao' => $distribuicao_ids,
             'paises' => $paises_ids,
             'generos' => $genero_ids,
@@ -295,18 +333,19 @@ function api_filmes_post($request)
             'feriados' => $feriado_ids,
         ];
 
-
         CFS()->save($field_data, ['ID' => $post_id]);
 
         return rest_ensure_response([
             'message' => 'Filme criado com sucesso!',
             'post_id' => $post_id,
-            // 'data' => $field_data['classificacao'],
+            'data' => $data
         ]);
     }
 
     return new WP_Error('filme_nao_criado', 'Erro ao criar o filme', ['status' => 500]);
 }
+
+
 
 function register_filmes_api_endpoints()
 {

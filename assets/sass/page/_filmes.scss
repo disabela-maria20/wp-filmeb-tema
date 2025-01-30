@@ -149,7 +149,7 @@
       .card {
         color: $color-darker-gray;
         width: 100%;
-        height: 379px;
+        
         background: #fef3f6;
         position: relative;
         display: flex;
@@ -157,7 +157,7 @@
         justify-content: center;
         flex-direction: column;
         border-radius: 5px;
-
+        height: 379px;
         @include media(lg) {
           height: 279px;
         }
@@ -176,9 +176,12 @@
         .poster {
           overflow: auto;
           width: 100%;
-          height: 100%;
           object-fit: cover;
           border-radius: 5px;
+          height: 379px;
+        @include media(lg) {
+          height: 279px;
+        }
         }
         .indisponivel {
           position: absolute;

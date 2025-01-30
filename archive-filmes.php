@@ -259,8 +259,14 @@ endif;
                   <div v-for="(value, index) in filme.distribuidoras" :key="index">{{value}}</div>
                 </td>
                 <td>{{filme.direcao}}</td>
-                <td v-for="(value, index) in filme.paises" :key="index">{{value}}</td>
-                <td v-for="(value, index) in filme.generos" :key="index">{{value}}</td>
+                <td>
+                  <div v-for="(value, index) in filme.paises" :key="index">{{value}}</div>
+                </td>
+                <td>
+                  <div v-for="(value, index) in filme.generos" :key="index">
+                    {{value}}
+                  </div>
+                </td>
                 <td>{{filme.duracao_minutos}}min</td>
                 <td>{{filme.elenco}}</td>
                 <td v-for="(value, index) in filme.classificacoes" :key="index">{{value}}</td>
@@ -301,7 +307,7 @@ endif;
     methods: {
       async getLitsaFilmes() {
         try {
-          const res = await fetch(`http://filmeb.local//FilmeB/wp-json/api/v1/filmes`);
+          const res = await fetch(`http://filmeb.local/wp-json/api/v1/filmes`);
           if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
           const data = await res.json();
 
@@ -315,7 +321,7 @@ endif;
 
       async getListaAnos() {
         try {
-          const res = await fetch(`http://localhost/FilmeB/wp-json/api/v1/anos-filmes`);
+          const res = await fetch(`http://filmeb.local/wp-json/api/v1/anos-filmes`);
           if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
           const data = await res.json();
 

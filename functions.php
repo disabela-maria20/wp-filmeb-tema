@@ -137,3 +137,32 @@ function formatar_data_estreia($estreia, $mostrar_dia_da_semana = false)
 
 add_action('wp_ajax_filtrar_filmes', 'filtrar_filmes');
 add_action('wp_ajax_nopriv_filtrar_filmes', 'filtrar_filmes');
+
+
+function upload_image_from_url($image_url)
+{
+    require_once ABSPATH . 'wp-admin/includes/file.php';
+    require_once ABSPATH . 'wp-admin/includes/media.php';
+    require_once ABSPATH . 'wp-admin/includes/image.php';
+
+    $temp_file = download_url($image_url);
+
+    if (is_wp_error($temp_file)) {
+        return $temp_file;
+    }
+
+    $file_array = [
+        'name'     => basename(parse_url($image_url, PHP_URL_PATH)),
+        'tmp_name' => $temp_file
+    ];
+    
+    $attachment_id = media_handle_sideload($file_array, 0);
+    
+    if (is_wp_error($attachment_id)) {
+        @unlink($temp_file);
+        return $attachment_id;
+    }
+
+    return $attachment_id;
+}
+
