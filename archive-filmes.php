@@ -301,7 +301,7 @@ endif;
     methods: {
       async getLitsaFilmes() {
         try {
-          const res = await fetch(`http://localhost/FilmeB/wp-json/api/v1/filmes`);
+          const res = await fetch(`http://filmeb.local//FilmeB/wp-json/api/v1/filmes`);
           if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
           const data = await res.json();
 
