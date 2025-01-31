@@ -49,6 +49,7 @@ function registrar_cpt_edicoes()
         'menu_position' => 5,
         'menu_icon' => 'dashicons-book-alt',
         'show_in_rest' => true,
+        'rest_controller_class' => 'WP_REST_Terms_Controller',
     ));
 }
 add_action('init', 'registrar_cpt_edicoes');
@@ -66,35 +67,30 @@ function api_rapidinhas_post($request)
         return new WP_Error('no_image_url', 'Nenhuma URL de imagem fornecida.', ['status' => 400]);
     }
 
-    // Faz o download da imagem externa e adiciona à biblioteca de mídia
     $attachment_id = upload_image_from_url($imagem_url);
     if (is_wp_error($attachment_id)) {
         return new WP_Error('upload_error', 'Erro ao baixar a imagem.', ['status' => 500]);
     }
 
-    // Obtém a URL da imagem salva
     $imagem_salva_url = wp_get_attachment_url($attachment_id);
 
-    // Cria o post no WordPress
     $post_data = [
-        'post_type'    => 'rapidinhas',
-        'post_title'   => $titulo,
-        'post_status'  => 'publish',
+        'post_type' => 'rapidinhas',
+        'post_title' => $titulo,
+        'post_status' => 'publish',
         'post_content' => $descricao
     ];
     $post_id = wp_insert_post($post_data);
 
     if ($post_id) {
-        // Associa a imagem como thumbnail do post (Opcional)
         set_post_thumbnail($post_id, $attachment_id);
 
-        // Salva a URL da imagem como campo personalizado via CFS
         $field_data = ['imagem' => $imagem_salva_url];
         CFS()->save($field_data, ['ID' => $post_id]);
 
         return rest_ensure_response([
-            'message'   => 'Filme criado com sucesso!',
-            'post_id'   => $post_id,
+            'message' => 'Filme criado com sucesso!',
+            'post_id' => $post_id,
             'image_url' => $imagem_salva_url
         ]);
     }
@@ -102,11 +98,78 @@ function api_rapidinhas_post($request)
     return new WP_Error('filme_nao_criado', 'Erro ao criar o filme', ['status' => 500]);
 }
 
+function api_edicoes_post($request)
+{
+    $data = $request->get_json_params();
+    $titulo = isset($data['titulo']) ? sanitize_text_field($data['titulo']) : '';
+    $data_lancamento = isset($data['data']) ? sanitize_text_field($data['data']) : '';
+
+
+    $edicao = isset($data['edicao']) ? (array) $data['edicao'] : [];
+    if (empty($edicao)) {
+        return new WP_Error('no_edicao_data', 'Nenhuma edição fornecida.', ['status' => 400]);
+    }
+
+    $edicao_ids = array_map('intval', $edicao);
+    if (empty($edicao_ids) || in_array(0, $edicao_ids, true)) {
+        return new WP_Error('invalid_edicao_ids', 'IDs de edição inválidos fornecidos.', ['status' => 400]);
+    }
+
+    global $wpdb;
+    $placeholders = implode(',', array_fill(0, count($edicao_ids), '%d'));
+    $query = $wpdb->prepare(
+        "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'rapidinhas' AND post_status = 'publish' AND ID IN ($placeholders)",
+        ...$edicao_ids
+    );
+    $rapidinhas = $wpdb->get_col($query);
+
+    if (empty($rapidinhas)) {
+        return new WP_Error('no_rapidinhas_found', 'Nenhuma rapidinha encontrada para os IDs fornecidos.', ['status' => 400]);
+    }
+
+
+    $post_data = [
+        'post_type' => 'edicoes',
+        'post_title' => $titulo,
+        'post_status' => 'publish',
+    ];
+
+    $post_id = wp_insert_post($post_data);
+
+    if ($post_id) {
+
+        $edicao_ids_terms = obter_term_ids($edicao_ids, 'edicao');
+        wp_set_object_terms($post_id, $edicao_ids_terms, 'edicao');
+
+        update_post_meta($post_id, 'rapidinhas_relacionadas', $rapidinhas);
+
+        $field_data = [
+            'edicao' => $rapidinhas,
+            'data' => $data_lancamento
+        ];
+        CFS()->save($field_data, ['ID' => $post_id]);
+
+        return rest_ensure_response([
+            'message' => 'Edição criada com sucesso!',
+            'post_id' => $post_id,
+            'data' => $field_data
+        ]);
+    }
+
+    return new WP_Error('filme_nao_criado', 'Erro ao criar a edição', ['status' => 500]);
+}
+
+
 function register_api_rapidinhas_post()
 {
     register_rest_route('api/v1', '/rapidinhas', [
-        'methods'             => 'POST',
-        'callback'            => 'api_rapidinhas_post',
+        'methods' => 'POST',
+        'callback' => 'api_rapidinhas_post',
+    ]);
+
+    register_rest_route('api/v1', '/edicoes', [
+        'methods' => 'POST',
+        'callback' => 'api_edicoes_post',
     ]);
 }
 

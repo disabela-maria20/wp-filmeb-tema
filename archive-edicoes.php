@@ -17,8 +17,9 @@ $args = array(
 
 $query = new WP_Query($args);
 
-if ($query->have_posts()) :
-  while ($query->have_posts()) : $query->the_post();
+if ($query->have_posts()):
+  while ($query->have_posts()):
+    $query->the_post();
 
     $banner_superior = CFS()->get('banner_moldura', $banner_id);
     $banner_inferior = CFS()->get('mega_banner', $banner_id);
@@ -38,7 +39,7 @@ if ($query->have_posts()) :
       'posts_per_page' => 10,
     ));
 
-?>
+    ?>
     <a href="<?php echo esc_url($link_banner_superior) ?>" target="_blank" rel="noopener noreferrer">
       <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner bannerMobile" alt="banner">
     </a>
@@ -57,7 +58,7 @@ if ($query->have_posts()) :
 
 
 
-<?php
+    <?php
   endwhile;
   wp_reset_postdata();
 endif;
@@ -95,7 +96,8 @@ endif;
 
       if ($boletim_query->have_posts()): ?>
         <h1>Edições</h1>
-        <?php while ($boletim_query->have_posts()): $boletim_query->the_post(); ?>
+        <?php while ($boletim_query->have_posts()):
+          $boletim_query->the_post(); ?>
           <div class="grid-semanal">
             <a href="<?php the_permalink(); ?>" class="link-post-semanal">
               <h2><?php the_title(); ?> - <?php echo date_i18n('d \d\e F \d\e Y', strtotime(CFS()->get('data'))) ?></h2>
@@ -140,7 +142,7 @@ endif;
               <?php echo get_the_date('j \d\e F \d\e Y'); ?>
             </a>
           </div>
-      <?php }
+        <?php }
         wp_reset_postdata();
       } ?>
     </aside>

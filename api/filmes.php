@@ -50,14 +50,13 @@ function filme_scheme($post)
     $filme->cartaz = esc_url(cfs()->get('cartaz', $post->ID));
     $filme->capa = esc_url(cfs()->get('capa', $post->ID));
 
-    $fotos = cfs()->get('title', $post->ID);
-   
+    $fotos = cfs()->get('fotos', $post->ID);
+
     $filme->fotos = [];
+
     if ($fotos) {
         foreach ($fotos as $foto) {
-            
             $filme->fotos[] = [
-                
                 'foto' => esc_url($foto['foto'] ?? ''),
             ];
         }
@@ -95,9 +94,6 @@ function filme_scheme($post)
         }
     }
 
-
-
-
     $paises = cfs()->get('paises', $post->ID);
     $filme->paises = [];
     if (is_array($paises)) {
@@ -108,7 +104,6 @@ function filme_scheme($post)
             }
         }
     }
-
 
     $generos = cfs()->get('generos', $post->ID);
     $filme->generos = [];
@@ -121,7 +116,6 @@ function filme_scheme($post)
         }
     }
 
-
     $classificacoes = cfs()->get('classificacao', $post->ID);
     $filme->classificacoes = [];
     if (is_array($classificacoes)) {
@@ -133,7 +127,6 @@ function filme_scheme($post)
         }
     }
 
-
     $tecnologias = cfs()->get('tecnologias', $post->ID);
     $filme->tecnologias = [];
     if (is_array($tecnologias)) {
@@ -144,8 +137,8 @@ function filme_scheme($post)
             }
         }
     }
-    echo var_dump($filme);
-    // return $filme;
+
+    return $filme;
 }
 
 function api_filmes_get($request)
@@ -208,30 +201,6 @@ function api_anos_filmes_get()
     return rest_ensure_response($anos_filmes);
 }
 
-function obter_term_ids($itens, $taxonomia)
-{
-    $ids = [];
-
-    foreach ($itens as $item) {
-        if (is_numeric($item)) {
-
-            $ids[] = intval($item);
-        } else {
-
-            $term = get_term_by('name', $item, $taxonomia);
-
-            if ($term && !is_wp_error($term)) {
-
-                $ids[] = $term->term_id;
-            } else {
-
-                error_log('Termo não encontrado para ' . $taxonomia . ': ' . $item);
-            }
-        }
-    }
-
-    return $ids;
-}
 
 function api_filmes_post($request)
 {
@@ -251,7 +220,7 @@ function api_filmes_post($request)
     $elenco = isset($data['elenco']) ? sanitize_text_field($data['elenco']) : '';
 
     // Ajuste para obter corretamente as URLs das fotos
-    $fotos = isset($data['fotos']) && is_array($data['fotos']) 
+    $fotos = isset($data['fotos']) && is_array($data['fotos'])
         ? array_map(fn($foto) => esc_url_raw($foto['foto'] ?? ''), $data['fotos'])
         : [];
 
@@ -286,10 +255,6 @@ function api_filmes_post($request)
         return new WP_Error('upload_error', 'Erro ao baixar a imagem da capa.', ['status' => 500, 'data' => $capa]);
     }
 
-    
-   
-
-    // Upload das fotos
     $fotos_id = [];
     foreach ($fotos as $foto_url) {
         if (!empty($foto_url)) {
@@ -299,9 +264,7 @@ function api_filmes_post($request)
             }
         }
     }
-   
 
-    // Criar post
     $post_data = [
         'post_type' => 'filmes',
         'post_title' => $titulo,
@@ -310,9 +273,11 @@ function api_filmes_post($request)
     ];
 
     $post_id = wp_insert_post($post_data);
-    
+
     if ($post_id) {
-        set_post_thumbnail($post_id, $cartaz_id); // Apenas cartaz como thumbnail principal
+        set_post_thumbnail($post_id, $cartaz_id);
+
+        $fotos_formatadas = array_map(fn($foto_id) => ['foto' => wp_get_attachment_url($foto_id)], $fotos_id);
 
         $field_data = [
             'titulo_original' => $titulo_original,
@@ -324,7 +289,7 @@ function api_filmes_post($request)
             'direcao' => $direcao,
             'roteiro' => $roteiro,
             'elenco' => $elenco,
-            'fotos' => $fotos_id,
+            'fotos' => $fotos_formatadas,
             'distribuicao' => $distribuicao_ids,
             'paises' => $paises_ids,
             'generos' => $genero_ids,
@@ -338,14 +303,12 @@ function api_filmes_post($request)
         return rest_ensure_response([
             'message' => 'Filme criado com sucesso!',
             'post_id' => $post_id,
-            'data' => $data
         ]);
     }
 
+
     return new WP_Error('filme_nao_criado', 'Erro ao criar o filme', ['status' => 500]);
 }
-
-
 
 function register_filmes_api_endpoints()
 {

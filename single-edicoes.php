@@ -15,8 +15,9 @@ $args = array(
 
 $query = new WP_Query($args);
 
-if ($query->have_posts()) :
-  while ($query->have_posts()) : $query->the_post();
+if ($query->have_posts()):
+  while ($query->have_posts()):
+    $query->the_post();
 
     $banner_superior = CFS()->get('banner_moldura', $banner_id);
     $banner_inferior = CFS()->get('mega_banner', $banner_id);
@@ -34,23 +35,23 @@ if ($query->have_posts()) :
       'category_name' => 'Rapidinhas',
       'posts_per_page' => 10,
     ));
-?>
-<a href="<?php echo esc_url($link_banner_superior) ?>" target="_blank" rel="noopener noreferrer">
-  <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner bannerMobile" alt="banner">
-</a>
-
-<div class="container bannerDesktop">
-  <div class="grid-banner-superior">
-    <a href="<?php echo esc_url($link_banner_superior); ?>" target="_blank" rel="noopener noreferrer">
-      <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner" alt="banner">
+    ?>
+    <a href="<?php echo esc_url($link_banner_superior) ?>" target="_blank" rel="noopener noreferrer">
+      <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner bannerMobile" alt="banner">
     </a>
-    <a href="<?php echo esc_url($link_banner_inferior); ?>" target="_blank" rel="noopener noreferrer">
-      <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
-    </a>
-  </div>
-</div>
 
-<?php
+    <div class="container bannerDesktop">
+      <div class="grid-banner-superior">
+        <a href="<?php echo esc_url($link_banner_superior); ?>" target="_blank" rel="noopener noreferrer">
+          <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner" alt="banner">
+        </a>
+        <a href="<?php echo esc_url($link_banner_inferior); ?>" target="_blank" rel="noopener noreferrer">
+          <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
+        </a>
+      </div>
+    </div>
+
+    <?php
   endwhile;
   wp_reset_postdata();
 endif;
@@ -78,28 +79,34 @@ endif;
       <a href="<?php echo esc_url($link_full_banner); ?>">
         <img src="<?php echo esc_url($full_banner); ?>" class="img-banner" alt="banner">
       </a>
-      <?php if (function_exists('yoast_breadcrumb')) { yoast_breadcrumb('<div id="breadcrumbs">', '</div>'); } ?>
+      <?php if (function_exists('yoast_breadcrumb')) {
+        yoast_breadcrumb('<div id="breadcrumbs">', '</div>');
+      } ?>
       <div class="post-content-semanal">
         <h1><?php the_title(); ?> -
-          <?php echo date_i18n('d \d\e F \d\e Y', strtotime(CFS()->get('data'))) ?></h1>
+          <?php echo date_i18n('d \d\e F \d\e Y', strtotime(CFS()->get('data'))) ?>
+        </h1>
         <div class="posts">
-          <?php  $values = CFS()->get('edicao'); ?>
-          <?php foreach ( $values as $post_id ) {?>
-          <?php $the_post = get_post( $post_id ); ?>
-          <div class="item-rapidinha">
-            <img src="<?php echo CFS()->get('imagem', $the_post->ID);?>" />
-            <div>
-              <span class="data"><?php echo date_i18n('j \d\e F \d\e Y', strtotime($the_post->post_date)); ?></span>
-              <a href="<?php the_permalink(); ?>" class="read-more">
-                <h2><?php echo $the_post->post_title;?></h2>
-              </a>
-              <a href="<?php echo  get_template_directory_uri() . '/' . 'rapidinhas/' . $the_post->post_name;?>">
-                Leia mais
-              </a>
-            </div>
-          </div>
-
-          <?php }?>
+          <?php
+          $values = CFS()->get('edicao');
+          if (!empty($values) && is_array($values)) {
+            foreach ($values as $post_id) {
+              $the_post = get_post($post_id);
+              ?>
+              <div class="item-rapidinha">
+                <img src="<?php echo CFS()->get('imagem', $the_post->ID); ?>" />
+                <div>
+                  <span class="data"><?php echo date_i18n('j \d\e F \d\e Y', strtotime($the_post->post_date)); ?></span>
+                  <a href="<?php the_permalink(); ?>" class="read-more">
+                    <h2><?php echo $the_post->post_title; ?></h2>
+                  </a>
+                  <a href="<?php echo get_template_directory_uri() . '/' . 'rapidinhas/' . $the_post->post_name; ?>">
+                    Leia mais
+                  </a>
+                </div>
+              </div>
+            <?php } // Fechamento do foreach ?>
+          <?php } // Fechamento do if ?>
         </div>
 
       </div>
@@ -110,7 +117,7 @@ endif;
           'type' => 'list',
           'prev_text' => __('<'),
           'next_text' => __('>'),
-          'mid_size' => 10, 
+          'mid_size' => 10,
         ));
         ?>
       </div>
@@ -127,17 +134,17 @@ endif;
         'posts_per_page' => 10,
       ));
 
-      if ($recent_posts_query->have_posts()) { 
-        while ($recent_posts_query->have_posts()) { 
+      if ($recent_posts_query->have_posts()) {
+        while ($recent_posts_query->have_posts()) {
           $recent_posts_query->the_post(); ?>
-      <div class="item-aside">
-        <a href="<?php the_permalink(); ?>" class="edicoes">
-          <i class="bi bi-arrow-right-short"></i>
-          <?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?>
-          <?php echo get_the_date('j \d\e F \d\e Y'); ?>
-        </a>
-      </div>
-      <?php 
+          <div class="item-aside">
+            <a href="<?php the_permalink(); ?>" class="edicoes">
+              <i class="bi bi-arrow-right-short"></i>
+              <?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?>
+              <?php echo get_the_date('j \d\e F \d\e Y'); ?>
+            </a>
+          </div>
+          <?php
         }
         wp_reset_postdata();
       }

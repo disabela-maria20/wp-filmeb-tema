@@ -82,25 +82,25 @@ function registrar_cpt_filmes()
 {
   register_post_type('filmes', array(
     'labels' => array(
-      'name'               => _x('Filmes', 'Post type general name', 'textdomain'),
-      'singular_name'      => _x('Filme', 'Post type singular name', 'textdomain'),
-      'add_new_item'       => __('Adicionar Novo Filme', 'textdomain'),
-      'edit_item'          => __('Editar Filme', 'textdomain'),
-      'new_item'           => __('Novo Filme', 'textdomain'),
-      'view_item'          => __('Ver Filme', 'textdomain'),
-      'search_items'       => __('Buscar Filmes', 'textdomain'),
-      'not_found'          => __('Nenhum Filme encontrado', 'textdomain'),
+      'name' => _x('Filmes', 'Post type general name', 'textdomain'),
+      'singular_name' => _x('Filme', 'Post type singular name', 'textdomain'),
+      'add_new_item' => __('Adicionar Novo Filme', 'textdomain'),
+      'edit_item' => __('Editar Filme', 'textdomain'),
+      'new_item' => __('Novo Filme', 'textdomain'),
+      'view_item' => __('Ver Filme', 'textdomain'),
+      'search_items' => __('Buscar Filmes', 'textdomain'),
+      'not_found' => __('Nenhum Filme encontrado', 'textdomain'),
       'not_found_in_trash' => __('Nenhum Filme encontrado na lixeira', 'textdomain'),
     ),
-    'description'        => 'Gerenciar Filmes',
-    'public'             => true,
-    'show_ui'            => true,
-    'menu_position'      => 5,
-    'menu_icon'          => 'dashicons-video-alt',
-    'capability_type'    => 'post',
-    'rewrite'            => array('slug' => 'filmes', 'with_front' => true),
-    'supports'           => array('title', 'editor', 'thumbnail', 'excerpt'),
-    'has_archive'        => true,
+    'description' => 'Gerenciar Filmes',
+    'public' => true,
+    'show_ui' => true,
+    'menu_position' => 5,
+    'menu_icon' => 'dashicons-video-alt',
+    'capability_type' => 'post',
+    'rewrite' => array('slug' => 'filmes', 'with_front' => true),
+    'supports' => array('title', 'editor', 'thumbnail', 'excerpt'),
+    'has_archive' => true,
     'publicly_queryable' => true,
     'show_in_rest' => true,
   ));
@@ -141,28 +141,52 @@ add_action('wp_ajax_nopriv_filtrar_filmes', 'filtrar_filmes');
 
 function upload_image_from_url($image_url)
 {
-    require_once ABSPATH . 'wp-admin/includes/file.php';
-    require_once ABSPATH . 'wp-admin/includes/media.php';
-    require_once ABSPATH . 'wp-admin/includes/image.php';
+  require_once ABSPATH . 'wp-admin/includes/file.php';
+  require_once ABSPATH . 'wp-admin/includes/media.php';
+  require_once ABSPATH . 'wp-admin/includes/image.php';
 
-    $temp_file = download_url($image_url);
+  $temp_file = download_url($image_url);
 
-    if (is_wp_error($temp_file)) {
-        return $temp_file;
-    }
+  if (is_wp_error($temp_file)) {
+    return $temp_file;
+  }
 
-    $file_array = [
-        'name'     => basename(parse_url($image_url, PHP_URL_PATH)),
-        'tmp_name' => $temp_file
-    ];
-    
-    $attachment_id = media_handle_sideload($file_array, 0);
-    
-    if (is_wp_error($attachment_id)) {
-        @unlink($temp_file);
-        return $attachment_id;
-    }
+  $file_array = [
+    'name' => basename(parse_url($image_url, PHP_URL_PATH)),
+    'tmp_name' => $temp_file
+  ];
 
+  $attachment_id = media_handle_sideload($file_array, 0);
+
+  if (is_wp_error($attachment_id)) {
+    @unlink($temp_file);
     return $attachment_id;
+  }
+
+  return $attachment_id;
 }
 
+function obter_term_ids($itens, $taxonomia)
+{
+  $ids = [];
+
+  foreach ($itens as $item) {
+    if (is_numeric($item)) {
+
+      $ids[] = intval($item);
+    } else {
+
+      $term = get_term_by('name', $item, $taxonomia);
+
+      if ($term && !is_wp_error($term)) {
+
+        $ids[] = $term->term_id;
+      } else {
+
+        error_log('Termo não encontrado para ' . $taxonomia . ': ' . $item);
+      }
+    }
+  }
+
+  return $ids;
+}
