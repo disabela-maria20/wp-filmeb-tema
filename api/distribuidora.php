@@ -22,12 +22,20 @@ function api_distribuidora_get($request)
 
     foreach ($posts as $post) {
         $filme = filme_scheme($post);
-        $estreia = $filme->estreia;
+        $estreia = $filme->estreia ?? null;
 
-        // Calcular ano e nome do mês da estreia
-        $dataEstreia = new DateTime($estreia);
-        $ano = $dataEstreia->format('Y');
-        $mes = $dataEstreia->format('F');
+        // Verifica se a estreia é válida antes de criar um DateTime
+        if (!$estreia) {
+            continue;
+        }
+
+        try {
+            $dataEstreia = new DateTime($estreia);
+            $ano = $dataEstreia->format('Y');
+            $mes = $dataEstreia->format('F');
+        } catch (Exception $e) {
+            continue; // Se houver erro na data, ignora esse filme
+        }
 
         // Distribuidores fixos
         $distribuidoresBase = [
@@ -59,9 +67,9 @@ function api_distribuidora_get($request)
 
         // Dados individuais do filme
         $filmeData = [
-            'link' => $filme->link,
-            'title' => $filme->title,
-            'titulo_original' => $filme->titulo_original
+            'link' => $filme->link ?? '',
+            'title' => $filme->title ?? '',
+            'titulo_original' => $filme->titulo_original ?? ''
         ];
 
         // Verificar se já existe um item com a mesma data de estreia
@@ -80,10 +88,10 @@ function api_distribuidora_get($request)
                 'estreia' => $estreia,
                 'ano' => $ano,
                 'mes' => $mes,
-                'distribuidoras' => $filme->distribuidoras,
-                'origem' => $filme->paises,
-                'genero' => $filme->generos,
-                'tecnologia' => $filme->tecnologias
+                'distribuidoras' => $filme->distribuidoras ?? [],
+                'origem' => $filme->paises ?? [],
+                'genero' => $filme->generos ?? [],
+                'tecnologia' => $filme->tecnologias ?? []
             ], $distribuidoresBase, [
                 $distribuidora => [$filmeData]
             ]);
@@ -97,11 +105,12 @@ function api_distribuidora_get($request)
     // Resposta final
     $response = rest_ensure_response([
         'data' => $pagedData,
-        'total' => $total,
+        'total' => count($resultData), // Corrigido para refletir a real contagem dos itens filtrados
         'page' => $page,
-        'total_pages' => ceil($total / $limit),
+        'total_pages' => ceil(count($resultData) / $limit),
     ]);
-    $response->header('X-Total-Count', $total);
+
+    $response->header('X-Total-Count', count($resultData));
     return $response;
 }
 

@@ -18,22 +18,22 @@ $query = new WP_Query($args);
 
 
 $termos = get_terms(array(
-  'taxonomy'   => 'generos',
+  'taxonomy' => 'generos',
   'hide_empty' => false,
 ));
 
 $tecnologias = get_terms(array(
-  'taxonomy'   => 'tecnologias',
+  'taxonomy' => 'tecnologias',
   'hide_empty' => false,
 ));
 
 $distribuidoras = get_terms(array(
-  'taxonomy'   => 'distribuidoras',
+  'taxonomy' => 'distribuidoras',
   'hide_empty' => false,
 ));
 
 $paises = get_terms(array(
-  'taxonomy'   => 'paises',
+  'taxonomy' => 'paises',
   'hide_empty' => false,
 ));
 
@@ -75,8 +75,9 @@ function render_terms($field_key)
   return $output;
 }
 
-if ($query->have_posts()) :
-  while ($query->have_posts()) : $query->the_post();
+if ($query->have_posts()):
+  while ($query->have_posts()):
+    $query->the_post();
 
     $banner_superior = CFS()->get('banner_moldura', $banner_id);
     $banner_inferior = CFS()->get('mega_banner', $banner_id);
@@ -84,7 +85,7 @@ if ($query->have_posts()) :
     $skyscraper = CFS()->get('skyscraper', $banner_id);
     $super_banner = CFS()->get('super_banner', $banner_id);
 
-?>
+    ?>
     <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner bannerMobile" alt="banner">
 
     <div class="container bannerDesktop">
@@ -94,7 +95,7 @@ if ($query->have_posts()) :
       </div>
     </div>
 
-<?php
+    <?php
   endwhile;
   wp_reset_postdata();
 endif;
@@ -186,107 +187,106 @@ endif;
           </select>
         </div>
       </section>
-      <section class="area-filmes">
-        <div class="lista-filmes" v-if="ativoItem === 'lista'" id="lista">
+      <div v-if="loading" class="loading">
+        Carregando filmes...
+      </div>
+      <div v-else>
+        <section class="area-filmes">
+          <div class="lista-filmes" v-if="ativoItem === 'lista'" id="lista">
+            <div class="grid-filmes">
+              <div v-for="(filme, index) in FiltrarFilme" :key="index">
+                <a class="card" v-on:mousemove="hoverCard" :href="filme.link" :key="index" ref="cards">
+                  <div v-if="!filme.cartaz">
+                    <h3>{{filme.title}}</h3>
+                    <p class="indisponivel">Poster não disponível</p>
+                  </div>
+                  <div v-else>
+                    <img :src="filme.cartaz" alt="<?php the_title(); ?>" class="poster">
+                  </div>
 
-          <div class="grid-filmes">
-            <div v-for="(filme, index) in FiltrarFilme" :key="index">
-              <a class="card" v-on:mousemove="hoverCard" :href="filme.link" :key="index">
-                <div v-if="!filme.cartaz">
-                  <h3>{{filme.title}}</h3>
-                  <p class="indisponivel">Poster não disponível</p>
-                </div>
-                <div v-else>
-                  <img :src="filme.cartaz" alt="<?php the_title(); ?>" class="poster">
-                </div>
-
-                <div class="info">
-                  <ul>
-                    <li> <span>Título:</span> <strong>{{filme.title}}</strong> </li>
-                    <li>
-                      <span>Distribuição:</span>
-                      <div>
-                        <strong v-for="(value, index) in filme.distribuidoras" :key="index">{{value}}</strong>
-                      </div>
-                    </li>
-                    <li>
-                      <span>País:</span>
-                      <div>
-                        <strong v-for="(value, index) in filme.paises" :key="index">{{value}}</strong>
-                      </div>
-                    </li>
-                    <li>
-                      <span>Gênero:</span>
-                      <div>
-                        <strong v-for="(value, index) in filme.generos" :key="index">{{value}}</strong>
-                      </div>
-                    </li>
-                    <li> <span>Direção:</span> <strong>{{filme.direcao}}</strong></li>
-                    <li> <span>Duração</span> <strong>{{filme.duracao_minutos}}min</strong></li>
-                  </ul>
-                </div>
-              </a>
+                  <div class="info">
+                    <ul>
+                      <li> <span>Título:</span> <strong>{{filme.title}}</strong> </li>
+                      <li>
+                        <span>Distribuição:</span>
+                        <div>
+                          <strong v-for="(value, index) in filme.distribuidoras" :key="index">{{value}}</strong>
+                        </div>
+                      </li>
+                      <li>
+                        <span>País:</span>
+                        <div>
+                          <strong v-for="(value, index) in filme.paises" :key="index">{{value}}</strong>
+                        </div>
+                      </li>
+                      <li>
+                        <span>Gênero:</span>
+                        <div>
+                          <strong v-for="(value, index) in filme.generos" :key="index">{{value}}</strong>
+                        </div>
+                      </li>
+                      <li> <span>Direção:</span> <strong>{{filme.direcao}}</strong></li>
+                      <li> <span>Duração</span> <strong>{{filme.duracao_minutos}}min</strong></li>
+                    </ul>
+                  </div>
+                </a>
+              </div>
             </div>
           </div>
-        </div>
 
-      </section>
-      <div class="tabela-filme" v-if="ativoItem === 'tabela'" id="tabela">
+        </section>
+        <div class="tabela-filme" v-if="ativoItem === 'tabela'" id="tabela">
+          <div :key="index">
+            <table>
+              <thead>
+                <tr>
+                  <th>Título</th>
+                  <th>Distribuição</th>
+                  <th>Direção</th>
+                  <th>País</th>
+                  <th>Gênero</th>
+                  <th>Duração</th>
+                  <th>Elenco</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(filme, index) in FiltrarFilme">
+                  <td class="titulo">
+                    <a :href="filme.link">
+                      <h3>{{filme.title}}</h3>
+                      <span>{{filme.titulo_original}}</span>
+                    </a>
+                  </td>
+                  <td>
+                    <div v-for="(value, index) in filme.distribuidoras" :key="index">{{value}}</div>
+                  </td>
+                  <td>{{filme.direcao}}</td>
+                  <td>
+                    <div v-for="(value, index) in filme.paises" :key="index">{{value}}</div>
+                  </td>
+                  <td>
+                    <div v-for="(value, index) in filme.generos" :key="index">
+                      {{value}}
+                    </div>
+                  </td>
+                  <td>{{filme.duracao_minutos}}min</td>
+                  <td>{{filme.elenco}}</td>
 
-        <div :key="index">
-          <table>
-            <thead>
-              <tr>
-                <th>Título</th>
-                <th>Distribuição</th>
-                <th>Direção</th>
-                <th>País</th>
-                <th>Gênero</th>
-                <th>Duração</th>
-                <th>Elenco</th>
-                <th>Classificação</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(filme, index) in FiltrarFilme">
-                <td class="titulo">
-                  <a :href="filme.link">
-                    <h3>{{filme.title}}</h3>
-                    <span>{{filme.titulo_original}}</span>
-                  </a>
-                </td>
-                <td>
-                  <div v-for="(value, index) in filme.distribuidoras" :key="index">{{value}}</div>
-                </td>
-                <td>{{filme.direcao}}</td>
-                <td>
-                  <div v-for="(value, index) in filme.paises" :key="index">{{value}}</div>
-                </td>
-                <td>
-                  <div v-for="(value, index) in filme.generos" :key="index">
-                    {{value}}
-                  </div>
-                </td>
-                <td>{{filme.duracao_minutos}}min</td>
-                <td>{{filme.elenco}}</td>
-                <td v-for="(value, index) in filme.classificacoes" :key="index">{{value}}</td>
-              </tr>
-            </tbody>
-          </table>
+
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
+
     </div>
   </div>
-
-
 </div>
 <?php get_template_part('components/Footer/index'); ?>
 <?php get_footer(); ?>
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <script>
-  const isLocalHost = window.location.host == "http://localhost/" ? 'http://localhost/FilmeB' :
-    'https://filmeb.isabelamribeiro.com.br/'
-
   new Vue({
     el: "#app",
     data: {
@@ -302,32 +302,40 @@ endif;
         genero: '',
         tecnologia: ''
       },
-      filteredMovies: [], // Adicionando a lista filtrada
+      filteredMovies: [],
+      loading: false,
     },
     methods: {
-      async getLitsaFilmes() {
+      async getListaFilmes() {
+        this.loading = true;
+
         try {
-          const res = await fetch(`http://filmeb.local/wp-json/api/v1/filmes`);
+          const res = await fetch(`https://filmeb.isabelamribeiro.com.br/FilmeB/wp-json/api/v1/filmes`);
           if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
           const data = await res.json();
 
           console.log("Filmes carregados:", data);
           this.filmes = data;
-          this.filteredMovies = data; // Inicializando a lista filtrada com todos os filmes
+
         } catch (error) {
           console.error("Erro ao buscar filmes:", error);
+        } finally {
+          this.loading = false;
         }
       },
-
       async getListaAnos() {
+        this.loading = true;
+
         try {
-          const res = await fetch(`http://filmeb.local/wp-json/api/v1/anos-filmes`);
+          const res = await fetch(`https://filmeb.isabelamribeiro.com.br/FilmeB/wp-json/api/v1/anos-filmes`);
           if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
           const data = await res.json();
 
           this.anos = data;
         } catch (error) {
           console.error("Erro ao buscar anos:", error);
+        } finally {
+          this.loading = false;
         }
       },
 
@@ -370,26 +378,28 @@ endif;
             cardInfo.style.top = `${mouseY}%`;
           }
         });
-      }
+      },
     },
     computed: {
       FiltrarFilme() {
-        return this.filmes.filter(filme => {
-          return (
-            (this.selectedFilters.ano ? filme.ano.toString() === this.selectedFilters.ano : true) &&
-            (this.selectedFilters.mes ? filme.mes === this.selectedFilters.mes : true) &&
-            (this.selectedFilters.origem ? filme.origem === this.selectedFilters.origem : true) &&
-            (this.selectedFilters.distribuidor ? filme.distribuidor === this.selectedFilters.distribuidor :
-              true) &&
-            (this.selectedFilters.genero ? filme.genero === this.selectedFilters.genero : true) &&
-            (this.selectedFilters.tecnologia ? filme.tecnologia === this.selectedFilters.tecnologia : true)
-          );
-        });
+        const filmes = this.filmes
+          .filter(filme => {
+            return (
+              (this.selectedFilters.ano ? filme.ano.toString() === this.selectedFilters.ano : true) &&
+              (this.selectedFilters.mes ? filme.mes === this.selectedFilters.mes : true) &&
+              (this.selectedFilters.origem ? filme.origem === this.selectedFilters.origem : true) &&
+              (this.selectedFilters.distribuidor ? filme.distribuidor === this.selectedFilters.distribuidor :
+                true) &&
+              (this.selectedFilters.genero ? filme.genero === this.selectedFilters.genero : true) &&
+              (this.selectedFilters.tecnologia ? filme.tecnologia === this.selectedFilters.tecnologia : true)
+            );
+          });
+        return filmes;
       }
     },
     created() {
       this.getListaAnos();
-      this.getLitsaFilmes();
+      this.getListaFilmes();
     },
   });
 </script>

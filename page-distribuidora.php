@@ -19,22 +19,22 @@ $query = new WP_Query($args);
 
 
 $termos = get_terms(array(
-  'taxonomy'   => 'generos',
+  'taxonomy' => 'generos',
   'hide_empty' => false,
 ));
 
 $tecnologias = get_terms(array(
-  'taxonomy'   => 'tecnologias',
+  'taxonomy' => 'tecnologias',
   'hide_empty' => false,
 ));
 
 $distribuidoras = get_terms(array(
-  'taxonomy'   => 'distribuidoras',
+  'taxonomy' => 'distribuidoras',
   'hide_empty' => false,
 ));
 
 $paises = get_terms(array(
-  'taxonomy'   => 'paises',
+  'taxonomy' => 'paises',
   'hide_empty' => false,
 ));
 
@@ -77,8 +77,9 @@ function render_terms($field_key)
   return $output;
 }
 
-if ($query->have_posts()) :
-  while ($query->have_posts()) : $query->the_post();
+if ($query->have_posts()):
+  while ($query->have_posts()):
+    $query->the_post();
 
     $banner_superior = CFS()->get('banner_moldura', $banner_id);
     $banner_inferior = CFS()->get('mega_banner', $banner_id);
@@ -86,7 +87,7 @@ if ($query->have_posts()) :
     $skyscraper = CFS()->get('skyscraper', $banner_id);
     $super_banner = CFS()->get('super_banner', $banner_id);
 
-?>
+    ?>
     <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner bannerMobile" alt="banner">
 
     <div class="container bannerDesktop">
@@ -96,7 +97,7 @@ if ($query->have_posts()) :
       </div>
     </div>
 
-<?php
+    <?php
   endwhile;
   wp_reset_postdata();
 endif;
@@ -158,7 +159,10 @@ endif;
         </select>
       </div>
     </section>
-    <div class="tabela-distribuidora" id="tableDistribuidora">
+    <div v-if="loading" class="loading">
+      Carregando filmes...
+    </div>
+    <div v-else class="tabela-distribuidora" id="tableDistribuidora">
       <table>
         <thead>
           <tr>
@@ -306,13 +310,15 @@ endif;
       filteredMovies: [],
       paginaAtual: 1,
       totalPaginas: 12,
-      filmesPorPagina: 10
+      filmesPorPagina: 10,
+      loading: false
     },
     methods: {
       async getLitsaFilmes(ano = '', pagina = this.paginaAtual) {
         try {
+          this.loading = true
           const url =
-            `${window.location.origin}/wp-json/api/v1/distribuidoras?page=${pagina}&limit=${this.filmesPorPagina}${ano ? `&ano=${ano}` : ''}`;
+            `https://filmeb.isabelamribeiro.com.br/FilmeB/wp-json/api/v1/distribuidoras?page=${pagina}&limit=${this.filmesPorPagina}${ano ? `&ano=${ano}` : ''}`;
           const res = await fetch(url);
           if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
           const data = await res.json();
@@ -322,6 +328,8 @@ endif;
           this.totalPaginas = data.total_pages;
         } catch (error) {
           console.error("Erro ao buscar filmes:", error);
+        } finally {
+          this.loading = false
         }
       },
 
@@ -346,15 +354,17 @@ endif;
       },
 
       async getListaAnos() {
-        lo
+        this.loading = true
         try {
-          const res = await fetch(`${window.location.origin}/wp-json/api/v1/anos-filmes`);
+          const res = await fetch(`https://filmeb.isabelamribeiro.com.br/FilmeB/wp-json/api/v1/anos-filmes`);
           if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
           const data = await res.json();
 
           this.anos = data;
         } catch (error) {
           console.error("Erro ao buscar anos:", error);
+        } finally {
+          this.loading = false
         }
       },
 

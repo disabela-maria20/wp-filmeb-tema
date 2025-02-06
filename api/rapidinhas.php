@@ -63,14 +63,7 @@ function api_rapidinhas_post($request)
     $descricao = isset($data['descricao']) ? sanitize_textarea_field($data['descricao']) : '';
     $imagem_url = isset($data['imagem']) ? esc_url_raw($data['imagem']) : '';
 
-    if (empty($imagem_url)) {
-        return new WP_Error('no_image_url', 'Nenhuma URL de imagem fornecida.', ['status' => 400]);
-    }
-
     $attachment_id = upload_image_from_url($imagem_url);
-    if (is_wp_error($attachment_id)) {
-        return new WP_Error('upload_error', 'Erro ao baixar a imagem.', ['status' => 500]);
-    }
 
     $imagem_salva_url = wp_get_attachment_url($attachment_id);
 
