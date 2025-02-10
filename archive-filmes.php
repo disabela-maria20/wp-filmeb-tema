@@ -141,7 +141,7 @@ endif;
           </div>
         </section>
         <div class="lancamento">
-          <a href="/lancamentos-por-distribuidora/" id="distribuidora">Ver lançamentos por
+          <a href="<?php echo get_site_url(); ?>/lancamentos-por-distribuidora/" id="distribuidora">Ver lançamentos por
             distribuidora</a>
         </div>
       </div>
@@ -310,7 +310,7 @@ endif;
         this.loading = true;
 
         try {
-          const res = await fetch(`https://filmeb.isabelamribeiro.com.br/FilmeB/wp-json/api/v1/filmes`);
+          const res = await fetch(`<?php echo get_site_url(); ?>/wp-json/api/v1/filmes`);
           if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
           const data = await res.json();
 
@@ -327,7 +327,7 @@ endif;
         this.loading = true;
 
         try {
-          const res = await fetch(`https://filmeb.isabelamribeiro.com.br/FilmeB/wp-json/api/v1/anos-filmes`);
+          const res = await fetch(`<?php echo get_site_url(); ?>/wp-json/api/v1/ano-filmes`);
           if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
           const data = await res.json();
 

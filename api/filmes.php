@@ -322,9 +322,10 @@ function register_filmes_api_endpoints()
         'callback' => 'api_filmes_post',
     ]);
 
-    register_rest_route('api/v1', '/anos-filmes', [
+    register_rest_route('api/v1', '/ano-filmes', array(
         'methods' => 'GET',
-        'callback' => 'api_anos_filmes_get'
-    ]);
+        'callback' => 'api_anos_filmes_get',
+
+    ));
 }
 add_action('rest_api_init', 'register_filmes_api_endpoints');

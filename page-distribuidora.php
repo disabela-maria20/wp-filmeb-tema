@@ -318,7 +318,7 @@ endif;
         try {
           this.loading = true
           const url =
-            `https://filmeb.isabelamribeiro.com.br/FilmeB/wp-json/api/v1/distribuidoras?page=${pagina}&limit=${this.filmesPorPagina}${ano ? `&ano=${ano}` : ''}`;
+            `<?php echo get_site_url(); ?>/wp-json/api/v1/distribuidoras?page=${pagina}&limit=${this.filmesPorPagina}${ano ? `&ano=${ano}` : ''}`;
           const res = await fetch(url);
           if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
           const data = await res.json();
@@ -356,7 +356,7 @@ endif;
       async getListaAnos() {
         this.loading = true
         try {
-          const res = await fetch(`https://filmeb.isabelamribeiro.com.br/FilmeB/wp-json/api/v1/anos-filmes`);
+          const res = await fetch(`<?php echo get_site_url(); ?>/wp-json/api/v1/ano-filmes`);
           if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
           const data = await res.json();
 

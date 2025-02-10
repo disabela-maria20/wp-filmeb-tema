@@ -3,6 +3,8 @@ require_once(get_template_directory() . "/api/banner.php");
 require_once(get_template_directory() . "/api/filmes.php");
 require_once(get_template_directory() . "/api/distribuidora.php");
 require_once(get_template_directory() . "/api/rapidinhas.php");
+require_once(get_template_directory() . "/api/noticias.php");
+require_once(get_template_directory() . "/api/usuario.php");
 
 
 add_filter('wp_image_editors', 'wpb_image_editor_default_to_gd');
@@ -190,3 +192,18 @@ function obter_term_ids($itens, $taxonomia)
 
   return $ids;
 }
+
+
+function custom_cors_headers()
+{
+  header("Access-Control-Allow-Origin: http://127.0.0.1:5500"); // Substitua com a origem permitida
+  header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+  header("Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token");
+
+  if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    header("HTTP/1.1 200 OK");
+    exit();
+  }
+}
+
+add_action('init', 'custom_cors_headers');
