@@ -11,26 +11,26 @@
       </div>
       <div>
         <nav>
-          <?php 
-            wp_nav_menu(array(
-              'theme_location' => 'institucional',
-              'menu_class' => 'menu-institucional',
-              'container' => false
-            )); ?>
+          <?php
+          wp_nav_menu(array(
+            'theme_location' => 'institucional',
+            'menu_class' => 'menu-institucional',
+            'container' => false
+          )); ?>
 
           <ul class="user">
             <li>
-              <?php if(is_user_logged_in()) {?>
-              <a href="">
-                <span>login</span>
-                <i class="bi bi-person-circle"></i>
-              </a>
-              <?php } else {?>
-              <a href="/conta-da-assinatura/seu-perfil/">
-                <span>Minha conta</span>
-                <i class="bi bi-person-circle"></i>
-              </a>
-              <?php }  ?>
+              <?php if (!is_user_logged_in()) { ?>
+                <a href="">
+                  <span>Entrar</span>
+                  <i class="bi bi-person-circle"></i>
+                </a>
+              <?php } else { ?>
+                <a href="/conta-da-assinatura/seu-perfil/">
+                  <span>Minha conta</span>
+                  <i class="bi bi-person-circle"></i>
+                </a>
+              <?php } ?>
             </li>
           </ul>
         </nav>
@@ -38,12 +38,12 @@
     </div>
     <div class="grid_menu">
       <nav>
-        <?php 
-          wp_nav_menu(array(
-            'menu' =>'principal', 
-            'theme_location' => 'menu-principal', 
-            'container' =>false
-          )); ?>
+        <?php
+        wp_nav_menu(array(
+          'menu' => 'principal',
+          'theme_location' => 'menu-principal',
+          'container' => false
+        )); ?>
       </nav>
     </div>
   </div>

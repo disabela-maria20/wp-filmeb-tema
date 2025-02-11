@@ -52,8 +52,20 @@
       line-height: 3.4rem;
     }
   }
+  a {
+    font-weight: normal;
+    font-size: 1.7rem;
+    line-height: 2.1rem;
+    text-align: left;
+    color: $color-bright-red;
+    transition: all 200ms ease-in;
 
-  p {
+    &:hover {
+      color: $color-black;
+    }
+  }
+  p,
+  address {
     color: $color-darker-gray;
     font-size: 1.6rem;
     line-height: 1.61;
