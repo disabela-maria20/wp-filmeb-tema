@@ -1,6 +1,6 @@
 footer.rodape {
   margin-top: 35px;
-  @include media(lg){
+  @include media(lg) {
     margin-top: 90px;
   }
   .bg-filmeB {
@@ -82,7 +82,7 @@ footer.rodape {
             color: $color-darker-gray;
             transition: all 200ms ease-in;
 
-            &:hover{
+            &:hover {
               color: $color-black;
             }
           }
@@ -112,12 +112,12 @@ footer.rodape {
       }
     }
   }
-  p{
+  p {
     font-weight: 300;
     font-size: 1.2rem;
     line-height: 1.6rem;
     text-align: center;
     color: $color-darker-gray;
-    padding:  25px;
+    padding: 25px;
   }
 }

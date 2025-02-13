@@ -1,13 +1,30 @@
 <?php
 // Template Name: Home
 get_header();
+
+$filme = new WP_Query(array(
+  'post_type' => 'filmes',
+  'posts_per_page' => 20,
+  'orderby' => 'date',
+  'order' => 'DESC'
+));
+
+$banner_estreia = CFS()->get('banner_estreia');
+$banner_lateral = CFS()->get('banner_lateral');
+$recent_posts_query = new WP_Query(array(
+  'post_type' => 'post',
+  'posts_per_page' => 10,
+  'orderby' => 'date',
+  'order' => 'DESC',
+  'category__not_in' =>'Rapidinhas',
+));
 ?>
 
-<img src="<?php echo CFS()->get('banner_superior'); ?>" class="img-banner bannerMobile" alt="banner">
+<img src="<?php echo CFS()->get('banner_superior'); ?>" class="img-banner w-full d-block" alt="banner">
+
 
 <div class="container bannerDesktop">
   <div class="grid-banner-superior">
-    <img src="<?php echo CFS()->get('banner_superior'); ?>" class="img-banner" alt="banner">
     <img src="<?php echo CFS()->get('banner_inferior'); ?>" class="img-banner " alt="banner">
   </div>
 </div>
@@ -15,10 +32,9 @@ get_header();
 <?php get_template_part('components/MenuMobile/index'); ?>
 <?php get_template_part('components/MenuDesktop/index'); ?>
 
-<section class="bg-gray padding-banner">
+<section class="bg-gray">
   <div class="container bannerMobile bg-gray padding-banner ">
     <div class="grid-banner-superior">
-      <img src="<?php echo CFS()->get('banner_superior'); ?>" class="img-banner bannerDesktop" alt="banner">
       <img src="<?php echo CFS()->get('banner_inferior'); ?>" class="img-banner " alt="banner">
     </div>
   </div>
@@ -27,9 +43,9 @@ get_header();
 <?php if (have_posts()):
   while (have_posts()):
     the_post(); ?>
-    <div class="container">
-      <section class="owl-carousel slide">
-        <?php
+<div class="container">
+  <section class="owl-carousel slide">
+    <?php
         $recent_posts_query = new WP_Query(array(
           'post_type' => 'post',
           'posts_per_page' => 5,
@@ -41,184 +57,176 @@ get_header();
           while ($recent_posts_query->have_posts()) {
             $recent_posts_query->the_post();
             ?>
-            <div class="item">
-              <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
-                alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
-              <div>
-                <span><?php echo get_the_category_list(', '); ?></span>
-                <a href="<?php the_permalink(); ?>">
-                  <h2><?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?></h2>
-                </a>
-                <p><?php echo esc_html(CFS()->get('descricao') ?: get_the_excerpt()); ?></p>
-              </div>
-            </div>
-            <?php
+    <div class="item">
+      <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
+        alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
+      <div>
+        <span><?php echo get_the_category_list(', '); ?></span>
+        <a href="<?php the_permalink(); ?>">
+          <h2><?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?></h2>
+        </a>
+        <p><?php echo esc_html(CFS()->get('descricao') ?: get_the_excerpt()); ?></p>
+      </div>
+    </div>
+    <?php
           }
           wp_reset_postdata();
         } else {
           echo '<p>Nenhum post encontrado.</p>';
         }
         ?>
-      </section>
-      <section class="home_table">
-        <div class="home_table grid grid-2-lg gap-32">
-          <div>
-            <div class="area">
-              <div class="titulo">
-                <h2>10 maiores bilheterias do ano no Brasil</h2>
-                <span></span>
-              </div>
-              <?php echo do_shortcode('[table id=Brasil /]'); ?>
-            </div>
-
-            <span>De 08 a 12/05/2024 - Fonte: Filme B Box Office</span>
+  </section>
+  <section class="home_table">
+    <div class="home_table grid grid-2-lg gap-32">
+      <div>
+        <div class="area">
+          <div class="titulo">
+            <h2>10 maiores bilheterias do ano no Brasil</h2>
+            <span></span>
           </div>
-          <div>
-            <div class="area">
-              <div class="titulo">
-                <h2>10 maiores bilheterias do ano no Brasil</h2>
-                <span></span>
-              </div>
-              <?php echo do_shortcode('[table id=Brasil /]'); ?>
-            </div>
+          <?php echo do_shortcode('[table id=Brasil /]'); ?>
+        </div>
 
-            <span>De 08 a 12/05/2024 - Fonte: Filme B Box Office</span>
+        <span>De 08 a 12/05/2024 - Fonte: Filme B Box Office</span>
+      </div>
+      <div>
+        <div class="area">
+          <div class="titulo">
+            <h2>10 maiores bilheterias do ano no Brasil</h2>
+            <span></span>
           </div>
+          <?php echo do_shortcode('[table id=Brasil /]'); ?>
         </div>
-      </section>
-      <section class="home_newllater">
-        <div class="container">
-          <img src="<?php echo CFS()->get('banner_newsllater'); ?>" class="img-banner d-block m-auto" alt="banner">
-        </div>
-      </section>
-      <!-- Area de filmes e newsllater -->
-      <section class="home_lista_noticias">
-        <h2>Publicações recentes</h2>
-        <div class="grid grid-2-lg gap-32">
-          <?php
-          $rapidinhas_id = get_cat_ID('Rapidinhas');
 
-          $recent_posts_query = new WP_Query(array(
-            'post_type' => 'post',
-            'posts_per_page' => 10,
-            'orderby' => 'date',
-            'order' => 'DESC',
-            'category__not_in' => array($rapidinhas_id),
-          ));
-
-          if ($recent_posts_query->have_posts()) {
-            while ($recent_posts_query->have_posts()) {
-              $recent_posts_query->the_post();
-              ?>
-              <div class="item">
-                <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
-                  alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
-                <div>
-                  <span><?php echo get_the_category_list(', '); ?></span>
-                  <a href="<?php the_permalink(); ?>">
-                    <h3><?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?></h3>
-                  </a>
-                  <span class="data"><?php echo date_i18n('j \d\e F \d\e Y', strtotime(get_the_date())); ?></span>
-                </div>
-
-              </div>
-              <?php
-            }
-            wp_reset_postdata();
-          } else {
-            echo '<p>Nenhum post encontrado.</p>';
-          }
-          ?>
-        </div>
-      </section>
-      <section class="home_lista_rapinhas bannerMobile">
-        <h2>Rapidinhas</h2>
-        <div class="owl-carousel rapidinhas">
-          <?php
-          $rapidinhas_posts_query = new WP_Query(array(
-            'post_type' => 'rapidinhas',
-            'posts_per_page' => 9,
-            'orderby' => 'date',
-            'order' => 'DESC',
-          ));
-          //var_dump($rapidinhas_posts_query) ;
-          if ($rapidinhas_posts_query->have_posts()) {
-            $post_count = 0;
-
-            while ($rapidinhas_posts_query->have_posts()) {
-              $rapidinhas_posts_query->the_post();
-
-
-              if ($post_count % 3 == 0) {
-                if ($post_count > 0) {
-                  echo '</div>'; // Fecha a div.grid anterior
-                  echo '</div>'; // Fecha a div.item anterior
-                }
-                echo '<div class="item"><div class="grid grid-1-lg gap-32">';
-              }
-
-              ?>
-              <div class="item-rapidinha">
-                <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
-                  alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
-                <div>
-                  <span class="data"><?php echo date_i18n('j \d\e F \d\e Y', strtotime(get_the_date())); ?></span>
-                  <h3><?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?></h3>
-                  <a href="<?php the_permalink(); ?>">Leia mais</a>
-                </div>
-              </div>
-              <?php
-
-              $post_count++;
-            }
-
-            // Fecha a última div.item
-            echo '</div>'; // Fecha a div.grid
-            echo '</div>'; // Fecha a div.item
-      
-            wp_reset_postdata();
-          } else {
-            echo '<p>Nenhum post encontrado.</p>';
-          }
-          ?>
-        </div>
-      </section>
-      <section class="home_lista_rapinhas bannerDesktop">
-        <h2>Rapidinhas</h2>
-        <div class="grid grid-2-lg gap-32">
-          <?php
-          $rapidinhas_posts_query = new WP_Query(array(
-            'post_type' => 'rapidinhas',
-            'posts_per_page' => 9,
-            'orderby' => 'date',
-            'order' => 'DESC',
-          ));
-
-          if ($rapidinhas_posts_query->have_posts()) {
-            while ($rapidinhas_posts_query->have_posts()) {
-              $rapidinhas_posts_query->the_post(); ?>
-              <div class="item-rapidinha">
-                <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
-                  alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
-                <div>
-                  <span class="data"><?php echo date_i18n('j \d\e F \d\e Y', strtotime(get_the_date())); ?></span>
-                  <h3><?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?></h3>
-                  <a href="<?php the_permalink(); ?>">Leia mais</a>
-                </div>
-              </div>
-              <?php
-            }
-            wp_reset_postdata();
-          } else {
-            echo '<p>Nenhum post encontrado.</p>';
-          }
-          ?>
-
-        </div>
-      </section>
+        <span>De 08 a 12/05/2024 - Fonte: Filme B Box Office</span>
+      </div>
     </div>
-  <?php endwhile;
+  </section>
+  <section class="home_newllater">
+    <div class="container">
+      <img src="<?php echo CFS()->get('banner_newsllater'); ?>" class="img-banner d-block m-auto" alt="banner">
+    </div>
+    <div class="grid">
+      <div>
+        <h2>Receba a nossa newsllater</h2>
+        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusamus non, ullam vitae veniam fuga nostrum
+          deleniti quos culpa? Magnam maiores doloribus numquam veritatis ullam dolore obcaecati et quo placeat
+          recusandae!</p>
+      </div>
+      <div class="enviar">
+        <input type="text" placeholder="Digite o seu e-mail">
+        <button>Enviar</button>
+      </div>
+    </div>
+  </section>
+  <section class="home-filmes">
+    <h2>Estreias</h2>
+    <div class="grid-filmes">
+      <div>
+        <section id="filmesHome" class="owl-carousel">
+          <?php if ($filme->have_posts()) { while ($filme->have_posts()) {  $filme->the_post(); ?>
+          <div class="item">
+            <img src="<?php echo esc_html(CFS()->get('cartaz')) ?>" class="img-slide" alt="">
+            <p><?php echo get_the_title() ?></p>
+          </div>
+          <?php } } ?>
+        </section>
+      </div>
+      <div>
+        <img class="publi" src="<?php echo esc_html($banner_estreia ) ?>" alt="Banner de publicidade" />
+      </div>
+    </div>
+  </section>
+  <section class="home_lista_noticias">
+    <h2>Publicações recentes</h2>
+    <?php if(esc_html($banner_lateral) == '1'){?>
+    <div class="grid-recentes">
+      <div>
+        <div class="item">
+          <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
+            alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
+          <div>
+            <span><?php echo get_the_category_list(', '); ?></span>
+            <a href="<?php the_permalink(); ?>">
+              <h3><?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?></h3>
+            </a>
+            <span class="data"><?php echo date_i18n('j \d\e F \d\e Y', strtotime(get_the_date())); ?></span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <img src="<?php echo esc_url(CFS()->get('imagem')); ?>" alt="" srcset="">
+        <iframe width="560" height="315" src="<?php echo esc_url(CFS()->get('imagem')); ?>" title="YouTube video player" frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      </div>
+    </div>
+    <?php }else {?>
+    <div class="grid grid-2-lg gap-32">
+      <?php if ($recent_posts_query->have_posts()) { while ($recent_posts_query->have_posts()) { $recent_posts_query->the_post(); ?>
+      <div class="item">
+        <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
+          alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
+        <div>
+          <span><?php echo get_the_category_list(', '); ?></span>
+          <a href="<?php the_permalink(); ?>">
+            <h3><?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?></h3>
+          </a>
+          <span class="data"><?php echo date_i18n('j \d\e F \d\e Y', strtotime(get_the_date())); ?></span>
+        </div>
+      </div>
+      <?php }} ?>
+    </div>
+    <?php  }?>
+
+  </section>
+  <section class="home_lista_rapinhas">
+    <h2 class="titulo">Rapidinha</h2>
+
+    <!-- Carousel Mobile -->
+    <section class="home_lista_rapinhas bannerMobile">
+      <div class="owl-carousel rapidinhas">
+        <?php get_template_part('components/RapidinhasMobile/index'); ?>
+      </div>
+    </section>
+
+    <!-- Grid Desktop -->
+    <section class="home_lista_rapinhas bannerDesktop">
+      <div class="grid grid-2-md gap-32">
+        <?php get_template_part('components/RapidinhasDesktop/index'); ?>
+      </div>
+    </section>
+  </section>
+</div>
+<?php endwhile;
 else:
 endif; ?>
 <?php get_template_part('components/Footer/index'); ?>
 <?php get_footer(); ?>
+
+
+<script>
+// Carrega o Splide plugin
+document.addEventListener("DOMContentLoaded", function() {
+  jQuery(document).ready(function($) {
+    $('#filmesHome').owlCarousel({
+      loop: true,
+      margin: 10,
+      nav: false,
+      dots: true,
+      mouseDrag: true,
+      autoplay: false,
+      autoplayTimeout: 3000,
+      navText: ["<i class='bi bi-chevron-left'></i>", "<i class='bi bi-chevron-right'></i>"],
+      responsive: {
+        0: {
+          items: 3
+        },
+        1024: {
+          items: 5
+        },
+      }
+    });
+  });
+});
+</script>
