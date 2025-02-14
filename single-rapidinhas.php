@@ -41,9 +41,9 @@ if ($query->have_posts()) :
 
 <div class="container bannerDesktop">
   <div class="grid-banner-superior">
-    <a href="<?php echo esc_url($link_banner_superior); ?>" target="_blank" rel="noopener noreferrer">
+    <!-- <a href="<?php echo esc_url($link_banner_superior); ?>" target="_blank" rel="noopener noreferrer">
       <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner" alt="banner">
-    </a>
+    </a> -->
     <a href="<?php echo esc_url($link_banner_inferior); ?>" target="_blank" rel="noopener noreferrer">
       <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
     </a>
@@ -62,9 +62,9 @@ endif;
 <section class="bg-gray padding-banner">
   <div class="container bannerMobile">
     <div class="grid-banner-superior">
-      <a href="<?php echo esc_url($link_banner_superior); ?>" target="_blank" rel="noopener noreferrer">
+      <!-- <a href="<?php echo esc_url($link_banner_superior); ?>" target="_blank" rel="noopener noreferrer">
         <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner" alt="banner">
-      </a>
+      </a> -->
       <a href="<?php echo esc_url($link_banner_inferior); ?>" target="_blank" rel="noopener noreferrer">
         <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
       </a>

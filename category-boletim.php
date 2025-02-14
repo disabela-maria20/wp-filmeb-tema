@@ -45,7 +45,7 @@ endif;
 <section class="bg-gray padding-banner">
   <div class="container bannerMobile">
     <div class="grid-banner-superior">
-      <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner bannerDesktop" alt="banner">
+      <!-- <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner bannerDesktop" alt="banner"> -->
       <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
     </div>
   </div>

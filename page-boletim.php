@@ -6,7 +6,7 @@ get_header();
 
 <div class="container bannerDesktop">
   <div class="grid-banner-superior">
-    <img src="<?php echo CFS()->get('banner_moldura'); ?>" class="img-banner" alt="banner">
+    <!-- <img src="<?php echo CFS()->get('banner_moldura'); ?>" class="img-banner" alt="banner"> -->
     <img src="<?php echo CFS()->get('mega_banner'); ?>" class="img-banner " alt="banner">
   </div>
 </div>
