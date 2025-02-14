@@ -9,7 +9,16 @@
       <a href="<?php echo get_template_directory_uri(); ?>">
         <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo-horizontal.png" alt="logo cine B" />
       </a>
-      <i class="bi bi-person-circle"></i>
+      <?php if (!is_user_logged_in()) { ?>
+      <a href="<?php echo get_site_url(); ?>/minha-conta/">
+        <i class=" bi bi-person-circle"></i>
+      </a>
+      <?php } else { ?>
+      <a href="<?php echo get_site_url(); ?>/minha-conta/">
+        <i class="bi bi-person-circle"></i>
+      </a>
+      <?php } ?>
+
     </div>
     <div>
       <nav class="menu">

@@ -29,7 +29,6 @@ if ($query->have_posts()) :
 
 <div class="container bannerDesktop">
   <div class="grid-banner-superior">
-    <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner" alt="banner">
     <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
   </div>
 </div>
