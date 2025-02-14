@@ -197,6 +197,36 @@
       color: $color-darker-gray;
     }
   }
+
+  .grid-recentes {
+    display: grid;
+    gap: 22px;
+    @include media(lg) {
+      grid-template-columns: 2fr 1fr;
+    }
+    img {
+      width: 100%;
+    }
+  }
+
+  .video {
+    margin-top: 10px;
+    float: none;
+    clear: both;
+    width: 100%;
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top: 25px;
+    height: 0;
+
+    iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
 }
 
 .home_lista_rapinhas {
@@ -255,6 +285,10 @@
 }
 
 .home_newllater {
+  .img-banner {
+    display: block;
+    margin: 0 auto;
+  }
   .grid {
     padding: 35px;
     margin-top: 35px;

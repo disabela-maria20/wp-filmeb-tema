@@ -361,10 +361,10 @@ header#desktop {
 .grid-banner-superior {
   display: grid;
   gap: 30px;
-
   .img-banner {
     max-width: 100%;
     margin: 0 auto;
     display: block;
+    padding-bottom: 35px;
   }
 }

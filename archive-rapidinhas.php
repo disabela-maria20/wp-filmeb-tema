@@ -38,15 +38,12 @@ $boletim_query = new WP_Query(array(
 
 ?>
 <a href="<?php echo esc_url($link_banner_superior)?>" target="_blank" rel="noopener noreferrer">
-  <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner bannerMobile" alt="banner">
+  <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner " alt="banner">
 </a>
 
 
 <div class="container bannerDesktop">
   <div class="grid-banner-superior">
-    <a href="<?php echo esc_url($banner_superior); ?>" target="_blank" rel="noopener noreferrer">
-      <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner" alt="banner">
-    </a>
     <a href="<?php echo esc_url($link_banner_inferior); ?>" target="_blank" rel="noopener noreferrer">
       <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
     </a>

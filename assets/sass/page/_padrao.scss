@@ -148,3 +148,14 @@ p {
     margin-bottom: 25px;
   }
 }
+
+.img-banner {
+  display: block;
+  margin: 0 auto;
+  @include media(lg) {
+    padding-bottom: 35px;
+  }
+}
+
+.img-banner {
+}

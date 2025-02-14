@@ -2,7 +2,7 @@
   <div class="container">
     <div class="grid_institucinal">
       <div>
-        <a href="/">
+        <a href="<?php echo get_site_url(); ?>">
           <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo-horizontal.png" alt="logo cine B" />
         </a>
       </div>
@@ -21,15 +21,15 @@
           <ul class="user">
             <li>
               <?php if (!is_user_logged_in()) { ?>
-                <a href="">
-                  <span>Entrar</span>
-                  <i class="bi bi-person-circle"></i>
-                </a>
+              <a href="<?php echo get_site_url(); ?>/minha-conta/>">
+                <span>Entrar</span>
+                <i class=" bi bi-person-circle"></i>
+              </a>
               <?php } else { ?>
-                <a href="/conta-da-assinatura/seu-perfil/">
-                  <span>Minha conta</span>
-                  <i class="bi bi-person-circle"></i>
-                </a>
+              <a href="<?php echo get_site_url(); ?>/minha-conta/">
+                <span>Minha conta</span>
+                <i class="bi bi-person-circle"></i>
+              </a>
               <?php } ?>
             </li>
           </ul>

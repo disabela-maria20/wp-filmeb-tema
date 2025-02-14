@@ -11,6 +11,11 @@ $filme = new WP_Query(array(
 
 $banner_estreia = CFS()->get('banner_estreia');
 $banner_lateral = CFS()->get('banner_lateral');
+$banner_skyscraper = CFS()->get('banner_skyscraper');
+$video = CFS()->get('video');
+
+
+
 $recent_posts_query = new WP_Query(array(
   'post_type' => 'post',
   'posts_per_page' => 10,
@@ -142,6 +147,7 @@ $recent_posts_query = new WP_Query(array(
     <?php if(esc_html($banner_lateral) == '1'){?>
     <div class="grid-recentes">
       <div>
+        <?php if ($recent_posts_query->have_posts()) { while ($recent_posts_query->have_posts()) { $recent_posts_query->the_post(); ?>
         <div class="item">
           <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
             alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
@@ -153,13 +159,18 @@ $recent_posts_query = new WP_Query(array(
             <span class="data"><?php echo date_i18n('j \d\e F \d\e Y', strtotime(get_the_date())); ?></span>
           </div>
         </div>
+        <?php }} ?>
       </div>
-      <div>
-        <img src="<?php echo esc_url(CFS()->get('imagem')); ?>" alt="" srcset="">
-        <iframe width="560" height="315" src="<?php echo esc_url(CFS()->get('imagem')); ?>" title="YouTube video player" frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-      </div>
+      <aside>
+        <img src="<?php echo esc_url($banner_skyscraper); ?>">
+        <div class="video">
+          <iframe width="560" height="315" src="<?php echo esc_url($video); ?>" title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+
+      </aside>
     </div>
     <?php }else {?>
     <div class="grid grid-2-lg gap-32">
