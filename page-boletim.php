@@ -2,7 +2,7 @@
 // Template Name: Boletim
 get_header();
 ?>
-<img src="<?php echo CFS()->get('banner_moldura'); ?>" class="img-banner bannerMobile" alt="banner">
+<img src="<?php echo CFS()->get('banner_moldura'); ?>" class="w-full p-35 img-banner bannerMobile " alt="banner">
 
 <div class="container bannerDesktop">
   <div class="grid-banner-superior">

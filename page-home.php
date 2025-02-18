@@ -25,7 +25,7 @@ $recent_posts_query = new WP_Query(array(
 ));
 ?>
 
-<img src="<?php echo CFS()->get('banner_superior'); ?>" class="img-banner w-full d-block" alt="banner">
+<img src="<?php echo CFS()->get('banner_superior'); ?>" class="w-full p-35 img-banner bannerMobile" alt="banner">
 
 
 <div class="container bannerDesktop">
@@ -58,10 +58,7 @@ $recent_posts_query = new WP_Query(array(
           'order' => 'DESC'
         ));
 
-        if ($recent_posts_query->have_posts()) {
-          while ($recent_posts_query->have_posts()) {
-            $recent_posts_query->the_post();
-            ?>
+        if ($recent_posts_query->have_posts()) {while ($recent_posts_query->have_posts()) { $recent_posts_query->the_post();?>
     <div class="item">
       <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
         alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
@@ -73,13 +70,7 @@ $recent_posts_query = new WP_Query(array(
         <p><?php echo esc_html(CFS()->get('descricao') ?: get_the_excerpt()); ?></p>
       </div>
     </div>
-    <?php
-          }
-          wp_reset_postdata();
-        } else {
-          echo '<p>Nenhum post encontrado.</p>';
-        }
-        ?>
+    <?php  } wp_reset_postdata(); } else {  echo '<p>Nenhum post encontrado.</p>'; } ?>
   </section>
   <section class="home_table">
     <div class="home_table grid grid-2-lg gap-32">
@@ -131,7 +122,10 @@ $recent_posts_query = new WP_Query(array(
         <section id="filmesHome" class="owl-carousel">
           <?php if ($filme->have_posts()) { while ($filme->have_posts()) {  $filme->the_post(); ?>
           <div class="item">
-            <img src="<?php echo esc_html(CFS()->get('cartaz')) ?>" class="img-slide" alt="">
+            <?php if( esc_url(CFS()->get('cartaz')) != '') {  ?>
+            <img src="<?php echo esc_url(CFS()->get('cartaz')); ?>"
+              alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
+            <?php }?>
             <p><?php echo get_the_title() ?></p>
           </div>
           <?php } } ?>
@@ -143,14 +137,17 @@ $recent_posts_query = new WP_Query(array(
     </div>
   </section>
   <section class="home_lista_noticias">
-    <h2>Publicações recentes</h2>
+    <h2>Publicações Recentes</h2>
     <?php if(esc_html($banner_lateral) == '1'){?>
     <div class="grid-recentes">
       <div>
         <?php if ($recent_posts_query->have_posts()) { while ($recent_posts_query->have_posts()) { $recent_posts_query->the_post(); ?>
         <div class="item">
+          <?php if( esc_url(CFS()->get('imagem')) != '') {  ?>
           <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
             alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
+          <?php }?>
+
           <div>
             <span><?php echo get_the_category_list(', '); ?></span>
             <a href="<?php the_permalink(); ?>">
@@ -176,8 +173,10 @@ $recent_posts_query = new WP_Query(array(
     <div class="grid grid-2-lg gap-32">
       <?php if ($recent_posts_query->have_posts()) { while ($recent_posts_query->have_posts()) { $recent_posts_query->the_post(); ?>
       <div class="item">
+        <?php if( esc_url(CFS()->get('imagem')) != '') {  ?>
         <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
           alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
+        <?php }?>
         <div>
           <span><?php echo get_the_category_list(', '); ?></span>
           <a href="<?php the_permalink(); ?>">

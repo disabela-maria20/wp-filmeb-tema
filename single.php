@@ -27,10 +27,9 @@ if ($query->have_posts()):
     $super_banner = CFS()->get('super_banner', $banner_id);
 
     ?>
-<img src="<?php echo esc_url($banner_superior); ?>" class=" img-banner bannerMobile" alt="banner">
+<img src="<?php echo esc_url($banner_superior); ?>" class="w-full p-35 img-banner bannerMobile" alt="banner">
 <div class="container bannerDesktop">
   <div class="grid-banner-superior">
-    <img src="<?php echo esc_url($banner_superior); ?>" class=" img-banner" alt="banner">
     <img src="<?php echo esc_url($banner_inferior); ?>" class=" img-banner" alt="banner">
   </div>
 </div>
@@ -44,9 +43,8 @@ endif;
 <?php get_template_part('components/MenuDesktop/index'); ?>
 
 <section class="bg-gray padding-banner">
-  <div class="container bannerMobile">
+  <div class="bannerMobile">
     <div class="grid-banner-superior">
-      <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner bannerDesktop" alt="banner">
       <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
     </div>
   </div>
@@ -69,12 +67,15 @@ endif;
       <section class="post">
         <div>
           <strong class="data"><?php echo date_i18n('j \d\e F \d\e Y', strtotime(get_the_date())); ?></strong>
+          <?php if( esc_url(CFS()->get('imagem')) != '') {  ?>
           <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
             alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
-          <a href="" class="autor">
+          <?php }?>
+
+          <!-- <a href="" class="autor">
             <img src="<?php echo get_avatar_url($author_id) ?>"
               alt="<?php get_the_author_meta('display_name', $author_id) ?>">
-          </a>
+          </a> -->
         </div>
         <div class="post-content">
           <h1><?php the_title(); ?></h1>
@@ -89,20 +90,6 @@ endif;
         </div>
       </section>
       <img src="<?php echo esc_url($super_banner); ?>" class="img-banner" alt="banner">
-      <h3 class="titulo">Rapidinha</h3>
-      <!-- Carousel Mobile -->
-      <section class="home_lista_rapinhas bannerMobile">
-        <div class="owl-carousel rapidinhas">
-          <?php get_template_part('components/RapidinhasMobile/index'); ?>
-        </div>
-      </section>
-
-      <!-- Grid Desktop -->
-      <section class="home_lista_rapinhas bannerDesktop">
-        <div class="grid gap-32">
-          <?php get_template_part('components/RapidinhasDesktop/index'); ?>
-        </div>
-      </section>
     </div>
     <?php get_template_part('components/Aside/index'); ?>
   </div>

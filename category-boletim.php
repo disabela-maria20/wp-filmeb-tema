@@ -15,6 +15,13 @@ $args = array(
 
 $query = new WP_Query($args);
 
+$recent_posts_query = new WP_Query(array(
+  'post_type' => 'post',
+  'posts_per_page' => 5,
+  'orderby' => 'date',
+  'order' => 'DESC'
+));
+
 if ($query->have_posts()) :
   while ($query->have_posts()) : $query->the_post();
 
@@ -25,7 +32,7 @@ if ($query->have_posts()) :
     $super_banner = CFS()->get('super_banner', $banner_id);
 
 ?>
-<img src="<?php echo esc_url($banner_superior); ?>" class="img-banner bannerMobile" alt="banner">
+<img src="<?php echo esc_url($banner_superior); ?>" class="w-full p-35 img-banner bannerMobile" alt="banner">
 
 <div class="container bannerDesktop">
   <div class="grid-banner-superior">
@@ -59,9 +66,7 @@ endif;
       <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo-boletim-filme-b-horizontal.png"
         class="logo" alt="cine B" />
 
-      <?php if (function_exists('yoast_breadcrumb')) {
-            yoast_breadcrumb('<div id="breadcrumbs">', '</div>');
-          } ?>
+      <?php if (function_exists('yoast_breadcrumb')) {yoast_breadcrumb('<div id="breadcrumbs">', '</div>'); } ?>
 
       <?php
           $boletim_query = new WP_Query(array(
@@ -73,8 +78,10 @@ endif;
       <div class="posts">
         <?php while ($boletim_query->have_posts()) : $boletim_query->the_post(); ?>
         <div class="post">
+          <?php if( esc_url(CFS()->get('imagem')) != '') {  ?>
           <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
             alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
+          <?php }?>
           <span><?php echo get_the_category_list(', '); ?></span>
           <a href="<?php the_permalink(); ?>" class="read-more">
             <h2><?php the_title(); ?></h2>
@@ -85,10 +92,7 @@ endif;
       </div>
       <?php else : ?>
       <p>Nenhum boletim encontrado.</p>
-      <?php
-          endif;
-          wp_reset_postdata();
-          ?>
+      <?php endif; wp_reset_postdata();?>
 
       <img src="<?php echo esc_url($super_banner); ?>" class="img-banner" alt="banner">
 
@@ -108,7 +112,37 @@ endif;
         </div>
       </section>
     </div>
-    <?php get_template_part('components/Aside/index'); ?>
+    <?php
+    $banner_id = "185";
+    $args = array(
+      'post_type' => 'banner-post',
+      'posts_per_page' => 1,
+    );
+    $query = new WP_Query($args);
+    if ($query->have_posts()) :while ($query->have_posts()) : $query->the_post();
+        $skyscraper = CFS()->get('skyscraper', $banner_id);
+    ?>
+
+    <aside class="aside-boletim">
+      <img src="<?php echo esc_url($skyscraper); ?>" class="img-banner" alt="banner">
+      <h2>Boletim da semana</h2>
+      <div class="aside-item-boletim">
+        <ul>
+          <?php  if ($recent_posts_query->have_posts()) {while ($recent_posts_query->have_posts()) { $recent_posts_query->the_post();?>
+          <li>
+            <?php if( esc_url(CFS()->get('imagem')) != '') {  ?>
+            <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
+              alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
+            <?php }?>
+            <a href="<?php the_permalink(); ?>">
+              <h2><?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?></h2>
+            </a>
+            <?php  } wp_reset_postdata(); } else {  echo '<p>Nenhum post encontrado.</p>'; } ?>
+          </li>
+        </ul>
+      </div>
+    </aside>
+    <?php endwhile; wp_reset_postdata(); endif;?>
   </div>
 </div>
 <?php endwhile;

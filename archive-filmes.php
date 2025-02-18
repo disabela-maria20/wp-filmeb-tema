@@ -86,16 +86,15 @@ if ($query->have_posts()):
     $super_banner = CFS()->get('super_banner', $banner_id);
 
     ?>
-    <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner bannerMobile" alt="banner">
+<img src="<?php echo esc_url($banner_superior); ?>" class="w-full p-35 img-banner bannerMobile" alt="banner">
 
-    <div class="container bannerDesktop">
-      <div class="grid-banner-superior">
-        <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner" alt="banner">
-        <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
-      </div>
-    </div>
+<div class="container bannerDesktop">
+  <div class="grid-banner-superior">
+    <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
+  </div>
+</div>
 
-    <?php
+<?php
   endwhile;
   wp_reset_postdata();
 endif;
@@ -155,34 +154,34 @@ endif;
           <select v-model="selectedFilters.mes" id="mes">
             <option disabled value="">Mês</option>
             <?php foreach ($meses as $key => $value) { ?>
-              <option value="<?php echo esc_attr($key); ?>"><?php echo esc_html($value); ?></option>
+            <option value="<?php echo esc_attr($key); ?>"><?php echo esc_html($value); ?></option>
             <?php } ?>
           </select>
           <select v-model="selectedFilters.origem" id="origem">
             <option disabled value="">Origem</option>
             <?php foreach ($paises as $paise) { ?>
-              <option value="<?php echo esc_html($paise->name); ?>"><?php echo $paise->name . PHP_EOL; ?>
-              </option>
+            <option value="<?php echo esc_html($paise->name); ?>"><?php echo $paise->name . PHP_EOL; ?>
+            </option>
             <?php } ?>
           </select>
           <select v-model="selectedFilters.distribuidor" id="distribuidor">
             <option disabled value="">Distribuidor</option>
             <?php foreach ($distribuidoras as $distribuidora) { ?>
-              <option value="<?php echo esc_html($distribuidora->name); ?>"><?php echo $distribuidora->name . PHP_EOL; ?>
-              </option>
+            <option value="<?php echo esc_html($distribuidora->name); ?>"><?php echo $distribuidora->name . PHP_EOL; ?>
+            </option>
             <?php } ?>
           </select>
           <select v-model="selectedFilters.genero" id="genero">
             <option disabled value="">Gênero</option>
             <?php foreach ($termos as $termo) { ?>
-              <option value="<?php echo esc_html($termo->name); ?>"><?php echo $termo->name . PHP_EOL; ?></option>
+            <option value="<?php echo esc_html($termo->name); ?>"><?php echo $termo->name . PHP_EOL; ?></option>
             <?php } ?>
           </select>
           <select v-model="selectedFilters.tecnologia" id="tecnologia">
             <option disabled value="">Tecnologia</option>
             <?php foreach ($tecnologias as $tecnologia) { ?>
-              <option value="<?php echo esc_html($tecnologia->name); ?>"><?php echo $tecnologia->name . PHP_EOL; ?>
-              </option>
+            <option value="<?php echo esc_html($tecnologia->name); ?>"><?php echo $tecnologia->name . PHP_EOL; ?>
+            </option>
             <?php } ?>
           </select>
         </div>
@@ -287,119 +286,119 @@ endif;
 <?php get_footer(); ?>
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <script>
-  new Vue({
-    el: "#app",
-    data: {
-      teste: "teste",
-      ativoItem: 'lista',
-      filmes: [],
-      anos: [],
-      selectedFilters: {
-        ano: '',
-        mes: '',
-        origem: '',
-        distribuidor: '',
-        genero: '',
-        tecnologia: ''
-      },
-      filteredMovies: [],
-      loading: false,
+new Vue({
+  el: "#app",
+  data: {
+    teste: "teste",
+    ativoItem: 'lista',
+    filmes: [],
+    anos: [],
+    selectedFilters: {
+      ano: '',
+      mes: '',
+      origem: '',
+      distribuidor: '',
+      genero: '',
+      tecnologia: ''
     },
-    methods: {
-      async getListaFilmes() {
-        this.loading = true;
+    filteredMovies: [],
+    loading: false,
+  },
+  methods: {
+    async getListaFilmes() {
+      this.loading = true;
 
-        try {
-          const res = await fetch(`<?php echo get_site_url(); ?>/wp-json/api/v1/filmes`);
-          if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
-          const data = await res.json();
+      try {
+        const res = await fetch(`<?php echo get_site_url(); ?>/wp-json/api/v1/filmes`);
+        if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
+        const data = await res.json();
 
-          console.log("Filmes carregados:", data);
-          this.filmes = data;
+        console.log("Filmes carregados:", data);
+        this.filmes = data;
 
-        } catch (error) {
-          console.error("Erro ao buscar filmes:", error);
-        } finally {
-          this.loading = false;
-        }
-      },
-      async getListaAnos() {
-        this.loading = true;
-
-        try {
-          const res = await fetch(`<?php echo get_site_url(); ?>/wp-json/api/v1/ano-filmes`);
-          if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
-          const data = await res.json();
-
-          this.anos = data;
-        } catch (error) {
-          console.error("Erro ao buscar anos:", error);
-        } finally {
-          this.loading = false;
-        }
-      },
-
-      setTabAtivo(tab) {
-        this.ativoItem = tab;
-      },
-
-      traduzirMesParaPortugues(mesIngles) {
-        const mesesIngles = [
-          "January", "February", "March", "April", "May", "June",
-          "July", "August", "September", "October", "November", "December"
-        ];
-
-        const mesesPortugues = [
-          "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-          "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-        ];
-
-        const index = mesesIngles.indexOf(mesIngles.charAt(0).toUpperCase() + mesIngles.slice(1));
-
-        if (index !== -1) {
-          return mesesPortugues[index];
-        } else {
-          return "Mês inválido";
-        }
-      },
-
-      hoverCard(e) {
-        const cards = this.$el.querySelectorAll(".card");
-
-        cards.forEach((card) => {
-          const rect = card.getBoundingClientRect();
-          const mouseX = ((e.clientX - rect.left) / rect.width) * 100;
-          const mouseY = ((e.clientY - rect.top) / rect.height) * 100;
-
-          const cardInfo = card.querySelector(".info");
-          if (cardInfo) {
-            cardInfo.style.position = 'absolute';
-            cardInfo.style.left = `${mouseX}%`;
-            cardInfo.style.top = `${mouseY}%`;
-          }
-        });
-      },
-    },
-    computed: {
-      FiltrarFilme() {
-        const filmes = this.filmes
-          .filter(filme => {
-            return (
-              (this.selectedFilters.ano ? filme.ano.toString() === this.selectedFilters.ano : true) &&
-              (this.selectedFilters.mes ? filme.mes === this.selectedFilters.mes : true) &&
-              (this.selectedFilters.origem ? filme.origem === this.selectedFilters.origem : true) &&
-              (this.selectedFilters.distribuidor ? filme.distribuidor === this.selectedFilters.distribuidor :
-                true) &&
-              (this.selectedFilters.genero ? filme.genero === this.selectedFilters.genero : true) &&
-              (this.selectedFilters.tecnologia ? filme.tecnologia === this.selectedFilters.tecnologia : true)
-            );
-          });
-        return filmes;
+      } catch (error) {
+        console.error("Erro ao buscar filmes:", error);
+      } finally {
+        this.loading = false;
       }
     },
-    created() {
-      this.getListaAnos();
-      this.getListaFilmes();
+    async getListaAnos() {
+      this.loading = true;
+
+      try {
+        const res = await fetch(`<?php echo get_site_url(); ?>/wp-json/api/v1/ano-filmes`);
+        if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
+        const data = await res.json();
+
+        this.anos = data;
+      } catch (error) {
+        console.error("Erro ao buscar anos:", error);
+      } finally {
+        this.loading = false;
+      }
     },
-  });
+
+    setTabAtivo(tab) {
+      this.ativoItem = tab;
+    },
+
+    traduzirMesParaPortugues(mesIngles) {
+      const mesesIngles = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+      ];
+
+      const mesesPortugues = [
+        "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+        "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+      ];
+
+      const index = mesesIngles.indexOf(mesIngles.charAt(0).toUpperCase() + mesIngles.slice(1));
+
+      if (index !== -1) {
+        return mesesPortugues[index];
+      } else {
+        return "Mês inválido";
+      }
+    },
+
+    hoverCard(e) {
+      const cards = this.$el.querySelectorAll(".card");
+
+      cards.forEach((card) => {
+        const rect = card.getBoundingClientRect();
+        const mouseX = ((e.clientX - rect.left) / rect.width) * 100;
+        const mouseY = ((e.clientY - rect.top) / rect.height) * 100;
+
+        const cardInfo = card.querySelector(".info");
+        if (cardInfo) {
+          cardInfo.style.position = 'absolute';
+          cardInfo.style.left = `${mouseX}%`;
+          cardInfo.style.top = `${mouseY}%`;
+        }
+      });
+    },
+  },
+  computed: {
+    FiltrarFilme() {
+      const filmes = this.filmes
+        .filter(filme => {
+          return (
+            (this.selectedFilters.ano ? filme.ano.toString() === this.selectedFilters.ano : true) &&
+            (this.selectedFilters.mes ? filme.mes === this.selectedFilters.mes : true) &&
+            (this.selectedFilters.origem ? filme.origem === this.selectedFilters.origem : true) &&
+            (this.selectedFilters.distribuidor ? filme.distribuidor === this.selectedFilters.distribuidor :
+              true) &&
+            (this.selectedFilters.genero ? filme.genero === this.selectedFilters.genero : true) &&
+            (this.selectedFilters.tecnologia ? filme.tecnologia === this.selectedFilters.tecnologia : true)
+          );
+        });
+      return filmes;
+    }
+  },
+  created() {
+    this.getListaAnos();
+    this.getListaFilmes();
+  },
+});
 </script>

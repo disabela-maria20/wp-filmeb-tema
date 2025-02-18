@@ -28,7 +28,7 @@
   }
 
   .logo {
-    margin-bottom: 40px;
+    margin: 35px 0;
   }
 
   #breadcrumbs {
@@ -182,6 +182,22 @@
         line-height: 2rem;
         color: $color-bright-red;
         margin-bottom: 20px;
+      }
+
+      ul {
+        display: grid;
+        gap: 20px;
+        li {
+          img {
+            margin-bottom: 10px;
+          }
+          a {
+            h2 {
+              font-size: 1.8rem;
+              margin: 0;
+            }
+          }
+        }
       }
     }
   }

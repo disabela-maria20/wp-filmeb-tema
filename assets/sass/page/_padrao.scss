@@ -1,4 +1,5 @@
-.padrao {
+.padrao,
+.post-content {
   h1 {
     font-weight: bold;
     font-size: 3rem;
@@ -75,7 +76,8 @@
   img {
     height: 225px;
     object-fit: cover;
-
+    margin: 0 auto;
+    display: block;
     @include media(lg) {
       height: 450px;
     }
@@ -152,10 +154,12 @@ p {
 .img-banner {
   display: block;
   margin: 0 auto;
-  @include media(lg) {
-    padding-bottom: 35px;
-  }
 }
 
-.img-banner {
+.w-full {
+  width: 100%;
+}
+
+.p-35 {
+  padding-bottom: 35px;
 }

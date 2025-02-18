@@ -5,8 +5,11 @@ footer.rodape {
   }
   .bg-filmeB {
     padding: 35px 0;
-    background: linear-gradient(180deg, #{$color-bright-red}, #{$color-red-dark});
+    background: linear-gradient(180deg, $color-bright-red, $color-red-dark 90%);
 
+    @include media(lg) {
+      padding: 90px 0;
+    }
     img {
       display: block;
       margin: 0 auto;
@@ -16,22 +19,23 @@ footer.rodape {
   .area_saiba_mais {
     display: block;
     margin: 0 auto;
-    color: $color-bright-red;
+    color: $color-white;
     max-width: 320px;
     text-align: center;
-    margin: 55px auto;
+    margin: 0 auto;
 
     h2 {
       font-weight: bold;
       font-size: 2rem;
       line-height: 3.4rem;
-      margin-bottom: 10px;
+      margin: 10px 0;
     }
 
     p {
+      color: $color-white;
       font-size: 1.6rem;
       line-height: 2rem;
-      margin-bottom: 32px;
+      margin-bottom: 35px;
     }
 
     a {
@@ -118,6 +122,5 @@ footer.rodape {
     line-height: 1.6rem;
     text-align: center;
     color: $color-darker-gray;
-    padding: 25px;
   }
 }

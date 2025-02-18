@@ -38,7 +38,7 @@ $boletim_query = new WP_Query(array(
 
 ?>
 <a href="<?php echo esc_url($link_banner_superior)?>" target="_blank" rel="noopener noreferrer">
-  <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner " alt="banner">
+  <img src="<?php echo esc_url($banner_superior); ?>" class="w-full p-35 img-banner bannerMobile " alt="banner">
 </a>
 
 

@@ -40,25 +40,25 @@ if ($query->have_posts()):
     ));
 
     ?>
-    <a href="<?php echo esc_url($link_banner_superior) ?>" target="_blank" rel="noopener noreferrer">
-      <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner bannerMobile" alt="banner">
+<a href="<?php echo esc_url($link_banner_superior) ?>" target="_blank" rel="noopener noreferrer">
+  <img src="<?php echo esc_url($banner_superior); ?>" class="w-full p-35 img-banner bannerMobile" alt="banner">
+</a>
+
+
+<div class="container bannerDesktop">
+  <div class="grid-banner-superior">
+    <a href="<?php echo esc_url($banner_superior); ?>" target="_blank" rel="noopener noreferrer">
+      <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner" alt="banner">
     </a>
-
-
-    <div class="container bannerDesktop">
-      <div class="grid-banner-superior">
-        <a href="<?php echo esc_url($banner_superior); ?>" target="_blank" rel="noopener noreferrer">
-          <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner" alt="banner">
-        </a>
-        <a href="<?php echo esc_url($link_banner_inferior); ?>" target="_blank" rel="noopener noreferrer">
-          <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
-        </a>
-      </div>
-    </div>
+    <a href="<?php echo esc_url($link_banner_inferior); ?>" target="_blank" rel="noopener noreferrer">
+      <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
+    </a>
+  </div>
+</div>
 
 
 
-    <?php
+<?php
   endwhile;
   wp_reset_postdata();
 endif;
@@ -95,18 +95,18 @@ endif;
       ));
 
       if ($boletim_query->have_posts()): ?>
-        <h1>Edições</h1>
-        <?php while ($boletim_query->have_posts()):
+      <h1>Edições</h1>
+      <?php while ($boletim_query->have_posts()):
           $boletim_query->the_post(); ?>
-          <div class="grid-semanal">
-            <a href="<?php the_permalink(); ?>" class="link-post-semanal">
-              <h2><?php the_title(); ?> - <?php echo date_i18n('d \d\e F \d\e Y', strtotime(CFS()->get('data'))) ?></h2>
-            </a>
-          </div>
+      <div class="grid-semanal">
+        <a href="<?php the_permalink(); ?>" class="link-post-semanal">
+          <h2><?php the_title(); ?> - <?php echo date_i18n('d \d\e F \d\e Y', strtotime(CFS()->get('data'))) ?></h2>
+        </a>
+      </div>
 
-        <?php endwhile; ?>
-        <div class="pagination">
-          <?php
+      <?php endwhile; ?>
+      <div class="pagination">
+        <?php
           echo paginate_links(array(
             'total' => $boletim_query->max_num_pages,
             'type' => 'list',
@@ -115,9 +115,9 @@ endif;
             'mid_size' => 10,
           ));
           ?>
-        </div>
+      </div>
       <?php else: ?>
-        <p>Nenhuma rapidinha encontrada.</p>
+      <p>Nenhuma rapidinha encontrada.</p>
       <?php endif; ?>
       <?php wp_reset_postdata(); ?>
     </div>
@@ -135,14 +135,14 @@ endif;
       if ($recent_posts_query->have_posts()) {
         while ($recent_posts_query->have_posts()) {
           $recent_posts_query->the_post(); ?>
-          <div class="item-aside">
-            <a href="<?php the_permalink(); ?>" class="edicoes">
-              <i class="bi bi-arrow-right-short"></i>
-              <?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?>
-              <?php echo get_the_date('j \d\e F \d\e Y'); ?>
-            </a>
-          </div>
-        <?php }
+      <div class="item-aside">
+        <a href="<?php the_permalink(); ?>" class="edicoes">
+          <i class="bi bi-arrow-right-short"></i>
+          <?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?>
+          <?php echo get_the_date('j \d\e F \d\e Y'); ?>
+        </a>
+      </div>
+      <?php }
         wp_reset_postdata();
       } ?>
     </aside>

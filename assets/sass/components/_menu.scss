@@ -352,6 +352,12 @@ header#desktop {
               }
             }
           }
+          .current-menu-item {
+            a {
+              font-weight: 700;
+              color: $color-bright-red;
+            }
+          }
         }
       }
     }
@@ -365,6 +371,5 @@ header#desktop {
     max-width: 100%;
     margin: 0 auto;
     display: block;
-    padding-bottom: 35px;
   }
 }
