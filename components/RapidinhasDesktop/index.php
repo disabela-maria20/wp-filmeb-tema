@@ -2,6 +2,8 @@
 $recent_posts_query = new WP_Query(array(
   'post_type' => 'rapidinhas',
   'posts_per_page' => 10,
+  'orderby' => 'date',     
+  'order' => 'DESC' 
 ));
 
 if ($recent_posts_query->have_posts()) {

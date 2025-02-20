@@ -112,6 +112,8 @@ endif;
       $recent_posts_query = new WP_Query(array(
         'post_type' => 'edicoes',
         'posts_per_page' => 10,
+        'orderby' => 'date',     
+        'order' => 'DESC' 
       ));
 
       if ($recent_posts_query->have_posts()) { 
@@ -120,15 +122,13 @@ endif;
       <div class="item-aside">
         <a href="<?php the_permalink(); ?>" class="edicoes">
           <i class="bi bi-arrow-right-short"></i>
-          <?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?>
-          <?php echo get_the_date('j \d\e F \d\e Y'); ?>
+          <?php 
+              $texto = the_title();
+              echo formatar_data_personalizada($texto);
+            ?>
         </a>
       </div>
-      <?php 
-        }
-        wp_reset_postdata();
-      }
-      ?>
+      <?php } wp_reset_postdata(); }?>
     </aside>
   </div>
 </div>

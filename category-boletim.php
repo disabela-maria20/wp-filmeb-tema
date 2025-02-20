@@ -72,6 +72,8 @@ endif;
           $boletim_query = new WP_Query(array(
             'category_name'  => $category_slug, 
             'posts_per_page' => 3,
+            'orderby' => 'date',     
+            'order' => 'DESC' 
           ));
 
           if ($boletim_query->have_posts()) : ?>

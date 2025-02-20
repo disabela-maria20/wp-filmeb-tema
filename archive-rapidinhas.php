@@ -85,6 +85,8 @@ endif;
           $boletim_query = new WP_Query(array(
             'post_type' => 'rapidinhas',
             'posts_per_page' => 10,
+            'orderby' => 'date',     
+            'order' => 'DESC' 
           ));
 
           if ($boletim_query->have_posts()): ?>
@@ -97,7 +99,7 @@ endif;
           <div>
             <span class="data"><?php echo date_i18n('j \d\e F \d\e Y', strtotime(get_the_date())); ?></span>
             <a href="<?php the_permalink(); ?>" class="read-more">
-              <h2><?php the_title(); ?></h2>
+              <h2><?php echo formatar_codigo(get_the_title());?> </h2>
             </a>
             <a href="<?php the_permalink(); ?>">
               Leia mais
@@ -132,6 +134,8 @@ endif;
       $recent_posts_query = new WP_Query(array(
         'post_type' => 'edicoes',
         'posts_per_page' => 10,
+        'orderby' => 'date',     
+        'order' => 'DESC' 
       ));
 
       if ($recent_posts_query->have_posts()) { 
@@ -140,8 +144,10 @@ endif;
       <div class="item-aside">
         <a href="<?php the_permalink(); ?>" class="edicoes">
           <i class="bi bi-arrow-right-short"></i>
-          <?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?>
-          <?php echo get_the_date('j \d\e F \d\e Y'); ?>
+          <?php 
+              $texto = the_title();
+              echo formatar_data_personalizada($texto);
+            ?>
         </a>
       </div>
       <?php 

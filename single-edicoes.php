@@ -99,7 +99,7 @@ endif;
             <div>
               <span class="data"><?php echo date_i18n('j \d\e F \d\e Y', strtotime($the_post->post_date)); ?></span>
               <a href="<?php the_permalink(); ?>" class="read-more">
-                <h2><?php echo $the_post->post_title; ?></h2>
+                <h2><?php echo formatar_codigo($the_post->post_title); ?></h2>
               </a>
               <a href="<?php echo get_template_directory_uri() . '/' . 'rapidinhas/' . $the_post->post_name; ?>">
                 Leia mais
@@ -141,14 +141,13 @@ endif;
       <div class="item-aside">
         <a href="<?php the_permalink(); ?>" class="edicoes">
           <i class="bi bi-arrow-right-short"></i>
-          <?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?>
+          <?php 
+              $texto = the_title();
+              echo formatar_data_personalizada($texto);
+            ?>
         </a>
       </div>
-      <?php
-        }
-        wp_reset_postdata();
-      }
-      ?>
+      <?php } wp_reset_postdata(); }?>
     </aside>
   </div>
 </div>
