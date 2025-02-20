@@ -6,22 +6,19 @@
   }
 
   .item {
-    display: grid;
-    gap: 40px;
-
+    height: 253px;
     @include media(lg) {
-      grid-template-columns: 1fr 1fr;
+      display: flex;
+      gap: 40px;
       align-items: center;
     }
-
+    @include media(lg) {
+      height: 400px;
+    }
     img {
-      height: 253px;
+      max-width: 45%;
       object-fit: cover;
       border-radius: 5px;
-
-      @include media(lg) {
-        height: 400px;
-      }
     }
 
     span,

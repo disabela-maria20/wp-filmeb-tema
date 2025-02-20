@@ -204,7 +204,7 @@ function obter_term_ids($itens, $taxonomia)
 
 function custom_cors_headers()
 {
-  header("Access-Control-Allow-Origin: http://127.0.0.1:5500"); // Substitua com a origem permitida
+  header("Access-Control-Allow-Origin: http://127.0.0.1:5500");
   header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
   header("Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token");
 
@@ -215,3 +215,38 @@ function custom_cors_headers()
 }
 
 add_action('init', 'custom_cors_headers');
+
+function formatar_data_personalizada($texto) {
+ 
+  if (preg_match('/(\d{2})-(\d{2})-(\d{4})/', $texto, $matches)) {
+      $dia = $matches[1];
+      $mes = (int)$matches[2];
+      $ano = $matches[3];
+
+     
+      $meses = [
+          1 => 'janeiro', 2 => 'fevereiro', 3 => 'março', 4 => 'abril',
+          5 => 'maio', 6 => 'junho', 7 => 'julho', 8 => 'agosto',
+          9 => 'setembro', 10 => 'outubro', 11 => 'novembro', 12 => 'dezembro'
+      ];
+
+     
+      $dataFormatada = sprintf('%s de %s de %s', $dia, $meses[$mes], $ano);
+
+     
+      return preg_replace('/\d{2}-\d{2}-\d{4}/', $dataFormatada, $texto);
+  }
+
+  return $texto;
+}
+
+// Aplica automaticamente ao título dos posts
+add_filter('the_title', 'formatar_data_personalizada');
+
+// Aplica automaticamente ao conteúdo dos posts
+add_filter('the_content', 'formatar_data_personalizada');
+
+function formatar_codigo($codigo) {
+  $partes = explode("-", $codigo);
+  return end($partes); // Retorna o último elemento do array
+}

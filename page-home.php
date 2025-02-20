@@ -60,8 +60,10 @@ $recent_posts_query = new WP_Query(array(
 
         if ($recent_posts_query->have_posts()) {while ($recent_posts_query->have_posts()) { $recent_posts_query->the_post();?>
     <div class="item">
+      <?php if( esc_url(CFS()->get('imagem')) != '') {  ?>
       <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
         alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
+      <?php }?>
       <div>
         <span><?php echo get_the_category_list(', '); ?></span>
         <a href="<?php the_permalink(); ?>">
@@ -105,9 +107,9 @@ $recent_posts_query = new WP_Query(array(
     <div class="grid">
       <div>
         <h2>Receba a nossa newsllater</h2>
-        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusamus non, ullam vitae veniam fuga nostrum
-          deleniti quos culpa? Magnam maiores doloribus numquam veritatis ullam dolore obcaecati et quo placeat
-          recusandae!</p>
+        <p>
+          Fique por dentro do que movimenta o mercado de cinema! Receba tendências, estreias, bilheterias e os temas
+          mais relevantes da indústria diretamente no seu e-mail.</p>
       </div>
       <div class="enviar">
         <input type="text" placeholder="Digite o seu e-mail">

@@ -70,7 +70,7 @@ endif;
 
       <?php
           $boletim_query = new WP_Query(array(
-            'category_name'  => $category_slug, // Usa a slug da categoria da URL
+            'category_name'  => $category_slug, 
             'posts_per_page' => 3,
           ));
 

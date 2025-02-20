@@ -1,5 +1,5 @@
 <?php
-// Template Name: Notícias
+
 get_header();
 
 $rapidinhas_id = get_cat_ID('Rapidinhas');
@@ -86,17 +86,24 @@ $rapidinhas_id = get_cat_ID('Rapidinhas');
       <img src="<?php echo esc_url(CFS()->get('skyscraper')); ?>" class="img-banner" alt="banner">
       <h2>Boletim da semana</h2>
       <?php
-          $recent_posts_query = new WP_Query(array(
-            'post_type' => 'edicoes',
-            'posts_per_page' => 10,
-          ));
+      $recent_posts_query = new WP_Query(array(
+        'post_type' => 'edicoes',
+        'posts_per_page' => 10,
+        'orderby'        => 'date',     
+        'order'          => 'DESC' 
+      ));
       if ($recent_posts_query->have_posts()) {while ($recent_posts_query->have_posts()) { $recent_posts_query->the_post(); ?>
       <div class="item-aside">
         <a href="<?php the_permalink(); ?>" class="link-post-semanal">
-          <h3><?php the_title(); ?> - <?php echo date_i18n('d \d\e F \d\e Y', strtotime(CFS()->get('data'))) ?></h3>
+          <h3>
+            <?php 
+              $texto = the_title();
+              echo formatar_data_personalizada($texto);
+            ?>
+          </h3>
         </a>
       </div>
-      <?php } wp_reset_postdata(); } else { echo '<p>Nenhum post encontrado.</p>'; }  ?>
+      <?php }  wp_reset_postdata(); } else {echo '<p>Nenhum post encontrado.</p>';} ?>
     </aside>
   </div>
 </div>

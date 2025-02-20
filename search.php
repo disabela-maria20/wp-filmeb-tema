@@ -35,25 +35,18 @@ if ($query->have_posts()) :
     ));
 ?>
 <a href="<?php echo esc_url($link_banner_superior) ?>" target="_blank" rel="noopener noreferrer">
-  <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner bannerMobile" alt="banner">
+  <img src="<?php echo esc_url($banner_superior); ?>" class="w-full p-35 img-banner bannerMobile" alt="banner">
 </a>
 
 <div class="container bannerDesktop">
   <div class="grid-banner-superior">
-    <a href="<?php echo esc_url($link_banner_superior); ?>" target="_blank" rel="noopener noreferrer">
-      <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner" alt="banner">
-    </a>
     <a href="<?php echo esc_url($link_banner_inferior); ?>" target="_blank" rel="noopener noreferrer">
       <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
     </a>
   </div>
 </div>
 
-<?php
-  endwhile;
-  wp_reset_postdata();
-endif;
-?>
+<?php endwhile; wp_reset_postdata(); endif; ?>
 
 <?php get_template_part('components/MenuMobile/index'); ?>
 <?php get_template_part('components/MenuDesktop/index'); ?>
@@ -89,8 +82,10 @@ endif;
       <div class="posts">
         <?php while (have_posts()): the_post(); ?>
         <div class="post">
+          <?php if( esc_url(CFS()->get('imagem')) != '') {  ?>
           <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
             alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
+          <?php }?>
           <span><?php echo get_the_category_list(', '); ?></span>
           <a href="<?php the_permalink(); ?>" class="read-more">
             <h2><?php the_title(); ?></h2>
@@ -127,21 +122,21 @@ endif;
       $recent_posts_query = new WP_Query(array(
         'post_type' => 'edicoes',
         'posts_per_page' => 10,
+        'orderby'        => 'date',     
+        'order'          => 'DESC' 
       ));
-      if ($recent_posts_query->have_posts()) {
-        while ($recent_posts_query->have_posts()) {
-          $recent_posts_query->the_post(); ?>
+      if ($recent_posts_query->have_posts()) {while ($recent_posts_query->have_posts()) { $recent_posts_query->the_post(); ?>
       <div class="item-aside">
         <a href="<?php the_permalink(); ?>" class="link-post-semanal">
-          <h3><?php the_title(); ?> - <?php echo date_i18n('d \d\e F \d\e Y', strtotime(CFS()->get('data'))) ?></h3>
+          <h3>
+            <?php 
+              $texto = the_title();
+              echo formatar_data_personalizada($texto);
+            ?>
+          </h3>
         </a>
       </div>
-      <?php }
-        wp_reset_postdata();
-      } else {
-        echo '<p>Nenhum post encontrado.</p>';
-      }
-      ?>
+      <?php }  wp_reset_postdata(); } else {echo '<p>Nenhum post encontrado.</p>';}?>
     </aside>
   </div>
 </div>

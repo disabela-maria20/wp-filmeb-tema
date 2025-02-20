@@ -40,6 +40,10 @@
         }
       }
 
+      h3 {
+        text-transform: uppercase;
+      }
+
       a {
         display: block;
         margin-top: 5px;
@@ -110,5 +114,12 @@
       margin-bottom: 20px;
       text-align: left;
     }
+  }
+}
+
+.item-rapidinha {
+  h3 {
+    margin: 5px 0;
+    text-transform: capitalize;
   }
 }
