@@ -7,7 +7,7 @@
         <span></span>
       </div>
       <a href="<?php echo get_template_directory_uri(); ?>">
-        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo-horizontal.png" alt="logo cine B" />
+        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.png" alt="logo cine B" />
       </a>
       <?php if (!is_user_logged_in()) { ?>
       <a href="<?php echo get_site_url(); ?>/minha-conta/">
