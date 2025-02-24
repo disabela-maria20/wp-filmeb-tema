@@ -15,8 +15,6 @@ $args = array(
 
 $query = new WP_Query($args);
 
-
-
 $termos = get_terms(array(
   'taxonomy' => 'generos',
   'hide_empty' => false,
@@ -38,25 +36,89 @@ $paises = get_terms(array(
 ));
 
 $meses = [
-  'January' => 'Janeiro',
-  'February' => 'Fevereiro',
-  'March' => 'Março',
-  'April' => 'Abril',
-  'May' => 'Maio',
-  'June' => 'Junho',
-  'July' => 'Julho',
-  'August' => 'Agosto',
-  'September' => 'Setembro',
-  'October' => 'Outubro',
-  'November' => 'Novembro',
-  'December' => 'Dezembro',
+  '01' => 'Janeiro',
+  '02' => 'Fevereiro',
+  '03' => 'Março',
+  '04' => 'Abril',
+  '05' => 'Maio',
+  '06' => 'Junho',
+  '07' => 'Julho',
+  '08' => 'Agosto',
+  '09' => 'Setembro',
+  '10' => 'Outubro',
+  '11' => 'Novembro',
+  '12' => 'Dezembro',
 ];
+
+$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
 
 $args = array(
   'post_type' => 'filmes',
-  'posts_per_page' => -1,
-  'post_status' => 'publish'
+  'posts_per_page' => 40,
+  'post_status' => 'publish',
+  'paged' => $paged,
 );
+
+// Aplicar filtros
+if (isset($_GET['ano']) && !empty($_GET['ano'])) {
+  $args['meta_query'][] = array(
+    'key' => 'estreia',
+    'value' => sanitize_text_field($_GET['ano']),
+    'compare' => 'REGEXP',
+  );
+  ;
+}
+
+if (isset($_GET['mes']) && !empty($_GET['mes'])) {
+  $args['meta_query'][] = array(
+    'key' => 'estreia',
+    'value' => sanitize_text_field($_GET['mes']),
+    'compare' => 'REGEXP',
+  );
+}
+
+if (isset($_GET['paises']) && !empty($_GET['paises'])) {
+  $args['tax_query'][] = array(
+    'taxonomy' => 'paises',
+    'field' => 'term_id',
+    'terms' => array($_GET['origem']),
+    'operator' => 'REGEXP',
+  );
+}
+
+echo '<pre>';
+var_dump($args['tax_query'][] = array(
+  'taxonomy' => 'paises',
+  'field' => 'term_id',
+  'terms' => array($_GET['origem']),
+  'operator' => 'REGEXP',
+));
+echo '</pre>';
+
+if (isset($_GET['distribuidoras']) && !empty($_GET['distribuidoras'])) {
+  $args['tax_query'][] = array(
+    'taxonomy' => 'distribuidoras',
+    'field' => 'term_id',
+    'terms' => intval($_GET['distribuidoras']),
+  );
+}
+
+if (isset($_GET['genero']) && !empty($_GET['genero'])) {
+  $args['tax_query'][] = array(
+    'taxonomy' => 'generos',
+    'field' => 'term_id',
+    'terms' => intval($_GET['genero']),
+  );
+}
+
+if (isset($_GET['tecnologia']) && !empty($_GET['tecnologias'])) {
+  $args['tax_query'][] = array(
+    'taxonomy' => 'tecnologias',
+    'field' => 'term_id',
+    'terms' => intval($_GET['tecnologias']),
+  );
+}
+
 $filmes = new WP_Query($args);
 
 function render_terms($field_key)
@@ -113,15 +175,13 @@ endif;
 </section>
 
 <div class="container page-filmes">
-
   <div id="app">
     <div class="container page-filmes">
-      <h1>Cine-semana</h1>
-
+      <h1>Estreias</h1>
       <div class="grid-filtros-config">
         <div class="ordem">
-          <button aria-label="ordem 1" @click="setTabAtivo('lista')"><i class="bi bi-border-all"></i></button>
-          <button aria-label="ordem 2" @click="setTabAtivo('tabela')"><i class="bi bi-grid-1x2"></i></button>
+          <button aria-label="ordem 1" onclick="setTabAtivo('lista')"><i class="bi bi-border-all"></i></button>
+          <button aria-label="ordem 2" onclick="setTabAtivo('tabela')"><i class="bi bi-grid-1x2"></i></button>
           <button aria-label="imprimir" onClick="window.print()"><i class="bi bi-printer"></i></button>
         </div>
         <section id="datas" class="splide">
@@ -145,145 +205,197 @@ endif;
         </div>
       </div>
       <section class="grid-select">
-        <div class="grid grid-7-xl gap-22 select-itens">
-          <select id="ano" v-model="selectedFilters.ano">
-            <option disabled value="">Ano</option>
-            <option v-for="ano in anos" :value="ano">{{ano}}</option>
-          </select>
+        <form method="GET" action="http://localhost/FilmeB/filmes/">
+          <div class="grid grid-7-xl gap-22 select-itens">
+            <select id="ano" name="ano" v-model="selectedFilters.ano">
+              <option disabled selected value="">Ano</option>
+              <option v-for="ano in anos" :value="ano" <?php selected($_GET['ano'], $key); ?>>{{ano}}</option>
+            </select>
 
-          <select v-model="selectedFilters.mes" id="mes">
-            <option disabled value="">Mês</option>
-            <?php foreach ($meses as $key => $value) { ?>
-            <option value="<?php echo esc_attr($key); ?>"><?php echo esc_html($value); ?></option>
-            <?php } ?>
-          </select>
-          <select v-model="selectedFilters.origem" id="origem">
-            <option disabled value="">Origem</option>
-            <?php foreach ($paises as $paise) { ?>
-            <option value="<?php echo esc_html($paise->name); ?>"><?php echo $paise->name . PHP_EOL; ?>
-            </option>
-            <?php } ?>
-          </select>
-          <select v-model="selectedFilters.distribuidor" id="distribuidor">
-            <option disabled value="">Distribuidor</option>
-            <?php foreach ($distribuidoras as $distribuidora) { ?>
-            <option value="<?php echo esc_html($distribuidora->name); ?>"><?php echo $distribuidora->name . PHP_EOL; ?>
-            </option>
-            <?php } ?>
-          </select>
-          <select v-model="selectedFilters.genero" id="genero">
-            <option disabled value="">Gênero</option>
-            <?php foreach ($termos as $termo) { ?>
-            <option value="<?php echo esc_html($termo->name); ?>"><?php echo $termo->name . PHP_EOL; ?></option>
-            <?php } ?>
-          </select>
-          <select v-model="selectedFilters.tecnologia" id="tecnologia">
-            <option disabled value="">Tecnologia</option>
-            <?php foreach ($tecnologias as $tecnologia) { ?>
-            <option value="<?php echo esc_html($tecnologia->name); ?>"><?php echo $tecnologia->name . PHP_EOL; ?>
-            </option>
-            <?php } ?>
-          </select>
+            <select name="mes" id="mes">
+              <option disabled selected value="">Mês</option>
+              <?php foreach ($meses as $key => $value) { ?>
+              <option value="<?php echo esc_attr($key); ?>" <?php selected($_GET['mes'], $key); ?>>
+                <?php echo esc_html($value); ?></option>
+              <?php } ?>
+            </select>
+
+            <select name="origem" id="origem">
+              <option disabled selected value="">Origem</option>
+              <?php foreach ($paises as $paise) { ?>
+              <option value="<?php echo esc_attr($paise->term_id); ?>">
+                <?php echo esc_html($paise->name); ?>
+              </option>
+              <?php } ?>
+            </select>
+
+            <select name="distribuidor" id="distribuidor">
+              <option disabled selected value="">Distribuidor</option>
+              <?php foreach ($distribuidoras as $distribuidora) { ?>
+              <option value="<?php echo esc_attr($distribuidora->term_id); ?>">
+                <?php echo esc_html($distribuidora->name); ?></option>
+              <?php } ?>
+            </select>
+
+            <select name="genero" id="genero">
+              <option disabled selected value="">Gênero</option>
+              <?php foreach ($termos as $termo) { ?>
+              <option value="<?php echo esc_attr($termo->term_id); ?>">
+                <?php echo esc_html($termo->name); ?>
+              </option>
+              <?php } ?>
+            </select>
+
+            <select name="tecnologia" id="tecnologia">
+              <option disabled selected value="">Tecnologia</option>
+              <?php foreach ($tecnologias as $tecnologia) { ?>
+              <option value="<?php echo esc_attr($tecnologia->term_id); ?>">
+                <?php echo esc_html($tecnologia->name); ?>
+              </option>
+              <?php } ?>
+            </select>
+
+            <button type="submit">Filtrar</button>
+          </div>
+        </form>
+      </section>
+      <section class="area-filmes" v-if="ativoItem === 'lista'">
+        <div class="lista-filmes" id="lista">
+          <div class="grid-filmes">
+            <?php if ($filmes->have_posts()): while ($filmes->have_posts()): $filmes->the_post(); ?>
+            <a href="<?php the_permalink(); ?>" class="card" v-on:mousemove="hoverCard">
+              <?php if (esc_url(CFS()->get('cartaz')) == ''): ?>
+              <h3><?php the_title(); ?></h3>
+              <p class="indisponivel">Poster não disponível</p>
+              <?php else: ?>
+              <img src="<?php echo esc_url(CFS()->get('cartaz')); ?>" alt="<?php the_title(); ?>">
+              <?php endif; ?>
+              <div class="info">
+                <ul>
+                  <li>
+                    <span>Título:</span><strong><?php the_title(); ?> </strong>
+                  </li>
+                  <?php if (render_terms('distribuicao')): ?>
+                  <li>
+                    <span>Distribuição:</span>
+                    <strong><?php echo render_terms('distribuicao'); ?></strong>
+                  </li>
+                  <?php endif; ?>
+
+                  <?php if (render_terms('paises')): ?>
+                  <li>
+                    <span>País:</span>
+                    <strong><?php echo render_terms('paises'); ?></strong>
+                  </li>
+                  <?php endif; ?>
+
+                  <?php if (render_terms('generos')): ?>
+                  <li>
+                    <span>Gênero(s)</span>
+                    <strong><?php echo render_terms('generos'); ?></strong>
+                  </li>
+                  <?php endif; ?>
+
+                  <?php if (CFS()->get('direcao') !== ''): ?>
+                  <li>
+                    <span>Direção</span>
+                    <strong><?php echo (esc_url(CFS()->get('direcao'))) ?></strong>
+                  </li>
+                  <?php endif; ?>
+                  <?php if (CFS()->get('duracao_minutos') !== '0'): ?>
+                  <li>
+                    <span>Duração</span>
+                    <strong><?php echo (CFS()->get('duracao_minutos')) ?>min</strong>
+                  </li>
+                  <?php endif; ?>
+                </ul>
+              </div>
+            </a>
+            <?php endwhile; else: ?>
+            <p>Nenhum filme encontrado.</p>
+            <?php endif; ?>
+          </div>
+
         </div>
       </section>
-      <div v-if="loading" class="loading">
-        Carregando filmes...
-      </div>
-      <div v-else>
-        <section class="area-filmes">
-          <div class="lista-filmes" v-if="ativoItem === 'lista'" id="lista">
-            <div class="grid-filmes">
-              <div v-for="(filme, index) in FiltrarFilme" :key="index">
-                <a class="card" v-on:mousemove="hoverCard" :href="filme.link" :key="index" ref="cards">
-                  <div v-if="!filme.cartaz">
-                    <h3>{{filme.title}}</h3>
-                    <p class="indisponivel">Poster não disponível</p>
-                  </div>
-                  <div v-else>
-                    <img :src="filme.cartaz" alt="<?php the_title(); ?>" class="poster">
-                  </div>
-
-                  <div class="info">
-                    <ul>
-                      <li> <span>Título:</span> <strong>{{filme.title}}</strong> </li>
-                      <li>
-                        <span>Distribuição:</span>
-                        <div>
-                          <strong v-for="(value, index) in filme.distribuidoras" :key="index">{{value}}</strong>
-                        </div>
-                      </li>
-                      <li>
-                        <span>País:</span>
-                        <div>
-                          <strong v-for="(value, index) in filme.paises" :key="index">{{value}}</strong>
-                        </div>
-                      </li>
-                      <li>
-                        <span>Gênero:</span>
-                        <div>
-                          <strong v-for="(value, index) in filme.generos" :key="index">{{value}}</strong>
-                        </div>
-                      </li>
-                      <li> <span>Direção:</span> <strong>{{filme.direcao}}</strong></li>
-                      <li> <span>Duração</span> <strong>{{filme.duracao_minutos}}min</strong></li>
-                    </ul>
-                  </div>
+      <div class="tabela-filme" v-if="ativoItem === 'tabela'" id="tabela">
+        <table>
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Distribuição</th>
+              <th>Direção</th>
+              <th>País</th>
+              <th>Gênero</th>
+              <th>Duração</th>
+              <th>Elenco</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php if ($filmes->have_posts()): while ($filmes->have_posts()): $filmes->the_post(); ?>
+            <tr>
+              <td class="titulo">
+                <a href="<?php the_permalink(); ?>">
+                  <h3><?php the_title(); ?></h3>
+                  <span><?php echo esc_html(CFS()->get('titulo_original')); ?></span>
                 </a>
-              </div>
-            </div>
-          </div>
-
-        </section>
-        <div class="tabela-filme" v-if="ativoItem === 'tabela'" id="tabela">
-          <div :key="index">
-            <table>
-              <thead>
-                <tr>
-                  <th>Título</th>
-                  <th>Distribuição</th>
-                  <th>Direção</th>
-                  <th>País</th>
-                  <th>Gênero</th>
-                  <th>Duração</th>
-                  <th>Elenco</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(filme, index) in FiltrarFilme">
-                  <td class="titulo">
-                    <a :href="filme.link">
-                      <h3>{{filme.title}}</h3>
-                      <span>{{filme.titulo_original}}</span>
-                    </a>
-                  </td>
-                  <td>
-                    <div v-for="(value, index) in filme.distribuidoras" :key="index">{{value}}</div>
-                  </td>
-                  <td>{{filme.direcao}}</td>
-                  <td>
-                    <div v-for="(value, index) in filme.paises" :key="index">{{value}}</div>
-                  </td>
-                  <td>
-                    <div v-for="(value, index) in filme.generos" :key="index">
-                      {{value}}
-                    </div>
-                  </td>
-                  <td>{{filme.duracao_minutos}}min</td>
-                  <td>{{filme.elenco}}</td>
-
-
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+              </td>
+              <td>
+                <?php if (render_terms('distribuicao')): ?>
+                <?php echo (render_terms('distribuicao')) ?>
+                <?php endif; ?>
+              </td>
+              <td>
+                <?php if (CFS()->get('direcao') !== ''): ?>
+                <?php echo esc_html(CFS()->get('direcao')); ?>
+                <?php endif; ?>
+              </td>
+              <td>
+                <?php if (render_terms('paises')): ?>
+                <?php echo  render_terms('paises'); ?>
+                <?php endif; ?>
+              </td>
+              <td>
+                <?php if (render_terms('generos')): ?>
+                <?php echo  render_terms('generos'); ?>
+                <?php endif; ?>
+              </td>
+              <td>
+                <?php if (CFS()->get('duracao_minutos') !== '0'): ?>
+                <?php echo esc_html(CFS()->get('duracao_minutos')); ?> min
+                <?php endif; ?>
+              </td>
+              <td>
+                <?php if (CFS()->get('elenco') !== ''): ?>
+                <?php echo esc_html(CFS()->get('elenco')); ?>
+                <?php endif; ?>
+              </td>
+            </tr>
+            <?php endwhile; else: ?>
+            <tr>
+              <td colspan="7">Nenhum filme encontrado.</td>
+            </tr>
+            <?php endif; ?>
+          </tbody>
+        </table>
       </div>
-
+      <div class="pagination">
+        <?php echo paginate_links(array(
+            'total'     => $filmes->max_num_pages,
+            'current'   => max(1, get_query_var('paged')),
+            'type'      => 'list',
+            'prev_text' => __('<'),
+            'next_text' => __('>'),
+            'mid_size'  => 2,
+        ));
+        ?>
+      </div>
     </div>
   </div>
 </div>
 <?php get_template_part('components/Footer/index'); ?>
 <?php get_footer(); ?>
+
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <script>
 new Vue({
@@ -305,23 +417,6 @@ new Vue({
     loading: false,
   },
   methods: {
-    async getListaFilmes() {
-      this.loading = true;
-
-      try {
-        const res = await fetch(`<?php echo get_site_url(); ?>/wp-json/api/v1/filmes`);
-        if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
-        const data = await res.json();
-
-        console.log("Filmes carregados:", data);
-        this.filmes = data;
-
-      } catch (error) {
-        console.error("Erro ao buscar filmes:", error);
-      } finally {
-        this.loading = false;
-      }
-    },
     async getListaAnos() {
       this.loading = true;
 
@@ -341,27 +436,6 @@ new Vue({
     setTabAtivo(tab) {
       this.ativoItem = tab;
     },
-
-    traduzirMesParaPortugues(mesIngles) {
-      const mesesIngles = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-      ];
-
-      const mesesPortugues = [
-        "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-        "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-      ];
-
-      const index = mesesIngles.indexOf(mesIngles.charAt(0).toUpperCase() + mesIngles.slice(1));
-
-      if (index !== -1) {
-        return mesesPortugues[index];
-      } else {
-        return "Mês inválido";
-      }
-    },
-
     hoverCard(e) {
       const cards = this.$el.querySelectorAll(".card");
 
@@ -379,26 +453,8 @@ new Vue({
       });
     },
   },
-  computed: {
-    FiltrarFilme() {
-      const filmes = this.filmes
-        .filter(filme => {
-          return (
-            (this.selectedFilters.ano ? filme.ano.toString() === this.selectedFilters.ano : true) &&
-            (this.selectedFilters.mes ? filme.mes === this.selectedFilters.mes : true) &&
-            (this.selectedFilters.origem ? filme.origem === this.selectedFilters.origem : true) &&
-            (this.selectedFilters.distribuidor ? filme.distribuidor === this.selectedFilters.distribuidor :
-              true) &&
-            (this.selectedFilters.genero ? filme.genero === this.selectedFilters.genero : true) &&
-            (this.selectedFilters.tecnologia ? filme.tecnologia === this.selectedFilters.tecnologia : true)
-          );
-        });
-      return filmes;
-    }
-  },
   created() {
     this.getListaAnos();
-    this.getListaFilmes();
   },
 });
 </script>

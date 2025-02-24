@@ -4,9 +4,8 @@
     <div class="container">
       <div class="area_saiba_mais">
         <h2>Conheça o Boletim</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.Ut elit tellus, luctus nec ullamcorper mattis,
-          pulvinar
-          dapibus leo.</p>
+        <p>Acompanhe de perto o mercado de cinema! Assine o Boletim Filme B e receba, toda semana, bilheterias,
+          análises e as principais movimentações da indústria no Brasil e no mundo.</p>
         <a href="">Saiba Mais</a>
       </div>
     </div>
