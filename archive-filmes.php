@@ -77,49 +77,43 @@ if (isset($_GET['mes']) && !empty($_GET['mes'])) {
   );
 }
 
-if (isset($_GET['paises']) && !empty($_GET['paises'])) {
-  $args['tax_query'][] = array(
-    'taxonomy' => 'paises',
-    'field' => 'term_id',
-    'terms' => array($_GET['origem']),
-    'operator' => 'REGEXP',
+if (isset($_GET['origem']) && !empty($_GET['origem'])) {
+  $args['meta_query'][] = array(
+    'key' => 'paises',
+    'value' => sanitize_text_field($_GET['origem']),
+    'compare' => 'REGEXP',
   );
 }
 
-echo '<pre>';
-var_dump($args['tax_query'][] = array(
-  'taxonomy' => 'paises',
-  'field' => 'term_id',
-  'terms' => array($_GET['origem']),
-  'operator' => 'REGEXP',
-));
-echo '</pre>';
-
-if (isset($_GET['distribuidoras']) && !empty($_GET['distribuidoras'])) {
-  $args['tax_query'][] = array(
-    'taxonomy' => 'distribuidoras',
-    'field' => 'term_id',
-    'terms' => intval($_GET['distribuidoras']),
+if (isset($_GET['distribuicao']) && !empty($_GET['distribuicao'])) {
+  $args['meta_query'][] = array(
+    'key' => 'distribuicao', 
+    'value' => sanitize_text_field($_GET['distribuicao']),
+    'compare' => '=',
   );
 }
 
 if (isset($_GET['genero']) && !empty($_GET['genero'])) {
-  $args['tax_query'][] = array(
-    'taxonomy' => 'generos',
-    'field' => 'term_id',
-    'terms' => intval($_GET['genero']),
+  $args['meta_query'][] = array(
+    'key' => 'generos', 
+    'value' => sanitize_text_field($_GET['genero']),
+    'compare' => 'REGEXP',
   );
 }
 
-if (isset($_GET['tecnologia']) && !empty($_GET['tecnologias'])) {
-  $args['tax_query'][] = array(
-    'taxonomy' => 'tecnologias',
-    'field' => 'term_id',
-    'terms' => intval($_GET['tecnologias']),
+if (isset($_GET['tecnologia']) && !empty($_GET['tecnologia'])) {
+  $args['meta_query'][] = array(
+    'key' => 'tecnologia', 
+    'value' => sanitize_text_field($_GET['tecnologia']),
+    'compare' => 'REGEXP',
   );
 }
 
 $filmes = new WP_Query($args);
+
+// echo '<pre>';
+// var_dump($filmes);
+// echo '</pre>';
 
 function render_terms($field_key)
 {
@@ -180,9 +174,9 @@ endif;
       <h1>Estreias</h1>
       <div class="grid-filtros-config">
         <div class="ordem">
-          <button aria-label="ordem 1" onclick="setTabAtivo('lista')"><i class="bi bi-border-all"></i></button>
-          <button aria-label="ordem 2" onclick="setTabAtivo('tabela')"><i class="bi bi-grid-1x2"></i></button>
-          <button aria-label="imprimir" onClick="window.print()"><i class="bi bi-printer"></i></button>
+          <button aria-label="ordem 1" @click="setTabAtivo('lista')"><i class="bi bi-border-all"></i></button>
+          <button aria-label="ordem 2" @click="setTabAtivo('tabela')"><i class="bi bi-grid-1x2"></i></button>
+          <button aria-label="imprimir" @click="window.print()"><i class="bi bi-printer"></i></button>
         </div>
         <section id="datas" class="splide">
           <div class="splide__track">
@@ -215,7 +209,7 @@ endif;
             <select name="mes" id="mes">
               <option disabled selected value="">Mês</option>
               <?php foreach ($meses as $key => $value) { ?>
-              <option value="<?php echo esc_attr($key); ?>" <?php selected($_GET['mes'], $key); ?>>
+              <option value="<?php echo esc_attr($key); ?>">
                 <?php echo esc_html($value); ?></option>
               <?php } ?>
             </select>
@@ -229,7 +223,7 @@ endif;
               <?php } ?>
             </select>
 
-            <select name="distribuidor" id="distribuidor">
+            <select name="distribuicao" id="distribuidoras">
               <option disabled selected value="">Distribuidor</option>
               <?php foreach ($distribuidoras as $distribuidora) { ?>
               <option value="<?php echo esc_attr($distribuidora->term_id); ?>">
@@ -256,6 +250,7 @@ endif;
             </select>
 
             <button type="submit">Filtrar</button>
+
           </div>
         </form>
       </section>
@@ -299,7 +294,7 @@ endif;
                   <?php if (CFS()->get('direcao') !== ''): ?>
                   <li>
                     <span>Direção</span>
-                    <strong><?php echo (esc_url(CFS()->get('direcao'))) ?></strong>
+                    <strong><?php echo (CFS()->get('direcao')) ?></strong>
                   </li>
                   <?php endif; ?>
                   <?php if (CFS()->get('duracao_minutos') !== '0'): ?>
@@ -347,7 +342,7 @@ endif;
               </td>
               <td>
                 <?php if (CFS()->get('direcao') !== ''): ?>
-                <?php echo esc_html(CFS()->get('direcao')); ?>
+                <?php echo CFS()->get('direcao'); ?>
                 <?php endif; ?>
               </td>
               <td>

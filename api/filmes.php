@@ -1,7 +1,7 @@
 <?php
+
 add_action('init', 'registrar_taxonomias_filmes');
-function registrar_taxonomias_filmes()
-{
+function registrar_taxonomias_filmes() {
     $taxonomias = [
         'distribuidoras' => 'Distribuidoras',
         'paises' => 'Países',
@@ -14,7 +14,7 @@ function registrar_taxonomias_filmes()
     foreach ($taxonomias as $slug => $nome) {
         register_taxonomy(
             $slug,
-            'filmes',
+            'filmes', 
             array(
                 'labels' => array(
                     'name' => $nome,
@@ -27,18 +27,45 @@ function registrar_taxonomias_filmes()
                     'new_item_name' => "Novo $nome",
                     'menu_name' => $nome,
                 ),
-                'hierarchical' => true,
+                'hierarchical' => true, 
                 'show_ui' => true,
                 'show_in_menu' => true,
-                'show_in_rest' => true,
+                'show_in_rest' => true, 
                 'rewrite' => array('slug' => $slug),
                 'rest_controller_class' => 'WP_REST_Terms_Controller',
-
             )
         );
     }
 }
 
+add_action('init', 'registrar_cpt_filmes');
+function registrar_cpt_filmes() {
+    register_post_type('filmes', array(
+        'labels' => array(
+            'name' => _x('Filmes', 'Post type general name', 'textdomain'),
+            'singular_name' => _x('Filme', 'Post type singular name', 'textdomain'),
+            'add_new_item' => __('Adicionar Novo Filme', 'textdomain'),
+            'edit_item' => __('Editar Filme', 'textdomain'),
+            'new_item' => __('Novo Filme', 'textdomain'),
+            'view_item' => __('Ver Filme', 'textdomain'),
+            'search_items' => __('Buscar Filmes', 'textdomain'),
+            'not_found' => __('Nenhum Filme encontrado', 'textdomain'),
+            'not_found_in_trash' => __('Nenhum Filme encontrado na lixeira', 'textdomain'),
+        ),
+        'description' => 'Gerenciar Filmes',
+        'public' => true,
+        'show_ui' => true,
+        'menu_position' => 5,
+        'menu_icon' => 'dashicons-video-alt',
+        'capability_type' => 'post',
+        'rewrite' => array('slug' => 'filmes', 'with_front' => true),
+        'supports' => array('title', 'editor', 'thumbnail', 'excerpt'),
+        'has_archive' => true,
+        'publicly_queryable' => true,
+        'show_in_rest' => true,
+        'taxonomies' => array('distribuidoras', 'paises', 'generos', 'classificacoes', 'tecnologias', 'feriados'),
+    ));
+}
 function filme_scheme($post)
 {
     $filme = new stdClass();
