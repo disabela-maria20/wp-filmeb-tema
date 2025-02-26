@@ -50,13 +50,7 @@ $boletim_query = new WP_Query(array(
   </div>
 </div>
 
-
-
-<?php
-  endwhile;
-  wp_reset_postdata();
-endif;
-?>
+<?php endwhile; wp_reset_postdata(); endif;?>
 
 <?php get_template_part('components/MenuMobile/index'); ?>
 <?php get_template_part('components/MenuDesktop/index'); ?>

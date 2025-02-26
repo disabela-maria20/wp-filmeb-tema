@@ -126,7 +126,7 @@
         align-items: center;
         gap: 10px;
         color: $color-red-dark;
-        padding: 15px 0;
+        padding: 25px 0;
       }
     }
 
@@ -134,7 +134,6 @@
       display: grid;
       gap: 20px;
       margin: 0 auto;
-      margin-top: 20px;
 
       @include media(md) {
         grid-template-columns: 1fr 1fr;
@@ -246,48 +245,6 @@
             td {
               padding: 20px 10px;
               text-align: left;
-              color: $color-darker-gray;
-            }
-          }
-        }
-      }
-    }
-  }
-  .tabela-filme {
-    h2 {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: $color-red-dark;
-      margin: 15px 0;
-    }
-
-    table {
-      border-spacing: 0;
-      width: 100%;
-      font-size: 1.4rem;
-      thead {
-        background-color: #fef3f6;
-        color: $color-darker-gray;
-
-        tr {
-          th {
-            padding: 10px;
-            text-align: left;
-          }
-        }
-      }
-      tbody {
-        tr {
-          &:nth-child(odd) td {
-            background-color: $color-off-white;
-          }
-          td {
-            padding: 20px 10px;
-            text-align: left;
-            color: $color-darker-gray;
-
-            a {
               color: $color-darker-gray;
             }
           }
@@ -494,4 +451,46 @@
   color: #707070;
   font-size: 1.6rem;
   line-height: 1.61;
+}
+
+.tabela-filme {
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: $color-red-dark;
+    margin: 15px 0;
+  }
+  table {
+    border-spacing: 0;
+    width: 100%;
+    font-size: 1.4rem;
+    thead {
+      background-color: #fef3f6;
+      color: $color-darker-gray;
+
+      tr {
+        th {
+          padding: 10px;
+          text-align: left;
+        }
+      }
+    }
+    tbody {
+      tr {
+        &:nth-child(odd) td {
+          background-color: $color-off-white;
+        }
+        td {
+          padding: 20px 10px;
+          text-align: left;
+          color: $color-darker-gray;
+
+          a {
+            color: $color-darker-gray;
+          }
+        }
+      }
+    }
+  }
 }

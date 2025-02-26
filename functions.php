@@ -219,3 +219,12 @@ function formatar_codigo($codigo) {
   $partes = explode("-", $codigo);
   return end($partes); // Retorna o último elemento do array
 }
+
+
+function custom_archive_filmes_title($title) {
+  if (is_post_type_archive('filmes')) {
+      $title = 'Lista de Filmes - ' . get_bloginfo('name');
+  }
+  return $title;
+}
+add_filter('pre_get_document_title', 'custom_archive_filmes_title');
