@@ -12,6 +12,9 @@ $filme = new WP_Query(array(
 $banner_estreia = CFS()->get('banner_estreia');
 $banner_lateral = CFS()->get('banner_lateral');
 $banner_skyscraper = CFS()->get('banner_skyscraper');
+
+$link_banner_estreia = CFS()->get('link_banner_estreia');
+
 $video = CFS()->get('video');
 
 
@@ -23,14 +26,24 @@ $recent_posts_query = new WP_Query(array(
   'order' => 'DESC',
   'category__not_in' =>'Rapidinhas',
 ));
+
+$recent_posts_query_banner = new WP_Query(array(
+  'post_type' => 'post',
+  'posts_per_page' => 5,
+  'orderby' => 'date',
+  'order' => 'DESC'
+));
 ?>
 
-<img src="<?php echo CFS()->get('banner_superior'); ?>" class="w-full p-35 img-banner bannerMobile" alt="banner">
-
+<a href="<?php echo CFS()->get('link_banner_superior');?>">
+  <img src="<?php echo CFS()->get('banner_superior');?>" class="w-full p-35 img-banner bannerMobile" alt="banner">
+</a>
 
 <div class="container bannerDesktop">
   <div class="grid-banner-superior">
-    <img src="<?php echo CFS()->get('banner_inferior'); ?>" class="img-banner " alt="banner">
+    <a href="<?php echo CFS()->get('link_banner_inferior'); ?>">
+      <img src="<?php echo CFS()->get('banner_inferior'); ?>" class="img-banner " alt="banner">
+    </a>
   </div>
 </div>
 
@@ -40,7 +53,9 @@ $recent_posts_query = new WP_Query(array(
 <section class="bg-gray">
   <div class="container bannerMobile bg-gray padding-banner ">
     <div class="grid-banner-superior">
-      <img src="<?php echo CFS()->get('banner_inferior'); ?>" class="img-banner " alt="banner">
+      <a href="<?php echo CFS()->get('link_banner_inferior'); ?>">
+        <img src="<?php echo CFS()->get('banner_inferior'); ?>" class="img-banner " alt="banner">
+      </a>
     </div>
   </div>
 </section>
@@ -50,15 +65,7 @@ $recent_posts_query = new WP_Query(array(
     the_post(); ?>
 <div class="container">
   <section class="owl-carousel slide">
-    <?php
-        $recent_posts_query = new WP_Query(array(
-          'post_type' => 'post',
-          'posts_per_page' => 5,
-          'orderby' => 'date',
-          'order' => 'DESC'
-        ));
-
-        if ($recent_posts_query->have_posts()) {while ($recent_posts_query->have_posts()) { $recent_posts_query->the_post();?>
+    <?php if ($recent_posts_query_banner->have_posts()) { while ($recent_posts_query_banner->have_posts()) { $recent_posts_query_banner->the_post();?>
     <div class="item">
       <?php if( esc_url(CFS()->get('imagem')) != '') {  ?>
       <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
@@ -72,7 +79,7 @@ $recent_posts_query = new WP_Query(array(
         <p><?php echo esc_html(CFS()->get('descricao') ?: get_the_excerpt()); ?></p>
       </div>
     </div>
-    <?php  } wp_reset_postdata(); } else {  echo '<p>Nenhum post encontrado.</p>'; } ?>
+    <?php } wp_reset_postdata(); } else { echo '<p>Nenhum post encontrado.</p>'; } ?>
   </section>
   <section class="home_table">
     <div class="home_table grid grid-2-lg gap-32">
@@ -102,7 +109,9 @@ $recent_posts_query = new WP_Query(array(
   </section>
   <section class="home_newllater">
     <div class="container">
-      <img src="<?php echo CFS()->get('banner_newsllater'); ?>" class="img-banner d-block m-auto" alt="banner">
+      <a href="<?php echo CFS()->get('link_banner_newsllater'); ?>">
+        <img src="<?php echo CFS()->get('banner_newsllater'); ?>" class="img-banner d-block m-auto" alt="banner">
+      </a>
     </div>
     <div class="grid">
       <div>
@@ -134,7 +143,9 @@ $recent_posts_query = new WP_Query(array(
         </section>
       </div>
       <div>
-        <img class="publi" src="<?php echo esc_html($banner_estreia ) ?>" alt="Banner de publicidade" />
+        <a href="<?php echo esc_attr($link_banner_estreia); ?>">
+          <img class="publi" src="<?php echo esc_html($banner_estreia ) ?>" alt="Banner de publicidade" />
+        </a>
       </div>
     </div>
   </section>
@@ -161,7 +172,10 @@ $recent_posts_query = new WP_Query(array(
         <?php }} ?>
       </div>
       <aside>
-        <img src="<?php echo esc_url($banner_skyscraper); ?>">
+        <a href="<?php echo esc_url(CFS()->get('link_banner_skyscraper')); ?>">
+          <img src="<?php echo esc_url($banner_skyscraper); ?>">
+        </a>
+
         <div class="video">
           <iframe width="560" height="315" src="<?php echo esc_url($video); ?>" title="YouTube video player"
             frameborder="0"

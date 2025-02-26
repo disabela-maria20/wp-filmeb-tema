@@ -31,12 +31,22 @@ if ($query->have_posts()) :
     $skyscraper = CFS()->get('skyscraper', $banner_id);
     $super_banner = CFS()->get('super_banner', $banner_id);
 
+    $link_banner_superior = CFS()->get('link_banner_moldura', $banner_id);
+    $link_banner_inferior = CFS()->get('link_mega_banner', $banner_id);
+    $link_full_banner = CFS()->get('link_full_banner', $banner_id);
+    $link_skyscraper = CFS()->get('link_skyscraper', $banner_id);
+    $link_super_banner = CFS()->get('link_super_banner', $banner_id);
+    
 ?>
-<img src="<?php echo esc_url($banner_superior); ?>" class="w-full p-35 img-banner bannerMobile" alt="banner">
+<a href="<?php echo esc_url($link_banner_superior)?>" target="_blank" rel="noopener noreferrer">
+  <img src="<?php echo esc_url($banner_superior); ?>" class="w-full p-35 img-banner bannerMobile " alt="banner">
+</a>
 
 <div class="container bannerDesktop">
   <div class="grid-banner-superior">
-    <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
+    <a href="<?php echo esc_url($link_banner_inferior); ?>" target="_blank" rel="noopener noreferrer">
+      <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
+    </a>
   </div>
 </div>
 
@@ -53,7 +63,9 @@ endif;
   <div class="container bannerMobile">
     <div class="grid-banner-superior">
       <!-- <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner bannerDesktop" alt="banner"> -->
-      <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
+      <a href="<?php echo esc_url($link_banner_inferior); ?>" target="_blank" rel="noopener noreferrer">
+        <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
+      </a>
     </div>
   </div>
 </section>
@@ -126,7 +138,9 @@ endif;
     ?>
 
     <aside class="aside-boletim">
-      <img src="<?php echo esc_url($skyscraper); ?>" class="img-banner" alt="banner">
+      <a href="<?php echo esc_url($link_skyscraper); ?>">
+        <img src="<?php echo esc_url($skyscraper); ?>" class="img-banner" alt="banner">
+      </a>
       <h2>Boletim da semana</h2>
       <div class="aside-item-boletim">
         <ul>
@@ -135,11 +149,11 @@ endif;
             <?php if( esc_url(CFS()->get('imagem')) != '') {  ?>
             <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
               alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
-            <?php }?>
+            <?php } ?>
             <a href="<?php the_permalink(); ?>">
               <h2><?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?></h2>
             </a>
-            <?php  } wp_reset_postdata(); } else {  echo '<p>Nenhum post encontrado.</p>'; } ?>
+            <?php } wp_reset_postdata(); } else { echo '<p>Nenhum post encontrado.</p>'; } ?>
           </li>
         </ul>
       </div>
@@ -147,7 +161,6 @@ endif;
     <?php endwhile; wp_reset_postdata(); endif;?>
   </div>
 </div>
-<?php endwhile;
-endif; ?>
+<?php endwhile; endif; ?>
 <?php get_template_part('components/Footer/index'); ?>
 <?php get_footer(); ?>
