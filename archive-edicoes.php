@@ -47,9 +47,7 @@ if ($query->have_posts()):
 
 <div class="container bannerDesktop">
   <div class="grid-banner-superior">
-    <a href="<?php echo esc_url($banner_superior); ?>" target="_blank" rel="noopener noreferrer">
-      <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner" alt="banner">
-    </a>
+
     <a href="<?php echo esc_url($link_banner_inferior); ?>" target="_blank" rel="noopener noreferrer">
       <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
     </a>
@@ -70,9 +68,7 @@ endif;
 <section class="bg-gray padding-banner">
   <div class="container bannerMobile">
     <div class="grid-banner-superior">
-      <a href="<?php echo esc_url($banner_superior); ?>" target="_blank" rel="noopener noreferrer">
-        <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner" alt="banner">
-      </a>
+
       <a href="<?php echo esc_url($link_banner_inferior); ?>" target="_blank" rel="noopener noreferrer">
         <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
       </a>
@@ -91,7 +87,7 @@ endif;
       <?php
       $boletim_query = new WP_Query(array(
         'post_type' => 'edicoes',
-        'posts_per_page' => 10,
+        'posts_per_page' => 60,
       ));
 
       if ($boletim_query->have_posts()): ?>
@@ -100,7 +96,7 @@ endif;
           $boletim_query->the_post(); ?>
       <div class="grid-semanal">
         <a href="<?php the_permalink(); ?>" class="link-post-semanal">
-          <h2><?php the_title(); ?> - <?php echo date_i18n('d \d\e F \d\e Y', strtotime(CFS()->get('data'))) ?></h2>
+          <h2><?php the_title(); ?></h2>
         </a>
       </div>
 
@@ -139,7 +135,6 @@ endif;
         <a href="<?php the_permalink(); ?>" class="edicoes">
           <i class="bi bi-arrow-right-short"></i>
           <?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?>
-          <?php echo get_the_date('j \d\e F \d\e Y'); ?>
         </a>
       </div>
       <?php }

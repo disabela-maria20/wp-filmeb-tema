@@ -1,10 +1,11 @@
 .pagination {
   ul {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
     margin-bottom: 35px;
     li {
-      span{
+      span {
         display: inline-block;
         padding: 5px 10px;
         color: $color-white;
@@ -13,9 +14,9 @@
         font-size: 1.6rem;
         border-radius: 6px;
       }
-      a{
+      a {
         display: inline-block;
-     
+
         border-radius: 6px;
         padding: 5px 10px;
         color: $color-darker-gray;

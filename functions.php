@@ -209,15 +209,13 @@ function formatar_data_personalizada($texto) {
   return $texto;
 }
 
-// Aplica automaticamente ao título dos posts
 add_filter('the_title', 'formatar_data_personalizada');
 
-// Aplica automaticamente ao conteúdo dos posts
 add_filter('the_content', 'formatar_data_personalizada');
 
 function formatar_codigo($codigo) {
   $partes = explode("-", $codigo);
-  return end($partes); // Retorna o último elemento do array
+  return end($partes); 
 }
 
 
