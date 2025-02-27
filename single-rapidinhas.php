@@ -76,7 +76,7 @@ endif;
       </a>
       <?php if (function_exists('yoast_breadcrumb')) { yoast_breadcrumb('<div id="breadcrumbs">', '</div>'); } ?>
       <div class="post-content">
-        <h1 class="opem"><?php  echo formatar_codigo(the_title()); ?></h1>
+        <h1 class="opem"><?php the_title(); ?></h1>
         <?php if (has_post_thumbnail()): ?>
         <div class="post-thumbnail">
           <?php the_post_thumbnail('large'); ?>

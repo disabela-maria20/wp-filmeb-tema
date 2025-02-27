@@ -99,7 +99,7 @@ endif;
             <div>
               <span class="data"><?php echo date_i18n('j \d\e F \d\e Y', strtotime($the_post->post_date)); ?></span>
               <a href="<?php the_permalink(); ?>" class="read-more">
-                <h2><?php echo formatar_codigo($the_post->post_title); ?></h2>
+                <h2><?php echo $the_post->post_title; ?></h2>
               </a>
               <a href="<?php echo get_template_directory_uri() . '/' . 'rapidinhas/' . $the_post->post_name; ?>">
                 Leia mais

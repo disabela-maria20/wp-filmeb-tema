@@ -213,12 +213,6 @@ add_filter('the_title', 'formatar_data_personalizada');
 
 add_filter('the_content', 'formatar_data_personalizada');
 
-function formatar_codigo($codigo) {
-  $partes = explode("-", $codigo);
-  return end($partes); 
-}
-
-
 function custom_archive_filmes_title($title) {
   if (is_post_type_archive('filmes')) {
       $title = 'Lista de Filmes - ' . get_bloginfo('name');
