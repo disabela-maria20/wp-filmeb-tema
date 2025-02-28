@@ -16,8 +16,8 @@ if ($recent_posts_query->have_posts()) {
   <?php }?>
   <div>
     <span class="data"><?php echo date_i18n('j \d\e F \d\e Y', strtotime(get_the_date())); ?></span>
-    <h3><?php get_the_title();?></h3>
-    <a href="<?php the_permalink(); ?>">Leia mais</a>
+    <h3><?php echo get_the_title();?></h3>
+    <a href="<?php  the_permalink(); ?>">Leia mais</a>
   </div>
 </div>
 <?php

@@ -86,12 +86,14 @@ $boletim_query = new WP_Query(array(
       <div class="posts">
         <?php while ($boletim_query->have_posts()): $boletim_query->the_post(); ?>
         <div class="item-rapidinha">
+          <?php if( esc_url(CFS()->get('imagem')) != '') {  ?>
           <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
             alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
+          <?php }?>
           <div>
             <span class="data"><?php echo date_i18n('j \d\e F \d\e Y', strtotime(get_the_date())); ?></span>
             <a href="<?php the_permalink(); ?>" class="read-more">
-              <h2><?php get_the_title();?> </h2>
+              <h2><?php echo get_the_title();?> </h2>
             </a>
             <a href="<?php the_permalink(); ?>">
               Leia mais
@@ -121,18 +123,16 @@ $boletim_query = new WP_Query(array(
         <img src="<?php echo esc_url($skyscraper); ?>" class="img-banner" alt="banner">
       </a>
 
-      <h2>Edições anteriores</h2>
+      <h2>Rapidinhas desta edição</h2>
       <?php
-      $recent_posts_query = new WP_Query(array(
+      $recent_edicoes_query = new WP_Query(array(
         'post_type' => 'edicoes',
         'posts_per_page' => 10,
         'orderby' => 'date',     
         'order' => 'DESC' 
       ));
-
-      if ($recent_posts_query->have_posts()) { 
-        while ($recent_posts_query->have_posts()) { 
-          $recent_posts_query->the_post(); ?>
+      
+      if ($recent_edicoes_query->have_posts()) { while ($recent_edicoes_query->have_posts()) { $recent_edicoes_query->the_post(); ?>
       <div class="item-aside">
         <a href="<?php the_permalink(); ?>" class="edicoes">
           <i class="bi bi-arrow-right-short"></i>
@@ -142,11 +142,7 @@ $boletim_query = new WP_Query(array(
             ?>
         </a>
       </div>
-      <?php 
-        }
-        wp_reset_postdata();
-      }
-      ?>
+      <?php } wp_reset_postdata(); }?>
     </aside>
   </div>
 

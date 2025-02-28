@@ -1,4 +1,4 @@
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -136,7 +136,7 @@ legend {
   padding: 0;
   white-space: normal;
 }
-ul{
+ul {
   list-style-type: none;
 }
 progress {
@@ -188,8 +188,43 @@ template {
   display: none;
 }
 
-*:focus, *:focus-within {
+*:focus,
+*:focus-within {
   box-shadow: 0 0 0 0;
   border: 0 none;
   outline: 0;
-} 
+}
+
+@view-transition {
+  navigation: auto;
+}
+
+main {
+  view-transition-name: my-main-content;
+}
+
+::view-transition-old(my-main-content) {
+  animation: 500ms ease-out both slide-out;
+}
+
+::view-transition-new(my-main-content) {
+  animation: 500ms ease-out both slide-in;
+}
+
+@keyframes slide-out {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}

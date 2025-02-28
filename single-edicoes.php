@@ -15,9 +15,7 @@ $args = array(
 
 $query = new WP_Query($args);
 
-if ($query->have_posts()):
-  while ($query->have_posts()):
-    $query->the_post();
+if ($query->have_posts()): while ($query->have_posts()): $query->the_post();
 
     $banner_superior = CFS()->get('banner_moldura', $banner_id);
     $banner_inferior = CFS()->get('mega_banner', $banner_id);
@@ -48,11 +46,7 @@ if ($query->have_posts()):
   </div>
 </div>
 
-<?php
-  endwhile;
-  wp_reset_postdata();
-endif;
-?>
+<?php endwhile; wp_reset_postdata();endif;?>
 
 <?php get_template_part('components/MenuMobile/index'); ?>
 <?php get_template_part('components/MenuDesktop/index'); ?>
@@ -76,9 +70,7 @@ endif;
       <a href="<?php echo esc_url($link_full_banner); ?>">
         <img src="<?php echo esc_url($full_banner); ?>" class="img-banner" alt="banner">
       </a>
-      <?php if (function_exists('yoast_breadcrumb')) {
-        yoast_breadcrumb('<div id="breadcrumbs">', '</div>');
-      } ?>
+      <?php if (function_exists('yoast_breadcrumb')) {yoast_breadcrumb('<div id="breadcrumbs">', '</div>'); } ?>
       <div class="post-content-semanal">
         <h1><?php the_title(); ?> -
           <?php echo date_i18n('d \d\e F \d\e Y', strtotime(CFS()->get('data'))) ?>

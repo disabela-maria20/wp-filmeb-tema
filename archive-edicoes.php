@@ -17,9 +17,7 @@ $args = array(
 
 $query = new WP_Query($args);
 
-if ($query->have_posts()):
-  while ($query->have_posts()):
-    $query->the_post();
+if ($query->have_posts()): while ($query->have_posts()): $query->the_post();
 
     $banner_superior = CFS()->get('banner_moldura', $banner_id);
     $banner_inferior = CFS()->get('mega_banner', $banner_id);
@@ -39,7 +37,7 @@ if ($query->have_posts()):
       'posts_per_page' => 10,
     ));
 
-    ?>
+  ?>
 <a href="<?php echo esc_url($link_banner_superior) ?>" target="_blank" rel="noopener noreferrer">
   <img src="<?php echo esc_url($banner_superior); ?>" class="w-full p-35 img-banner bannerMobile" alt="banner">
 </a>
@@ -127,6 +125,8 @@ endif;
       $recent_posts_query = new WP_Query(array(
         'post_type' => 'edicoes',
         'posts_per_page' => 10,
+        'orderby' => 'date',     
+        'order' => 'DESC' 
       ));
       if ($recent_posts_query->have_posts()) {
         while ($recent_posts_query->have_posts()) {
