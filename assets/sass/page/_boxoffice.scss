@@ -104,8 +104,14 @@
 
     .item {
       border-radius: 25px;
-      padding: 0 25px;
+      padding: 25px;
       background-color: $color-off-white-alt;
+
+      img {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+      }
     }
   }
 }

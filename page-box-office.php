@@ -55,19 +55,19 @@ get_header();
     <h2 class="titulo">Outros produtos Filme B | Box Office Brasil</h2>
     <div class="grid-box-produtos">
       <div class="item">
-        <img src="" alt="">
+        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/report.png" alt="">
         <h3>FilmeB Report</h3>
         <p>Coleta diária dos dados de público e renda junto aos exibidores, com envios diários por email ou FTP de
           relatórios padronizados para a importação automática no sistema do distribuidor.</p>
       </div>
       <div class="item">
-        <img src="" alt="">
+        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/progressao-grafica.png" alt="">
         <h3>FilmeB Ontime</h3>
         <p>Ranking top 10 estimado de filmes no fim de semana, com uma projeção nos valores de público, renda, pmi,
           média de público por cinema, média de público por sessão, variação (%) e acumulados.</p>
       </div>
       <div class="item">
-        <img src="" alt="">
+        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/ancine.webp" alt="">
         <h3>Sadis ANCINE</h3>
         <p>Exportação e envio mensal do relatório SADIS em XML para upload no Sistema Ancine Digital, contendo os dados
           de público e renda dos filmes exibidos pelo distribuidor.
