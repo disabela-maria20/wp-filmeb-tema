@@ -220,3 +220,23 @@ function custom_archive_filmes_title($title) {
   return $title;
 }
 add_filter('pre_get_document_title', 'custom_archive_filmes_title');
+
+
+// Usuarios associados
+
+function meu_dashboard() {
+  echo 'Origamid';
+}
+
+add_action('woocommerce_account_dashboard', 'meu_dashboard');
+
+
+function personalizar_texto_pagseguro($translated_text, $text, $domain) {
+  if ($domain === 'woocommerce-pagseguro') {
+      if ($text === 'Pagar com PagSeguro') {
+          return 'Pague com segurança via PagSeguro';
+      }
+  }
+  return $translated_text;
+}
+add_filter('gettext', 'personalizar_texto_pagseguro', 20, 3);
