@@ -1,5 +1,5 @@
 <?php
-// Template Name: Login
+// Template Name: Cadastro
 get_header();
 ?>
 <?php if (have_posts()): while (have_posts()):the_post(); ?>
