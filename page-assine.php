@@ -103,7 +103,7 @@ endif;
                   <source src="/filmeb_assine.mp4" type="video/mp4">
                 </video>
                 <div class="area-btn">
-                  <a href="<?php echo get_site_url(); ?>/minha-conta/">Assinar</a>
+                  <a href="<?php echo get_site_url(); ?>/carrinho/">Assinar</a>
                 </div>
               </div>
             </div>
