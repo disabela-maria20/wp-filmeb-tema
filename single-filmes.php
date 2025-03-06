@@ -111,10 +111,9 @@ endif;
           <div class="dados">
             <h3>Trailer</h3>
             <div class="video">
-              <iframe width="560" height="315" src="<?php echo esc_url(CFS()->get('trailer')); ?>"
-                title="YouTube video player" frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+              <?php 
+                echo  better_youtube_embed_block_render_block( ['url' => CFS()->get('trailer')] );
+              ?>
             </div>
 
           </div>
