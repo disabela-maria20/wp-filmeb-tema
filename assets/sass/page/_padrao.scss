@@ -161,7 +161,9 @@ p {
 }
 
 .p-35 {
-  padding-bottom: 35px;
+  @include media(lg) {
+    padding-bottom: 35px;
+  }
 }
 
 .area-btn {
