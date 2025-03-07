@@ -309,7 +309,7 @@ new Vue({
     filteredMovies: [],
     paginaAtual: 1,
     totalPaginas: 12,
-    filmesPorPagina: 10,
+    filmesPorPagina: 50,
     loading: false
   },
   methods: {

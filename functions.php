@@ -437,27 +437,18 @@ function limitar_a_um_item_no_carrinho($cart_item_data) {
 }
 add_filter('woocommerce_add_cart_item_data', 'limitar_a_um_item_no_carrinho');
 
+function restringir_acesso_membros_pagos() {
+  if (is_tax('product_cat') || is_post_type_archive('rapidinhas')) {
+      if (!SwpmMemberUtils::is_member_logged_in()) { // Se o usuário não está logado
+          wp_redirect(home_url('/assine')); // Redireciona para a página de login
+          exit;
+      }
 
-
-
-function associar_usuario_assinatura_woocommerce($order_id) {
-  // Verifica se o pedido foi concluído
-  $order = wc_get_order($order_id);
-  if ($order->get_status() === 'completed') {
-      $user_id = $order->get_user_id();
-
-      if ($user_id) {
-          $nivel_assinatura = 1; // ID do nível de assinatura no Simple Membership
-
-          // Associa o usuário ao nível de assinatura
-          if (class_exists('SimpleWpMembership')) {
-              $swpm_user = SwpmMemberUtils::get_user_by_id($user_id);
-              if ($swpm_user) {
-                  $swpm_user->set('membership_level', $nivel_assinatura);
-                  $swpm_user->save();
-              }
-          }
+      $membership_level = SwpmMemberUtils::get_logged_in_members_level();
+      if ($membership_level != 2) { // Verifica se o usuário tem um nível pago (ajuste conforme necessário)
+          wp_redirect(home_url('/carrinho')); // Redireciona para página de upgrade
+          exit;
       }
   }
 }
-add_action('woocommerce_order_status_completed', 'associar_usuario_assinatura_woocommerce');
+add_action('template_redirect', 'restringir_acesso_membros_pagos');
