@@ -53,6 +53,11 @@ function render_terms($field_key) {
   return $output;
 }
 
+function is_cfs_field_empty($field_key) {
+  $field_value = CFS()->get($field_key);
+  return empty($field_value);
+}
+
 ?>
 <a href="<?php echo esc_url($link_banner_superior)?>" target="_blank" rel="noopener noreferrer">
   <img src="<?php echo esc_url($banner_superior); ?>" class="w-full p-35 img-banner bannerMobile " alt="banner">
@@ -91,16 +96,17 @@ endif;
 
 <section class="page-filmes-aberta">
   <div class="container">
-    <div class="banner" style=" background-image: url('<?php echo esc_url(CFS()->get('capa')); ?>')">
+    <div class="banner" style="background-image: url('<?php echo esc_url(CFS()->get('capa')); ?>')">
       <h1>
         <strong>
           <?php the_title(); ?>
         </strong>
         <span>
-          <?php echo CFS()->get('titulo_original') ?>
+          <?php echo CFS()->get('titulo_original'); ?>
         </span>
       </h1>
     </div>
+
     <h2>Ficha Técnica</h2>
     <div class="grid-filmes">
       <div class="item">
@@ -110,36 +116,38 @@ endif;
             <h3>Estreia</h3>
             <?php
               $estreia = CFS()->get('estreia');
-
               if (!empty($estreia)) {
                   $data_formatada = date_i18n('j \d\e F \d\e Y', strtotime($estreia));
                   echo '<p>' . esc_html($data_formatada) . '</p>';
               }
-              ?>
+            ?>
           </div>
           <div class="dados">
+            <?php if (CFS()->get('trailer') === 'http://NULL') : ?>
+            <h3>Trailer</h3>
+            <p>Trailher Não disponivel</p>
+            <div class="video"></div>
+            <?php else: ?>
             <h3>Trailer</h3>
             <div class="video">
-              <?php 
-                echo  better_youtube_embed_block_render_block( ['url' => CFS()->get('trailer')] );
-              ?>
+              <?php echo better_youtube_embed_block_render_block(['url' => CFS()->get('trailer')]); ?>
             </div>
-
+            <?php endif; ?>
           </div>
           <div class="dados">
+            <?php if (!is_cfs_field_empty('fotos')) : ?>
             <h3>Fotos</h3>
             <section id="fotos" class="splide">
               <div class="splide__track">
                 <ul class="splide__list">
-
                   <?php $fields = CFS()->get('fotos'); ?>
-                  <?php if ($fields) { ?>
-                  <?php foreach ($fields as $field) { ?>
+                  <?php if ($fields) : ?>
+                  <?php foreach ($fields as $field) : ?>
                   <li class="splide__slide">
-                    <img src="<?php echo esc_html($field['foto']); ?>" class="img-slide" alt="">
+                    <img src="<?php echo esc_url($field['foto']); ?>" class="img-slide" alt="">
                   </li>
-                  <?php } ?>
-                  <?php } ?>
+                  <?php endforeach; ?>
+                  <?php endif; ?>
                 </ul>
               </div>
             </section>
@@ -151,6 +159,7 @@ endif;
                 <div class="modal-img"></div>
               </div>
             </section>
+            <?php endif; ?>
           </div>
         </div>
       </div>
@@ -158,46 +167,62 @@ endif;
         <div class="grid grid-2-lg">
           <div class="dados">
             <table>
+              <?php if (!is_cfs_field_empty('distribuicao')) : ?>
               <tr>
                 <td class="titulo">Distribuição</td>
                 <td>
-                  <?php echo render_terms('distribuicao')?>
+                  <?php echo render_terms('distribuicao'); ?>
                 </td>
               </tr>
+              <?php endif; ?>
+
+              <?php if (!is_cfs_field_empty('paises')) : ?>
               <tr>
                 <td class="titulo">País</td>
                 <td>
-                  <?php echo render_terms('paises')?>
+                  <?php echo render_terms('paises'); ?>
                 </td>
               </tr>
+              <?php endif; ?>
+
+              <?php if (!is_cfs_field_empty('generos')) : ?>
               <tr>
                 <td class="titulo">Gênero</td>
                 <td>
-                  <?php echo render_terms('generos')?>
+                  <?php echo render_terms('generos'); ?>
                 </td>
               </tr>
+              <?php endif; ?>
             </table>
           </div>
           <div class="dados">
             <table>
+              <?php if (!is_cfs_field_empty('duracao_minutos')) : ?>
               <tr>
                 <td class="titulo">Duração</td>
                 <td>
                   <?php echo CFS()->get('duracao_minutos'); ?>min
                 </td>
               </tr>
+              <?php endif; ?>
+
+              <?php if (!is_cfs_field_empty('tecnologias')) : ?>
               <tr>
                 <td class="titulo">Tecnologia</td>
                 <td>
-                  <?php echo render_terms('tecnologias')?>
+                  <?php echo render_terms('tecnologias'); ?>
                 </td>
               </tr>
+              <?php endif; ?>
+
+              <?php if (!is_cfs_field_empty('classificacao')) : ?>
               <tr>
                 <td class="titulo">Classificação</td>
                 <td>
-                  <?php echo render_terms('classificacao')?>
+                  <?php echo render_terms('classificacao'); ?>
                 </td>
               </tr>
+              <?php endif; ?>
             </table>
           </div>
         </div>
@@ -206,33 +231,41 @@ endif;
             <tr>
               <td class="titulo">Sinopse</td>
               <td>
-                <?php the_content(); ?>
+                <?php echo the_content(); ?>
               </td>
             </tr>
           </table>
         </div>
+
+        <?php if (!is_cfs_field_empty('direcao')) : ?>
         <div class="dados">
           <h3>Direção</h3>
           <p>
-            <?php echo CFS()->get('direcao'); ?>
+            <?php echo esc_html(CFS()->get('direcao')); ?>
           </p>
         </div>
+        <?php endif; ?>
+
+        <?php if (!is_cfs_field_empty('roteiro')) : ?>
         <div class="dados">
           <h3>Roteiro</h3>
           <p>
-            <?php echo CFS()->get('roteiro'); ?>
+            <?php echo esc_html(CFS()->get('roteiro')); ?>
           </p>
         </div>
+        <?php endif; ?>
+
+        <?php if (!is_cfs_field_empty('elenco')) : ?>
         <div class="dados">
           <h3>Elenco</h3>
           <p>
-            <?php echo CFS()->get('elenco'); ?>
+            <?php echo esc_html(CFS()->get('elenco')); ?>
           </p>
         </div>
+        <?php endif; ?>
       </div>
     </div>
   </div>
-
 </section>
 
 <?php endwhile;

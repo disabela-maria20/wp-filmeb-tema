@@ -436,3 +436,28 @@ function limitar_a_um_item_no_carrinho($cart_item_data) {
   return $cart_item_data;
 }
 add_filter('woocommerce_add_cart_item_data', 'limitar_a_um_item_no_carrinho');
+
+
+
+
+function associar_usuario_assinatura_woocommerce($order_id) {
+  // Verifica se o pedido foi concluído
+  $order = wc_get_order($order_id);
+  if ($order->get_status() === 'completed') {
+      $user_id = $order->get_user_id();
+
+      if ($user_id) {
+          $nivel_assinatura = 1; // ID do nível de assinatura no Simple Membership
+
+          // Associa o usuário ao nível de assinatura
+          if (class_exists('SimpleWpMembership')) {
+              $swpm_user = SwpmMemberUtils::get_user_by_id($user_id);
+              if ($swpm_user) {
+                  $swpm_user->set('membership_level', $nivel_assinatura);
+                  $swpm_user->save();
+              }
+          }
+      }
+  }
+}
+add_action('woocommerce_order_status_completed', 'associar_usuario_assinatura_woocommerce');

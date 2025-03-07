@@ -133,11 +133,13 @@ $recent_posts_query_banner = new WP_Query(array(
         <section id="filmesHome" class="owl-carousel">
           <?php if ($filme->have_posts()) { while ($filme->have_posts()) {  $filme->the_post(); ?>
           <div class="item">
-            <?php if( esc_url(CFS()->get('cartaz')) != '') {  ?>
-            <img src="<?php echo esc_url(CFS()->get('cartaz')); ?>"
-              alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
-            <?php }?>
-            <p><?php echo get_the_title() ?></p>
+            <a href="<?php the_permalink(); ?>">
+              <?php if( esc_url(CFS()->get('cartaz')) != '') {  ?>
+              <img src="<?php echo esc_url(CFS()->get('cartaz')); ?>"
+                alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
+              <?php }?>
+              <p><?php echo get_the_title() ?></p>
+            </a>
           </div>
           <?php } } ?>
         </section>
@@ -185,7 +187,7 @@ $recent_posts_query_banner = new WP_Query(array(
 
       </aside>
     </div>
-    <?php }else {?>
+    <?php } else { ?>
     <div class="grid grid-2-lg gap-32">
       <?php if ($recent_posts_query->have_posts()) { while ($recent_posts_query->have_posts()) { $recent_posts_query->the_post(); ?>
       <div class="item">
@@ -203,7 +205,7 @@ $recent_posts_query_banner = new WP_Query(array(
       </div>
       <?php }} ?>
     </div>
-    <?php  }?>
+    <?php }?>
 
   </section>
   <section class="home_lista_rapinhas">
