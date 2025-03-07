@@ -3,7 +3,7 @@
 <?php
 $current_page_slug = basename(get_permalink());
 $category_slug = str_replace('boletim/', '', $current_page_slug);
-$banner_id = "185";
+$banner_id = "77483";
 $author_id = get_the_author_meta('ID');
 
 $args = array(
@@ -154,17 +154,19 @@ function render_terms($field_key, $post_id) {
 <?php if ($query->have_posts()): ?>
 <?php while ($query->have_posts()): $query->the_post(); ?>
 <?php
+    $banner_lateral = CFS()->get('banner_lateral', $banner_id);
+
     $banner_superior = CFS()->get('banner_moldura', $banner_id);
     $banner_inferior = CFS()->get('mega_banner', $banner_id);
-    $full_banner = CFS()->get('full_banner', $banner_id);
     $skyscraper = CFS()->get('skyscraper', $banner_id);
-    $super_banner = CFS()->get('super_banner', $banner_id);
+    $big_stamp = CFS()->get('big_stamp', $banner_id);
+    $banner_moldura_casado = CFS()->get('banner_moldura_casado', $banner_id);
 
     $link_banner_superior = CFS()->get('link_banner_moldura', $banner_id);
     $link_banner_inferior = CFS()->get('link_mega_banner', $banner_id);
-    $link_full_banner = CFS()->get('link_full_banner', $banner_id);
     $link_skyscraper = CFS()->get('link_skyscraper', $banner_id);
-    $link_super_banner = CFS()->get('link_super_banner', $banner_id);
+    $link_big_stampr = CFS()->get('link_big_stamp', $banner_id);
+    $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_id);
     ?>
 <a href="<?php echo esc_url($link_banner_superior)?>" target="_blank" rel="noopener noreferrer">
   <img src="<?php echo esc_url($banner_superior); ?>" class="w-full p-35 img-banner bannerMobile " alt="banner">
@@ -189,7 +191,7 @@ function render_terms($field_key, $post_id) {
 <section class="bg-gray padding-banner">
   <div class="container bannerMobile">
     <div class="grid-banner-superior">
-      <a href="<?php echo esc_url($link_banner_inferior); ?>" target="_blank" rel="noopener noreferrer">
+      <a href="<?php echo $link_banner_inferior; ?>" target="_blank" rel="noopener noreferrer">
         <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
       </a>
     </div>
@@ -263,104 +265,103 @@ function render_terms($field_key, $post_id) {
           </div>
         </form>
       </section>
+      <?php 
+      function render_filmes_lista($filmes_por_mes, $meses) {
+        if (!empty($filmes_por_mes)) {
+            ksort($filmes_por_mes);
+            foreach ($filmes_por_mes as $mes => $filmes) {
+                echo '<h2> <i class="bi bi-calendar-check-fill"></i> ' . esc_html($meses[$mes]) . '</h2>';
+                echo '<div class="grid-filmes">';
+                foreach ($filmes as $filme) {
+                    echo '<a v-on:mousemove="hoverCard" href="' . get_permalink($filme->ID) . '" class="card">';
+                    if (esc_url(CFS()->get('cartaz', $filme->ID)) == '') {
+                        echo '<h3>' . get_the_title($filme->ID) . '</h3>';
+                        echo '<p class="indisponivel">Poster não disponível</p>';
+                    } else {
+                        echo '<img src="' . esc_url(CFS()->get('cartaz', $filme->ID)) . '" alt="' . get_the_title($filme->ID) . '">';
+                    }
+                    echo '<div class="info"><ul>';
+                    echo '<li><span>Título:</span><strong>' . get_the_title($filme->ID) . '</strong></li>';
+                    if ($d = render_terms('distribuicao', $filme->ID)) echo '<li><span>Distribuição:</span><strong>' . $d . '</strong></li>';
+                    if ($p = render_terms('paises', $filme->ID)) echo '<li><span>País:</span><strong>' . $p . '</strong></li>';
+                    if ($g = render_terms('generos', $filme->ID)) echo '<li><span>Gênero(s)</span><strong>' . $g . '</strong></li>';
+                    if ($dir = CFS()->get('direcao', $filme->ID)) echo '<li><span>Direção</span><strong>' . $dir . '</strong></li>';
+                    if ($dur = CFS()->get('duracao_minutos', $filme->ID)) echo '<li><span>Duração</span><strong>' . $dur . 'min</strong></li>';
+                    echo '</ul></div></a>';
+                }
+                echo '</div>';
+            }
+        } else {
+            echo '<p>Nenhum filme encontrado.</p>';
+        }
+    }
+    
+    function render_filmes_tabela($filmes_por_mes, $meses) {
+        if (!empty($filmes_por_mes)) {
+            ksort($filmes_por_mes);
+            foreach ($filmes_por_mes as $mes => $filmes) {
+             
+                echo '<h2> <i class="bi bi-calendar-check-fill"></i>' . esc_html($meses[$mes]) . '</h2>';
+                echo '<table><thead><tr>
+                      <th colspan="2">Título</th>
+                      <th>Distribuição</th>
+                      <th>Direção</th>
+                      <th>País</th>
+                      <th>Gênero</th>
+                      <th>Duração</th>
+                      <th>Elenco</th>
+                      </tr></thead><tbody>';
+                foreach ($filmes as $filme) {
+                    echo '<tr>
+                          <td class="titulo" colspan="2"><a href="' . get_permalink($filme->ID) . '"><h3>' . get_the_title($filme->ID) . '</h3><span>' . esc_html(CFS()->get('titulo_original', $filme->ID)) . '</span></a></td>
+                          <td>' . render_terms('distribuicao', $filme->ID) . '</td>
+                          <td>' . esc_html(CFS()->get('direcao', $filme->ID)) . '</td>
+                          <td>' . render_terms('paises', $filme->ID) . '</td>
+                          <td>' . render_terms('generos', $filme->ID) . '</td>
+                          <td>' . CFS()->get('duracao_minutos', $filme->ID) . ' min</td>
+                          <td>' . CFS()->get('elenco', $filme->ID) . '</td>
+                          </tr>';
+                }
+                echo '</tbody></table>';
+            }
+        } else {
+            echo '<p>Nenhum filme encontrado.</p>';
+        }
+    }
+    if (esc_html($banner_lateral) == '1') : ?>
+      <div class="grid-lateral">
+        <div>
+          <section class="area-filmes" v-if="ativoItem === 'lista'">
+            <div class="lista-filmes" id="lista">
+              <?php render_filmes_lista($filmes_por_mes, $meses); ?>
+            </div>
+          </section>
+          <section class="tabela-filme" v-if="ativoItem === 'tabela'">
+            <?php render_filmes_tabela($filmes_por_mes, $meses); ?>
+          </section>
+        </div>
+        <aside>
+          <a href="<?php echo esc_url($link_skyscraper); ?>">
+            <img src="<?php echo esc_url($skyscraper); ?>">
+          </a>
+          <a href="<?php echo esc_url($link_big_stampr); ?>">
+            <img src="<?php echo esc_url($big_stamp); ?>">
+          </a>
+        </aside>
+      </div>
+      <?php else: ?>
       <section class="area-filmes" v-if="ativoItem === 'lista'">
         <div class="lista-filmes" id="lista">
-          <?php if (!empty($filmes_por_mes)): ?>
-          <?php ksort($filmes_por_mes);?>
-          <?php foreach ($filmes_por_mes as $mes => $filmes): ?>
-          <h2> <i class="bi bi-calendar-check-fill"></i> <?php echo esc_html($meses[$mes]); ?></h2>
-          <div class="grid-filmes">
-            <?php foreach ($filmes as $filme): ?>
-            <a v-on:mousemove="hoverCard" href="<?php echo get_permalink($filme->ID); ?>" class="card">
-              <?php if (esc_url(CFS()->get('cartaz', $filme->ID)) == ''): ?>
-              <h3><?php echo get_the_title($filme->ID); ?></h3>
-              <p class="indisponivel">Poster não disponível</p>
-              <?php else: ?>
-              <img src="<?php echo esc_url(CFS()->get('cartaz', $filme->ID)); ?>"
-                alt="<?php echo get_the_title($filme->ID); ?>">
-              <?php endif; ?>
-              <div class="info">
-                <ul>
-                  <li><span>Título:</span><strong><?php echo get_the_title($filme->ID); ?></strong></li>
-                  <?php if (render_terms('distribuicao', $filme->ID)): ?>
-                  <li><span>Distribuição:</span><strong><?php echo render_terms('distribuicao', $filme->ID); ?></strong>
-                  </li>
-                  <?php endif; ?>
-                  <?php if (render_terms('paises', $filme->ID)): ?>
-                  <li><span>País:</span><strong><?php echo render_terms('paises', $filme->ID); ?></strong></li>
-                  <?php endif; ?>
-                  <?php if (render_terms('generos', $filme->ID)): ?>
-                  <li><span>Gênero(s)</span><strong><?php echo render_terms('generos', $filme->ID); ?></strong></li>
-                  <?php endif; ?>
-                  <?php if (CFS()->get('direcao', $filme->ID) !== ''): ?>
-                  <li><span>Direção</span><strong><?php echo CFS()->get('direcao'); ?></strong></li>
-                  <?php endif; ?>
-                  <?php if (CFS()->get('duracao_minutos', $filme->ID) !== '0'): ?>
-                  <li><span>Duração</span><strong><?php echo CFS()->get('duracao_minutos', $filme->ID); ?>min</strong>
-                  </li>
-                  <?php endif; ?>
-                </ul>
-              </div>
-            </a>
-            <?php endforeach; ?>
-          </div>
-          <?php endforeach; ?>
-          <?php else: ?>
-          <p>Nenhum filme encontrado.</p>
-          <?php endif; ?>
+          <?php render_filmes_lista($filmes_por_mes, $meses); ?>
         </div>
       </section>
       <section class="tabela-filme" v-if="ativoItem === 'tabela'">
-        <?php if (!empty($filmes_por_mes)): ?>
-        <?php ksort($filmes_por_mes); ?>
-        <?php foreach ($filmes_por_mes as $mes => $filmes): ?>
-        <h2> <i class="bi bi-calendar-check-fill"></i><?php echo esc_html($meses[$mes]); ?></h2>
-        <table>
-          <thead>
-            <tr>
-              <th colspan="2">Título</th>
-              <th>Distribuição</th>
-              <th>Direção</th>
-              <th>País</th>
-              <th>Gênero</th>
-              <th>Duração</th>
-              <th>Elenco</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php foreach ($filmes as $filme): ?>
-            <tr>
-              <td class="titulo" colspan="2">
-                <a href="<?php echo get_permalink($filme->ID); ?>">
-                  <h3><?php echo get_the_title($filme->ID); ?></h3>
-                  <span><?php echo esc_html(CFS()->get('titulo_original', $filme->ID)); ?></span>
-                </a>
-              </td>
-              <td><?php echo render_terms('distribuicao', $filme->ID); ?></td>
-              <td><?php echo esc_html(CFS()->get('direcao', $filme->ID)) ?></td>
-              <td><?php echo render_terms('paises', $filme->ID); ?></td>
-              <td><?php echo render_terms('generos', $filme->ID); ?></td>
-              <td><?php echo CFS()->get('duracao_minutos', $filme->ID); ?> min</td>
-              <td><?php echo CFS()->get('elenco', $filme->ID); ?></td>
-            </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
-        <?php endforeach; ?>
-        <?php else: ?>
-        <p>Nenhum filme encontrado.</p>
-        <?php endif; ?>
+        <a href="<?php echo esc_url($link_banner_moldura_casado); ?>">
+          <img src="<?php echo esc_url($banner_moldura_casado); ?>">
+        </a>
+        <?php render_filmes_tabela($filmes_por_mes, $meses); ?>
       </section>
-      <div class="pagination">
-        <?php echo paginate_links(array(
-          'total'     => $filmes->max_num_pages,
-          'current'   => max(1, get_query_var('paged')),
-          'type'      => 'list',
-          'prev_text' => __('<'),
-          'next_text' => __('>'),
-          'mid_size'  => 2,
-        )); ?>
-      </div>
+      <?php endif; ?>
     </div>
   </div>
 </div>
@@ -378,7 +379,7 @@ new Vue({
     filmes: [],
     anos: [],
     selectedFilters: {
-      ano: '',
+      ano: new Date().getFullYear(),
       mes: '',
       origem: '',
       distribuidor: '',

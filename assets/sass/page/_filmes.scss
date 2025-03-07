@@ -494,3 +494,19 @@
     }
   }
 }
+
+.grid-lateral {
+  display: grid;
+  gap: 25px;
+  padding-top: 45px;
+  @include media(lg) {
+    padding-top: 95px;
+    gap: 45px;
+    grid-template-columns: 2fr 1fr;
+  }
+  aside {
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+  }
+}
