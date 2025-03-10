@@ -438,7 +438,12 @@ function limitar_a_um_item_no_carrinho($cart_item_data) {
 add_filter('woocommerce_add_cart_item_data', 'limitar_a_um_item_no_carrinho');
 
 function restringir_acesso_membros_pagos() {
-  if (is_tax('product_cat') || is_post_type_archive('rapidinhas')) {
+  if (is_tax('product_cat') || 
+  is_post_type_archive('rapidinhas') || 
+  is_post_type_archive('edicoes')|| 
+  is_page('boletim') || 
+  is_page('fim-de-semana-brasil') ||
+  is_page('fim-de-semana-global')) {
       if (!SwpmMemberUtils::is_member_logged_in()) { // Se o usuário não está logado
           wp_redirect(home_url('/assine')); // Redireciona para a página de login
           exit;
