@@ -477,5 +477,3 @@ function handel_assinaturas_content() {
   echo "<h2>Minhas Assinaturas</h2>";
 }
 add_action('woocommerce_account_assinaturas_endpoint', 'handel_assinaturas_content');
-
-flush_rewrite_rules(); 
