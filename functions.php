@@ -474,6 +474,39 @@ add_action('init', 'handel_add_endpoint');
 
 // Corrigindo para o endpoint correto (assinaturas)
 function handel_assinaturas_content() {
-  echo "<h2>Minhas Assinaturas</h2>";
+  if(!SwpmMemberUtils::is_member_logged_in()) {
+    return 0;
+  }
+
+  $member_level = SwpmMemberUtils::get_logged_in_members_level();
+
+  if ($member_level == '4'){
+    echo '<p>Assine a Filme b</p>';
+  } else if ($member_level == '2') {
+ 
+    $user_id = SwpmMemberUtils::get_logged_in_members_id();
+
+    if ($user_id) {
+        // Obtém as informações do usuário
+        $user_info = SwpmMemberUtils::get_user_by_id($user_id);
+        
+        echo '<pre>';
+        print_r($user_info);
+        echo '</pre>';
+    } else {
+        echo 'Usuário não está logado.';
+    }
+    echo '<p>Voce ja é assinante, aproveite os conteudos exclusivos</p>';
+  }
 }
 add_action('woocommerce_account_assinaturas_endpoint', 'handel_assinaturas_content');
+
+
+function add_woocommerce_caps_to_admin() {
+  $admin_role = get_role('administrator');
+  if ($admin_role) {
+      $admin_role->add_cap('manage_woocommerce');
+      $admin_role->add_cap('view_woocommerce_reports');
+  }
+}
+add_action('init', 'add_woocommerce_caps_to_admin');

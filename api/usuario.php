@@ -6,18 +6,21 @@ add_action('rest_api_init', function () {
     'permission_callback' => '__return_true'
   ]);
 });
+
 function register_customer_membership(WP_REST_Request $request)
 {
   global $wpdb;
 
   $params = $request->get_json_params();
 
+  // Campos obrigatórios
   $username = sanitize_text_field($params['username']);
   $email = sanitize_email($params['email']);
   $password = sanitize_text_field($params['password']);
   $activation_date = sanitize_text_field($params['activation_date']);
-  $expiration_date = sanitize_text_field($params['expiration_date']); // Data de expiração
+  $expiration_date = sanitize_text_field($params['expiration_date']);
 
+  // Verificação dos campos obrigatórios
   if (empty($username) || empty($email) || empty($password) || empty($expiration_date)) {
     return new WP_Error('missing_data', 'Os campos username, email, password e expiration_date são obrigatórios.', ['status' => 400]);
   }
@@ -36,7 +39,7 @@ function register_customer_membership(WP_REST_Request $request)
   $user = new WP_User($user_id);
   $user->set_role('customer'); // Define como Cliente no WooCommerce
 
-  // Adicionar informações ao WooCommerce
+  // Adicionar informações ao WooCommerce (campos obrigatórios)
   update_user_meta($user_id, 'billing_email', $email);
   update_user_meta($user_id, 'membership_activation', $activation_date);
   update_user_meta($user_id, 'membership_expiration', $expiration_date);
@@ -50,25 +53,34 @@ function register_customer_membership(WP_REST_Request $request)
   $account_state = $is_paid ? 'active' : 'inactive';
   $status = $is_paid ? 'paid' : 'free';
 
-  // Adicionar ou atualizar no Simple WordPress Membership
+  // Inserir diretamente na tabela wp_swpm_members_tbl
   $table = $wpdb->prefix . 'swpm_members_tbl';
-  $existing_member = $wpdb->get_row($wpdb->prepare("SELECT id FROM $table WHERE email = %s", $email));
 
-  if ($existing_member) {
-    $wpdb->update($table, [
-      'membership_level' => $membership_level,
-      'account_state' => $account_state,
-      'subscription_starts' => $activation_date
-    ], ['email' => $email]);
-  } else {
-    $wpdb->insert($table, [
-      'user_name' => $username,
-      'email' => $email,
-      'membership_level' => $membership_level,
-      'account_state' => $account_state,
-      'subscription_starts' => $activation_date
-    ]);
-  }
+  // Dados para inserção na tabela SWPM
+  $swpm_data = [
+    'user_name' => $username,
+    'first_name' => sanitize_text_field($params['first_name'] ?? ''),
+    'last_name' => sanitize_text_field($params['last_name'] ?? ''),
+    'password' => $password,
+    'member_since' => $activation_date,
+    'membership_level' => $membership_level,
+    'account_state' => $account_state,
+    'email' => $email,
+    'phone' => sanitize_text_field($params['phone'] ?? ''),
+    'address_street' => sanitize_text_field($params['address_street'] ?? ''),
+    'address_city' => sanitize_text_field($params['address_city'] ?? ''),
+    'address_state' => sanitize_text_field($params['address_state'] ?? ''),
+    'address_zipcode' => sanitize_text_field($params['address_zipcode'] ?? ''),
+    'country' => sanitize_text_field($params['country'] ?? ''),
+    'gender' => sanitize_text_field($params['gender'] ?? 'not specified'),
+    'company_name' => sanitize_text_field($params['company_name'] ?? ''),
+    'subscription_starts' => $activation_date,
+    'last_accessed' => current_time('mysql'),
+    'last_accessed_from_ip' => $_SERVER['REMOTE_ADDR'],
+  ];
+
+  // Inserir na tabela SWPM
+  $wpdb->insert($table, $swpm_data);
 
   return rest_ensure_response([
     'message' => 'Usuário registrado com sucesso!',
@@ -78,21 +90,3 @@ function register_customer_membership(WP_REST_Request $request)
   ]);
 }
 ?>
-<!-- 
-
--------------------------------------- TUDO: -----------------------------------------
-Filme B
-
-Vincular os clientes com o woocommerce com a api,
-
-os dados + data de encerramento + cliente do woocommerce como ja pago e concluído 
-
-nome, email, password, data de ativação, data de encerramento, status do cliente (pago e concluído)
-e Vincular esse cadastro a Membership os clintes que tem conta ativa, ou seja a data de expiração não chegou tem que esta como Cliente e vai ter acesso a
-conteudo exclusivos se a data ja passou e não esta como pago vai para o plano free 
-
-em seguida no wordpress vincllar o cadastro dos clintes woocommerce com Simple WordPress Membership
-
-o usuarioi vai se cadastrar com o woocomerce então apartir dele veja o nivel de associação, para os usuarios que ja existe eplique a logica de clinte ou free
-
--->

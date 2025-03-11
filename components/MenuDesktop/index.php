@@ -20,7 +20,7 @@
 
           <ul class="user">
             <li>
-              <?php if (!is_user_logged_in()) { ?>
+              <?php if (!SwpmMemberUtils::is_member_logged_in()) { ?>
               <a href="<?php echo get_site_url(); ?>/minha-conta/">
                 <span>Entrar</span>
                 <i class=" bi bi-person-circle"></i>
