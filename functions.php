@@ -432,28 +432,50 @@ add_filter('woocommerce_cart_item_remove_link', '__return_false');
 add_filter('woocommerce_cart_item_actions', 'ocultar_remover_item_no_carrinho', 10, 3);
 
 function limitar_a_um_item_no_carrinho($cart_item_data) {
-  WC()->cart->empty_cart(); // Remove todos os produtos antes de adicionar um novo
+  WC()->cart->empty_cart(); 
   return $cart_item_data;
 }
 add_filter('woocommerce_add_cart_item_data', 'limitar_a_um_item_no_carrinho');
 
 function restringir_acesso_membros_pagos() {
   if (is_tax('product_cat') || 
-  is_post_type_archive('rapidinhas') || 
-  is_post_type_archive('edicoes')|| 
-  is_page('boletim') || 
-  is_page('fim-de-semana-brasil') ||
-  is_page('fim-de-semana-global')) {
-      if (!SwpmMemberUtils::is_member_logged_in()) { // Se o usuário não está logado
-          wp_redirect(home_url('/assine')); // Redireciona para a página de login
+  is_post_type_archive('rapidinhas')) {
+      if (!SwpmMemberUtils::is_member_logged_in()) { 
+          wp_redirect(home_url('/assine')); 
           exit;
       }
 
       $membership_level = SwpmMemberUtils::get_logged_in_members_level();
-      if ($membership_level != 2) { // Verifica se o usuário tem um nível pago (ajuste conforme necessário)
-          wp_redirect(home_url('/carrinho')); // Redireciona para página de upgrade
+      if ($membership_level != 2) { 
+          wp_redirect(home_url('/carrinho')); 
           exit;
       }
   }
 }
 add_action('template_redirect', 'restringir_acesso_membros_pagos');
+
+
+function handel_custom_menu($menu_links) {
+  $menu_links = array_slice($menu_links, 0, 5, true)
+  + ['assinaturas' => 'Assinaturas']
+  + array_slice($menu_links, 3, NULL, true);
+
+  unset($menu_links['downloads']);
+  return $menu_links;
+}
+add_filter('woocommerce_account_menu_items', 'handel_custom_menu');
+
+function handel_add_endpoint() {
+  add_rewrite_endpoint('assinaturas', EP_PAGES);
+  // Se quiser adicionar certificados, descomente:
+  // add_rewrite_endpoint('certificados', EP_PAGES);
+}
+add_action('init', 'handel_add_endpoint');
+
+// Corrigindo para o endpoint correto (assinaturas)
+function handel_assinaturas_content() {
+  echo "<h2>Minhas Assinaturas</h2>";
+}
+add_action('woocommerce_account_assinaturas_endpoint', 'handel_assinaturas_content');
+
+flush_rewrite_rules(); 
