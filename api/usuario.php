@@ -74,6 +74,7 @@ function register_customer_membership(WP_REST_Request $request)
     'country' => sanitize_text_field($params['country'] ?? ''),
     'gender' => sanitize_text_field($params['gender'] ?? 'not specified'),
     'company_name' => sanitize_text_field($params['company_name'] ?? ''),
+    'profile_image' => sanitize_text_field($params['profile_image'] ?? ''),
     'subscription_starts' => $activation_date,
     'last_accessed' => current_time('mysql'),
     'last_accessed_from_ip' => $_SERVER['REMOTE_ADDR'],
@@ -81,6 +82,40 @@ function register_customer_membership(WP_REST_Request $request)
 
   // Inserir na tabela SWPM
   $wpdb->insert($table, $swpm_data);
+
+  // Criar um pedido no WooCommerce (se os dados de endereço forem fornecidos)
+  if (isset($params['address_street']) && isset($params['address_city']) && isset($params['address_state']) && isset($params['address_zipcode']) && isset($params['country'])) {
+    $order = wc_create_order(['customer_id' => $user_id]);
+
+    // Adicionar o produto com ID 77471 ao pedido
+    $product_id = 77471; // ID do produto
+    $product = wc_get_product($product_id);
+
+    if ($product) {
+      $order->add_product($product, 1); // Adiciona 1 unidade do produto ao pedido
+    } else {
+      return new WP_Error('product_not_found', 'Produto não encontrado.', ['status' => 404]);
+    }
+
+    // Adicionar endereço de cobrança ao pedido
+    $billing_address = [
+      'first_name' => sanitize_text_field($params['first_name'] ?? ''),
+      'last_name'  => sanitize_text_field($params['last_name'] ?? ''),
+      'email'      => $email,
+      'phone'      => sanitize_text_field($params['phone'] ?? ''),
+      'address_1'  => sanitize_text_field($params['address_street']),
+      'city'       => sanitize_text_field($params['address_city']),
+      'state'      => sanitize_text_field($params['address_state']),
+      'postcode'   => sanitize_text_field($params['address_zipcode']),
+      'country'    => sanitize_text_field($params['country']),
+    ];
+
+    $order->set_address($billing_address, 'billing');
+
+    // Definir status do pedido (opcional)
+    $order->set_status('completed'); // Ou 'processing', 'pending', etc.
+    $order->save();
+  }
 
   return rest_ensure_response([
     'message' => 'Usuário registrado com sucesso!',
