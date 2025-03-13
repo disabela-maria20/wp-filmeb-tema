@@ -223,7 +223,7 @@ function render_terms($field_key, $post_id) {
         </div>
       </div>
       <section class="grid-select">
-        <form method="GET" action="<?php echo get_site_url(); ?>">
+        <form method="GET" action="<?php echo get_site_url(); ?>/filmes/">
           <div class="grid grid-7-xl gap-22 select-itens">
             <select id="ano" name="ano" v-model="selectedFilters.ano">
               <option disabled selected value="">Ano</option>
