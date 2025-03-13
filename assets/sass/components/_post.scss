@@ -24,6 +24,7 @@
     line-height: 3.4rem;
     text-align: left;
     color: $color-bright-red;
+    padding-top: 50px;
 
     @include media(lg) {
       font-size: 4rem;
