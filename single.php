@@ -87,11 +87,6 @@ if ($query->have_posts()):
           </a> -->
         </div>
         <div class="post-content">
-          <?php if (has_post_thumbnail()): ?>
-          <div class="post-thumbnail">
-            <?php the_post_thumbnail('medium'); ?>
-          </div>
-          <?php endif; ?>
           <h1><?php the_title(); ?></h1>
 
           <div class="post-text">
