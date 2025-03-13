@@ -84,7 +84,7 @@ $rapidinhas_id = get_cat_ID('Rapidinhas');
 
     <aside class="aside-info">
       <img src="<?php echo esc_url(CFS()->get('skyscraper')); ?>" class="img-banner" alt="banner">
-      <h2>Boletim da semana</h2>
+      <h2>Boletim</h2>
       <?php
       $recent_posts_query = new WP_Query(array(
         'post_type' => 'edicoes',

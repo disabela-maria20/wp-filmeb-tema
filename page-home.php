@@ -86,7 +86,7 @@ $recent_posts_query_banner = new WP_Query(array(
       <div>
         <div class="area">
           <div class="titulo">
-            <h2>10 maiores bilheterias do ano no Brasil</h2>
+            <h2> 10 maiores bilheterias do fim de semana no Brasil </h2>
             <span></span>
           </div>
           <?php echo do_shortcode('[table id=Brasil /]'); ?>
@@ -115,7 +115,7 @@ $recent_posts_query_banner = new WP_Query(array(
     </div>
     <div class="grid">
       <div>
-        <h2>Receba a nossa newsllater</h2>
+        <h2>Receba a nossa newsletter</h2>
         <p>
           Fique por dentro do que movimenta o mercado de cinema! Receba tendências, estreias, bilheterias e os temas
           mais relevantes da indústria diretamente no seu e-mail.</p>
@@ -127,7 +127,7 @@ $recent_posts_query_banner = new WP_Query(array(
     </div>
   </section>
   <section class="home-filmes">
-    <h2>Estreias</h2>
+    <h2>Lançamentos</h2>
     <div class="grid-filmes">
       <div>
         <section id="filmesHome" class="owl-carousel">
@@ -152,7 +152,7 @@ $recent_posts_query_banner = new WP_Query(array(
     </div>
   </section>
   <section class="home_lista_noticias">
-    <h2>Publicações Recentes</h2>
+    <h2>Publicações recentes</h2>
     <?php if(esc_html($banner_lateral) == '1'){?>
     <div class="grid-recentes">
       <div>
@@ -209,7 +209,7 @@ $recent_posts_query_banner = new WP_Query(array(
 
   </section>
   <section class="home_lista_rapinhas">
-    <h2 class="titulo">Rapidinha</h2>
+    <h2 class="titulo">Rapidinhas</h2>
 
     <!-- Carousel Mobile -->
     <section class="home_lista_rapinhas bannerMobile">
@@ -243,8 +243,8 @@ document.addEventListener("DOMContentLoaded", function() {
       nav: false,
       dots: true,
       mouseDrag: true,
-      autoplay: false,
-      autoplayTimeout: 3000,
+      autoplay: true,
+      autoplayTimeout: 6000,
       navText: ["<i class='bi bi-chevron-left'></i>", "<i class='bi bi-chevron-right'></i>"],
       responsive: {
         0: {
@@ -254,6 +254,23 @@ document.addEventListener("DOMContentLoaded", function() {
           items: 5
         },
       }
+    });
+    jQuery(document).ready(function($) {
+      $('.slide').owlCarousel({
+        loop: true,
+        margin: 10,
+        nav: true,
+        dots: false,
+        mouseDrag: true,
+        autoplay: true,
+        autoplayTimeout: 6000,
+        navText: ["<i class='bi bi-chevron-left'></i>", "<i class='bi bi-chevron-right'></i>"],
+        responsive: {
+          0: {
+            items: 1
+          },
+        }
+      });
     });
   });
 });

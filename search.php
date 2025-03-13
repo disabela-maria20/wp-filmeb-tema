@@ -117,7 +117,7 @@ if ($query->have_posts()) :
       <a href="<?php echo esc_url($link_skyscraper); ?>">
         <img src="<?php echo esc_url($skyscraper); ?>" class="img-banner" alt="banner">
       </a>
-      <h2>Boletim da semana</h2>
+      <h2>Boletim</h2>
       <?php
       $recent_posts_query = new WP_Query(array(
         'post_type' => 'edicoes',

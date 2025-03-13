@@ -15,7 +15,7 @@ if ($query->have_posts()) :
 
     <aside class="aside-boletim">
       <img src="<?php echo esc_url($skyscraper); ?>" class="img-banner" alt="banner">
-      <h2>Boletim da semana</h2>
+      <h2>Boletim</h2>
       <div class="aside-item-boletim">
         <div>
           <img src="<?php echo get_template_directory_uri(); ?>/assets/images/banner/final-de-semana.png" alt="cine B" />

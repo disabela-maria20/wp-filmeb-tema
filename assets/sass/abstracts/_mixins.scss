@@ -122,12 +122,15 @@ $grid-breakpoints: (
 }
 
 @mixin Inputsearch() {
-  padding: 0 25px;
+  padding-right: 25px;
   display: flex;
   justify-content: center;
   height: 40px;
   width: 100%;
 
+  @include media(lg) {
+    padding-right: 0 25px;
+  }
   input {
     width: 100%;
     background-color: $color-white;

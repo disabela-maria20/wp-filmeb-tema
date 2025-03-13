@@ -141,7 +141,7 @@ endif;
       <a href="<?php echo esc_url($link_skyscraper); ?>">
         <img src="<?php echo esc_url($skyscraper); ?>" class="img-banner" alt="banner">
       </a>
-      <h2>Boletim da semana</h2>
+      <h2>Boletim</h2>
       <div class="aside-item-boletim">
         <ul>
           <?php  if ($recent_posts_query->have_posts()) {while ($recent_posts_query->have_posts()) { $recent_posts_query->the_post();?>

@@ -103,12 +103,23 @@
   table {
     font-size: 1.2rem;
     width: 100%;
-
+    @include media(lg) {
+      font-size: 1.5rem;
+    }
     tbody {
+      td,
+      th {
+        padding: 5px 0;
+      }
       tr {
+        margin-top: 10px;
+        .column-1 {
+          text-align: start;
+        }
         td {
           color: $color-darker-gray;
           border: none !important;
+          text-align: end;
         }
 
         .column-2 {
@@ -134,7 +145,7 @@
     text-align: end;
 
     @include media(lg) {
-      font-size: 1.3rem;
+      font-size: 1.4rem;
     }
   }
 }
@@ -143,7 +154,7 @@
   padding: 45px 0;
 
   @include media(lg) {
-    padding: 95px 0;
+    padding: 75px 0;
   }
 }
 
@@ -157,6 +168,8 @@
     margin-bottom: 35px;
 
     @include media(lg) {
+      font-size: 3rem;
+      line-height: 3.4rem;
       margin-bottom: 90px;
     }
   }
@@ -186,11 +199,17 @@
     h3 {
       color: $color-darker-gray;
       font-size: 1.6rem;
+      padding: 10px 0;
+      @include media(lg) {
+        font-size: 1.8rem;
+      }
     }
-
+    span {
+      font-size: 1.5rem;
+    }
     .data {
+      font-size: 1.5rem;
       display: block;
-      margin-top: 5px;
       color: $color-darker-gray;
     }
   }
@@ -242,6 +261,8 @@
     margin: 35px 0;
 
     @include media(lg) {
+      font-size: 3rem;
+      line-height: 3.4rem;
       margin: 90px 0;
     }
   }
@@ -267,17 +288,23 @@
     a {
       display: block;
       margin-top: 5px;
+      font-size: 1.2rem;
       color: $color-darker-gray;
     }
 
     h3 {
       color: $color-darker-gray;
       font-size: 1.6rem;
+      padding: 10px 0;
+      @include media(lg) {
+        font-size: 1.8rem;
+      }
     }
 
     .data {
       color: $color-bright-red;
-      font-size: 1.2rem;
+      font-size: 1.5rem;
+      display: block;
     }
   }
 }
@@ -363,15 +390,15 @@
 
     @include media(lg) {
       margin-bottom: 90px;
+      font-size: 3rem;
+      line-height: 3.4rem;
     }
   }
   .grid-filmes {
     margin-bottom: 35px;
-    padding-bottom: 90px;
-    border-bottom: 2px solid $color-medium-gray;
+
     @include media(lg) {
       margin-bottom: 90px;
-      padding-bottom: 90px;
       display: grid;
       gap: 25px;
       grid-template-columns: 60% 1fr;

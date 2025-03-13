@@ -21,23 +21,7 @@ const isMobile = () => {
   return isMobileDevice
 }
 
-jQuery(document).ready(function ($) {
-  $('.slide').owlCarousel({
-    loop: true,
-    margin: 10,
-    nav: true,
-    dots: false,
-    mouseDrag: true,
-    autoplay: true,
-    autoplayTimeout: 3000,
-    navText: ["<i class='bi bi-chevron-left'></i>", "<i class='bi bi-chevron-right'></i>"],
-    responsive: {
-      0: {
-        items: 1
-      },
-    }
-  });
-});
+
 
 jQuery(document).ready(function ($) {
   $('.rapidinhas').owlCarousel({

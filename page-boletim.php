@@ -71,7 +71,7 @@ get_header();
     </div>
     <aside class="aside-info">
       <img src="<?php echo CFS()->get('skyscraper'); ?>" class="img-banner" alt="banner">
-      <h2>Boletim da semana</h2>
+      <h2>Boletim</h2>
       <?php
           $rapidinhas_id = get_cat_ID('Rapidinhas');
 
