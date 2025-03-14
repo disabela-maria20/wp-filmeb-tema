@@ -331,13 +331,13 @@ function render_terms($field_key, $post_id) {
         if (!empty($filmes_por_dia)) {
             krsort($filmes_por_dia); // Alterado de ksort para krsort para ordenar de dezembro a janeiro
             foreach ($filmes_por_dia as $data => $filmes) {
-                $data_estreia = DateTime::createFromFormat('Y-m-d', $data);
-                $dia_semana_ingles = $data_estreia->format('l');
+              $data_estreia = DateTime::createFromFormat('Y-m-d', $data);
+                $dia_semana_ingles = $data_estreia->format('l'); // Dia da semana em inglês (ex: "Monday")
                 $dia_semana = $dias_semana[$dia_semana_ingles]; // Traduz o dia da semana para português
-                $dia = $data_estreia->format('d');
-                $mes = $data_estreia->format('F');
-                $ano = $data_estreia->format('Y');
-                echo '<h2><i class="bi bi-calendar-check-fill"></i>' . esc_html($dia_semana) . ', ' . esc_html($dia) . ' de ' . esc_html($mes) . ' de ' . esc_html($ano) . '</h2>';
+                $dia = $data_estreia->format('d'); // Dia no formato DD
+                $mes = $data_estreia->format('m'); // Mês no formato MM
+                $ano = $data_estreia->format('Y'); // Ano no formato AAAA
+                echo '<h2><i class="bi bi-calendar-check-fill"></i>' . esc_html($dia_semana) . ', ' . esc_html($dia) . '/' . esc_html($mes) . '/' . esc_html($ano) . '</h2>';
                 echo '<table><thead><tr>
                       <th colspan="2">Título</th>
                       <th>Distribuição</th>
@@ -404,9 +404,18 @@ function render_terms($field_key, $post_id) {
 
 <?php get_template_part('components/Footer/index'); ?>
 <?php get_footer(); ?>
-
+<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/js/splide.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <script>
+const datas = document.querySelector('#datas');
+var splide = new Splide('#datas', {
+  arrows: true,
+  perPage: 1,
+  gap: '30px',
+  pagination: false,
+});
+
+splide.mount();
 new Vue({
   el: "#app",
   data: {
