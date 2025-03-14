@@ -48,11 +48,21 @@ $meses = [
   '12' => 'Dezembro',
 ];
 
+$dias_semana = [
+  'Sunday'    => 'Domingo',
+  'Monday'    => 'Segunda-feira',
+  'Tuesday'   => 'Terça-feira',
+  'Wednesday' => 'Quarta-feira',
+  'Thursday'  => 'Quinta-feira',
+  'Friday'    => 'Sexta-feira',
+  'Saturday'  => 'Sábado',
+];
+
 $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
 
 $args = array(
   'post_type' => 'filmes',
-  'posts_per_page' => 40,
+  'posts_per_page' => 10, // Paginação de 10 filmes por página
   'post_status' => 'publish',
   'paged' => $paged,
 );
@@ -108,29 +118,21 @@ if (isset($_GET['tecnologia']) && !empty($_GET['tecnologia'])) {
 
 $filmes = new WP_Query($args);
 
-// Array para armazenar filmes agrupados por mês
-$filmes_por_mes = array();
+// Array para armazenar filmes agrupados por dia
+$filmes_por_dia = array();
 
 if ($filmes->have_posts()) {
     while ($filmes->have_posts()) {
         $filmes->the_post();
-
-        // Obter a data de estreia do filme
         $estreia = CFS()->get('estreia');
         if (!empty($estreia)) {
             $data_estreia = DateTime::createFromFormat('Y-m-d', $estreia);
-            $mes = $data_estreia->format('m');
-            $ano = $data_estreia->format('Y');
+            $data_formatada = $data_estreia->format('Y-m-d');
 
-            // Verificar se o ano é o atual ou o selecionado no filtro
-            $ano_selecionado = isset($_GET['ano']) ? $_GET['ano'] : date('Y');
-            if ($ano == $ano_selecionado) {
-                // Agrupar filmes por mês
-                if (!isset($filmes_por_mes[$mes])) {
-                    $filmes_por_mes[$mes] = array();
-                }
-                $filmes_por_mes[$mes][] = get_post();
+            if (!isset($filmes_por_dia[$data_formatada])) {
+                $filmes_por_dia[$data_formatada] = array();
             }
+            $filmes_por_dia[$data_formatada][] = get_post();
         }
     }
     wp_reset_postdata();
@@ -172,7 +174,6 @@ function render_terms($field_key, $post_id) {
   <img src="<?php echo esc_url($banner_superior); ?>" class="w-full p-35 img-banner bannerMobile " alt="banner">
 </a>
 
-
 <div class="container bannerDesktop">
   <div class="grid-banner-superior">
     <a href="<?php echo esc_url($link_banner_inferior); ?>" target="_blank" rel="noopener noreferrer">
@@ -211,9 +212,33 @@ function render_terms($field_key, $post_id) {
         <section id="datas" class="splide">
           <div class="splide__track">
             <ul class="splide__list">
-              <li class="splide__slide">Quinta-feira, 13/06/2024</li>
-              <li class="splide__slide">Quinta-feira, 13/06/2024</li>
-              <li class="splide__slide">Quinta-feira, 13/06/2024</li>
+              <?php
+              $datas_filmes = array();
+              if ($filmes->have_posts()) {
+                  while ($filmes->have_posts()) {
+                      $filmes->the_post();
+                      $estreia = CFS()->get('estreia');
+                      if (!empty($estreia)) {
+                          $data_estreia = DateTime::createFromFormat('Y-m-d', $estreia);
+                          $data_formatada = $data_estreia->format('Y-m-d');
+                          if (!in_array($data_formatada, $datas_filmes)) {
+                              $datas_filmes[] = $data_formatada;
+                          }
+                      }
+                  }
+                  wp_reset_postdata();
+              }
+
+              foreach ($datas_filmes as $data) {
+                  $data_estreia = DateTime::createFromFormat('Y-m-d', $data);
+                  $dia_semana_ingles = $data_estreia->format('l');
+                  $dia_semana = $dias_semana[$dia_semana_ingles]; // Traduz o dia da semana para português
+                  $dia = $data_estreia->format('d');
+                  $mes = $data_estreia->format('F');
+                  $ano = $data_estreia->format('Y');
+                  echo '<li class="splide__slide" data-date="' . esc_attr($data) . '">' . esc_html($dia_semana) . ', ' . esc_html($dia) . ' de ' . esc_html($mes) . ' de ' . esc_html($ano) . '</li>';
+              }
+              ?>
             </ul>
           </div>
         </section>
@@ -266,11 +291,17 @@ function render_terms($field_key, $post_id) {
         </form>
       </section>
       <?php 
-      function render_filmes_lista($filmes_por_mes, $meses) {
-        if (!empty($filmes_por_mes)) {
-            ksort($filmes_por_mes);
-            foreach ($filmes_por_mes as $mes => $filmes) {
-                echo '<h2> <i class="bi bi-calendar-check-fill"></i> ' . esc_html($meses[$mes]) . '</h2>';
+      function render_filmes_lista($filmes_por_dia, $dias_semana) {
+        if (!empty($filmes_por_dia)) {
+            krsort($filmes_por_dia); // Alterado de ksort para krsort para ordenar de dezembro a janeiro
+            foreach ($filmes_por_dia as $data => $filmes) {
+                $data_estreia = DateTime::createFromFormat('Y-m-d', $data);
+                $dia_semana_ingles = $data_estreia->format('l'); // Dia da semana em inglês (ex: "Monday")
+                $dia_semana = $dias_semana[$dia_semana_ingles]; // Traduz o dia da semana para português
+                $dia = $data_estreia->format('d'); // Dia no formato DD
+                $mes = $data_estreia->format('m'); // Mês no formato MM
+                $ano = $data_estreia->format('Y'); // Ano no formato AAAA
+                echo '<h2><i class="bi bi-calendar-check-fill"></i> ' . esc_html($dia_semana) . ', ' . esc_html($dia) . '/' . esc_html($mes) . '/' . esc_html($ano) . '</h2>';
                 echo '<div class="grid-filmes">';
                 foreach ($filmes as $filme) {
                     echo '<a v-on:mousemove="hoverCard" href="' . get_permalink($filme->ID) . '" class="card">';
@@ -296,12 +327,17 @@ function render_terms($field_key, $post_id) {
         }
     }
     
-    function render_filmes_tabela($filmes_por_mes, $meses) {
-        if (!empty($filmes_por_mes)) {
-            ksort($filmes_por_mes);
-            foreach ($filmes_por_mes as $mes => $filmes) {
-             
-                echo '<h2> <i class="bi bi-calendar-check-fill"></i>' . esc_html($meses[$mes]) . '</h2>';
+    function render_filmes_tabela($filmes_por_dia, $dias_semana) {
+        if (!empty($filmes_por_dia)) {
+            krsort($filmes_por_dia); // Alterado de ksort para krsort para ordenar de dezembro a janeiro
+            foreach ($filmes_por_dia as $data => $filmes) {
+                $data_estreia = DateTime::createFromFormat('Y-m-d', $data);
+                $dia_semana_ingles = $data_estreia->format('l');
+                $dia_semana = $dias_semana[$dia_semana_ingles]; // Traduz o dia da semana para português
+                $dia = $data_estreia->format('d');
+                $mes = $data_estreia->format('F');
+                $ano = $data_estreia->format('Y');
+                echo '<h2><i class="bi bi-calendar-check-fill"></i>' . esc_html($dia_semana) . ', ' . esc_html($dia) . ' de ' . esc_html($mes) . ' de ' . esc_html($ano) . '</h2>';
                 echo '<table><thead><tr>
                       <th colspan="2">Título</th>
                       <th>Distribuição</th>
@@ -333,11 +369,11 @@ function render_terms($field_key, $post_id) {
         <div>
           <section class="area-filmes" v-if="ativoItem === 'lista'">
             <div class="lista-filmes" id="lista">
-              <?php render_filmes_lista($filmes_por_mes, $meses); ?>
+              <?php render_filmes_lista($filmes_por_dia, $dias_semana); ?>
             </div>
           </section>
           <section class="tabela-filme" v-if="ativoItem === 'tabela'">
-            <?php render_filmes_tabela($filmes_por_mes, $meses); ?>
+            <?php render_filmes_tabela($filmes_por_dia, $dias_semana); ?>
           </section>
         </div>
         <aside>
@@ -352,14 +388,14 @@ function render_terms($field_key, $post_id) {
       <?php else: ?>
       <section class="area-filmes" v-if="ativoItem === 'lista'">
         <div class="lista-filmes" id="lista">
-          <?php render_filmes_lista($filmes_por_mes, $meses); ?>
+          <?php render_filmes_lista($filmes_por_dia, $dias_semana); ?>
         </div>
       </section>
       <section class="tabela-filme" v-if="ativoItem === 'tabela'">
         <a href="<?php echo esc_url($link_banner_moldura_casado); ?>">
           <img src="<?php echo esc_url($banner_moldura_casado); ?>">
         </a>
-        <?php render_filmes_tabela($filmes_por_mes, $meses); ?>
+        <?php render_filmes_tabela($filmes_por_dia, $dias_semana); ?>
       </section>
       <?php endif; ?>
     </div>

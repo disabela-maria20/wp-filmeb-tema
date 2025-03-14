@@ -157,6 +157,14 @@ endif;
                   <i class="bi bi-x"></i>
                 </button>
                 <div class="modal-img"></div>
+                <div class="arrow">
+                  <button>
+                    <i class="bi bi-chevron-left"></i>
+                  </button>
+                  <button>
+                    <i class="bi bi-chevron-right"></i>
+                  </button>
+                </div>
               </div>
             </section>
             <?php endif; ?>
@@ -274,7 +282,6 @@ endif; ?>
 <?php get_footer(); ?>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Inicializar o Splide
   var splide = new Splide('#fotos', {
     arrows: true,
     perPage: 3,
@@ -287,6 +294,31 @@ document.addEventListener('DOMContentLoaded', function() {
   const modal = document.querySelector('#modalFilme');
   const modalBody = document.querySelector('.modal-img');
   const close = document.querySelector('.close');
+  let currentIndex = 0;
+
+  function openModal(index) {
+    currentIndex = index;
+    modalBody.innerHTML = `<img src="${imgs[currentIndex].src}" alt="">`;
+    modal.style.display = 'flex';
+    modal.style.alignItems = 'center';
+    modal.style.justifyContent = 'center';
+  }
+
+  function nextPhoto() {
+    currentIndex = (currentIndex + 1) % imgs.length;
+    modalBody.innerHTML = `<img src="${imgs[currentIndex].src}" alt="">`;
+  }
+
+  function prevPhoto() {
+    currentIndex = (currentIndex - 1 + imgs.length) % imgs.length;
+    modalBody.innerHTML = `<img src="${imgs[currentIndex].src}" alt="">`;
+  }
+
+  imgs.forEach((img, index) => {
+    img.addEventListener('click', () => {
+      openModal(index);
+    });
+  });
 
   modal.addEventListener('click', (e) => {
     if (e.target === modal) {
@@ -294,18 +326,33 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-
-  imgs.forEach((img) => {
-    img.addEventListener('click', () => {
-      modalBody.innerHTML = `<img src="${img.src}" alt="">`
-      modal.style.display = 'flex';
-      modal.style.alignItems = 'center'
-      modal.style.justifyContent = 'center'
-    });
-  });
-
   close.addEventListener('click', () => {
     modal.style.display = 'none';
+  });
+
+  const prevButton = document.querySelector('.arrow button:first-child');
+  const nextButton = document.querySelector('.arrow button:last-child');
+
+  if (prevButton && nextButton) {
+    prevButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      prevPhoto();
+    });
+
+    nextButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      nextPhoto();
+    });
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (modal.style.display === 'flex') {
+      if (e.key === 'ArrowRight') {
+        nextPhoto();
+      } else if (e.key === 'ArrowLeft') {
+        prevPhoto();
+      }
+    }
   });
 });
 </script>
