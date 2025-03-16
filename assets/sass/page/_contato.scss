@@ -25,12 +25,12 @@
     line-height: 1.61;
   }
 
-  a{
+  a {
     color: $color-bright-red;
     font-size: 1.6rem;
     transition: all 400ms ease;
 
-    &:hover{
+    &:hover {
       color: $color-red-dark;
     }
   }
@@ -65,21 +65,29 @@
   }
 
   .card-user {
-    h4, span{
+    h4,
+    span {
       font-size: 1.6rem;
       line-height: 2.5rem;
       text-align: left;
       font-weight: normal;
       color: $color-darker-gray;
     }
-    .item{
+    .item {
       margin-top: 35px;
       display: flex;
       align-items: center;
       gap: 30px;
+
+      img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 45px;
+      }
     }
   }
-  .titulo{
+  .titulo {
     margin: 10px 0;
   }
 }

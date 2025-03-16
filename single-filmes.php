@@ -238,7 +238,7 @@ endif;
           <table>
             <tr>
               <td class="titulo">Sinopse</td>
-              <td>
+              <td id="sinopse">
                 <?php echo the_content(); ?>
               </td>
             </tr>
@@ -354,5 +354,12 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
   });
+
 });
+
+const sinopse = document.querySelector('#sinopse p');
+
+if (sinopse.textContent.trim() === "NULL" || sinopse.textContent.trim() === "") {
+  sinopse.innerHTML = "Sinopse não disponível";
+}
 </script>

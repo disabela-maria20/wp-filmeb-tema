@@ -202,14 +202,15 @@ function render_terms($field_key, $post_id) {
 <div class="container page-filmes">
   <div id="app">
     <div class="page-filmes">
-      <h1>Estreias</h1>
+      <h1>Lançamentos</h1>
       <div class="grid-filtros-config">
         <div class="ordem">
           <button aria-label="ordem 1" @click="setTabAtivo('lista')"><i class="bi bi-border-all"></i></button>
           <button aria-label="ordem 2" @click="setTabAtivo('tabela')"><i class="bi bi-grid-1x2"></i></button>
           <button aria-label="imprimir" @click="window.print()"><i class="bi bi-printer"></i></button>
         </div>
-        <section id="datas" class="splide">
+        <div></div>
+        <!-- <section id="datas" class="splide">
           <div class="splide__track">
             <ul class="splide__list">
               <?php
@@ -241,7 +242,7 @@ function render_terms($field_key, $post_id) {
               ?>
             </ul>
           </div>
-        </section>
+        </section> -->
         <div class="lancamento">
           <a href="<?php echo get_site_url(); ?>/lancamentos-por-distribuidora/" id="distribuidora">Ver lançamentos por
             distribuidora</a>

@@ -3,6 +3,7 @@ footer.rodape {
   @include media(lg) {
     margin-top: 90px;
   }
+
   .bg-filmeB {
     padding: 35px 0;
     background: linear-gradient(180deg, $color-bright-red, $color-red-dark 90%);
@@ -57,7 +58,13 @@ footer.rodape {
   .area_links_rodape {
     padding: 60px 0;
     background-color: $color-off-white-alt;
-
+    .grid {
+      @include media(lg) {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr 0.3fr 1fr;
+        gap: 20px;
+      }
+    }
     nav {
       h2 {
         font-weight: bold;

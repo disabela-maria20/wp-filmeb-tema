@@ -43,7 +43,7 @@ get_header();
         <p>É possível o cruzamento e a filtragem de diversas variáveis, como tecnologia, linguagem, origem e gêneros,
           além da construção de comparativos.</p>
         <p><strong>Uma importante ferramenta para a tomada de decisão do seu negócio.</strong></p>
-        <a class="btn" href="">Assine</a>
+        <a class="btn" href="<?php echo get_site_url(); ?>/box-office-assine">Assine</a>
       </div>
       <div class="box-office">
         <video src=""></video>
@@ -82,7 +82,7 @@ get_header();
         <h2> Se você já é assinante do banco de dados Box Office Brasil, entre aqui.</h2>
         <p>Acesso exclusivo para assinantes do Box Office Brasil. Para saber mais, entre em contato conosco.</p>
 
-        <a href="" class="btn">Assine</a>
+        <a href="<?php echo get_site_url(); ?>/box-office-assine" class="btn">Assine</a>
       </div>
       <div class="box-office">
         <img src="<?php echo get_template_directory_uri(); ?>/assets/images/revenue-operations-collage.jpg"

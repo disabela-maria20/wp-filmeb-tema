@@ -12,7 +12,7 @@
   </div>
   <div class="area_links_rodape">
     <div class="container">
-      <div class="grid grid-5-lg gap-32">
+      <div class="grid gap-32">
         <nav>
           <h2>Mapa do site</h2>
           <?php
@@ -47,23 +47,19 @@
           <h2>Produtos Filme B</h2>
           <img src="<?php echo get_template_directory_uri(); ?>/assets/images/box-office-brasil.png" alt="cine B" />
         </nav>
+        <div></div>
         <nav class="redes">
           <h2>Redes sociais</h2>
           <ul>
             <li>
-              <a href="">
+              <a href="https://www.instagram.com/filmebportal/#">
                 <i class="bi bi-instagram"></i>
                 <span>Instagram</span>
               </a>
             </li>
+
             <li>
-              <a href="">
-                <i class="bi bi-twitter"></i>
-                <span>Twitter</span>
-              </a>
-            </li>
-            <li>
-              <a href="">
+              <a href="https://www.facebook.com/FilmeB">
                 <i class="bi bi-facebook"></i>
                 <span>Facebook</span>
               </a>
