@@ -1,146 +1,122 @@
 <?php
+// Template Name: Assine
 get_header();
 ?>
-
-<?php
-$current_page_slug = basename(get_permalink());
-$category_slug = str_replace('boletim/', '', $current_page_slug);
-$banner_id = "23243";
-$author_id = get_the_author_meta('ID');
-
-$args = array(
-  'post_type' => 'banner-post',
-  'posts_per_page' => 1,
-);
-
-$query = new WP_Query($args);
-
-if ($query->have_posts()) :
-  while ($query->have_posts()) : $query->the_post();
-
-    $banner_superior = CFS()->get('banner_moldura', $banner_id);
-    $banner_inferior = CFS()->get('mega_banner', $banner_id);
-    $full_banner = CFS()->get('full_banner', $banner_id);
-    $skyscraper = CFS()->get('skyscraper', $banner_id);
-    $super_banner = CFS()->get('super_banner', $banner_id);
-
-    $link_banner_superior = CFS()->get('link_banner_moldura', $banner_id);
-    $link_banner_inferior = CFS()->get('link_mega_banner', $banner_id);
-    $link_full_banner = CFS()->get('link_full_banner', $banner_id);
-    $link_skyscraper = CFS()->get('link_skyscraper', $banner_id);
-    $link_super_banner = CFS()->get('link_super_banner', $banner_id);
-
-    $boletim_query = new WP_Query(array(
-      'category_name' => 'Rapidinhas',
-      'posts_per_page' => 10,
-    ));
-?>
-<a href="<?php echo esc_url($link_banner_superior) ?>" target="_blank" rel="noopener noreferrer">
-  <img src="<?php echo esc_url($banner_superior); ?>" class="w-full p-35 img-banner bannerMobile" alt="banner">
-</a>
-
-<div class="container bannerDesktop">
-  <div class="grid-banner-superior">
-    <!-- <a href="<?php echo esc_url($link_banner_superior); ?>" target="_blank" rel="noopener noreferrer">
-      <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner" alt="banner">
-    </a> -->
-    <a href="<?php echo esc_url($link_banner_inferior); ?>" target="_blank" rel="noopener noreferrer">
-      <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
-    </a>
-  </div>
-</div>
-
-<?php
-  endwhile;
-  wp_reset_postdata();
-endif;
-?>
-
-<?php get_template_part('components/MenuMobile/index'); ?>
-<?php get_template_part('components/MenuDesktop/index'); ?>
-
-<section class="bg-gray padding-banner">
-  <div class="container bannerMobile">
-    <div class="grid-banner-superior">
-      <!-- <a href="<?php echo esc_url($link_banner_superior); ?>" target="_blank" rel="noopener noreferrer">
-        <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner" alt="banner">
-      </a> -->
-      <a href="<?php echo esc_url($link_banner_inferior); ?>" target="_blank" rel="noopener noreferrer">
-        <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
-      </a>
-    </div>
-  </div>
-</section>
-
-<div class="container post-content">
-  <div class="grid-list-post gap-124">
-    <div>
-      <div class="views-field views-field-body">
-        <div class="field-content">
-          <div id="assine-texto">
-            <h1>Assine o Filme B</h1>
-            <p>A assinatura do Filme B permite acesso ao conteúdo exclusivo do site.</p>
-            <div class="assine-texto-wrapper">
-              <h4>Boletim</h4>
-              <p>Dados e análises sobre o mercado de cinema no Brasil e no mundo, com destaque para o ranking do fim de
-                semana no Brasil.</p>
-              <p class="small">⋅ Acesso a todas as edições anteriores do Boletim</p>
-              <h4>Notícias</h4>
-              <p class="assi-noti">Cobertura diária do mercado de cinema: produção, exibição, distribuição, 3D, digital,
-                editais, opinião e tendências.<br>&nbsp;</p>
-              <h4>Database Brasil</h4>
-              <p>Bases de dados anuais com números e comparativos dos setores de exibição, produção e distribuição no
-                Brasil desde 2000.</p>
-              <p class="small">⋅ Todas as edições dos databases estão disponíveis no site até 2020.</p>
-              <h4>Revistas</h4>
-              <p>Edições lançadas no Show de Inverno (abril) e Show Búzios (novembro)</p>
-              <p class="small">⋅ Versão impressa é enviada aos assinantes (edições suspensas durante a pandemia)</p>
-              <div class="assinatura-precos">
-                <h3>R$ 700,00 por ano</h3>
-                <h4>Formas de pagamento: boleto ou cartão</h4>
-
-                <video controls="" height="180" poster="/poster_assine.png" width="320">
-                  <source src="/filmeb_assine.mp4" type="video/mp4">
-                </video>
-                <div class="area-btn">
-                  <a href="<?php echo get_site_url(); ?>/finalizar-compra/?add-to-cart=77471/">Assinar</a>
-                </div>
-              </div>
-            </div>
-          </div>
+<main class="page-assine">
+  <section class="bg1"
+    style="background: linear-gradient(180deg, #ffffff00, #221115), url('<?php echo get_template_directory_uri(); ?>/assets/images/banner/bg-hero-pagina-de-vendas-1024x450.jpg');">
+    <div class="title">
+      <div class="container">
+        <div>
+          <h2>Assine os conteúdos exclusivos da Filme B </h2>
+          <h1>Dados e análises para a tomada de decisão do seu negócio.</h1>
         </div>
       </div>
     </div>
-    <aside class="aside-info">
-      <a href="<?php echo esc_url($link_skyscraper); ?>">
-        <img src="<?php echo esc_url($skyscraper); ?>" class="img-banner" alt="banner">
-      </a>
-
-      <h2>Edições anteriores</h2>
-      <?php
-      $recent_posts_query = new WP_Query(array(
-        'post_type' => 'edicoes',
-        'posts_per_page' => 10,
-        'orderby' => 'date',     
-        'order' => 'DESC' 
-      ));
-
-      if ($recent_posts_query->have_posts()) { 
-        while ($recent_posts_query->have_posts()) { 
-          $recent_posts_query->the_post(); ?>
-      <div class="item-aside">
-        <a href="<?php the_permalink(); ?>" class="edicoes">
-          <i class="bi bi-arrow-right-short"></i>
-          <?php 
-              $texto = the_title();
-              echo formatar_data_personalizada($texto);
-            ?>
-        </a>
+  </section>
+  <section class="bg2">
+    <div class="container">
+      <div class="grid grid-2-md gap-32">
+        <div>
+          <img src="<?php echo get_template_directory_uri(); ?>/assets/images/banner/thumb-cinema-filmeb.png" alt="">
+        </div>
+        <div>
+          <h2>Boletim Filme B: o fim de semana cinematográfico em números e análises</h2>
+          <p>Por meio de um conteúdo especializado e de referência, o Boletim Filme B, há mais de 25 anos no mercado,
+            oferece semanalmente para seus assinantes, sempre às segundas e terças-feiras, o ranking das maiores
+            bilheterias do fim de semana no Brasil e no mundo.</p>
+          <p>Instrumento de inteligência de mercado, o Boletim Filme B traz um panorama completo da evolução do setor
+            cinematográfico.
+          </p>
+          <h2>Seções do Boletim</h2>
+          <ul>
+            <li>Ranking do fim de semana cinematográfico no Brasil (maiores bilheterias);</li>
+            <li>Ranking do fim de semana EUA;</li>
+            <li>Ranking das 10 maiores bilheterias do ano;</li>
+            <li>Análise do fim de semana cinematográfico (no Brasil e no mundo);</li>
+            <li>Opinião;</li>
+            <li>Rapidinhas;</li>
+          </ul>
+        </div>
       </div>
-      <?php } wp_reset_postdata(); }?>
-    </aside>
-  </div>
-</div>
+    </div>
+  </section>
+  <section class="bg3">
+    <div class="container">
+      <div class="grid grid-2-md gap-32">
+        <div>
+          <h2>Notícias: cobertura diária do mercado</h2>
+          <p>O assinante do portal tem acesso ainda a notícias exclusivas, produzidas por uma equipe de especialistas,
+            sobre o mercado de cinema/audiovisual.</p>
+          <h2>Alguns temas:</h2>
+          <ul>
+            <li>Políticas públicas do cinema/audiovisual;</li>
+            <li>Streaming;</li>
+            <li>Festivais;</li>
+            <li>Eventos de mercado;</li>
+            <li>Line-ups de distribuidoras;</li>
+            <li>Produção de filmes;</li>
+            <li>Mercado exibidor;</li>
+            <li>E muito mais.</li>
+          </ul>
+        </div>
+        <div>
+          <img src="<?php echo get_template_directory_uri(); ?>/assets/images/banner/thumb-noticias-filmeb.png" alt="">
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="bg4">
+    <div class="container">
+      <div class="grid grid-2-md gap-32">
+        <div>
+          <img src="<?php echo get_template_directory_uri(); ?>/assets/images/banner/thumb-database-filmeb.png" alt="">
+        </div>
+        <div>
+          <h2>Database do mercado de cinema no Brasil</h2>
+          <p>Único banco de dados disponibilizado para o mercado. Números e comparativos dos setores de exibição,
+            produção
+            e distribuição no Brasil desde o ano 2000.</p>
+          <ul>
+            <li>Público total dos filmes;</li>
+            <li>Renda total dos filmes;</li>
+            <li>Preço médio do ingresso no ano;</li>
+            <li>Número total de cinemas e salas no ano <em>(cinemas e salas abertas e fechadas)</em>;</li>
+            <li>Total de filmes lançados no ano <em>(nacionais e internacionais)</em>;</li>
+            <li>Líderes do ano <em>(filmes, distribuidores, exibidores)</em>;</li>
+            <li>E muito mais.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer class="footer-assine">
+    <div class="container">
+      <div class="area">
+        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo-boletim-alt@2x.1c82f3.png"
+          alt="Boletim FilmeB" width="174" height="65" class="mb-4">
+        <h2 class="">
+          Clique e assine o Boletim Filme B
+        </h2>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit.Ut elit tellus, luctus nec ullamcorper mattis,
+          pulvinar
+          dapibus leo.
+        </p>
+        <p>
+          R$ 700,00/ano
+        </p>
+        <div class="btn-center">
+          <a href="<?php echo get_site_url(); ?>/finalizar-compra/?add-to-cart=77471/">
+            Assine o FilmeB
+          </a>
+        </div>
+      </div>
+    </div>
+    </div>
 
-<?php get_template_part('components/Footer/index'); ?>
+</main>
+
+
+
 <?php get_footer(); ?>
