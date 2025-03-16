@@ -398,44 +398,6 @@ function save_custom_fields($customer_id) {
     }
 }
 
-function adicionar_produto_automatico_ao_carrinho() {
-  if (is_admin() || is_cart() || is_checkout()) {
-      return; 
-  }
-
-  $product_id = 77471; 
-  $found = false;
-
-  foreach (WC()->cart->get_cart() as $cart_item) {
-      if ($cart_item['product_id'] == $product_id) {
-          $found = true;
-          break;
-      }
-  }
-
-  if (!$found) {
-      WC()->cart->add_to_cart($product_id);
-  }
-}
-
-add_action('template_redirect', 'adicionar_produto_automatico_ao_carrinho');
-
-function ocultar_remover_item_no_carrinho($actions, $cart_item_key, $cart_item) {
-  if (!is_cart()) {
-      return $actions;
-  }
-  unset($actions['remove']);
-  
-  return $actions;
-}
-add_filter('woocommerce_cart_item_remove_link', '__return_false'); 
-add_filter('woocommerce_cart_item_actions', 'ocultar_remover_item_no_carrinho', 10, 3);
-
-function limitar_a_um_item_no_carrinho($cart_item_data) {
-  WC()->cart->empty_cart(); 
-  return $cart_item_data;
-}
-add_filter('woocommerce_add_cart_item_data', 'limitar_a_um_item_no_carrinho');
 
 function restringir_acesso_membros_pagos() {
   if (is_tax('product_cat') || 
@@ -502,11 +464,24 @@ function handel_assinaturas_content() {
 add_action('woocommerce_account_assinaturas_endpoint', 'handel_assinaturas_content');
 
 
-function add_woocommerce_caps_to_admin() {
-  $admin_role = get_role('administrator');
-  if ($admin_role) {
-      $admin_role->add_cap('manage_woocommerce');
-      $admin_role->add_cap('view_woocommerce_reports');
+
+function adicionar_produto_ao_carrinho_automaticamente() {
+  if ( ! WC()->cart->is_empty() ) {
+    return;
   }
+  $product_id = 77471;
+  WC()->cart->add_to_cart( $product_id );
 }
-add_action('init', 'add_woocommerce_caps_to_admin');
+add_action('template_redirect', 'adicionar_produto_ao_carrinho_automaticamente');
+
+function redirecionar_para_checkout() {
+    // URL da página de checkout
+    return wc_get_checkout_url();
+}
+add_filter('woocommerce_add_to_cart_redirect', 'redirecionar_para_checkout');
+
+add_filter('woocommerce_add_to_cart_message', 'ocultar_botao_ver_carrinho');
+
+function ocultar_botao_ver_carrinho() {
+    return '';
+}
