@@ -74,7 +74,8 @@
     width: 100%;
     border-radius: 20px;
     @include media(lg) {
-      height: 450px;
+      width: 269px;
+      height: initial;
     }
   }
 
