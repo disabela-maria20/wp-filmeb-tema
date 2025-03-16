@@ -52,15 +52,19 @@ $rapidinhas_id = get_cat_ID('Rapidinhas');
       <div class="posts">
         <?php while ($boletim_query->have_posts()):$boletim_query->the_post(); ?>
         <div class="post">
-          <?php if( esc_url(CFS()->get('imagem')) != '') {  ?>
-          <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
-            alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
-          <?php }?>
-          <span><?php echo get_the_category_list(', '); ?></span>
-          <a href="<?php the_permalink(); ?>" class="read-more">
-            <h2><?php the_title(); ?></h2>
-          </a>
-          <p><?php echo esc_html(CFS()->get('descricao') ?: get_the_excerpt()); ?></p>
+          <div class="item">
+            <?php if( esc_url(CFS()->get('imagem')) != '') {  ?>
+            <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
+              alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
+            <?php }?>
+            <div>
+              <span><?php echo get_the_category_list(', '); ?></span>
+              <a href="<?php the_permalink(); ?>" class="read-more">
+                <h2><?php the_title(); ?></h2>
+              </a>
+              <p><?php echo esc_html(CFS()->get('descricao') ?: get_the_excerpt()); ?></p>
+            </div>
+          </div>
         </div>
         <?php endwhile; ?>
       </div>

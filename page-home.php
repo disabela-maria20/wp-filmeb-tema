@@ -127,7 +127,7 @@ $recent_posts_query_banner = new WP_Query(array(
     </div>
   </section>
   <section class="home-filmes">
-    <h2>Lançamentos</h2>
+    <h2>Lançamentos da semana</h2>
     <div class="grid-filmes">
       <div>
         <section id="filmesHome" class="owl-carousel">

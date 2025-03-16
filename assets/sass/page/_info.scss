@@ -43,7 +43,10 @@
       color: $color-darker-gray;
     }
   }
-
+  .item {
+    display: flex;
+    align-items: center;
+  }
   .posts {
     display: flex;
     flex-direction: column;
