@@ -46,6 +46,7 @@
   .item {
     @include media(lg) {
       display: flex;
+      gap: 35px;
       align-items: center;
     }
   }
@@ -63,6 +64,7 @@
 
       @include media(lg) {
         width: 269px;
+        height: initial;
       }
     }
 
