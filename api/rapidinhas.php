@@ -62,13 +62,24 @@ function api_rapidinhas_post($request)
     $titulo = isset($data['titulo']) ? sanitize_text_field($data['titulo']) : '';
     $descricao = isset($data['descricao']) ? sanitize_textarea_field($data['descricao']) : '';
     $imagem_url = isset($data['imagem']) ? esc_url_raw($data['imagem']) : '';
-    $edicao = isset($data['edicao']) ? sanitize_text_field($data['edicao']) : '';
-    $data_edicao = isset($data['data']) ? sanitize_text_field($data['data']) : '';
+    $edicao_id = isset($data['edicao_id']) ? intval($data['edicao_id']) : 0; // Novo campo para o ID da edição
 
+    // Verifica se o ID da edição é válido
+    if ($edicao_id <= 0) {
+        return new WP_Error('invalid_edicao_id', 'ID da edição inválido.', ['status' => 400]);
+    }
+
+    // Verifica se a edição existe
+    $edicao_post = get_post($edicao_id);
+    if (!$edicao_post || $edicao_post->post_type !== 'edicoes') {
+        return new WP_Error('edicao_not_found', 'Edição não encontrada.', ['status' => 404]);
+    }
+
+    // Faz o upload da imagem e obtém o ID do anexo
     $attachment_id = upload_image_from_url($imagem_url);
-
     $imagem_salva_url = wp_get_attachment_url($attachment_id);
 
+    // Cria o post da rapidinha
     $post_data = [
         'post_type' => 'rapidinhas',
         'post_title' => $titulo,
@@ -78,24 +89,28 @@ function api_rapidinhas_post($request)
     $post_id = wp_insert_post($post_data);
 
     if ($post_id) {
+        // Define a imagem destacada
         set_post_thumbnail($post_id, $attachment_id);
 
+        // Salva os campos personalizados
         $field_data = [
             'imagem' => $imagem_salva_url,
-            'edicao' => $edicao,
-            'data' => $data_edicao
+            'edicao_id' => $edicao_id // Salva o ID da edição
         ];
-
         CFS()->save($field_data, ['ID' => $post_id]);
 
+        // Relaciona a rapidinha com a edição
+        update_post_meta($post_id, 'edicao_relacionada', $edicao_id);
+
         return rest_ensure_response([
-            'message' => 'Filme criado com sucesso!',
+            'message' => 'Rapidinha criada com sucesso!',
             'post_id' => $post_id,
-            'image_url' => $imagem_salva_url
+            'image_url' => $imagem_salva_url,
+            'edicao_id' => $edicao_id
         ]);
     }
 
-    return new WP_Error('filme_nao_criado', 'Erro ao criar o filme', ['status' => 500]);
+    return new WP_Error('rapidinha_nao_criada', 'Erro ao criar a rapidinha', ['status' => 500]);
 }
 
 function api_edicoes_post($request)
