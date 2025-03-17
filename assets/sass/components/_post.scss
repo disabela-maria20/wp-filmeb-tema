@@ -109,3 +109,12 @@
     color: $color-darker-gray;
   }
 }
+
+.post-thumbnail {
+  margin-bottom: 35px;
+  img {
+    width: 100% !important;
+    object-fit: cover !important;
+    border-radius: 20px !important;
+  }
+}

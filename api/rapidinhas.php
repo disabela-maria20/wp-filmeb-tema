@@ -62,6 +62,8 @@ function api_rapidinhas_post($request)
     $titulo = isset($data['titulo']) ? sanitize_text_field($data['titulo']) : '';
     $descricao = isset($data['descricao']) ? sanitize_textarea_field($data['descricao']) : '';
     $imagem_url = isset($data['imagem']) ? esc_url_raw($data['imagem']) : '';
+    $edicao = isset($data['edicao']) ? sanitize_text_field($data['edicao']) : '';
+    $data_edicao = isset($data['data']) ? sanitize_text_field($data['data']) : '';
 
     $attachment_id = upload_image_from_url($imagem_url);
 
@@ -78,7 +80,12 @@ function api_rapidinhas_post($request)
     if ($post_id) {
         set_post_thumbnail($post_id, $attachment_id);
 
-        $field_data = ['imagem' => $imagem_salva_url];
+        $field_data = [
+            'imagem' => $imagem_salva_url,
+            'edicao' => $edicao,
+            'data' => $data_edicao
+        ];
+
         CFS()->save($field_data, ['ID' => $post_id]);
 
         return rest_ensure_response([

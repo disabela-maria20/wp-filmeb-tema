@@ -405,18 +405,20 @@ function render_terms($field_key, $post_id) {
 
 <?php get_template_part('components/Footer/index'); ?>
 <?php get_footer(); ?>
-<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/js/splide.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+
 <script>
 const datas = document.querySelector('#datas');
-var splide = new Splide('#datas', {
-  arrows: true,
-  perPage: 1,
-  gap: '30px',
-  pagination: false,
-});
+if (splide) {
+  var splide = new Splide('#datas', {
+    arrows: true,
+    perPage: 1,
+    gap: '30px',
+    pagination: false,
+  });
 
-splide.mount();
+  splide.mount()
+};
 new Vue({
   el: "#app",
   data: {
@@ -473,6 +475,7 @@ new Vue({
     },
   },
   created() {
+    console.log("Vue está sendo inicializado");
     this.getListaAnos();
   },
 });
