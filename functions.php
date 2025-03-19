@@ -400,22 +400,20 @@ function save_custom_fields($customer_id) {
 }
 
 
-function restringir_acesso_membros_pagos() {
-  if (is_tax('product_cat') || 
-  is_post_type_archive('rapidinhas')) {
-      if (!SwpmMemberUtils::is_member_logged_in()) { 
-          wp_redirect(home_url('/assine')); 
-          exit;
-      }
-
-      $membership_level = SwpmMemberUtils::get_logged_in_members_level();
-      if ($membership_level != 2) { 
-          wp_redirect(home_url('/carrinho')); 
-          exit;
-      }
-  }
-}
-add_action('template_redirect', 'restringir_acesso_membros_pagos');
+// function restringir_acesso_membros_pagos() {
+//   // if (is_tax('product_cat') || is_post_type_archive('rapidinhas')) {
+//   //     if (!SwpmMemberUtils::is_member_logged_in()) { 
+//   //         wp_redirect(home_url('/assine')); 
+//   //         exit;
+//   //     }
+//   // }
+//   $membership_level = SwpmMemberUtils::get_logged_in_members_level();
+//   if ($membership_level != 2) { 
+//     wp_redirect(home_url('/carrinho')); 
+//     exit;
+//   }
+// }
+// add_action('template_redirect', 'restringir_acesso_membros_pagos');
 
 
 function handel_custom_menu($menu_links) {
@@ -480,9 +478,3 @@ function redirecionar_para_checkout() {
     return wc_get_checkout_url();
 }
 add_filter('woocommerce_add_to_cart_redirect', 'redirecionar_para_checkout');
-
-add_filter('woocommerce_add_to_cart_message', 'ocultar_botao_ver_carrinho');
-
-function ocultar_botao_ver_carrinho() {
-    return '';
-}

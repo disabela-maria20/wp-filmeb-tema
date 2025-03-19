@@ -55,64 +55,69 @@ function registrar_cpt_edicoes()
 add_action('init', 'registrar_cpt_edicoes');
 
 
-function api_rapidinhas_post($request)
-{
+function api_rapidinhas_post($request) {
     $data = $request->get_json_params();
 
     $titulo = isset($data['titulo']) ? sanitize_text_field($data['titulo']) : '';
     $descricao = isset($data['descricao']) ? sanitize_textarea_field($data['descricao']) : '';
     $imagem_url = isset($data['imagem']) ? esc_url_raw($data['imagem']) : '';
-    $edicao_id = isset($data['edicao_id']) ? intval($data['edicao_id']) : 0; // Novo campo para o ID da edição
-
-    // Verifica se o ID da edição é válido
-    if ($edicao_id <= 0) {
-        return new WP_Error('invalid_edicao_id', 'ID da edição inválido.', ['status' => 400]);
-    }
+    $edicao_id = isset($data['edicao_id']) ? intval($data['edicao_id']) : 0; // ID da edição
+    $data_rapidinha = isset($data['data']) ? sanitize_text_field($data['data']) : ''; // Campo data
 
     // Verifica se a edição existe
-    $edicao_post = get_post($edicao_id);
-    if (!$edicao_post || $edicao_post->post_type !== 'edicoes') {
-        return new WP_Error('edicao_not_found', 'Edição não encontrada.', ['status' => 404]);
-    }
+    $edicao_term = get_term($edicao_id, 'edicao');
 
-    // Faz o upload da imagem e obtém o ID do anexo
     $attachment_id = upload_image_from_url($imagem_url);
+
     $imagem_salva_url = wp_get_attachment_url($attachment_id);
 
-    // Cria o post da rapidinha
     $post_data = [
         'post_type' => 'rapidinhas',
         'post_title' => $titulo,
         'post_status' => 'publish',
         'post_content' => $descricao
     ];
+    
     $post_id = wp_insert_post($post_data);
-
-    if ($post_id) {
-        // Define a imagem destacada
-        set_post_thumbnail($post_id, $attachment_id);
-
-        // Salva os campos personalizados
-        $field_data = [
-            'imagem' => $imagem_salva_url,
-            'edicao_id' => $edicao_id // Salva o ID da edição
-        ];
-        CFS()->save($field_data, ['ID' => $post_id]);
-
-        // Relaciona a rapidinha com a edição
-        update_post_meta($post_id, 'edicao_relacionada', $edicao_id);
-
+    if (is_wp_error($post_id)) {
         return rest_ensure_response([
-            'message' => 'Rapidinha criada com sucesso!',
-            'post_id' => $post_id,
-            'image_url' => $imagem_salva_url,
-            'edicao_id' => $edicao_id
+            'message' => 'Erro ao criar o post.',
+            'success' => false,
+            'post_id' => $post_id
         ]);
     }
 
-    return new WP_Error('rapidinha_nao_criada', 'Erro ao criar a rapidinha', ['status' => 500]);
-}
+    set_post_thumbnail($post_id, $attachment_id);
 
+    $field_data = [
+        'imagem' => $imagem_salva_url,
+        'edicao' => $edicao_id, 
+        'data' => $data_rapidinha 
+    ];
+    CFS()->save($field_data, ['ID' => $post_id]);
+
+    // Associa o termo da edição ao post
+    $term_association = wp_set_object_terms($post_id, 77521, 'edicoes');
+    var_dump($term_association);
+    if (is_wp_error($term_association)) {
+        return rest_ensure_response([
+            'message' => 'Erro ao associar a edição ao post.',
+            'success' => false,
+            'term_association' => $term_association
+        ]);
+    }
+
+    update_post_meta($post_id, 'rapidinhas_relacionadas', [$edicao_id]);
+
+    return rest_ensure_response([
+        'message' => 'Rapidinha criada com sucesso!',
+        'success' => true,
+        'post_id' => $post_id,
+        'image_url' => $imagem_salva_url,
+        'edicao' => $edicao_id,
+        'data' => $data_rapidinha
+    ]);
+}
 function api_edicoes_post($request)
 {
     $data = $request->get_json_params();
