@@ -1,6 +1,19 @@
 <?php
 // Template Name: Boletim
 get_header();
+
+$edicoes_query = new WP_Query(array(
+  'post_type' => 'edicoes',
+  'posts_per_page' => 1,
+  'orderby' => 'date',     
+  'order' => 'DESC',
+));
+
+$recent_posts_query = new WP_Query(array(
+  'category_name' => 'Notícias',
+  'posts_per_page' => 10,
+));
+
 ?>
 <img src="<?php echo CFS()->get('banner_moldura'); ?>" class="w-full p-35 img-banner bannerMobile " alt="banner">
 
@@ -27,27 +40,35 @@ get_header();
             yoast_breadcrumb('<div id="breadcrumbs">', '</div>');
           } ?>
 
-      <?php
-          $boletim_query = new WP_Query(array(
-            'category_name' => 'Boletim',
-            'posts_per_page' => 3,
-          ));
+      <?php if ($edicoes_query->have_posts()): ?>
 
-          if ($boletim_query->have_posts()): ?>
+      <?php while ($edicoes_query->have_posts()): $edicoes_query->the_post(); ?>
+      <h2 class="titulo-cinza"><?php the_title(); ?></h2>
       <div class="posts">
-        <?php while ($boletim_query->have_posts()): $boletim_query->the_post(); ?>
+        <?php
+          $values = CFS()->get('edicao');
+          if (!empty($values) && is_array($values)) { 
+            foreach ($values as $post_id) { 
+              $the_post = get_post($post_id);
+            ?>
         <div class="post">
+          <?php if( esc_url(CFS()->get('imagem')) != '') {  ?>
           <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
             alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
-          <span><?php echo get_the_category_list(', '); ?></span>
-          <a href="<?php the_permalink(); ?>" class="read-more">
-            <h2><?php the_title(); ?></h2>
-          </a>
-          <p><?php echo esc_html(CFS()->get('descricao') ?: get_the_excerpt()); ?></p>
-
+          <?php }?>
+          <div>
+            <span class="data"><?php echo date_i18n('j \d\e F \d\e Y', strtotime($the_post->post_date)); ?></span>
+            <a href="<?php the_permalink(); ?>" class="read-more">
+              <h2><?php echo $the_post->post_title; ?></h2>
+            </a>
+            <p><?php echo  wp_trim_words($the_post->post_content, 20, '...') ?></p>
+          </div>
         </div>
-        <?php endwhile; ?>
+        <?php } // Fechamento do foreach ?>
+        <?php } // Fechamento do if ?>
       </div>
+      <?php endwhile; ?>
+
       <?php else: ?>
       <p>Nenhum boletim encontrado.</p>
       <?php endif; ?>
@@ -71,34 +92,25 @@ get_header();
     </div>
     <aside class="aside-info">
       <img src="<?php echo CFS()->get('skyscraper'); ?>" class="img-banner" alt="banner">
-      <h2>Boletim</h2>
-      <?php
-          $rapidinhas_id = get_cat_ID('Rapidinhas');
+      <h2>Notícias recentes</h2>
+      <?php if ($recent_posts_query->have_posts()) : ?>
+      <div class="aside-flex">
+        <?php while ($recent_posts_query->have_posts()) : $recent_posts_query->the_post(); ?>
+        <div class="">
+          <?php if( esc_url(CFS()->get('imagem')) != '') {  ?>
+          <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
+            alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
+          <?php }?>
 
-          $recent_posts_query = new WP_Query(array(
-            'post_type' => 'post',
-            'posts_per_page' => 5,
-            'orderby' => 'date',
-            'order' => 'DESC',
-            'category__in' => array($rapidinhas_id),
-          ));
-
-          if ($recent_posts_query->have_posts()) {
-            while ($recent_posts_query->have_posts()) {
-              $recent_posts_query->the_post(); ?>
-      <div class="item-aside">
-        <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
-          alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
-        <a href="<?php the_permalink(); ?>">
-          <h3><?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?></h3>
-        </a>
+          <a href="<?php the_permalink(); ?>" class="read-more">
+            <h3><?php the_title(); ?></h3>
+          </a>
+        </div>
+        <?php endwhile; ?>
       </div>
-      <?php }
-            wp_reset_postdata();
-          } else {
-            echo '<p>Nenhum post encontrado.</p>';
-          }
-          ?>
+      <?php else : ?>
+      <p>Nenhum boletim encontrado.</p>
+      <?php endif; wp_reset_postdata();?>
     </aside>
   </div>
 </div>
