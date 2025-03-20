@@ -1,8 +1,29 @@
 .woocommerce {
+  p {
+    margin: 0 !important;
+  }
+  span {
+    font-size: 1.6rem;
+    line-height: 1.61;
+  }
   > h2 {
     text-align: center !important;
   }
 
+  button {
+    margin-top: 20px !important;
+    background-color: $color-bright-red !important;
+    color: $color-white !important;
+    font-size: 1.6rem !important;
+    line-height: 2rem !important;
+    padding: 10px 22px !important;
+    border-radius: 6px !important;
+    transition: all 400ms ease-in !important;
+
+    &:hover {
+      @include hoveBtn();
+    }
+  }
   .woocommerce-form {
     margin: 35px auto 0 !important;
     max-width: 550px;
@@ -239,4 +260,56 @@ table.wc-block-cart-items .wc-block-cart-items__row .wc-block-cart-item__image i
 
 .woocommerce-cart table.cart td.product-quantity {
   display: none !important;
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected],
+.select2-container--default .select2-results__option--highlighted[data-selected] {
+  font-size: 1.4rem;
+}
+
+.select2-results__option[aria-selected],
+.select2-results__option[data-selected] {
+  font-size: 1.4rem;
+}
+
+.woocommerce table.shop_table th {
+  font-size: 1rem !important;
+}
+
+.woocommerce table.shop_table th,
+.payment_method_pagseguro {
+  font-size: 1.4rem !important;
+}
+
+.woocommerce table.shop_table td {
+  font-size: 1.4rem !important;
+}
+
+#add_payment_method #payment,
+.woocommerce-cart #payment,
+.woocommerce-checkout #payment {
+  background: $color-off-white !important;
+}
+
+#add_payment_method #payment div.payment_box,
+.woocommerce-cart #payment div.payment_box,
+.woocommerce-checkout #payment div.payment_box {
+  background: #f4f4f4 !important;
+}
+#add_payment_method #payment div.payment_box::before,
+.woocommerce-cart #payment div.payment_box::before,
+.woocommerce-checkout #payment div.payment_box::before {
+  content: none !important;
+}
+
+.woocommerce input:not(input[type="checkbox"]),
+.woocommerce select {
+  font-size: 1.4rem !important;
+  &::placeholder {
+    color: $color-dark-gray;
+  }
+}
+
+.woocommerce-error {
+  font-size: 1.4rem !important;
 }

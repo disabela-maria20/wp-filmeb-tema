@@ -296,8 +296,8 @@ endif;
 new Vue({
   el: "#app",
   data: {
-    filmes: [],
-    anos: [],
+    filmes: [], // Lista completa de filmes
+    anos: [], // Lista de anos disponíveis
     selectedFilters: {
       ano: '',
       mes: '',
@@ -306,67 +306,44 @@ new Vue({
       genero: '',
       tecnologia: ''
     },
-    filteredMovies: [],
     paginaAtual: 1,
-    totalPaginas: 12,
+    totalPaginas: 1,
     filmesPorPagina: 50,
     loading: false
   },
   methods: {
-    async getLitsaFilmes(ano = '', pagina = this.paginaAtual) {
+    // Carrega a lista completa de filmes
+    async carregarFilmes() {
       try {
-        this.loading = true
+        this.loading = true;
         const url =
-          `<?php echo get_site_url(); ?>/wp-json/api/v1/distribuidoras?page=${pagina}&limit=${this.filmesPorPagina}${ano ? `&ano=${ano}` : ''}`;
+          `<?php echo get_site_url(); ?>/wp-json/api/v1/distribuidoras?limit=1000`; // Carrega todos os filmes de uma vez
         const res = await fetch(url);
         if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
         const data = await res.json();
-        console.log(data);
-
-        this.filmes = data.data;
-        this.totalPaginas = data.total_pages;
+        console.log("Dados carregados da API:", data); // Log para depuração
+        this.filmes = data.data || []; // Garante que filmes seja um array
+        this.totalPaginas = Math.ceil(this.filmes.length / this.filmesPorPagina); // Calcula o total de páginas
       } catch (error) {
         console.error("Erro ao buscar filmes:", error);
       } finally {
-        this.loading = false
+        this.loading = false;
       }
     },
 
-    traduzirMesParaPortugues(mesIngles) {
-      const mesesIngles = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-      ];
-
-      const mesesPortugues = [
-        "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-        "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-      ];
-
-      const index = mesesIngles.indexOf(mesIngles.charAt(0).toUpperCase() + mesIngles.slice(1));
-
-      if (index !== -1) {
-        return mesesPortugues[index];
-      } else {
-        return "Mês inválido";
-      }
-    },
-
-    async getListaAnos() {
-      this.loading = true
+    // Carrega a lista de anos disponíveis
+    async carregarAnos() {
       try {
         const res = await fetch(`<?php echo get_site_url(); ?>/wp-json/api/v1/ano-filmes`);
         if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
         const data = await res.json();
-
         this.anos = data;
       } catch (error) {
         console.error("Erro ao buscar anos:", error);
-      } finally {
-        this.loading = false
       }
     },
 
+    // Formata a data para exibição
     formatarData(data) {
       const date = new Date(data);
       const dia = date.getDate();
@@ -380,51 +357,74 @@ new Vue({
         'Sábado'
       ];
       return `
-            <div>
-              <div class="dia">${String(dia).padStart(2, '0')}</div>
-              <div class="mes">${meses[mes - 1]}</div>
-              <div class="ano">${ano}</div>
-              <div class="semana">${diasSemana[diaSemana]}</div>
-            </div>
-          `;
+        <div>
+          <div class="dia">${String(dia).padStart(2, '0')}</div>
+          <div class="mes">${meses[mes - 1]}</div>
+          <div class="ano">${ano}</div>
+          <div class="semana">${diasSemana[diaSemana]}</div>
+        </div>
+      `;
     },
 
+    // Navega para uma página específica
     navegarParaPagina(pagina) {
       this.paginaAtual = pagina;
-      this.getLitsaFilmes(this.selectedFilters.ano, pagina);
     }
   },
-
   computed: {
+    // Filtra e ordena os filmes com base nos filtros selecionados
     FiltrarFilme() {
-      return this.filmes.filter((filme) => {
-        const filtroAno = this.selectedFilters.ano ? filme.ano === this.selectedFilters.ano : true;
-        const filtroMes = this.selectedFilters.mes ? filme.mes === this.selectedFilters.mes : true;
-        const filtroOrigem = this.selectedFilters.origem ? filme.origem.includes(this.selectedFilters.origem) :
-          true;
-        const filtroDistribuidor = this.selectedFilters.distribuidor ? filme.distribuidoras.includes(this
-          .selectedFilters.distribuidor) : true;
-        const filtroGenero = this.selectedFilters.genero ? filme.genero.includes(this.selectedFilters.genero) :
-          true;
-        const filtroTecnologia = this.selectedFilters.tecnologia ? filme.tecnologia.includes(this
-          .selectedFilters.genero) : true;
+      let filtered = this.filmes;
 
-        return filtroAno && filtroMes && filtroOrigem && filtroDistribuidor && filtroGenero && filtroTecnologia;
-      });
+      console.log("Filmes antes da filtragem:", filtered); // Log para depuração
+      console.log("Filtros aplicados:", this.selectedFilters); // Log para depuração
+
+      // Aplica os filtros
+      if (this.selectedFilters.ano) {
+        filtered = filtered.filter(filme => filme.ano == this.selectedFilters
+          .ano); // Use == para comparar strings/numbers
+      }
+      if (this.selectedFilters.mes) {
+        filtered = filtered.filter(filme => filme.mes.toLowerCase() === this.selectedFilters.mes
+          .toLowerCase()); // Ignora maiúsculas/minúsculas
+      }
+      if (this.selectedFilters.origem) {
+        filtered = filtered.filter(filme => filme.origem === this.selectedFilters.origem);
+      }
+      if (this.selectedFilters.distribuidor) {
+        filtered = filtered.filter(filme => filme.distribuidoras && filme.distribuidoras.includes(this
+          .selectedFilters.distribuidor));
+      }
+      if (this.selectedFilters.genero) {
+        filtered = filtered.filter(filme => filme.genero && filme.genero.includes(this.selectedFilters.genero));
+      }
+      if (this.selectedFilters.tecnologia) {
+        filtered = filtered.filter(filme => filme.tecnologia && filme.tecnologia.includes(this.selectedFilters
+          .tecnologia));
+      }
+
+      console.log("Filmes após filtragem:", filtered); // Log para depuração
+
+      // Ordena os filmes por data de estreia (do mais recente para o mais antigo)
+      filtered.sort((a, b) => new Date(b.estreia) - new Date(a.estreia));
+
+      // Paginação
+      const inicio = (this.paginaAtual - 1) * this.filmesPorPagina;
+      const fim = inicio + this.filmesPorPagina;
+      return filtered.slice(inicio, fim);
     }
   },
-
   created() {
-    const anoAtual = new Date().getFullYear().toString();
-    this.selectedFilters.ano = '';
-    this.getListaAnos();
-    this.getLitsaFilmes('', 1);
-  },
+    // Define o ano e mês atuais como filtros padrão
+    const dataAtual = new Date();
+    this.selectedFilters.ano = dataAtual.getFullYear().toString();
+    this.selectedFilters.mes = dataAtual.toLocaleString('default', {
+      month: 'long'
+    });
 
-  watch: {
-    paginaAtual(newPage) {
-      this.getLitsaFilmes(this.selectedFilters.ano, newPage);
-    }
+    // Carrega os dados iniciais
+    this.carregarAnos();
+    this.carregarFilmes();
   }
 });
 </script>

@@ -73,7 +73,7 @@
     margin: 20px 0;
   }
 
-  img {
+  img:not(.woocommerce img) {
     height: 225px;
     object-fit: cover;
     margin: 0 auto;
@@ -83,7 +83,7 @@
     }
   }
 
-  ul {
+  ul:not(.woocommerce ul) {
     padding-inline-start: 20px;
 
     li {
@@ -186,5 +186,11 @@ p {
     &:hover {
       background-color: $color-red-dark;
     }
+  }
+}
+
+input {
+  &::placeholder {
+    color: $color-dark-gray !important;
   }
 }

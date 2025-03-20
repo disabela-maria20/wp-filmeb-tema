@@ -14,6 +14,7 @@ require_once(get_template_directory() . "/api/rapidinhas.php");
 require_once(get_template_directory() . "/api/noticias.php");
 require_once(get_template_directory() . "/api/usuario.php");
 
+require_once(get_template_directory() . '/inc/checkout-customizado.php');
 
 add_filter('wp_image_editors', 'wpb_image_editor_default_to_gd');
 
