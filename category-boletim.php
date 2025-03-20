@@ -90,7 +90,7 @@ endif;
 
           if ($boletim_query->have_posts()) : ?>
       <div class="posts">
-        <?php while (have_posts()) : the_post(); ?>
+        <?php while ($boletim_query->have_posts()) : $boletim_query->the_post(); ?>
         <div class="post">
           <?php the_title(); ?></h1>
           <?php the_content(); ?>
