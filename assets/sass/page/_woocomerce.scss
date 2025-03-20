@@ -313,3 +313,16 @@ table.wc-block-cart-items .wc-block-cart-items__row .wc-block-cart-item__image i
 .woocommerce-error {
   font-size: 1.4rem !important;
 }
+
+.woocommerce-info {
+  font-size: 1.4rem !important;
+  a {
+    font-size: 1.4rem !important;
+  }
+}
+
+.woocommerce-error::before,
+.woocommerce-info::before,
+.woocommerce-message::before {
+  font-size: large !important;
+}
