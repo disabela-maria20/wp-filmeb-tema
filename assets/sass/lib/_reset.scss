@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  height: auto;
+  white-space: normal !important;
 }
 
 html {
@@ -30,7 +30,7 @@ hr {
 }
 
 pre {
-  font-family: monospace, monospace;
+  white-space: normal !important;
 }
 
 a {
