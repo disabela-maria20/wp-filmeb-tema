@@ -326,3 +326,10 @@ table.wc-block-cart-items .wc-block-cart-items__row .wc-block-cart-item__image i
 .woocommerce-message::before {
   font-size: large !important;
 }
+
+.woocommerce-error::before,
+.woocommerce-info::before,
+.woocommerce-message::before {
+  top: 1em !important;
+  left: 1em !important;
+}
