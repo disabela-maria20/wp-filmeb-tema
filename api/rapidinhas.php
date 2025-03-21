@@ -61,16 +61,25 @@ function api_rapidinhas_post($request) {
     $titulo = isset($data['titulo']) ? sanitize_text_field($data['titulo']) : '';
     $descricao = isset($data['descricao']) ? sanitize_textarea_field($data['descricao']) : '';
     $imagem_url = isset($data['imagem']) ? esc_url_raw($data['imagem']) : '';
-    $edicao_id = isset($data['edicao_id']) ? intval($data['edicao_id']) : 0; // ID da edição
+    $edicao_id = isset($data['edicao']) ? sanitize_text_field($data['edicao']) : ''; // Pode ser string ou número
     $data_rapidinha = isset($data['data']) ? sanitize_text_field($data['data']) : ''; // Campo data
 
-    // Verifica se a edição existe
-    $edicao_term = get_term($edicao_id, 'edicao');
+    // Verifica se a imagem foi fornecida e tenta fazer o upload
+    $attachment_id = '';
+    $imagem_salva_url = false;
+    if (!empty($imagem_url)) {
+        $attachment_id = upload_image_from_url($imagem_url);
+        if (is_wp_error($attachment_id)) {
+            return rest_ensure_response([
+                'message' => 'Erro ao fazer upload da imagem.',
+                'success' => false,
+                'error' => $attachment_id->get_error_message()
+            ]);
+        }
+        $imagem_salva_url = wp_get_attachment_url($attachment_id);
+    }
 
-    $attachment_id = upload_image_from_url($imagem_url);
-
-    $imagem_salva_url = wp_get_attachment_url($attachment_id);
-
+    // Cria o post
     $post_data = [
         'post_type' => 'rapidinhas',
         'post_title' => $titulo,
@@ -87,34 +96,21 @@ function api_rapidinhas_post($request) {
         ]);
     }
 
-    set_post_thumbnail($post_id, $attachment_id);
-
+    // Salva os campos personalizados
     $field_data = [
         'imagem' => $imagem_salva_url,
-        'edicao' => $edicao_id, 
+        'edicao' => $edicao_id, // Agora pode ser uma string ou número
         'data' => $data_rapidinha 
     ];
     CFS()->save($field_data, ['ID' => $post_id]);
 
-    // Associa o termo da edição ao post
-    $term_association = wp_set_object_terms($post_id, 77521, 'edicoes');
-    var_dump($term_association);
-    if (is_wp_error($term_association)) {
-        return rest_ensure_response([
-            'message' => 'Erro ao associar a edição ao post.',
-            'success' => false,
-            'term_association' => $term_association
-        ]);
-    }
-
-    update_post_meta($post_id, 'rapidinhas_relacionadas', [$edicao_id]);
-
+    // Retorna a resposta de sucesso
     return rest_ensure_response([
         'message' => 'Rapidinha criada com sucesso!',
         'success' => true,
         'post_id' => $post_id,
         'image_url' => $imagem_salva_url,
-        'edicao' => $edicao_id,
+        'edicao' => $edicao_id, // Retorna o valor original (string ou número)
         'data' => $data_rapidinha
     ]);
 }

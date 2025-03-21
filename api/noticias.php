@@ -9,6 +9,9 @@ function api_noticia_post($request)
   $post_category = !empty($data['post_category']) ? sanitize_text_field($data['post_category']) : '';
   $post_author = !empty($data['post_author']) ? intval($data['post_author']) : get_current_user_id();
   $cartaz = !empty($data['cartaz']) ? esc_url_raw($data['cartaz']) : '';
+  $data_filme = !empty($data['data_filme']) ? sanitize_text_field($data['data_filme']) : '';
+  $chapel = !empty($data['chapel']) ? sanitize_text_field($data['chapel']) : '';
+  $edicao = !empty($data['edicao']) ? sanitize_text_field($data['edicao']) : '';
 
   $category_id = [];
   if (!empty($post_category)) {
@@ -41,6 +44,9 @@ function api_noticia_post($request)
     'post_excerpt' => $post_excerpt,
     'post_category' => $category_id,
     'post_author' => $post_author,
+    'meta_input' => [
+      'data_filme' => $data_filme,
+    ],
   ];
 
   $post_id = wp_insert_post($post_data);
@@ -55,10 +61,23 @@ function api_noticia_post($request)
       CFS()->save($field_data, ['ID' => $post_id]);
     }
 
+    // Verifica se a categoria é "plus" e salva os campos personalizados
+    if ($post_category === 'plus') {
+      $custom_fields = [
+        'chapeu' => $chapel,
+        'edicao' => $edicao,
+        'data' => $data_filme
+      ];
+      CFS()->save($custom_fields, ['ID' => $post_id]);
+    }
+
     return rest_ensure_response([
       'message' => 'Noticia criado com sucesso!',
       'post_id' => $post_id,
       'category_id' => $category_id,
+      'data_filme' => $data_filme,
+      'chapel' => $chapel,
+      'edicao' => $edicao,
     ]);
   }
 
