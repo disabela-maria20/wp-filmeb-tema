@@ -98,31 +98,7 @@ if ($query->have_posts()) : while ($query->have_posts()) : $query->the_post();
       </div>
     </div>
     <aside class="aside-info">
-      <a href="<?php echo esc_url($link_skyscraper); ?>">
-        <img src="<?php echo esc_url($skyscraper); ?>" class="img-banner" alt="banner">
-      </a>
-
-      <h2>Edições anteriores</h2>
-      <?php
-      $edicoes = new WP_Query(array(
-        'post_type' => 'edicoes',
-        'posts_per_page' => 10,
-        'orderby' => 'date',     
-        'order' => 'DESC' 
-      ));
-      
-
-      if ($edicoes->have_posts()) { while ($edicoes->have_posts()) {  $edicoes->the_post(); ?>
-      <div class="item-aside">
-        <a href="<?php the_permalink(); ?>" class="edicoes">
-          <i class="bi bi-arrow-right-short"></i>
-          <?php 
-              $texto = the_title();
-              echo formatar_data_personalizada($texto);
-            ?>
-        </a>
-      </div>
-      <?php } wp_reset_postdata(); }?>
+      <?php get_template_part('components/Aside/index'); ?>
     </aside>
   </div>
 </div>

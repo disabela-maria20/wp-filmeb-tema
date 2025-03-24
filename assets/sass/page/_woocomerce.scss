@@ -10,7 +10,7 @@
     text-align: center !important;
   }
 
-  button {
+  button:not(.show-password-input) {
     margin-top: 20px !important;
     background-color: $color-bright-red !important;
     color: $color-white !important;
@@ -24,7 +24,7 @@
       @include hoveBtn();
     }
   }
-  .woocommerce-form {
+  .woocommerce-form:not(.login) {
     margin: 35px auto 0 !important;
     max-width: 550px;
   }
@@ -332,4 +332,29 @@ table.wc-block-cart-items .wc-block-cart-items__row .wc-block-cart-item__image i
 .woocommerce-message::before {
   top: 15px !important;
   left: 15px !important;
+}
+
+.woocommerce .woocommerce-form-login .woocommerce-form-login__rememberme {
+  display: block !important;
+}
+
+.woocommerce form .form-row-last,
+.woocommerce-page form .form-row-last {
+  float: none !important;
+}
+
+.select2-container .select2-dropdown,
+.select2-container .select2-selection {
+  border: 1px solid #aaa !important;
+}
+
+#reg_billing_categoria_profissional {
+  width: 100% !important;
+  height: 47px !important;
+  padding: 10px 15px !important;
+  border: 1px solid #ccc !important;
+  border-radius: 5px !important;
+  box-sizing: border-box !important;
+  margin-bottom: 15px !important;
+  color: $color-dark-gray !important;
 }

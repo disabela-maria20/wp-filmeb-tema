@@ -50,6 +50,9 @@ $recent_posts_query = new WP_Query(array(
           if (!empty($values) && is_array($values)) { 
             foreach ($values as $post_id) { 
               $the_post = get_post($post_id);
+              // echo "<pre>";
+              // var_dump( $the_post);
+              // echo "</pre>";
             ?>
         <div class="post">
           <?php if( esc_url(CFS()->get('imagem')) != '') {  ?>
@@ -58,7 +61,8 @@ $recent_posts_query = new WP_Query(array(
           <?php }?>
           <div>
             <span class="data"><?php echo date_i18n('j \d\e F \d\e Y', strtotime($the_post->post_date)); ?></span>
-            <a href="<?php the_permalink(); ?>" class="read-more">
+            <a href="<?php echo str_replace("https://filmeb.isabelamribeiro.com.br", get_site_url(), $the_post->guid);  ?>"
+              class="read-more">
               <h2><?php echo $the_post->post_title; ?></h2>
             </a>
             <p><?php echo  wp_trim_words($the_post->post_content, 20, '...') ?></p>

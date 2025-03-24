@@ -15,6 +15,7 @@ $args = array(
   'posts_per_page' => 1,
 );
 
+
 $query = new WP_Query($args);
 
 if ($query->have_posts()): while ($query->have_posts()): $query->the_post();
@@ -85,19 +86,35 @@ endif;
       <?php
       $boletim_query = new WP_Query(array(
         'post_type' => 'edicoes',
-        'posts_per_page' => 60,
+        'posts_per_page' => 10,
       ));
+      
 
       if ($boletim_query->have_posts()): ?>
-      <h1>Edições</h1>
-      <?php while ($boletim_query->have_posts()):
-          $boletim_query->the_post(); ?>
+      <h1>Toda as Edições</h1>
+      <?php while ($boletim_query->have_posts()): $boletim_query->the_post(); ?>
       <div class="grid-semanal">
         <a href="<?php the_permalink(); ?>" class="link-post-semanal">
           <h2><?php the_title(); ?></h2>
         </a>
-      </div>
 
+        <?php
+        $values = CFS()->get('edicao');
+        if (!empty($values) && is_array($values)) {
+            // Pega apenas os dois primeiros itens do array
+            $primeiros_dois = array_slice($values, 0, 3);
+
+            foreach ($primeiros_dois as $post_id) {
+                $the_post = get_post($post_id);
+                ?>
+        <a href="<?php echo str_replace("https://filmeb.isabelamribeiro.com.br", get_site_url(), $the_post->guid); ?>"
+          class="link-lista-rapidinha">
+          <i class="bi bi-arrow-right-short"></i>
+          <span><?php echo $the_post->post_title; ?></span>
+        </a>
+        <?php } // Fechamento do foreach ?>
+        <?php } // Fechamento do if ?>
+      </div>
       <?php endwhile; ?>
       <div class="pagination">
         <?php
@@ -116,30 +133,7 @@ endif;
       <?php wp_reset_postdata(); ?>
     </div>
     <aside class="aside-info">
-      <a href="<?php echo esc_url($link_skyscraper); ?>">
-        <img src="<?php echo esc_url($skyscraper); ?>" class="img-banner" alt="banner">
-      </a>
-
-      <h2>Edições anteriores</h2>
-      <?php
-      $recent_posts_query = new WP_Query(array(
-        'post_type' => 'edicoes',
-        'posts_per_page' => 10,
-        'orderby' => 'date',     
-        'order' => 'DESC' 
-      ));
-      if ($recent_posts_query->have_posts()) {
-        while ($recent_posts_query->have_posts()) {
-          $recent_posts_query->the_post(); ?>
-      <div class="item-aside">
-        <a href="<?php the_permalink(); ?>" class="edicoes">
-          <i class="bi bi-arrow-right-short"></i>
-          <?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?>
-        </a>
-      </div>
-      <?php }
-        wp_reset_postdata();
-      } ?>
+      <?php get_template_part('components/Aside/index'); ?>
     </aside>
   </div>
 
