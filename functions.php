@@ -493,16 +493,6 @@ function handel_assinaturas_content() {
 add_action('woocommerce_account_assinaturas_endpoint', 'handel_assinaturas_content');
 
 
-
-function adicionar_produto_ao_carrinho_automaticamente() {
-  if ( ! WC()->cart->is_empty() ) {
-    return;
-  }
-  $product_id = 77471;
-  WC()->cart->add_to_cart( $product_id );
-}
-add_action('template_redirect', 'adicionar_produto_ao_carrinho_automaticamente');
-
 function redirecionar_para_checkout() {
     // URL da página de checkout
     return wc_get_checkout_url();
