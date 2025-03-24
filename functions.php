@@ -14,7 +14,6 @@ require_once(get_template_directory() . "/api/rapidinhas.php");
 require_once(get_template_directory() . "/api/noticias.php");
 require_once(get_template_directory() . "/api/usuario.php");
 
-require_once(get_template_directory() . '/inc/checkout-customizado.php');
 
 add_filter('wp_image_editors', 'wpb_image_editor_default_to_gd');
 
@@ -45,35 +44,6 @@ function use_scripts()
   wp_enqueue_script('main-script', get_template_directory_uri() . '/assets/js/main.js', array('jquery', 'owl-carousel'), null, true);
 }
 add_action('wp_enqueue_scripts', 'use_scripts');
-
-function registrar_cpt_filmes() {
-  register_post_type('filmes', array(
-      'labels' => array(
-          'name' => _x('Filmes', 'Post type general name', 'textdomain'),
-          'singular_name' => _x('Filme', 'Post type singular name', 'textdomain'),
-          'add_new_item' => __('Adicionar Novo Filme', 'textdomain'),
-          'edit_item' => __('Editar Filme', 'textdomain'),
-          'new_item' => __('Novo Filme', 'textdomain'),
-          'view_item' => __('Ver Filme', 'textdomain'),
-          'search_items' => __('Buscar Filmes', 'textdomain'),
-          'not_found' => __('Nenhum Filme encontrado', 'textdomain'),
-          'not_found_in_trash' => __('Nenhum Filme encontrado na lixeira', 'textdomain'),
-      ),
-      'description' => 'Gerenciar Filmes',
-      'public' => true,
-      'show_ui' => true,
-      'menu_position' => 5,
-      'menu_icon' => 'dashicons-video-alt',
-      'capability_type' => 'post',
-      'rewrite' => array('slug' => 'filmes', 'with_front' => true),
-      'supports' => array('title', 'editor', 'thumbnail', 'excerpt'),
-      'has_archive' => true,
-      'publicly_queryable' => true,
-      'show_in_rest' => true,
-      'taxonomies' => array('distribuidoras', 'paises', 'generos', 'classificacoes', 'tecnologias', 'feriados'),
-  ));
-}
-add_action('init', 'registrar_cpt_filmes');
 
 function add_meta_tags()
 {
@@ -491,3 +461,20 @@ function handel_assinaturas_content() {
   }
 }
 add_action('woocommerce_account_assinaturas_endpoint', 'handel_assinaturas_content');
+
+
+
+function adicionar_produto_ao_carrinho_automaticamente() {
+  if ( ! WC()->cart->is_empty() ) {
+    return;
+  }
+  $product_id = 77471;
+  WC()->cart->add_to_cart( $product_id );
+}
+add_action('template_redirect', 'adicionar_produto_ao_carrinho_automaticamente');
+
+function redirecionar_para_checkout() {
+    // URL da página de checkout
+    return wc_get_checkout_url();
+}
+add_filter('woocommerce_add_to_cart_redirect', 'redirecionar_para_checkout');

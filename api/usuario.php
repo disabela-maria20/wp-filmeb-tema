@@ -88,7 +88,7 @@ function register_customer_membership(WP_REST_Request $request)
     $order = wc_create_order(['customer_id' => $user_id]);
 
     // Adicionar o produto com ID 77471 ao pedido
-    $product_id = 77471; // ID do produto
+    $product_id = 80027 ; // ID do produto
     $product = wc_get_product($product_id);
 
     if ($product) {
