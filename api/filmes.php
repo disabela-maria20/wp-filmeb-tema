@@ -229,8 +229,7 @@ function api_anos_filmes_get()
 }
 
 
-function api_filmes_post($request)
-{
+function api_filmes_post($request) {
     $data = $request->get_json_params();
 
     $titulo = isset($data['titulo']) ? sanitize_text_field($data['titulo']) : '';
@@ -265,21 +264,21 @@ function api_filmes_post($request)
     $tecnologia_ids = obter_term_ids($tecnologias, 'tecnologias');
     $feriado_ids = obter_term_ids($feriados, 'feriados');
 
-    // Upload de imagens
-    if (empty($cartaz)) {
-        return new WP_Error('no_cartaz_url', 'Nenhuma URL de cartaz fornecida.', ['status' => 400]);
-    }
-    $cartaz_id = upload_image_from_url($cartaz);
-    if (is_wp_error($cartaz_id)) {
-        return new WP_Error('upload_error', 'Erro ao baixar a imagem do cartaz.', ['status' => 500, 'data' => $cartaz]);
+    // Upload de imagens - somente se a URL não estiver vazia
+    $cartaz_id = null;
+    if (!empty($cartaz)) {
+        $cartaz_id = upload_image_from_url($cartaz);
+        if (is_wp_error($cartaz_id)) {
+            return new WP_Error('upload_error', 'Erro ao baixar a imagem do cartaz.', ['status' => 500, 'data' => $cartaz]);
+        }
     }
 
-    if (empty($capa)) {
-        return new WP_Error('no_capa_url', 'Nenhuma URL de capa fornecida.', ['status' => 400]);
-    }
-    $capa_id = upload_image_from_url($capa);
-    if (is_wp_error($capa_id)) {
-        return new WP_Error('upload_error', 'Erro ao baixar a imagem da capa.', ['status' => 500, 'data' => $capa]);
+    $capa_id = null;
+    if (!empty($capa)) {
+        $capa_id = upload_image_from_url($capa);
+        if (is_wp_error($capa_id)) {
+            return new WP_Error('upload_error', 'Erro ao baixar a imagem da capa.', ['status' => 500, 'data' => $capa]);
+        }
     }
 
     $fotos_id = [];
@@ -302,15 +301,18 @@ function api_filmes_post($request)
     $post_id = wp_insert_post($post_data);
 
     if ($post_id) {
-        set_post_thumbnail($post_id, $cartaz_id);
+        // Define a imagem destacada somente se o cartaz foi enviado
+        if ($cartaz_id) {
+            set_post_thumbnail($post_id, $cartaz_id);
+        }
 
         $fotos_formatadas = array_map(fn($foto_id) => ['foto' => wp_get_attachment_url($foto_id)], $fotos_id);
 
         $field_data = [
             'titulo_original' => $titulo_original,
             'trailer' => $trailer,
-            'cartaz' => wp_get_attachment_url($cartaz_id),
-            'capa' => wp_get_attachment_url($capa_id),
+            'cartaz' => $cartaz_id ? wp_get_attachment_url($cartaz_id) : '',
+            'capa' => $capa_id ? wp_get_attachment_url($capa_id) : '',
             'estreia' => $estreia,
             'duracao_minutos' => $duracao_minutos,
             'direcao' => $direcao,
@@ -332,7 +334,6 @@ function api_filmes_post($request)
             'post_id' => $post_id,
         ]);
     }
-
 
     return new WP_Error('filme_nao_criado', 'Erro ao criar o filme', ['status' => 500]);
 }

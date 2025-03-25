@@ -87,27 +87,7 @@ $rapidinhas_id = get_cat_ID('Rapidinhas');
     </div>
 
     <aside class="aside-info">
-      <img src="<?php echo esc_url(CFS()->get('skyscraper')); ?>" class="img-banner" alt="banner">
-      <h2>Boletim</h2>
-      <?php
-      $recent_posts_query = new WP_Query(array(
-        'post_type' => 'edicoes',
-        'posts_per_page' => 10,
-        'orderby'        => 'date',     
-        'order'          => 'DESC' 
-      ));
-      if ($recent_posts_query->have_posts()) {while ($recent_posts_query->have_posts()) { $recent_posts_query->the_post(); ?>
-      <div class="item-aside">
-        <a href="<?php the_permalink(); ?>" class="link-post-semanal">
-          <h3>
-            <?php 
-              $texto = the_title();
-              echo formatar_data_personalizada($texto);
-            ?>
-          </h3>
-        </a>
-      </div>
-      <?php }  wp_reset_postdata(); } else {echo '<p>Nenhum post encontrado.</p>';} ?>
+      <?php get_template_part('components/Aside/index'); ?>
     </aside>
   </div>
 </div>

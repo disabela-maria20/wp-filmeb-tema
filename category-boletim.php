@@ -79,27 +79,14 @@ endif;
         class="logo" alt="cine B" />
 
       <?php if (function_exists('yoast_breadcrumb')) {yoast_breadcrumb('<div id="breadcrumbs">', '</div>'); } ?>
-
-      <?php
-          $boletim_query = new WP_Query(array(
-            'category_name'  => $category_slug, 
-            'posts_per_page' => 3,
-            'orderby' => 'date',     
-            'order' => 'DESC' 
-          ));
-
-          if ($boletim_query->have_posts()) : ?>
-      <div class="posts">
-        <?php while ($boletim_query->have_posts()) : $boletim_query->the_post(); ?>
-        <div class="post">
-          <?php the_title(); ?></h1>
-          <?php the_content(); ?>
+      <div class="post">
+        <div class="posts">
+          <h1><?php the_title(); ?></h1>
+          <div><?php the_content(); ?></div>
         </div>
-        <?php endwhile; ?>
       </div>
-      <?php else : ?>
-      <p>Nenhum boletim encontrado.</p>
-      <?php endif; wp_reset_postdata();?>
+
+
 
       <img src="<?php echo esc_url($super_banner); ?>" class="img-banner" alt="banner">
 
@@ -130,26 +117,8 @@ endif;
         $skyscraper = CFS()->get('skyscraper', $banner_id);
     ?>
 
-    <aside class="aside-boletim">
-      <a href="<?php echo esc_url($link_skyscraper); ?>">
-        <img src="<?php echo esc_url($skyscraper); ?>" class="img-banner" alt="banner">
-      </a>
-      <h2>Boletim</h2>
-      <div class="aside-item-boletim">
-        <ul>
-          <?php  if ($recent_posts_query->have_posts()) {while ($recent_posts_query->have_posts()) { $recent_posts_query->the_post();?>
-          <li>
-            <?php if( esc_url(CFS()->get('imagem')) != '') {  ?>
-            <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
-              alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
-            <?php } ?>
-            <a href="<?php the_permalink(); ?>">
-              <h2><?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?></h2>
-            </a>
-            <?php } wp_reset_postdata(); } else { echo '<p>Nenhum post encontrado.</p>'; } ?>
-          </li>
-        </ul>
-      </div>
+    <aside class="aside-info">
+      <?php get_template_part('components/Aside/index'); ?>
     </aside>
     <?php endwhile; wp_reset_postdata(); endif;?>
   </div>

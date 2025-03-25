@@ -223,12 +223,10 @@
   }
 
   a {
-    margin-top: 20px;
     font-weight: bold;
     font-size: 1.6rem;
     line-height: 2rem;
     color: $color-bright-red;
-    margin-bottom: 20px;
   }
 
   ul {
@@ -241,7 +239,7 @@
       a {
         h2 {
           font-size: 1.8rem;
-          margin: 0;
+          margin: 0 !important;
         }
       }
     }

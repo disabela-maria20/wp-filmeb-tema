@@ -1,4 +1,44 @@
 .post {
+  table {
+    font-family: $font-family;
+    width: 100%;
+    border: none;
+    border-spacing: 0;
+
+    thead {
+      tr {
+        background-color: $color-light-red;
+
+        th {
+          color: $color-darker-gray;
+          padding: 15px;
+          font-size: 1.2rem;
+
+          @include media(lg) {
+            font-size: 1.4rem;
+          }
+        }
+      }
+    }
+
+    tbody {
+      td {
+        color: $color-darker-gray;
+        padding: 15px;
+        font-size: 1.2rem;
+        line-height: 2rem;
+        padding: 25px;
+
+        @include media(lg) {
+          font-size: 1.4rem;
+          line-height: 2.2rem;
+        }
+      }
+    }
+  }
+  a {
+    color: $color-bright-red;
+  }
   .data {
     font-size: 1.6rem;
     font-weight: 700;
@@ -61,7 +101,8 @@
     }
   }
 
-  p:not(.item p) {
+  p:not(.item p),
+  .swpm-post-not-logged-in-msg {
     color: $color-darker-gray;
     font-size: 1.6rem;
     line-height: 1.61;

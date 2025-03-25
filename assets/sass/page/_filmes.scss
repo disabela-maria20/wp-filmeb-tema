@@ -258,8 +258,10 @@
   .banner {
     height: 300px;
     position: relative;
-    background-position: center;
+    background-attachment: fixed;
     background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
 
     h1 {
       position: absolute;

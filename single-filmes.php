@@ -96,7 +96,8 @@ endif;
 
 <section class="page-filmes-aberta">
   <div class="container">
-    <div class="banner" style="background-image: url('<?php echo esc_url(CFS()->get('capa')); ?>')">
+    <div class="banner"
+      style="background-image: url('<?php echo esc_url(CFS()->get('capa')); ?>'); background-color: #4b4b4b;  background-attachment: fixed;">
       <h1>
         <strong>
           <?php the_title(); ?>
