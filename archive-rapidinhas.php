@@ -121,7 +121,6 @@ $boletim_query = new WP_Query(array(
       <a href="<?php echo esc_url($link_skyscraper); ?>">
         <img src="<?php echo esc_url($skyscraper); ?>" class="img-banner" alt="banner">
       </a>
-
       <h2>Rapidinhas desta edição</h2>
       <?php
       $recent_edicoes_query = new WP_Query(array(
