@@ -2,21 +2,17 @@
 
 function api_distribuidora_get($request)
 {
-    $page = isset($request['page']) ? intval($request['page']) : 1;
-    $limit = isset($request['limit']) ? intval($request['limit']) : 10;
-
     // Configuração da consulta
     $query = array(
         'post_type' => 'filmes',
-        'posts_per_page' => -1, // Obter todos os posts inicialmente
+        'posts_per_page' => -1, // Obter todos os posts
         'meta_key' => 'estreia',
         'orderby' => 'meta_value',
-        'order' => 'ASC',
+        'order' => 'DESC',
     );
 
     $loop = new WP_Query($query);
     $posts = $loop->posts;
-    $total = $loop->found_posts;
 
     $resultData = [];
 
@@ -45,13 +41,12 @@ function api_distribuidora_get($request)
             'Universal' => [],
             'Warner' => [],
             'downtownParis' => [],
-            'Imagem' => [],
+            'Imagem Filmes' => [],
             'Paris' => [],
             'Diamond' => [],
             'OutrasDistribuidoras' => []
         ];
 
-        // Verificar distribuidora principal
         $distribuidora = $filme->distribuidoras[0] ?? 'OutrasDistribuidoras';
         $distribuidorasMap = [
             'Diamond/Galeria' => 'Diamond',
@@ -61,7 +56,8 @@ function api_distribuidora_get($request)
             'Universal' => 'Universal',
             'Warner' => 'Warner',
             'downtownParis' => 'downtownParis',
-            'Paris' => 'Paris'
+            'Paris' => 'Paris',
+            'Imagem' => 'Imagem Filmes' // Adicionado para completar o mapeamento
         ];
         $distribuidora = $distribuidorasMap[$distribuidora] ?? 'OutrasDistribuidoras';
 
@@ -98,19 +94,12 @@ function api_distribuidora_get($request)
         }
     }
 
-    // Paginação manual
-    $offset = ($page - 1) * $limit;
-    $pagedData = array_slice($resultData, $offset, $limit);
-
-    // Resposta final
+    // Resposta final sem paginação
     $response = rest_ensure_response([
-        'data' => $pagedData,
-        'total' => count($resultData), // Corrigido para refletir a real contagem dos itens filtrados
-        'page' => $page,
-        'total_pages' => ceil(count($resultData) / $limit),
+        'data' => $resultData,
+        'total' => count($resultData),
     ]);
 
-    $response->header('X-Total-Count', count($resultData));
     return $response;
 }
 
@@ -119,22 +108,6 @@ function register_distribuidora_api_endpoints()
     register_rest_route('api/v1', '/distribuidoras', [
         'methods' => 'GET',
         'callback' => 'api_distribuidora_get',
-        'args' => [
-            'page' => [
-                'required' => false,
-                'default' => 1,
-                'validate_callback' => function ($param) {
-                    return is_numeric($param) && $param > 0;
-                },
-            ],
-            'limit' => [
-                'required' => false,
-                'default' => 10,
-                'validate_callback' => function ($param) {
-                    return is_numeric($param) && $param > 0;
-                },
-            ],
-        ],
     ]);
 }
 add_action('rest_api_init', 'register_distribuidora_api_endpoints');

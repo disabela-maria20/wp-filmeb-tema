@@ -1,22 +1,26 @@
-<?php
+<?php // Template Name: Distribuidora
 get_header();
-// Template Name: Distribuidora
-?>
 
-<?php
-$current_page_slug = basename(get_permalink());
-$category_slug = str_replace('boletim/', '', $current_page_slug);
-$banner_id = "185";
-$author_id = get_the_author_meta('ID');
+// Configuração da consulta com paginação do WordPress
+$paged = get_query_var('paged') ? get_query_var('paged') : 1;
+$posts_per_page = 32;
 
 $args = array(
-  'post_type' => 'banner-post',
-  'posts_per_page' => 1,
+  'post_type' => 'filmes',
+  'posts_per_page' => $posts_per_page,
+  'paged' => $paged,
+  'meta_key' => 'estreia',
+  'orderby'   => array(
+    'date' => 'DESC',
+    'menu_order' => 'ASC',
+    /*Other params*/
+  )
 );
 
-$query = new WP_Query($args);
+$filmes_query = new WP_Query($args);
 
-
+// Processar os dados como na função original
+$resultData = array();
 
 $termos = get_terms(array(
   'taxonomy' => 'generos',
@@ -53,378 +57,385 @@ $meses = [
   'December' => 'Dezembro',
 ];
 
-
-$args = array(
-  'post_type' => 'filmes',
-  'posts_per_page' => -1,
-  'post_status' => 'publish'
-);
-$filmes = new WP_Query($args);
-
-function render_terms($field_key)
+function obter_anos_dos_filmes()
 {
-  $distribuicao = CFS()->get($field_key);
-  $output = '';
-  if (!empty($distribuicao)) {
-    foreach ($distribuicao as $term_id) {
-      $term = get_term($term_id);
-      if ($term && !is_wp_error($term)) {
-        $output .= '<div>' . esc_html($term->name) . '</div>';
+  $query = array(
+    'post_type' => 'filmes',
+    'posts_per_page' => -1,
+    'fields' => 'ids'
+  );
+
+  $loop = new WP_Query($query);
+  $posts = $loop->posts;
+
+  $anos_filmes = [];
+
+  foreach ($posts as $post_id) {
+    $data_estreia = get_post_meta($post_id, 'estreia', true);
+
+    if (!empty($data_estreia)) {
+      $ano = date('Y', strtotime($data_estreia));
+
+      if (!in_array($ano, $anos_filmes)) {
+        $anos_filmes[] = $ano;
       }
     }
   }
 
-  return $output;
+  rsort($anos_filmes);
+
+  return $anos_filmes;
 }
 
-if ($query->have_posts()):
-  while ($query->have_posts()):
-    $query->the_post();
+$anos = obter_anos_dos_filmes();
 
-    $banner_superior = CFS()->get('banner_moldura', $banner_id);
-    $banner_inferior = CFS()->get('mega_banner', $banner_id);
-    $full_banner = CFS()->get('full_banner', $banner_id);
-    $skyscraper = CFS()->get('skyscraper', $banner_id);
-    $super_banner = CFS()->get('super_banner', $banner_id);
+if ($filmes_query->have_posts()) {
+  while ($filmes_query->have_posts()) {
+    $filmes_query->the_post();
 
-    ?>
-<img src="<?php echo esc_url($banner_superior); ?>" class="w-full p-35 img-banner bannerMobile" alt="banner">
+    $filme = filme_scheme(get_post());
+    $estreia = $filme->estreia ?? null;
 
-<div class="container bannerDesktop">
-  <div class="grid-banner-superior">
-    <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
-  </div>
-</div>
+    if (!$estreia) {
+      continue;
+    }
 
-<?php
-  endwhile;
-  wp_reset_postdata();
-endif;
+    try {
+      $dataEstreia = new DateTime($estreia);
+      $ano = $dataEstreia->format('Y');
+      $mes = $dataEstreia->format('F');
+    } catch (Exception $e) {
+      continue;
+    }
+
+    // Todas as distribuidoras definidas na API
+    $distribuidoresBase = [
+      'Disney' => [],
+      'Paramount' => [],
+      'Sony' => [],
+      'Universal' => [],
+      'Warner' => [],
+      'downtownParis' => [],
+      'Imagem' => [],
+      'Paris' => [],
+      'Diamond' => [],
+      'OutrasDistribuidoras' => []
+    ];
+
+    // Mapeamento de distribuidoras
+    $distribuidora = $filme->distribuidoras[0] ?? 'OutrasDistribuidoras';
+    $distribuidorasMap = [
+      'Diamond/Galeria' => 'Diamond',
+      'Disney' => 'Disney',
+      'Paramount' => 'Paramount',
+      'Sony' => 'Sony',
+      'Universal' => 'Universal',
+      'Warner' => 'Warner',
+      'downtownParis' => 'downtownParis',
+      'Paris' => 'Paris'
+    ];
+    $distribuidora = $distribuidorasMap[$distribuidora] ?? 'OutrasDistribuidoras';
+
+    // Dados do filme
+    $filmeData = [
+      'link' => $filme->link ?? '',
+      'title' => $filme->title ?? '',
+      'titulo_original' => $filme->titulo_original ?? ''
+    ];
+
+    // Verificar se já existe um item com a mesma data de estreia
+    $found = false;
+    foreach ($resultData as &$dataItem) {
+      if ($dataItem['estreia'] === $estreia) {
+        $dataItem[$distribuidora][] = $filmeData;
+        $found = true;
+        break;
+      }
+    }
+
+    // Criar novo item se não existir
+    if (!$found) {
+      $resultData[] = array_merge([
+        'estreia' => $estreia,
+        'ano' => $ano,
+        'mes' => $mes,
+        'distribuidoras' => $filme->distribuidoras ?? [],
+        'origem' => $filme->paises ?? [],
+        'genero' => $filme->generos ?? [],
+        'tecnologia' => $filme->tecnologias ?? []
+      ], $distribuidoresBase, [
+        $distribuidora => [$filmeData]
+      ]);
+    }
+  }
+}
+
+if (isset($_GET['ano']) && !empty($_GET['ano'])) {
+  $args['meta_query'][] = array(
+    'key' => 'estreia',
+    'value' => sanitize_text_field($_GET['ano']),
+    'compare' => 'REGEXP',
+  );
+}
+
+if (isset($_GET['mes']) && !empty($_GET['mes'])) {
+  $args['meta_query'][] = array(
+    'key' => 'estreia',
+    'value' => sanitize_text_field($_GET['mes']),
+    'compare' => 'REGEXP',
+  );
+}
+
+if (isset($_GET['origem']) && !empty($_GET['origem'])) {
+  $args['meta_query'][] = array(
+    'key' => 'paises',
+    'value' => sanitize_text_field($_GET['origem']),
+    'compare' => 'REGEXP',
+  );
+}
+
+if (isset($_GET['distribuicao']) && !empty($_GET['distribuicao'])) {
+  $args['meta_query'][] = array(
+    'key' => 'distribuicao',
+    'value' => sanitize_text_field($_GET['distribuicao']),
+    'compare' => '=',
+  );
+}
+
+if (isset($_GET['genero']) && !empty($_GET['genero'])) {
+  $args['meta_query'][] = array(
+    'key' => 'generos',
+    'value' => sanitize_text_field($_GET['genero']),
+    'compare' => 'REGEXP',
+  );
+}
+
+if (isset($_GET['tecnologia']) && !empty($_GET['tecnologia'])) {
+  $args['meta_query'][] = array(
+    'key' => 'tecnologia',
+    'value' => sanitize_text_field($_GET['tecnologia']),
+    'compare' => 'REGEXP',
+  );
+}
+
 ?>
-
 <?php get_template_part('components/MenuMobile/index'); ?>
 <?php get_template_part('components/MenuDesktop/index'); ?>
 
-<section class="bg-gray padding-banner">
-  <div class="container bannerMobile">
-    <div class="grid-banner-superior">
-      <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner bannerDesktop" alt="banner">
-      <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
-    </div>
-  </div>
-</section>
-
-<div id="app">
-  <div class="container page-distribuidora">
-    <h1>Lançamentos por Distribuidora</h1>
-    <section class="grid-select">
+<div class="container page-distribuidora">
+  <h1>Lançamentos por Distribuidora</h1>
+  <section class="grid-select">
+    <form method="GET" action="<?php echo get_site_url(); ?>/lancamentos-por-distribuidora/">
       <div class="grid grid-7-xl gap-22 select-itens">
-        <select id="ano" v-model="selectedFilters.ano">
-          <option value="">Ano</option>
-          <option v-for="ano in anos" :value="ano">{{ano}}</option>
+        <select id="ano" name="ano">
+          <option isabled selected value="">Ano</option>
+          <?php foreach ($anos as $key => $value) { ?>
+          <option value="<?php echo esc_attr($key); ?>"><?php echo esc_html($value); ?></option>
+          <?php } ?>
         </select>
-        <select v-model="selectedFilters.mes" id="mes">
-          <option disabled value="">Mês</option>
+        <select name="mes" id="mes">
+          <option disabled selected value="">Mês</option>
           <?php foreach ($meses as $key => $value) { ?>
           <option value="<?php echo esc_attr($key); ?>"><?php echo esc_html($value); ?></option>
           <?php } ?>
         </select>
-        <select v-model="selectedFilters.origem" id="origem">
-          <option disabled value="">Origem</option>
+        <select name="origem" id="origem">
+          <option disabled selected value="">Origem</option>
           <?php foreach ($paises as $paise) { ?>
-          <option value="<?php echo esc_html($paise->name); ?>"><?php echo $paise->name . PHP_EOL; ?>
-          </option>
+          <option value="<?php echo esc_attr($paise->term_id); ?>"><?php echo esc_html($paise->name); ?></option>
           <?php } ?>
         </select>
-        <select v-model="selectedFilters.distribuidor" id="distribuidor">
-          <option disabled value="">Distribuidor</option>
+        <select name="distribuicao" id="distribuidoras">
+          <option disabled selected value="">Distribuidor</option>
           <?php foreach ($distribuidoras as $distribuidora) { ?>
-          <option value="<?php echo esc_html($distribuidora->name); ?>"><?php echo $distribuidora->name . PHP_EOL; ?>
-          </option>
+          <option value="<?php echo esc_attr($distribuidora->term_id); ?>">
+            <?php echo esc_html($distribuidora->name); ?></option>
           <?php } ?>
         </select>
-        <select v-model="selectedFilters.genero" id="genero">
-          <option disabled value="">Gênero</option>
+        <select name="genero" id="genero">
+          <option disabled selected value="">Gênero</option>
           <?php foreach ($termos as $termo) { ?>
-          <option value="<?php echo esc_html($termo->name); ?>"><?php echo $termo->name . PHP_EOL; ?></option>
+          <option value="<?php echo esc_attr($termo->term_id); ?>"><?php echo esc_html($termo->name); ?></option>
           <?php } ?>
         </select>
-        <select v-model="selectedFilters.tecnologia" id="tecnologia">
-          <option disabled value="">Tecnologia</option>
+        <select name="tecnologia" id="tecnologia">
+          <option disabled selected value="">Tecnologia</option>
           <?php foreach ($tecnologias as $tecnologia) { ?>
-          <option value="<?php echo esc_html($tecnologia->name); ?>"><?php echo $tecnologia->name . PHP_EOL; ?>
+          <option value="<?php echo esc_attr($tecnologia->term_id); ?>"><?php echo esc_html($tecnologia->name); ?>
           </option>
           <?php } ?>
         </select>
+        <button type="submit">Filtrar</button>
       </div>
-    </section>
-    <div v-if="loading" class="loading">
-      Carregando filmes...
-    </div>
-    <div v-else class="tabela-distribuidora" id="tableDistribuidora">
-      <table>
-        <thead>
-          <tr>
-            <th>Estreia</th>
-            <th>Disney</th>
-            <th>Paramount</th>
-            <th>Sony</th>
-            <th>Universal</th>
-            <th>Warner</th>
-            <th>Diamond</th>
-            <th>
-              <div>downtown</div>
-              <div>/ Paris</div>
-            </th>
-            <th>Imagem</th>
-            <th>Paris</th>
-            <th>
-              <div>Outras</div>
-              <div>Distribuidoras</div>
-            </th>
-          </tr>
+    </form>
+  </section>
+  <?php if (!empty($resultData)) : ?>
+  <table class="tabela-distribuidora">
+    <thead>
+      <tr>
+        <th>Data de Estreia</th>
+        <th>Ano</th>
+        <th>Mês</th>
+        <!-- Todas as colunas de distribuidoras -->
+        <th>Disney</th>
+        <th>Paramount</th>
+        <th>Sony</th>
+        <th>Universal</th>
+        <th>Warner</th>
+        <th>downtownParis</th>
+        <th>Imagem</th>
+        <th>Paris</th>
+        <th>Diamond</th>
+        <th>Outras</th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php foreach ($resultData as $item) : ?>
+      <tr>
+        <td class="data"><?php echo formatar_data_estreia_dist($item['estreia'] ?? ''); ?> </td>
+        <td><?php echo esc_html($item['ano'] ?? ''); ?></td>
+        <td><?php echo esc_html(traduzir_mes_para_portugues($item['mes'] ?? '')); ?></td>
+        <!-- Todas as células de distribuidoras -->
+        <td><?php echo format_filmes($item['Disney'] ?? []); ?></td>
+        <td><?php echo format_filmes($item['Paramount'] ?? []); ?></td>
+        <td><?php echo format_filmes($item['Sony'] ?? []); ?></td>
+        <td><?php echo format_filmes($item['Universal'] ?? []); ?></td>
+        <td><?php echo format_filmes($item['Warner'] ?? []); ?></td>
+        <td><?php echo format_filmes($item['downtownParis'] ?? []); ?></td>
+        <td><?php echo format_filmes($item['Imagem'] ?? []); ?></td>
+        <td><?php echo format_filmes($item['Paris'] ?? []); ?></td>
+        <td><?php echo format_filmes($item['Diamond'] ?? []); ?></td>
+        <td><?php echo format_filmes($item['OutrasDistribuidoras'] ?? []); ?></td>
+      </tr>
+      <?php endforeach; ?>
+    </tbody>
+  </table>
 
-        </thead>
-        <tbody>
-          <tr v-for="(filme, index) in FiltrarFilme" :key="index">
-            <td>
-              <span class="data" v-html="formatarData(filme.estreia)"></span>
-            </td>
-            <td>
-              <div v-for="(value, index) in filme.Disney" :key="index">
-                <div>
-                  <h3>{{value.title}}</h3>
-                  <h4>{{value.titulo_original}}</h4>
-                </div>
-              </div>
-            </td>
-            <td>
-              <div v-for="(value, index) in filme.Paramount" :key="index">
-                <div>
-                  <h3>{{value.title}}</h3>
-                  <h4>{{value.titulo_original}}</h4>
-                </div>
-              </div>
-            </td>
-            <td>
-              <div v-for="(value, index) in filme.Sony" :key="index">
-                <div>
-                  <h3>{{value.title}}</h3>
-                  <h4>{{value.titulo_original}}</h4>
-                </div>
-              </div>
-            </td>
-            <td>
-              <div v-for="(value, index) in filme.Universal" :key="index">
-                <div>
-                  <h3>{{value.title}}</h3>
-                  <h4>{{value.titulo_original}}</h4>
-                </div>
-              </div>
-            </td>
-            <td>
-              <div v-for="(value, index) in filme.Warner" :key="index">
-                <div>
-                  <h3>{{value.title}}</h3>
-                  <h4>{{value.titulo_original}}</h4>
-                </div>
-              </div>
-            </td>
-            <td>
-              <div v-for="(value, index) in filme.Diamond" :key="index">
-                <div>
-                  <h3>{{value.title}}</h3>
-                  <h4>{{value.titulo_original}}</h4>
-                </div>
-              </div>
-            </td>
-            <td>
-              <div v-for="(value, index) in filme.downtownParis" :key="index">
-                <div>
-                  <h3>{{value.title}}</h3>
-                  <h4>{{value.titulo_original}}</h4>
-                </div>
-              </div>
-            </td>
-            <td>
-              <div v-for="(value, index) in filme.Imagem" :key="index">
-                <div>
-                  <h3>{{value.title}}</h3>
-                  <h4>{{value.titulo_original}}</h4>
-                </div>
-              </div>
-            </td>
-            <td>
-              <div v-for="(value, index) in filme.Paris" :key="index">
-                <div>
-                  <h3>{{value.title}}</h3>
-                  <h4>{{value.titulo_original}}</h4>
-                </div>
-              </div>
-            </td>
-            <td>
-              <div v-for="(value, index) in filme.OutrasDistribuidoras" :key="index">
-                <div>
-                  <h3>{{value.title}}</h3>
-                  <h4>{{value.titulo_original}}</h4>
-                </div>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="pagination">
-        <button :disabled="paginaAtual === 1" @click="navegarParaPagina(1)">
-          <i class="bi bi-chevron-left"></i>
-        </button>
-
-        <button v-for="n in totalPaginas" :key="n" :class="{ active: n === paginaAtual }" @click="navegarParaPagina(n)">
-          {{ n }}
-        </button>
-
-        <button :disabled="paginaAtual === totalPaginas" @click="navegarParaPagina(totalPaginas)">
-          <i class="bi bi-chevron-right"></i>
-        </button>
-      </div>
-    </div>
+  <div class="pagination">
+    <?php
+      echo paginate_links(array(
+        'base' => str_replace(999999999, '%#%', esc_url(get_pagenum_link(999999999))),
+        'format' => '?paged=%#%',
+        'current' => max(1, $paged),
+        'total' => $filmes_query->max_num_pages,
+        'prev_text' => __('« Anterior'),
+        'next_text' => __('Próxima »'),
+      ));
+      ?>
   </div>
+  <?php else : ?>
+  <p>Nenhum filme encontrado.</p>
+  <?php endif; ?>
+
 </div>
-<?php get_template_part('components/Footer/index'); ?>
-<?php get_footer(); ?>
-<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-<script>
-new Vue({
-  el: "#app",
-  data: {
-    filmes: [], // Lista completa de filmes
-    anos: [], // Lista de anos disponíveis
-    selectedFilters: {
-      ano: '',
-      mes: '',
-      origem: '',
-      distribuidor: '',
-      genero: '',
-      tecnologia: ''
-    },
-    paginaAtual: 1,
-    totalPaginas: 1,
-    filmesPorPagina: 50,
-    loading: false
-  },
-  methods: {
-    // Carrega a lista completa de filmes
-    async carregarFilmes() {
-      try {
-        this.loading = true;
-        const url =
-          `<?php echo get_site_url(); ?>/wp-json/api/v1/distribuidoras?limit=1000`; // Carrega todos os filmes de uma vez
-        const res = await fetch(url);
-        if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
-        const data = await res.json();
-        console.log("Dados carregados da API:", data); // Log para depuração
-        this.filmes = data.data || []; // Garante que filmes seja um array
-        this.totalPaginas = Math.ceil(this.filmes.length / this.filmesPorPagina); // Calcula o total de páginas
-      } catch (error) {
-        console.error("Erro ao buscar filmes:", error);
-      } finally {
-        this.loading = false;
-      }
-    },
-
-    // Carrega a lista de anos disponíveis
-    async carregarAnos() {
-      try {
-        const res = await fetch(`<?php echo get_site_url(); ?>/wp-json/api/v1/ano-filmes`);
-        if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
-        const data = await res.json();
-        this.anos = data;
-      } catch (error) {
-        console.error("Erro ao buscar anos:", error);
-      }
-    },
-
-    // Formata a data para exibição
-    formatarData(data) {
-      const date = new Date(data);
-      const dia = date.getDate();
-      const mes = date.getMonth() + 1;
-      const ano = date.getFullYear();
-      const diaSemana = date.getDay();
-      const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro',
-        'Outubro', 'Novembro', 'Dezembro'
-      ];
-      const diasSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira',
-        'Sábado'
-      ];
-      return `
-        <div>
-          <div class="dia">${String(dia).padStart(2, '0')}</div>
-          <div class="mes">${meses[mes - 1]}</div>
-          <div class="ano">${ano}</div>
-          <div class="semana">${diasSemana[diaSemana]}</div>
-        </div>
-      `;
-    },
-
-    // Navega para uma página específica
-    navegarParaPagina(pagina) {
-      this.paginaAtual = pagina;
-    }
-  },
-  computed: {
-    // Filtra e ordena os filmes com base nos filtros selecionados
-    FiltrarFilme() {
-      let filtered = this.filmes;
-
-      console.log("Filmes antes da filtragem:", filtered); // Log para depuração
-      console.log("Filtros aplicados:", this.selectedFilters); // Log para depuração
-
-      // Aplica os filtros
-      if (this.selectedFilters.ano) {
-        filtered = filtered.filter(filme => filme.ano == this.selectedFilters
-          .ano); // Use == para comparar strings/numbers
-      }
-      if (this.selectedFilters.mes) {
-        filtered = filtered.filter(filme => filme.mes.toLowerCase() === this.selectedFilters.mes
-          .toLowerCase()); // Ignora maiúsculas/minúsculas
-      }
-      if (this.selectedFilters.origem) {
-        filtered = filtered.filter(filme => filme.origem === this.selectedFilters.origem);
-      }
-      if (this.selectedFilters.distribuidor) {
-        filtered = filtered.filter(filme => filme.distribuidoras && filme.distribuidoras.includes(this
-          .selectedFilters.distribuidor));
-      }
-      if (this.selectedFilters.genero) {
-        filtered = filtered.filter(filme => filme.genero && filme.genero.includes(this.selectedFilters.genero));
-      }
-      if (this.selectedFilters.tecnologia) {
-        filtered = filtered.filter(filme => filme.tecnologia && filme.tecnologia.includes(this.selectedFilters
-          .tecnologia));
-      }
-
-      console.log("Filmes após filtragem:", filtered); // Log para depuração
-
-      // Ordena os filmes por data de estreia (do mais recente para o mais antigo)
-      filtered.sort((a, b) => new Date(b.estreia) - new Date(a.estreia));
-
-      // Paginação
-      const inicio = (this.paginaAtual - 1) * this.filmesPorPagina;
-      const fim = inicio + this.filmesPorPagina;
-      return filtered.slice(inicio, fim);
-    }
-  },
-  created() {
-    // Define o ano e mês atuais como filtros padrão
-    const dataAtual = new Date();
-    this.selectedFilters.ano = dataAtual.getFullYear().toString();
-    this.selectedFilters.mes = dataAtual.toLocaleString('default', {
-      month: 'long'
-    });
-
-    // Carrega os dados iniciais
-    this.carregarAnos();
-    this.carregarFilmes();
+<?php
+function formatar_data_estreia_dist($data)
+{
+  if (empty($data)) {
+    return '';
   }
-});
-</script>
+
+  // Mapeamento dos meses completos em português
+  $meses = array(
+    1 => 'Janeiro',
+    2 => 'Fevereiro',
+    3 => 'Março',
+    4 => 'Abril',
+    5 => 'Maio',
+    6 => 'Junho',
+    7 => 'Julho',
+    8 => 'Agosto',
+    9 => 'Setembro',
+    10 => 'Outubro',
+    11 => 'Novembro',
+    12 => 'Dezembro'
+  );
+
+  // Mapeamento dos dias da semana em português
+  $dias_semana = array(
+    'Domingo',
+    'Segunda-feira',
+    'Terça-feira',
+    'Quarta-feira',
+    'Quinta-feira',
+    'Sexta-feira',
+    'Sábado'
+  );
+
+  $timestamp = strtotime($data);
+
+  if ($timestamp === false) {
+    return '';
+  }
+
+  $dia = date('d', $timestamp);
+  $mes_num = date('n', $timestamp);
+  $ano = date('Y', $timestamp);
+  $dia_semana_num = date('w', $timestamp);
+
+  $mes_nome = $meses[$mes_num] ?? '';
+  $dia_semana = $dias_semana[$dia_semana_num] ?? '';
+
+  return sprintf(
+    '
+  <div class="dia">
+    %s
+  </div>
+   <div class="mes">
+    %s
+  </div>
+  <div class="ano">
+    %s
+  </div> %s',
+    $dia,
+    $mes_nome,
+    $ano,
+    $dia_semana
+  );
+}
+function format_filmes($filmes)
+{
+  if (empty($filmes)) return '';
+
+  $output = '<ul>';
+  foreach ($filmes as $filme) {
+    $output .= '<li>';
+    $output .= '<a href="' . esc_url($filme['link'] ?? '#') . '" target="_blank">';
+    $output .= esc_html($filme['title'] ?? '');
+
+    if (!empty($filme['titulo_original']) && $filme['titulo_original'] !== $filme['title']) {
+      $output .= ' <small>(' . esc_html($filme['titulo_original']) . ')</small>';
+    }
+
+    $output .= '</a>';
+    $output .= '</li>';
+  }
+  $output .= '</ul>';
+
+  return $output;
+}
+
+function traduzir_mes_para_portugues($mes_ingles)
+{
+  $meses = [
+    'January' => 'Janeiro',
+    'February' => 'Fevereiro',
+    'March' => 'Março',
+    'April' => 'Abril',
+    'May' => 'Maio',
+    'June' => 'Junho',
+    'July' => 'Julho',
+    'August' => 'Agosto',
+    'September' => 'Setembro',
+    'October' => 'Outubro',
+    'November' => 'Novembro',
+    'December' => 'Dezembro'
+  ];
+
+  return $meses[$mes_ingles] ?? $mes_ingles;
+}
+
+wp_reset_postdata();
+get_footer(); ?>
+
+<?php get_template_part('components/Footer/index'); ?>

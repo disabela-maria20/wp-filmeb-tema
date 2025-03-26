@@ -212,45 +212,6 @@
         }
       }
     }
-
-    .tabela-distribuidora {
-      h2 {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        color: $color-red-dark;
-        margin-bottom: 35px;
-      }
-
-      table {
-        border-spacing: 0;
-        width: 100%;
-        font-size: 1.4rem;
-        thead {
-          background-color: #fef3f6;
-          color: $color-darker-gray;
-
-          tr {
-            th {
-              padding: 10px;
-              text-align: left;
-            }
-          }
-        }
-        tbody {
-          tr {
-            &:nth-child(odd) td {
-              background-color: $color-off-white;
-            }
-            td {
-              padding: 20px 10px;
-              text-align: left;
-              color: $color-darker-gray;
-            }
-          }
-        }
-      }
-    }
   }
 }
 
@@ -455,7 +416,9 @@
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
-  button {
+  a,
+  button,
+  span {
     padding: 5px;
     background-color: $color-white;
     font-size: 1.6rem;
