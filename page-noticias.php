@@ -1,5 +1,5 @@
 <?php
-
+// Template Name: Notícias
 get_header();
 
 $rapidinhas_id = get_cat_ID('Rapidinhas');
@@ -28,7 +28,7 @@ $rapidinhas_id = get_cat_ID('Rapidinhas');
 </section>
 
 
-<?php if (have_posts()): while (have_posts()):the_post(); ?>
+<?php if (have_posts()): while (have_posts()): the_post(); ?>
 <div class="container">
   <div class="grid-list-post gap-124">
     <div>
@@ -37,26 +37,26 @@ $rapidinhas_id = get_cat_ID('Rapidinhas');
         src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/logo-boletim-filme-b-horizontal.png'); ?>"
         class="logo" alt="cine B" />
       <?php if (function_exists('yoast_breadcrumb')) {
-          yoast_breadcrumb('<div id="breadcrumbs">', '</div>');
-        } ?>
+            yoast_breadcrumb('<div id="breadcrumbs">', '</div>');
+          } ?>
 
       <?php
-        $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
-        $boletim_query = new WP_Query(array(
-          'category_name' => 'Notícias',
-          'posts_per_page' => 4,
-          'paged' => $paged,
-        ));
+          $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+          $boletim_query = new WP_Query(array(
+            'category_name' => 'Notícias',
+            'posts_per_page' => 4,
+            'paged' => $paged,
+          ));
 
-      if ($boletim_query->have_posts()): ?>
+          if ($boletim_query->have_posts()): ?>
       <div class="posts">
-        <?php while ($boletim_query->have_posts()):$boletim_query->the_post(); ?>
+        <?php while ($boletim_query->have_posts()): $boletim_query->the_post(); ?>
         <div class="post">
           <div class="item">
-            <?php if( esc_url(CFS()->get('imagem')) != '') {  ?>
+            <?php if (esc_url(CFS()->get('imagem')) != '') {  ?>
             <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
               alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
-            <?php }?>
+            <?php } ?>
             <div>
               <span><?php echo get_the_category_list(', '); ?></span>
               <a href="<?php the_permalink(); ?>" class="read-more">
