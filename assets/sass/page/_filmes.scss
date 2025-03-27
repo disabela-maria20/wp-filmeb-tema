@@ -399,7 +399,7 @@
     p,
     div:not(.modal-img, .arrow),
     td:not(.titulo) {
-      color: #707070;
+      color: $color-dark-gray;
       font-size: 1.6rem;
       line-height: 1.61;
       margin: 0 10px;
@@ -440,7 +440,7 @@
 }
 
 .loading {
-  color: #707070;
+  color: $color-dark-gray;
   font-size: 1.6rem;
   line-height: 1.61;
 }
