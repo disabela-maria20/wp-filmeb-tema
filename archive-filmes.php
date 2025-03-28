@@ -122,21 +122,22 @@ $filmes = new WP_Query($args);
 // Array para armazenar filmes agrupados por dia
 $filmes_por_dia = array();
 
+
 if ($filmes->have_posts()) {
   while ($filmes->have_posts()) {
     $filmes->the_post();
-    $estreia = CFS()->get('estreia');
-    if (!empty($estreia)) {
-      $data_estreia = DateTime::createFromFormat('Y-m-d', $estreia);
-      // Add validation here
-      if ($data_estreia !== false) {  // Check if date was parsed correctly
-        $data_formatada = $data_estreia->format('Y-m-d');
+    $post_id = get_the_ID();
 
-        if (!isset($filmes_por_dia[$data_formatada])) {
-          $filmes_por_dia[$data_formatada] = array();
-        }
-        $filmes_por_dia[$data_formatada][] = get_post();
+    // Pega a data diretamente e verifica se é válida
+    $data_estreia = CFS()->get('estreia', $post_id);
+
+    if ($data_estreia && preg_match('/^\d{4}-\d{2}-\d{2}$/', $data_estreia)) {
+      $data_formatada = $data_estreia; // Já está no formato 'Y-m-d'
+
+      if (!isset($filmes_por_dia[$data_formatada])) {
+        $filmes_por_dia[$data_formatada] = array();
       }
+      $filmes_por_dia[$data_formatada][] = get_post();
     }
   }
   wp_reset_postdata();
