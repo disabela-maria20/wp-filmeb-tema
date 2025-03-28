@@ -115,7 +115,7 @@ if (isset($_GET['tecnologia']) && !empty($_GET['tecnologia'])) {
 
 $filmes = new WP_Query($args);
 
-
+var_dump($filmes);
 ?>
 
 <?php if ($query->have_posts()): ?>
