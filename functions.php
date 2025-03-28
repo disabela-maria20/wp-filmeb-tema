@@ -13,7 +13,7 @@ require_once(get_template_directory() . "/api/distribuidora.php");
 require_once(get_template_directory() . "/api/rapidinhas.php");
 require_once(get_template_directory() . "/api/noticias.php");
 require_once(get_template_directory() . "/api/usuario.php");
-
+require_once(get_template_directory() . "/api/taxionomia.php");
 
 add_filter('wp_image_editors', 'wpb_image_editor_default_to_gd');
 
@@ -36,7 +36,7 @@ function use_scripts()
   wp_enqueue_style('base-style', get_template_directory_uri() . '/assets/css/base.min.css', array(), '1.0.0', 'all');
   wp_enqueue_script('jquery');
   wp_enqueue_script('owl-carousel', get_template_directory_uri() . '/assets/js/lib/owl.carousel.min.js', array('jquery'), '2.3.4', true);
-  
+
   wp_enqueue_script('splide', get_template_directory_uri() . '/assets/js/lib/splide.min.js', array('jquery'), '2.3.4', true);
   wp_enqueue_style('google-fonts', 'https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap', array(), null, 'all');
   wp_enqueue_style('bootstrap-icons', 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css', array(), null, 'all');
@@ -188,25 +188,35 @@ function custom_cors_headers()
 
 add_action('init', 'custom_cors_headers');
 
-function formatar_data_personalizada($texto) {
- 
+function formatar_data_personalizada($texto)
+{
+
   if (preg_match('/(\d{2})-(\d{2})-(\d{4})/', $texto, $matches)) {
-      $dia = $matches[1];
-      $mes = (int)$matches[2];
-      $ano = $matches[3];
+    $dia = $matches[1];
+    $mes = (int)$matches[2];
+    $ano = $matches[3];
 
-     
-      $meses = [
-          1 => 'janeiro', 2 => 'fevereiro', 3 => 'março', 4 => 'abril',
-          5 => 'maio', 6 => 'junho', 7 => 'julho', 8 => 'agosto',
-          9 => 'setembro', 10 => 'outubro', 11 => 'novembro', 12 => 'dezembro'
-      ];
 
-     
-      $dataFormatada = sprintf('%s de %s de %s', $dia, $meses[$mes], $ano);
+    $meses = [
+      1 => 'janeiro',
+      2 => 'fevereiro',
+      3 => 'março',
+      4 => 'abril',
+      5 => 'maio',
+      6 => 'junho',
+      7 => 'julho',
+      8 => 'agosto',
+      9 => 'setembro',
+      10 => 'outubro',
+      11 => 'novembro',
+      12 => 'dezembro'
+    ];
 
-     
-      return preg_replace('/\d{2}-\d{2}-\d{4}/', $dataFormatada, $texto);
+
+    $dataFormatada = sprintf('%s de %s de %s', $dia, $meses[$mes], $ano);
+
+
+    return preg_replace('/\d{2}-\d{2}-\d{4}/', $dataFormatada, $texto);
   }
 
   return $texto;
@@ -216,9 +226,10 @@ add_filter('the_title', 'formatar_data_personalizada');
 
 add_filter('the_content', 'formatar_data_personalizada');
 
-function custom_archive_filmes_title($title) {
+function custom_archive_filmes_title($title)
+{
   if (is_post_type_archive('filmes')) {
-      $title = 'Lista de Filmes - ' . get_bloginfo('name');
+    $title = 'Lista de Filmes - ' . get_bloginfo('name');
   }
   return $title;
 }
@@ -233,8 +244,9 @@ add_filter('pre_get_document_title', 'custom_archive_filmes_title');
 // 1. Adicionar campos personalizados ao formulário de registro
 add_action('woocommerce_register_form_start', 'add_custom_fields_to_registration');
 
-function add_custom_fields_to_registration() {
-    ?>
+function add_custom_fields_to_registration()
+{
+?>
 <p class="form-row form-row-wide">
   <label for="reg_billing_first_name"><?php _e('Nome *', 'woocommerce'); ?></label>
   <input type="text" class="input-text" name="billing_first_name" id="reg_billing_first_name"
@@ -339,64 +351,66 @@ function add_custom_fields_to_registration() {
 // 2. Validar campos obrigatórios
 add_action('woocommerce_register_post', 'validate_custom_fields', 10, 3);
 
-function validate_custom_fields($username, $email, $validation_errors) {
-    if (isset($_POST['billing_first_name']) && empty($_POST['billing_first_name'])) {
-        $validation_errors->add('billing_first_name_error', __('O campo Nome é obrigatório!', 'woocommerce'));
-    }
-    if (isset($_POST['billing_categoria_profissional']) && empty($_POST['billing_categoria_profissional'])) {
-        $validation_errors->add('billing_categoria_profissional_error', __('O campo Categoria Profissional é obrigatório!', 'woocommerce'));
-    }
-    if (isset($_POST['billing_cpf_cnpj']) && empty($_POST['billing_cpf_cnpj'])) {
-        $validation_errors->add('billing_cpf_cnpj_error', __('O campo CPF/CNPJ é obrigatório!', 'woocommerce'));
-    }
-    if (isset($_POST['billing_cellphone']) && empty($_POST['billing_cellphone'])) {
-        $validation_errors->add('billing_cellphone_error', __('O campo Celular é obrigatório!', 'woocommerce'));
-    }
-    return $validation_errors;
+function validate_custom_fields($username, $email, $validation_errors)
+{
+  if (isset($_POST['billing_first_name']) && empty($_POST['billing_first_name'])) {
+    $validation_errors->add('billing_first_name_error', __('O campo Nome é obrigatório!', 'woocommerce'));
+  }
+  if (isset($_POST['billing_categoria_profissional']) && empty($_POST['billing_categoria_profissional'])) {
+    $validation_errors->add('billing_categoria_profissional_error', __('O campo Categoria Profissional é obrigatório!', 'woocommerce'));
+  }
+  if (isset($_POST['billing_cpf_cnpj']) && empty($_POST['billing_cpf_cnpj'])) {
+    $validation_errors->add('billing_cpf_cnpj_error', __('O campo CPF/CNPJ é obrigatório!', 'woocommerce'));
+  }
+  if (isset($_POST['billing_cellphone']) && empty($_POST['billing_cellphone'])) {
+    $validation_errors->add('billing_cellphone_error', __('O campo Celular é obrigatório!', 'woocommerce'));
+  }
+  return $validation_errors;
 }
 
 // 3. Salvar campos personalizados no banco de dados
 add_action('woocommerce_created_customer', 'save_custom_fields');
 
-function save_custom_fields($customer_id) {
-    if (isset($_POST['billing_first_name'])) {
-        update_user_meta($customer_id, 'billing_first_name', sanitize_text_field($_POST['billing_first_name']));
-        update_user_meta($customer_id, 'first_name', sanitize_text_field($_POST['billing_first_name']));
-    }
-    if (isset($_POST['billing_last_name'])) {
-        update_user_meta($customer_id, 'billing_last_name', sanitize_text_field($_POST['billing_last_name']));
-        update_user_meta($customer_id, 'last_name', sanitize_text_field($_POST['billing_last_name']));
-    }
-    if (isset($_POST['billing_categoria_profissional'])) {
-        update_user_meta($customer_id, 'billing_categoria_profissional', sanitize_text_field($_POST['billing_categoria_profissional']));
-    }
-    if (isset($_POST['billing_cpf_cnpj'])) {
-        update_user_meta($customer_id, 'billing_cpf_cnpj', sanitize_text_field($_POST['billing_cpf_cnpj']));
-    }
-    if (isset($_POST['billing_phone'])) {
-        update_user_meta($customer_id, 'billing_phone', sanitize_text_field($_POST['billing_phone']));
-    }
-    if (isset($_POST['billing_cellphone'])) {
-        update_user_meta($customer_id, 'billing_cellphone', sanitize_text_field($_POST['billing_cellphone']));
-    }
-    if (isset($_POST['billing_address'])) {
-        update_user_meta($customer_id, 'billing_address', sanitize_text_field($_POST['billing_address']));
-    }
-    if (isset($_POST['billing_complemento'])) {
-        update_user_meta($customer_id, 'billing_complemento', sanitize_text_field($_POST['billing_complemento']));
-    }
-    if (isset($_POST['billing_bairro'])) {
-        update_user_meta($customer_id, 'billing_bairro', sanitize_text_field($_POST['billing_bairro']));
-    }
-    if (isset($_POST['billing_city'])) {
-        update_user_meta($customer_id, 'billing_city', sanitize_text_field($_POST['billing_city']));
-    }
-    if (isset($_POST['billing_state'])) {
-        update_user_meta($customer_id, 'billing_state', sanitize_text_field($_POST['billing_state']));
-    }
-    if (isset($_POST['billing_postcode'])) {
-        update_user_meta($customer_id, 'billing_postcode', sanitize_text_field($_POST['billing_postcode']));
-    }
+function save_custom_fields($customer_id)
+{
+  if (isset($_POST['billing_first_name'])) {
+    update_user_meta($customer_id, 'billing_first_name', sanitize_text_field($_POST['billing_first_name']));
+    update_user_meta($customer_id, 'first_name', sanitize_text_field($_POST['billing_first_name']));
+  }
+  if (isset($_POST['billing_last_name'])) {
+    update_user_meta($customer_id, 'billing_last_name', sanitize_text_field($_POST['billing_last_name']));
+    update_user_meta($customer_id, 'last_name', sanitize_text_field($_POST['billing_last_name']));
+  }
+  if (isset($_POST['billing_categoria_profissional'])) {
+    update_user_meta($customer_id, 'billing_categoria_profissional', sanitize_text_field($_POST['billing_categoria_profissional']));
+  }
+  if (isset($_POST['billing_cpf_cnpj'])) {
+    update_user_meta($customer_id, 'billing_cpf_cnpj', sanitize_text_field($_POST['billing_cpf_cnpj']));
+  }
+  if (isset($_POST['billing_phone'])) {
+    update_user_meta($customer_id, 'billing_phone', sanitize_text_field($_POST['billing_phone']));
+  }
+  if (isset($_POST['billing_cellphone'])) {
+    update_user_meta($customer_id, 'billing_cellphone', sanitize_text_field($_POST['billing_cellphone']));
+  }
+  if (isset($_POST['billing_address'])) {
+    update_user_meta($customer_id, 'billing_address', sanitize_text_field($_POST['billing_address']));
+  }
+  if (isset($_POST['billing_complemento'])) {
+    update_user_meta($customer_id, 'billing_complemento', sanitize_text_field($_POST['billing_complemento']));
+  }
+  if (isset($_POST['billing_bairro'])) {
+    update_user_meta($customer_id, 'billing_bairro', sanitize_text_field($_POST['billing_bairro']));
+  }
+  if (isset($_POST['billing_city'])) {
+    update_user_meta($customer_id, 'billing_city', sanitize_text_field($_POST['billing_city']));
+  }
+  if (isset($_POST['billing_state'])) {
+    update_user_meta($customer_id, 'billing_state', sanitize_text_field($_POST['billing_state']));
+  }
+  if (isset($_POST['billing_postcode'])) {
+    update_user_meta($customer_id, 'billing_postcode', sanitize_text_field($_POST['billing_postcode']));
+  }
 }
 
 
@@ -416,17 +430,19 @@ function save_custom_fields($customer_id) {
 // add_action('template_redirect', 'restringir_acesso_membros_pagos');
 
 
-function handel_custom_menu($menu_links) {
+function handel_custom_menu($menu_links)
+{
   $menu_links = array_slice($menu_links, 0, 5, true)
-  + ['assinaturas' => 'Assinaturas']
-  + array_slice($menu_links, 3, NULL, true);
+    + ['assinaturas' => 'Assinaturas']
+    + array_slice($menu_links, 3, NULL, true);
 
   unset($menu_links['downloads']);
   return $menu_links;
 }
 add_filter('woocommerce_account_menu_items', 'handel_custom_menu');
 
-function handel_add_endpoint() {
+function handel_add_endpoint()
+{
   add_rewrite_endpoint('assinaturas', EP_PAGES);
   // Se quiser adicionar certificados, descomente:
   // add_rewrite_endpoint('certificados', EP_PAGES);
@@ -434,28 +450,29 @@ function handel_add_endpoint() {
 add_action('init', 'handel_add_endpoint');
 
 // Corrigindo para o endpoint correto (assinaturas)
-function handel_assinaturas_content() {
-  if(!SwpmMemberUtils::is_member_logged_in()) {
+function handel_assinaturas_content()
+{
+  if (!SwpmMemberUtils::is_member_logged_in()) {
     return 0;
   }
 
   $member_level = SwpmMemberUtils::get_logged_in_members_level();
 
-  if ($member_level == '3'){
+  if ($member_level == '3') {
     echo '<p>Assine a Filme b</p>';
   } else if ($member_level == '2') {
- 
+
     $user_id = SwpmMemberUtils::get_logged_in_members_id();
 
     if ($user_id) {
-        // Obtém as informações do usuário
-        $user_info = SwpmMemberUtils::get_user_by_id($user_id);
-        
-        echo '<pre>';
-        print_r($user_info);
-        echo '</pre>';
+      // Obtém as informações do usuário
+      $user_info = SwpmMemberUtils::get_user_by_id($user_id);
+
+      echo '<pre>';
+      print_r($user_info);
+      echo '</pre>';
     } else {
-        echo 'Usuário não está logado.';
+      echo 'Usuário não está logado.';
     }
     echo '<p>Voce ja é assinante, aproveite os conteudos exclusivos</p>';
   }
@@ -464,17 +481,19 @@ add_action('woocommerce_account_assinaturas_endpoint', 'handel_assinaturas_conte
 
 
 
-function adicionar_produto_ao_carrinho_automaticamente() {
-  if ( ! WC()->cart->is_empty() ) {
+function adicionar_produto_ao_carrinho_automaticamente()
+{
+  if (! WC()->cart->is_empty()) {
     return;
   }
   $product_id = 77471;
-  WC()->cart->add_to_cart( $product_id );
+  WC()->cart->add_to_cart($product_id);
 }
 add_action('template_redirect', 'adicionar_produto_ao_carrinho_automaticamente');
 
-function redirecionar_para_checkout() {
-    // URL da página de checkout
-    return wc_get_checkout_url();
+function redirecionar_para_checkout()
+{
+  // URL da página de checkout
+  return wc_get_checkout_url();
 }
 add_filter('woocommerce_add_to_cart_redirect', 'redirecionar_para_checkout');
