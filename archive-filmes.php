@@ -162,7 +162,7 @@ function render_terms($field_key, $post_id)
 <?php if ($query->have_posts()): ?>
 <?php while ($query->have_posts()): $query->the_post(); ?>
 <?php
-    $banner_lateral = CFS()->get('banner_lateral', $banner_id);
+
 
     $banner_superior = CFS()->get('banner_moldura', $banner_id);
     $banner_inferior = CFS()->get('mega_banner', $banner_id);
@@ -340,6 +340,7 @@ function render_terms($field_key, $post_id)
           echo '<p>Nenhum filme encontrado.</p>';
         }
       }
+      $banner_lateral = CFS()->get('banner_lateral', $banner_id);
       if (esc_html($banner_lateral) == '1') : ?>
       <div class="grid-lateral">
         <div>
