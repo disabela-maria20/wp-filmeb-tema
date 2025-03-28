@@ -1,10 +1,11 @@
 <?php get_header(); ?>
 
 <?php
-$current_page_slug = basename(get_permalink());
-$category_slug = str_replace('boletim/', '', $current_page_slug);
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 $banner_id = "77483";
-$author_id = get_the_author_meta('ID');
 
 $args = array(
   'post_type' => 'banner-post',
@@ -245,12 +246,12 @@ function render_terms($field_key, $post_id)
           </div>
         </section> -->
         <div class="lancamento">
-          <a href="<?php echo get_site_url(); ?>/lancamentos-por-distribuidora/" id="distribuidora">Ver lançamentos por
+          <a href="<?php echo home_url(); ?>/lancamentos-por-distribuidora/" id="distribuidora">Ver lançamentos por
             distribuidora</a>
         </div>
       </div>
       <section class="grid-select">
-        <form method="GET" action="<?php echo get_site_url(); ?>/filmes/">
+        <form method="GET" action="<?php echo home_url(); ?>/filmes/">
           <div class="grid grid-7-xl gap-22 select-itens">
             <select id="ano" name="ano" v-model="selectedFilters.ano">
               <option disabled selected value="">Ano</option>
@@ -411,17 +412,6 @@ function render_terms($field_key, $post_id)
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
 
 <script>
-const datas = document.querySelector('#datas');
-if (splide) {
-  var splide = new Splide('#datas', {
-    arrows: true,
-    perPage: 1,
-    gap: '30px',
-    pagination: false,
-  });
-
-  splide.mount()
-};
 new Vue({
   el: "#app",
   data: {
@@ -445,7 +435,7 @@ new Vue({
       this.loading = true;
 
       try {
-        const res = await fetch(`<?php echo get_site_url(); ?>/wp-json/api/v1/ano-filmes`);
+        const res = await fetch(`<?php echo home_url(); ?>/wp-json/api/v1/ano-filmes`);
         if (!res.ok) throw new Error(`Erro na requisição: ${res.status} - ${res.statusText}`);
         const data = await res.json();
 
