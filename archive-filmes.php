@@ -113,6 +113,8 @@ if (isset($_GET['tecnologia']) && !empty($_GET['tecnologia'])) {
   );
 }
 
+$filmes = new WP_Query($args);
+
 
 ?>
 
