@@ -128,12 +128,15 @@ if ($filmes->have_posts()) {
     $estreia = CFS()->get('estreia');
     if (!empty($estreia)) {
       $data_estreia = DateTime::createFromFormat('Y-m-d', $estreia);
-      $data_formatada = $data_estreia->format('Y-m-d');
+      // Add validation here
+      if ($data_estreia !== false) {  // Check if date was parsed correctly
+        $data_formatada = $data_estreia->format('Y-m-d');
 
-      if (!isset($filmes_por_dia[$data_formatada])) {
-        $filmes_por_dia[$data_formatada] = array();
+        if (!isset($filmes_por_dia[$data_formatada])) {
+          $filmes_por_dia[$data_formatada] = array();
+        }
+        $filmes_por_dia[$data_formatada][] = get_post();
       }
-      $filmes_por_dia[$data_formatada][] = get_post();
     }
   }
   wp_reset_postdata();
