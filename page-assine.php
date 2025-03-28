@@ -107,7 +107,7 @@ get_header();
           R$ 700,00/ano
         </p>
         <div class="btn-center">
-          <a href="<?php echo get_site_url(); ?>/finalizar-compra/?add-to-cart=77471/">
+          <a href="<?php echo get_site_url(); ?>/finalizar-compra/?add-to-cart=106/">
             Assine o FilmeB
           </a>
         </div>
