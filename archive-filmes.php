@@ -119,11 +119,23 @@ if (isset($_GET['tecnologia']) && !empty($_GET['tecnologia'])) {
 $filmes = new WP_Query($args);
 
 // Array para armazenar filmes agrupados por dia
+$filmes_por_dia = array();
 
 if ($filmes->have_posts()) {
   while ($filmes->have_posts()) {
     $filmes->the_post();
+    $estreia = CFS()->get('estreia');
+    if (!empty($estreia)) {
+      $data_estreia = DateTime::createFromFormat('Y-m-d', $estreia);
+      $data_formatada = $data_estreia->format('Y-m-d');
+
+      if (!isset($filmes_por_dia[$data_formatada])) {
+        $filmes_por_dia[$data_formatada] = array();
+      }
+      $filmes_por_dia[$data_formatada][] = get_post();
+    }
   }
+  wp_reset_postdata();
 }
 
 function render_terms($field_key, $post_id)
@@ -199,6 +211,39 @@ function render_terms($field_key, $post_id)
           <button aria-label="imprimir" @click="window.print()"><i class="bi bi-printer"></i></button>
         </div>
         <div></div>
+        <!-- <section id="datas" class="splide">
+          <div class="splide__track">
+            <ul class="splide__list">
+              <?php
+              $datas_filmes = array();
+              if ($filmes->have_posts()) {
+                while ($filmes->have_posts()) {
+                  $filmes->the_post();
+                  $estreia = CFS()->get('estreia');
+                  if (!empty($estreia)) {
+                    $data_estreia = DateTime::createFromFormat('Y-m-d', $estreia);
+                    $data_formatada = $data_estreia->format('Y-m-d');
+                    if (!in_array($data_formatada, $datas_filmes)) {
+                      $datas_filmes[] = $data_formatada;
+                    }
+                  }
+                }
+                wp_reset_postdata();
+              }
+
+              foreach ($datas_filmes as $data) {
+                $data_estreia = DateTime::createFromFormat('Y-m-d', $data);
+                $dia_semana_ingles = $data_estreia->format('l');
+                $dia_semana = $dias_semana[$dia_semana_ingles]; // Traduz o dia da semana para português
+                $dia = $data_estreia->format('d');
+                $mes = $data_estreia->format('F');
+                $ano = $data_estreia->format('Y');
+                echo '<li class="splide__slide" data-date="' . esc_attr($data) . '">' . esc_html($dia_semana) . ', ' . esc_html($dia) . ' de ' . esc_html($mes) . ' de ' . esc_html($ano) . '</li>';
+              }
+              ?>
+            </ul>
+          </div>
+        </section> -->
         <div class="lancamento">
           <a href="<?php echo get_site_url(); ?>/lancamentos-por-distribuidora/" id="distribuidora">Ver lançamentos por
             distribuidora</a>
