@@ -113,10 +113,15 @@ if (isset($_GET['tecnologia']) && !empty($_GET['tecnologia'])) {
   );
 }
 
+$filmes = new WP_Query($args);
 
-echo '<pre>';
-var_dump($filmes);
-echo '</pre>';
+
+if ($filmes->have_posts()) {
+  while ($filmes->have_posts()) {
+    $filmes->the_post();
+  }
+}
+
 ?>
 
 <?php if ($query->have_posts()): ?>
