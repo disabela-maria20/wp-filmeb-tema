@@ -115,14 +115,28 @@ if (isset($_GET['tecnologia']) && !empty($_GET['tecnologia'])) {
 
 $filmes = new WP_Query($args);
 
-$filmes_por_dia = array();
 
 if ($filmes->have_posts()) {
   while ($filmes->have_posts()) {
     $filmes->the_post();
   }
+  wp_reset_postdata();
 }
 
+function render_terms($field_key, $post_id)
+{
+  $distribuicao = CFS()->get($field_key, $post_id);
+  $output = '';
+  if (!empty($distribuicao)) {
+    foreach ($distribuicao as $term_id) {
+      $term = get_term($term_id);
+      if ($term && !is_wp_error($term)) {
+        $output .= '<div>' . esc_html($term->name) . '</div>';
+      }
+    }
+  }
+  return $output;
+}
 ?>
 
 <?php if ($query->have_posts()): ?>
