@@ -113,15 +113,6 @@ if (isset($_GET['tecnologia']) && !empty($_GET['tecnologia'])) {
   );
 }
 
-$filmes = new WP_Query($args);
-
-
-if ($filmes->have_posts()) {
-  while ($filmes->have_posts()) {
-    $filmes->the_post();
-  }
-  wp_reset_postdata();
-}
 
 ?>
 
