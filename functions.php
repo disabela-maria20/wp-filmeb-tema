@@ -458,9 +458,9 @@ function handel_assinaturas_content()
 
   $member_level = SwpmMemberUtils::get_logged_in_members_level();
 
-  if ($member_level == '3') {
+  if ($member_level == '2') {
     echo '<p>Assine a Filme b</p>';
-  } else if ($member_level == '2') {
+  } else if ($member_level == '3') {
 
     $user_id = SwpmMemberUtils::get_logged_in_members_id();
 
@@ -486,7 +486,7 @@ function adicionar_produto_ao_carrinho_automaticamente()
   if (! WC()->cart->is_empty()) {
     return;
   }
-  $product_id = 77471;
+  $product_id = 106;
   WC()->cart->add_to_cart($product_id);
 }
 add_action('template_redirect', 'adicionar_produto_ao_carrinho_automaticamente');

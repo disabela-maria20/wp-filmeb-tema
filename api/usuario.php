@@ -47,9 +47,9 @@ function register_customer_membership(WP_REST_Request $request)
   // Verificar se a data de expiração já passou
   $current_date = current_time('mysql');
   $is_paid = strtotime($expiration_date) > strtotime($current_date);
-  
+
   // Se ainda não expirou, é pago; caso contrário, é Free
-  $membership_level = $is_paid ? 2 : 4;
+  $membership_level = $is_paid ? 2 : 3;
   $account_state = $is_paid ? 'active' : 'inactive';
   $status = $is_paid ? 'paid' : 'free';
 
@@ -83,21 +83,18 @@ function register_customer_membership(WP_REST_Request $request)
   // Inserir na tabela SWPM
   $wpdb->insert($table, $swpm_data);
 
-  // Criar um pedido no WooCommerce (se os dados de endereço forem fornecidos)
   if (isset($params['address_street']) && isset($params['address_city']) && isset($params['address_state']) && isset($params['address_zipcode']) && isset($params['country'])) {
     $order = wc_create_order(['customer_id' => $user_id]);
 
-    // Adicionar o produto com ID 77471 ao pedido
-    $product_id = 80027 ; // ID do produto
+    $product_id = 106;
     $product = wc_get_product($product_id);
 
     if ($product) {
-      $order->add_product($product, 1); // Adiciona 1 unidade do produto ao pedido
+      $order->add_product($product, 1);
     } else {
       return new WP_Error('product_not_found', 'Produto não encontrado.', ['status' => 404]);
     }
 
-    // Adicionar endereço de cobrança ao pedido
     $billing_address = [
       'first_name' => sanitize_text_field($params['first_name'] ?? ''),
       'last_name'  => sanitize_text_field($params['last_name'] ?? ''),
@@ -124,4 +121,3 @@ function register_customer_membership(WP_REST_Request $request)
     'expiration_date' => $expiration_date
   ]);
 }
-?>
