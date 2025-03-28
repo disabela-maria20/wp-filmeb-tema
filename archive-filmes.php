@@ -115,10 +115,21 @@ if (isset($_GET['tecnologia']) && !empty($_GET['tecnologia'])) {
 
 $filmes = new WP_Query($args);
 
+$filmes_por_dia = array();
 
 if ($filmes->have_posts()) {
   while ($filmes->have_posts()) {
     $filmes->the_post();
+    $estreia = CFS()->get('estreia');
+    if (!empty($estreia)) {
+      $data_estreia = DateTime::createFromFormat('Y-m-d', $estreia);
+      $data_formatada = $data_estreia->format('Y-m-d');
+
+      if (!isset($filmes_por_dia[$data_formatada])) {
+        $filmes_por_dia[$data_formatada] = array();
+      }
+      $filmes_por_dia[$data_formatada][] = get_post();
+    }
   }
 }
 
