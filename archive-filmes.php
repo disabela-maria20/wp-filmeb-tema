@@ -115,12 +115,12 @@ if (isset($_GET['tecnologia']) && !empty($_GET['tecnologia'])) {
 
 $filmes = new WP_Query($args);
 
+// Array para armazenar filmes agrupados por dia
 
 if ($filmes->have_posts()) {
   while ($filmes->have_posts()) {
     $filmes->the_post();
   }
-  wp_reset_postdata();
 }
 
 function render_terms($field_key, $post_id)
@@ -142,11 +142,19 @@ function render_terms($field_key, $post_id)
 <?php if ($query->have_posts()): ?>
 <?php while ($query->have_posts()): $query->the_post(); ?>
 <?php
+    $banner_lateral = CFS()->get('banner_lateral', $banner_id);
+
     $banner_superior = CFS()->get('banner_moldura', $banner_id);
     $banner_inferior = CFS()->get('mega_banner', $banner_id);
+    $skyscraper = CFS()->get('skyscraper', $banner_id);
+    $big_stamp = CFS()->get('big_stamp', $banner_id);
+    $banner_moldura_casado = CFS()->get('banner_moldura_casado', $banner_id);
 
     $link_banner_superior = CFS()->get('link_banner_moldura', $banner_id);
     $link_banner_inferior = CFS()->get('link_mega_banner', $banner_id);
+    $link_skyscraper = CFS()->get('link_skyscraper', $banner_id);
+    $link_big_stampr = CFS()->get('link_big_stamp', $banner_id);
+    $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_id);
     ?>
 <a href="<?php echo esc_url($link_banner_superior) ?>" target="_blank" rel="noopener noreferrer">
   <img src="<?php echo esc_url($banner_superior); ?>" class="w-full p-35 img-banner bannerMobile " alt="banner">
