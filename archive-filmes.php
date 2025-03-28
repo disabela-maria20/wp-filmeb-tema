@@ -157,7 +157,40 @@ function render_terms($field_key, $post_id)
   }
   return $output;
 }
+
+function obter_anos_dos_filmes()
+{
+  $query = array(
+    'post_type' => 'filmes',
+    'posts_per_page' => -1,
+    'fields' => 'ids'
+  );
+
+  $loop = new WP_Query($query);
+  $posts = $loop->posts;
+
+  $anos_filmes = [];
+
+  foreach ($posts as $post_id) {
+    $data_estreia = get_post_meta($post_id, 'estreia', true);
+
+    if (!empty($data_estreia)) {
+      $ano = date('Y', strtotime($data_estreia));
+
+      if (!in_array($ano, $anos_filmes)) {
+        $anos_filmes[] = $ano;
+      }
+    }
+  }
+
+  rsort($anos_filmes);
+
+  return $anos_filmes;
+}
+
+$anos = obter_anos_dos_filmes();
 ?>
+
 
 <?php if ($query->have_posts()): ?>
 <?php while ($query->have_posts()): $query->the_post(); ?>
@@ -224,9 +257,11 @@ function render_terms($field_key, $post_id)
       <section class="grid-select">
         <form method="GET" action="<?php echo home_url(); ?>/filmes/">
           <div class="grid grid-7-xl gap-22 select-itens">
-            <select id="ano" name="ano" v-model="selectedFilters.ano">
-              <option disabled selected value="">Ano</option>
-              <option v-for="ano in anos" :value="ano" <?php selected($_GET['ano'], $key); ?>>{{ano}}</option>
+            <select id="ano" name="ano">
+              <option isabled selected value="">Ano</option>
+              <?php foreach ($anos as $key => $value) { ?>
+              <option value="<?php echo esc_attr($key); ?>"><?php echo esc_html($value); ?></option>
+              <?php } ?>
             </select>
             <select name="mes" id="mes">
               <option disabled selected value="">Mês</option>
