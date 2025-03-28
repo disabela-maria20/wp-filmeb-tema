@@ -1,7 +1,8 @@
 <?php
 
 add_action('init', 'registrar_taxonomias_filmes');
-function registrar_taxonomias_filmes() {
+function registrar_taxonomias_filmes()
+{
     $taxonomias = [
         'distribuidoras' => 'Distribuidoras',
         'paises' => 'Países',
@@ -14,7 +15,7 @@ function registrar_taxonomias_filmes() {
     foreach ($taxonomias as $slug => $nome) {
         register_taxonomy(
             $slug,
-            'filmes', 
+            'filmes',
             array(
                 'labels' => array(
                     'name' => $nome,
@@ -27,10 +28,10 @@ function registrar_taxonomias_filmes() {
                     'new_item_name' => "Novo $nome",
                     'menu_name' => $nome,
                 ),
-                'hierarchical' => true, 
+                'hierarchical' => true,
                 'show_ui' => true,
                 'show_in_menu' => true,
-                'show_in_rest' => true, 
+                'show_in_rest' => true,
                 'rewrite' => array('slug' => $slug),
                 'rest_controller_class' => 'WP_REST_Terms_Controller',
             )
@@ -38,8 +39,8 @@ function registrar_taxonomias_filmes() {
     }
 }
 
-add_action('init', 'registrar_cpt_filmes');
-function registrar_cpt_filmes() {
+function registrar_cpt_filmes()
+{
     register_post_type('filmes', array(
         'labels' => array(
             'name' => _x('Filmes', 'Post type general name', 'textdomain'),
@@ -66,6 +67,8 @@ function registrar_cpt_filmes() {
         'taxonomies' => array('distribuidoras', 'paises', 'generos', 'classificacoes', 'tecnologias', 'feriados'),
     ));
 }
+add_action('init', 'registrar_cpt_filmes');
+
 function filme_scheme($post)
 {
     $filme = new stdClass();
@@ -229,7 +232,8 @@ function api_anos_filmes_get()
 }
 
 
-function api_filmes_post($request) {
+function api_filmes_post($request)
+{
     $data = $request->get_json_params();
 
     $titulo = isset($data['titulo']) ? sanitize_text_field($data['titulo']) : '';
