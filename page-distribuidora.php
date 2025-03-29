@@ -17,6 +17,64 @@ $args = array(
   )
 );
 
+// Add filter conditions to args before creating the query
+if (isset($_GET['ano']) && !empty($_GET['ano'])) {
+  $args['meta_query'][] = array(
+    'key' => 'estreia',
+    'value' => sanitize_text_field($_GET['ano']),
+    'compare' => 'REGEXP',
+  );
+}
+
+if (isset($_GET['mes']) && !empty($_GET['mes'])) {
+  $args['meta_query'][] = array(
+    'key' => 'estreia',
+    'value' => sanitize_text_field($_GET['mes']),
+    'compare' => 'REGEXP',
+  );
+}
+
+if (isset($_GET['origem']) && !empty($_GET['origem'])) {
+  $args['tax_query'][] = array(
+    'taxonomy' => 'paises',
+    'field' => 'term_id',
+    'terms' => sanitize_text_field($_GET['origem']),
+  );
+}
+
+if (isset($_GET['distribuicao']) && !empty($_GET['distribuicao'])) {
+  $args['tax_query'][] = array(
+    'taxonomy' => 'distribuidoras',
+    'field' => 'term_id',
+    'terms' => sanitize_text_field($_GET['distribuicao']),
+  );
+}
+
+if (isset($_GET['genero']) && !empty($_GET['genero'])) {
+  $args['tax_query'][] = array(
+    'taxonomy' => 'generos',
+    'field' => 'term_id',
+    'terms' => sanitize_text_field($_GET['genero']),
+  );
+}
+
+if (isset($_GET['tecnologia']) && !empty($_GET['tecnologia'])) {
+  $args['tax_query'][] = array(
+    'taxonomy' => 'tecnologias',
+    'field' => 'term_id',
+    'terms' => sanitize_text_field($_GET['tecnologia']),
+  );
+}
+
+if (!empty($args['tax_query']) && count($args['tax_query']) > 1) {
+  $args['tax_query']['relation'] = 'AND';
+}
+
+if (!empty($args['meta_query']) && count($args['meta_query']) > 1) {
+  $args['meta_query']['relation'] = 'AND';
+}
+
+// Create the query here, before trying to use it
 $filmes_query = new WP_Query($args);
 
 // Processar os dados como na função original
@@ -43,18 +101,18 @@ $paises = get_terms(array(
 ));
 
 $meses = [
-  'January' => 'Janeiro',
-  'February' => 'Fevereiro',
-  'March' => 'Março',
-  'April' => 'Abril',
-  'May' => 'Maio',
-  'June' => 'Junho',
-  'July' => 'Julho',
-  'August' => 'Agosto',
-  'September' => 'Setembro',
-  'October' => 'Outubro',
-  'November' => 'Novembro',
-  'December' => 'Dezembro',
+  '01' => 'Janeiro',
+  '02' => 'Fevereiro',
+  '03' => 'Março',
+  '04' => 'Abril',
+  '05' => 'Maio',
+  '06' => 'Junho',
+  '07' => 'Julho',
+  '08' => 'Agosto',
+  '09' => 'Setembro',
+  '10' => 'Outubro',
+  '11' => 'Novembro',
+  '12' => 'Dezembro',
 ];
 
 function obter_anos_dos_filmes()
@@ -169,68 +227,20 @@ if ($filmes_query->have_posts()) {
     }
   }
 }
-
-if (isset($_GET['ano']) && !empty($_GET['ano'])) {
-  $args['meta_query'][] = array(
-    'key' => 'estreia',
-    'value' => sanitize_text_field($_GET['ano']),
-    'compare' => 'REGEXP',
-  );
-}
-
-if (isset($_GET['mes']) && !empty($_GET['mes'])) {
-  $args['meta_query'][] = array(
-    'key' => 'estreia',
-    'value' => sanitize_text_field($_GET['mes']),
-    'compare' => 'REGEXP',
-  );
-}
-
-if (isset($_GET['origem']) && !empty($_GET['origem'])) {
-  $args['meta_query'][] = array(
-    'key' => 'paises',
-    'value' => sanitize_text_field($_GET['origem']),
-    'compare' => 'REGEXP',
-  );
-}
-
-if (isset($_GET['distribuicao']) && !empty($_GET['distribuicao'])) {
-  $args['meta_query'][] = array(
-    'key' => 'distribuicao',
-    'value' => sanitize_text_field($_GET['distribuicao']),
-    'compare' => '=',
-  );
-}
-
-if (isset($_GET['genero']) && !empty($_GET['genero'])) {
-  $args['meta_query'][] = array(
-    'key' => 'generos',
-    'value' => sanitize_text_field($_GET['genero']),
-    'compare' => 'REGEXP',
-  );
-}
-
-if (isset($_GET['tecnologia']) && !empty($_GET['tecnologia'])) {
-  $args['meta_query'][] = array(
-    'key' => 'tecnologia',
-    'value' => sanitize_text_field($_GET['tecnologia']),
-    'compare' => 'REGEXP',
-  );
-}
-
 ?>
+
 <?php get_template_part('components/MenuMobile/index'); ?>
 <?php get_template_part('components/MenuDesktop/index'); ?>
 
 <div class="container page-distribuidora">
   <h1>Lançamentos por Distribuidora</h1>
   <section class="grid-select">
-    <form method="GET" action="<?php echo get_site_url(); ?>/lancamentos-por-distribuidora/">
+    <form method="GET" action="<?php echo home_url(); ?>/lancamentos-por-distribuidora/">
       <div class="grid grid-7-xl gap-22 select-itens">
         <select id="ano" name="ano">
           <option isabled selected value="">Ano</option>
           <?php foreach ($anos as $key => $value) { ?>
-          <option value="<?php echo esc_attr($key); ?>"><?php echo esc_html($value); ?></option>
+          <option value="<?php echo esc_attr($value); ?>"><?php echo esc_html($value); ?></option>
           <?php } ?>
         </select>
         <select name="mes" id="mes">
@@ -393,6 +403,7 @@ function formatar_data_estreia_dist($data)
     $dia_semana
   );
 }
+
 function format_filmes($filmes)
 {
   if (empty($filmes)) return '';

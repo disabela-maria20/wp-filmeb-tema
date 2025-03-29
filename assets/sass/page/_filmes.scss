@@ -188,8 +188,10 @@
         }
 
         h3 {
-          font-size: 1.6rem;
+          font-size: 1.4rem;
           color: $color-darker-gray;
+          text-align: center;
+          padding: 0 15px;
         }
         &:hover .info {
           display: block;

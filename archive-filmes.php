@@ -63,7 +63,7 @@ $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
 
 $args = array(
   'post_type' => 'filmes',
-  'posts_per_page' => 10, // Paginação de 10 filmes por página
+  'posts_per_page' => 10,
   'post_status' => 'publish',
   'paged' => $paged,
 );
@@ -121,7 +121,6 @@ $filmes = new WP_Query($args);
 
 // Array para armazenar filmes agrupados por dia
 $filmes_por_dia = array();
-
 
 if ($filmes->have_posts()) {
   while ($filmes->have_posts()) {
@@ -191,12 +190,9 @@ function obter_anos_dos_filmes()
 $anos = obter_anos_dos_filmes();
 ?>
 
-
 <?php if ($query->have_posts()): ?>
 <?php while ($query->have_posts()): $query->the_post(); ?>
 <?php
-
-
     $banner_superior = CFS()->get('banner_moldura', $banner_id);
     $banner_inferior = CFS()->get('mega_banner', $banner_id);
     $skyscraper = CFS()->get('skyscraper', $banner_id);
@@ -260,7 +256,7 @@ $anos = obter_anos_dos_filmes();
             <select id="ano" name="ano">
               <option isabled selected value="">Ano</option>
               <?php foreach ($anos as $key => $value) { ?>
-              <option value="<?php echo esc_attr($key); ?>"><?php echo esc_html($value); ?></option>
+              <option value="<?php echo esc_attr($value); ?>"><?php echo esc_html($value); ?></option>
               <?php } ?>
             </select>
             <select name="mes" id="mes">
@@ -303,14 +299,14 @@ $anos = obter_anos_dos_filmes();
       function render_filmes_lista($filmes_por_dia, $dias_semana)
       {
         if (!empty($filmes_por_dia)) {
-          krsort($filmes_por_dia); // Alterado de ksort para krsort para ordenar de dezembro a janeiro
+          krsort($filmes_por_dia);
           foreach ($filmes_por_dia as $data => $filmes) {
             $data_estreia = DateTime::createFromFormat('Y-m-d', $data);
-            $dia_semana_ingles = $data_estreia->format('l'); // Dia da semana em inglês (ex: "Monday")
-            $dia_semana = $dias_semana[$dia_semana_ingles]; // Traduz o dia da semana para português
-            $dia = $data_estreia->format('d'); // Dia no formato DD
-            $mes = $data_estreia->format('m'); // Mês no formato MM
-            $ano = $data_estreia->format('Y'); // Ano no formato AAAA
+            $dia_semana_ingles = $data_estreia->format('l');
+            $dia_semana = $dias_semana[$dia_semana_ingles];
+            $dia = $data_estreia->format('d');
+            $mes = $data_estreia->format('m');
+            $ano = $data_estreia->format('Y');
             echo '<h2><i class="bi bi-calendar-check-fill"></i> ' . esc_html($dia_semana) . ', ' . esc_html($dia) . '/' . esc_html($mes) . '/' . esc_html($ano) . '</h2>';
             echo '<div class="grid-filmes">';
             foreach ($filmes as $filme) {
@@ -340,14 +336,14 @@ $anos = obter_anos_dos_filmes();
       function render_filmes_tabela($filmes_por_dia, $dias_semana)
       {
         if (!empty($filmes_por_dia)) {
-          krsort($filmes_por_dia); // Alterado de ksort para krsort para ordenar de dezembro a janeiro
+          krsort($filmes_por_dia);
           foreach ($filmes_por_dia as $data => $filmes) {
             $data_estreia = DateTime::createFromFormat('Y-m-d', $data);
-            $dia_semana_ingles = $data_estreia->format('l'); // Dia da semana em inglês (ex: "Monday")
-            $dia_semana = $dias_semana[$dia_semana_ingles]; // Traduz o dia da semana para português
-            $dia = $data_estreia->format('d'); // Dia no formato DD
-            $mes = $data_estreia->format('m'); // Mês no formato MM
-            $ano = $data_estreia->format('Y'); // Ano no formato AAAA
+            $dia_semana_ingles = $data_estreia->format('l');
+            $dia_semana = $dias_semana[$dia_semana_ingles];
+            $dia = $data_estreia->format('d');
+            $mes = $data_estreia->format('m');
+            $ano = $data_estreia->format('Y');
             echo '<h2><i class="bi bi-calendar-check-fill"></i>' . esc_html($dia_semana) . ', ' . esc_html($dia) . '/' . esc_html($mes) . '/' . esc_html($ano) . '</h2>';
             echo '<table><thead><tr>
                       <th colspan="2">Título</th>
@@ -382,10 +378,42 @@ $anos = obter_anos_dos_filmes();
           <section class="area-filmes" v-if="ativoItem === 'lista'">
             <div class="lista-filmes" id="lista">
               <?php render_filmes_lista($filmes_por_dia, $dias_semana); ?>
+
+              <!-- Paginação -->
+              <?php if ($filmes->max_num_pages > 1) : ?>
+              <div class="pagination">
+                <?php
+                    echo paginate_links(array(
+                      'base' => str_replace(999999999, '%#%', esc_url(get_pagenum_link(999999999))),
+                      'format' => '?paged=%#%',
+                      'current' => max(1, $paged),
+                      'total' => $filmes->max_num_pages,
+                      'prev_text' => __('« Anterior'),
+                      'next_text' => __('Próximo »'),
+                    ));
+                    ?>
+              </div>
+              <?php endif; ?>
             </div>
           </section>
           <section class="tabela-filme" v-if="ativoItem === 'tabela'">
             <?php render_filmes_tabela($filmes_por_dia, $dias_semana); ?>
+
+            <!-- Paginação -->
+            <?php if ($filmes->max_num_pages > 1) : ?>
+            <div class="pagination">
+              <?php
+                  echo paginate_links(array(
+                    'base' => str_replace(999999999, '%#%', esc_url(get_pagenum_link(999999999))),
+                    'format' => '?paged=%#%',
+                    'current' => max(1, $paged),
+                    'total' => $filmes->max_num_pages,
+                    'prev_text' => __('« Anterior'),
+                    'next_text' => __('Próximo »'),
+                  ));
+                  ?>
+            </div>
+            <?php endif; ?>
           </section>
         </div>
         <aside>
@@ -401,6 +429,22 @@ $anos = obter_anos_dos_filmes();
       <section class="area-filmes" v-if="ativoItem === 'lista'">
         <div class="lista-filmes" id="lista">
           <?php render_filmes_lista($filmes_por_dia, $dias_semana); ?>
+
+          <!-- Paginação -->
+          <?php if ($filmes->max_num_pages > 1) : ?>
+          <div class="pagination">
+            <?php
+                echo paginate_links(array(
+                  'base' => str_replace(999999999, '%#%', esc_url(get_pagenum_link(999999999))),
+                  'format' => '?paged=%#%',
+                  'current' => max(1, $paged),
+                  'total' => $filmes->max_num_pages,
+                  'prev_text' => __('« Anterior'),
+                  'next_text' => __('Próximo »'),
+                ));
+                ?>
+          </div>
+          <?php endif; ?>
         </div>
       </section>
       <section class="tabela-filme" v-if="ativoItem === 'tabela'">
@@ -408,6 +452,22 @@ $anos = obter_anos_dos_filmes();
           <img src="<?php echo esc_url($banner_moldura_casado); ?>">
         </a>
         <?php render_filmes_tabela($filmes_por_dia, $dias_semana); ?>
+
+        <!-- Paginação -->
+        <?php if ($filmes->max_num_pages > 1) : ?>
+        <div class="pagination">
+          <?php
+              echo paginate_links(array(
+                'base' => str_replace(999999999, '%#%', esc_url(get_pagenum_link(999999999))),
+                'format' => '?paged=%#%',
+                'current' => max(1, $paged),
+                'total' => $filmes->max_num_pages,
+                'prev_text' => __('« Anterior'),
+                'next_text' => __('Próximo »'),
+              ));
+              ?>
+        </div>
+        <?php endif; ?>
       </section>
       <?php endif; ?>
     </div>
