@@ -413,7 +413,19 @@ function save_custom_fields($customer_id)
   }
 }
 
-
+function format_products($products, $img_size = 'medium')
+{
+  $products_final = [];
+  foreach ($products as $product) {
+    $products_final[] = [
+      'name' => $product->get_name(),
+      'price' => $product->get_price_html(),
+      'link' => $product->get_permalink(),
+      'img' => wp_get_attachment_image_src($product->get_image_id(), $img_size)[0],
+    ];
+  }
+  return $products_final;
+}
 // function restringir_acesso_membros_pagos() {
 //   // if (is_tax('product_cat') || is_post_type_archive('rapidinhas')) {
 //   //     if (!SwpmMemberUtils::is_member_logged_in()) { 
@@ -497,3 +509,13 @@ function redirecionar_para_checkout()
   return wc_get_checkout_url();
 }
 add_filter('woocommerce_add_to_cart_redirect', 'redirecionar_para_checkout');
+
+
+add_action('template_redirect', 'redirecionar_assinatura_filme_b');
+function redirecionar_assinatura_filme_b()
+{
+  if (is_singular('product') && strpos($_SERVER['REQUEST_URI'], '/produto/assinatura-filme-b/') !== false) {
+    wp_redirect(home_url('/assine/'), 301);
+    exit;
+  }
+}
