@@ -109,6 +109,113 @@ endif;
         </span>
       </h1>
     </div>
+
+    <h2>Ficha técnica</h2>
+    <div class="grid-filmes">
+
+
+      <div>
+        <div class="grid grid-2-lg">
+          <div class="dados">
+            <table>
+              <?php if (!is_cfs_field_empty('distribuicao')) : ?>
+              <tr>
+                <td class="titulo">Distribuição</td>
+                <td>
+                  <?php echo render_terms('distribuicao'); ?>
+                </td>
+              </tr>
+              <?php endif; ?>
+
+              <?php if (!is_cfs_field_empty('paises')) : ?>
+              <tr>
+                <td class="titulo">País</td>
+                <td>
+                  <?php echo render_terms('paises'); ?>
+                </td>
+              </tr>
+              <?php endif; ?>
+
+              <?php if (!is_cfs_field_empty('generos')) : ?>
+              <tr>
+                <td class="titulo">Gênero</td>
+                <td>
+                  <?php echo render_terms('generos'); ?>
+                </td>
+              </tr>
+              <?php endif; ?>
+            </table>
+          </div>
+          <div class="dados">
+            <table>
+              <?php if (!is_cfs_field_empty('duracao_minutos')) : ?>
+              <tr>
+                <td class="titulo">Duração</td>
+                <td>
+                  <?php echo CFS()->get('duracao_minutos'); ?>min
+                </td>
+              </tr>
+              <?php endif; ?>
+
+              <?php if (!is_cfs_field_empty('tecnologias')) : ?>
+              <tr>
+                <td class="titulo">Tecnologia</td>
+                <td>
+                  <?php echo render_terms('tecnologias'); ?>
+                </td>
+              </tr>
+              <?php endif; ?>
+
+              <?php if (!is_cfs_field_empty('classificacao')) : ?>
+              <tr>
+                <td class="titulo">Classificação</td>
+                <td>
+                  <?php echo render_terms('classificacao'); ?>
+                </td>
+              </tr>
+              <?php endif; ?>
+            </table>
+          </div>
+        </div>
+        <div class="dados">
+          <table>
+            <tr>
+              <td class="titulo">Sinopse</td>
+              <td id="sinopse">
+                <?php echo the_content(); ?>
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <?php if (!is_cfs_field_empty('direcao')) : ?>
+        <div class="dados">
+          <h3>Direção</h3>
+          <p>
+            <?php echo esc_html(CFS()->get('direcao')); ?>
+          </p>
+        </div>
+        <?php endif; ?>
+
+        <?php if (!is_cfs_field_empty('roteiro')) : ?>
+        <div class="dados">
+          <h3>Roteiro</h3>
+          <p>
+            <?php echo esc_html(CFS()->get('roteiro')); ?>
+          </p>
+        </div>
+        <?php endif; ?>
+
+        <?php if (!is_cfs_field_empty('elenco')) : ?>
+        <div class="dados">
+          <h3>Elenco</h3>
+          <p>
+            <?php echo esc_html(CFS()->get('elenco')); ?>
+          </p>
+        </div>
+        <?php endif; ?>
+      </div>
+    </div>
   </div>
 </section>
 
