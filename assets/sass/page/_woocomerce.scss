@@ -1,4 +1,9 @@
 .woocommerce {
+  @include media(lg) {
+    display: flex;
+    gap: 90px;
+  }
+
   p {
     margin: 0 !important;
   }
@@ -6,8 +11,9 @@
     font-size: 1.6rem;
     line-height: 1.61;
   }
-  > h2 {
-    text-align: center !important;
+  h2 {
+    font-size: 2.5rem;
+    line-height: 3.4rem;
   }
 
   button:not(.show-password-input),
@@ -58,21 +64,27 @@
   fieldset {
     font-size: 2rem !important;
   }
+  .woocommerce-MyAccount-content {
+    width: 100%;
+  }
   .woocommerce-MyAccount-navigation {
     margin-bottom: 35px;
     ul {
-      display: flex;
-      gap: 20px;
-      padding-inline-start: 0;
-      flex-wrap: wrap;
       margin-top: 25px;
-      li {
+      @include media(lg) {
+        margin-top: 0;
+      }
+      .woocommerce-MyAccount-navigation-link {
         margin: 0;
         list-style-type: none;
+
+        a {
+          color: $color-dark-gray !important;
+          font-size: 1.8rem;
+          line-height: 3.1rem;
+        }
       }
-      a {
-        color: $color-dark-gray !important;
-      }
+
       .is-active {
         a {
           color: $color-dark-gray !important;
@@ -365,4 +377,18 @@ table.wc-block-cart-items .wc-block-cart-items__row .wc-block-cart-item__image i
 .woocommerce-page table.cart img {
   max-height: 140px !important;
   object-fit: contain !important;
+}
+
+// .woocommerce-address-fields__field-wrapper {
+//   .form-row {
+//     width: 100% !important;
+//   }
+// }
+
+.filme-b-promo {
+  font-size: 1.4rem !important;
+  line-height: 1.61 !important;
+  ul {
+    padding: 20px 0;
+  }
 }

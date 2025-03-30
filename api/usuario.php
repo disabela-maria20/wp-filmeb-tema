@@ -49,7 +49,7 @@ function register_customer_membership(WP_REST_Request $request)
   $is_paid = strtotime($expiration_date) > strtotime($current_date);
 
   // Se ainda não expirou, é pago; caso contrário, é Free
-  $membership_level = $is_paid ? 2 : 3;
+  $membership_level = $is_paid ? 3 : 2;
   $account_state = $is_paid ? 'active' : 'inactive';
   $status = $is_paid ? 'paid' : 'free';
 

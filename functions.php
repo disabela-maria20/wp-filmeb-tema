@@ -45,6 +45,7 @@ function use_scripts()
 }
 add_action('wp_enqueue_scripts', 'use_scripts');
 
+
 function add_meta_tags()
 {
   echo '<meta name="viewport" content="width=device-width, initial-scale=1.0" />';
@@ -59,7 +60,6 @@ function register_my_menu()
   register_nav_menu('institucional', __('Menu Institucional'));
 }
 add_action('init', 'register_my_menu');
-
 
 
 function flush_rewrite_rules_on_theme_activation()
@@ -470,23 +470,52 @@ function handel_assinaturas_content()
 
   $member_level = SwpmMemberUtils::get_logged_in_members_level();
 
-  if ($member_level == '2') {
-    echo '<p>Assine a Filme b</p>';
-  } else if ($member_level == '3') {
-
+  if ($member_level == '3') {
+    // Mensagem para não assinantes (convite para assinar)
+    echo '
+      <div class="filme-b-promo" style="background: #f8f8f8; border-left: 4px solid #ff6b00; padding: 20px; margin: 20px 0; border-radius: 4px;">
+          <h3 style="color: #ff6b00; margin-top: 0;">🎬 ACESSO EXCLUSIVO FILME B</h3>
+          <p>Você está no nível <strong>Grátis</strong>. Assine o <strong>Filme B Premium</strong> e tenha:</p>
+          <ul style="padding-left: 20px;">
+              <li>✅ Conteúdos VIP exclusivos</li>
+              <li>✅ Bastidores e making-of</li>
+              <li>✅ Acesso antecipado a lançamentos</li>
+          </ul>
+          <a href="/assine/" style="background: #ff6b00; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; display: inline-block; margin-top: 10px; font-weight: bold;">QUERO ASSINAR AGORA</a>
+          <p style="font-size: 0.9em; margin-top: 10px; color: #666;">Garanta seu acesso ilimitado!</p>
+      </div>';
+  } else if ($member_level == '2') {
     $user_id = SwpmMemberUtils::get_logged_in_members_id();
-
     if ($user_id) {
-      // Obtém as informações do usuário
       $user_info = SwpmMemberUtils::get_user_by_id($user_id);
 
-      echo '<pre>';
-      print_r($user_info);
-      echo '</pre>';
-    } else {
-      echo 'Usuário não está logado.';
+      // Calcula a data de expiração (assumindo 1 ano de duração)
+      $subscription_start = $user_info->subscription_starts;
+      $expiry_date = date('Y-m-d', strtotime($subscription_start . ' +1 year'));
+      $current_date = date('Y-m-d');
+      $days_remaining = floor((strtotime($expiry_date) - strtotime($current_date)) / (60 * 60 * 24));
+
+      // Mensagem personalizada conforme o status
+      echo '
+          <div class="assinatura-info" style="background: #f0f8ff; border-left: 4px solid #0066cc; padding: 20px; margin: 20px 0; border-radius: 4px;">
+              <h3 style="color: #0066cc; margin-top: 0;">📅 SUA ASSINATURA FILME B</h3>
+              <p><strong>👋 Olá, ' . esc_html($user_info->first_name) . '!</strong></p>
+              <p><strong>📅 Início:</strong> ' . date('d/m/Y', strtotime($subscription_start)) . '</p>';
+
+      if ($days_remaining > 0) {
+        echo '
+              <p><strong>⏳ Expira em:</strong> ' . date('d/m/Y', strtotime($expiry_date)) . ' <span style="color: #0066cc;">(' . floor($days_remaining) . ' dias restantes)</span></p>
+              <p style="font-size: 1.4rem; color: #666;">Sua assinatura está ativa. Aproveite todos os benefícios!</p>';
+      } else {
+        echo '
+              <p><strong>⚠️ Expirou em:</strong> ' . date('d/m/Y', strtotime($expiry_date)) . ' <span style="color: #cc0000;">(Assinatura encerrada)</span></p>
+              <p style="font-size: 1.4rem; color: #cc0000;">Renove agora para continuar acessando o conteúdo exclusivo!</p>
+              <a href="/renovar/" style="background: #cc0000; color: white; padding: 8px 15px; text-decoration: none; border-radius: 4px; display: inline-block; margin-top: 5px; font-weight: bold;">RENOVAR ASSINATURA</a>';
+      }
+
+      echo '
+          </div>';
     }
-    echo '<p>Voce ja é assinante, aproveite os conteudos exclusivos</p>';
   }
 }
 add_action('woocommerce_account_assinaturas_endpoint', 'handel_assinaturas_content');
@@ -518,4 +547,16 @@ function redirecionar_assinatura_filme_b()
     wp_redirect(home_url('/assine/'), 301);
     exit;
   }
+  if (is_singular('product') && strpos($_SERVER['REQUEST_URI'], '/produto/assinatura-filme-b/') !== false) {
+    wp_redirect(home_url('/assine/'), 301);
+    exit;
+  }
 }
+
+function remover_mensagem_padrao_sem_pedidos()
+{
+  if (is_wc_endpoint_url('orders')) {
+    remove_action('woocommerce_account_orders_endpoint', 'woocommerce_account_orders_content', 10);
+  }
+}
+add_action('template_redirect', 'remover_mensagem_padrao_sem_pedidos');
