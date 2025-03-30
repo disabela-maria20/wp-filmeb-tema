@@ -36,25 +36,25 @@ if (isset($_GET['mes']) && !empty($_GET['mes'])) {
 
 if (isset($_GET['origem']) && !empty($_GET['origem'])) {
   $args['tax_query'][] = array(
-    'taxonomy' => 'paises',
-    'field' => 'term_id',
-    'terms' => sanitize_text_field($_GET['origem']),
+    'key' => 'paises',
+    'value' => sanitize_text_field($_GET['origem']),
+    'compare' => 'REGEXP',
   );
 }
 
 if (isset($_GET['distribuicao']) && !empty($_GET['distribuicao'])) {
   $args['tax_query'][] = array(
-    'taxonomy' => 'distribuidoras',
-    'field' => 'term_id',
-    'terms' => sanitize_text_field($_GET['distribuicao']),
+    'key' => 'distribuicao',
+    'value' => sanitize_text_field($_GET['distribuicao']),
+    'compare' => '=',
   );
 }
 
 if (isset($_GET['genero']) && !empty($_GET['genero'])) {
   $args['tax_query'][] = array(
-    'taxonomy' => 'generos',
-    'field' => 'term_id',
-    'terms' => sanitize_text_field($_GET['genero']),
+    'key' => 'generos',
+    'value' => sanitize_text_field($_GET['genero']),
+    'compare' => 'REGEXP',
   );
 }
 
