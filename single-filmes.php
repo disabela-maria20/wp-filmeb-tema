@@ -29,9 +29,6 @@ if ($query->have_posts()) :
     $link_full_banner = CFS()->get('link_full_banner', $banner_id);
     $link_skyscraper = CFS()->get('link_skyscraper', $banner_id);
     $link_super_banner = CFS()->get('link_super_banner', $banner_id);
-?>
-
-<?php
 
     $termos = get_terms(array(
       'taxonomy'   => 'Gêneros',
@@ -50,7 +47,6 @@ if ($query->have_posts()) :
           }
         }
       }
-
       return $output;
     }
 
@@ -59,12 +55,10 @@ if ($query->have_posts()) :
       $field_value = CFS()->get($field_key);
       return empty($field_value);
     }
-
-    ?>
-<a href="<?php echo esc_url($link_banner_superior) ?>" target="_blank" rel="noopener noreferrer">
-  <img src="<?php echo esc_url($banner_superior); ?>" class="w-full p-35 img-banner bannerMobile " alt="banner">
+?>
+<a href="<?php echo esc_url($link_banner_superior); ?>" target="_blank" rel="noopener noreferrer">
+  <img src="<?php echo esc_url($banner_superior); ?>" class="w-full p-35 img-banner bannerMobile" alt="banner">
 </a>
-
 
 <div class="container bannerDesktop">
   <div class="grid-banner-superior">
@@ -86,7 +80,6 @@ endif;
 <section class="bg-gray padding-banner">
   <div class="container bannerMobile">
     <div class="grid-banner-superior">
-
       <a href="<?php echo esc_url($link_banner_inferior); ?>" target="_blank" rel="noopener noreferrer">
         <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
       </a>
@@ -112,7 +105,68 @@ endif;
 
     <h2>Ficha técnica</h2>
     <div class="grid-filmes">
-
+      <div class="item">
+        <img src="<?php echo esc_url(CFS()->get('cartaz')); ?>" class="cartaz">
+        <div class="area-poster">
+          <div class="dados">
+            <h3>Estreia</h3>
+            <?php
+                $estreia = CFS()->get('estreia');
+                if (!empty($estreia)) {
+                  $data_formatada = date_i18n('j \d\e F \d\e Y', strtotime($estreia));
+                  echo '<p>' . esc_html($data_formatada) . '</p>';
+                }
+                ?>
+          </div>
+          <div class="dados">
+            <?php if (CFS()->get('trailer') === 'http://NULL') : ?>
+            <h3>Trailer</h3>
+            <p>Trailer Não disponível</p>
+            <div class="video"></div>
+            <?php else: ?>
+            <h3>Trailer</h3>
+            <div class="video">
+              <?php echo better_youtube_embed_block_render_block(['url' => CFS()->get('trailer')]); ?>
+            </div>
+            <?php endif; ?>
+          </div>
+          <div class="dados">
+            <?php if (!is_cfs_field_empty('fotos')) : ?>
+            <h3>Fotos</h3>
+            <section id="fotos" class="splide">
+              <div class="splide__track">
+                <ul class="splide__list">
+                  <?php $fields = CFS()->get('fotos'); ?>
+                  <?php if ($fields) : ?>
+                  <?php foreach ($fields as $field) : ?>
+                  <li class="splide__slide">
+                    <img src="<?php echo esc_url($field['foto']); ?>" class="img-slide" alt="">
+                  </li>
+                  <?php endforeach; ?>
+                  <?php endif; ?>
+                </ul>
+              </div>
+            </section>
+            <section id="modalFilme" class="modal">
+              <div class="modal-body">
+                <button class="close" aria-label="Fechar">
+                  <i class="bi bi-x"></i>
+                </button>
+                <div class="modal-img"></div>
+                <div class="arrow">
+                  <button>
+                    <i class="bi bi-chevron-left"></i>
+                  </button>
+                  <button>
+                    <i class="bi bi-chevron-right"></i>
+                  </button>
+                </div>
+              </div>
+            </section>
+            <?php endif; ?>
+          </div>
+        </div>
+      </div>
 
       <div>
         <div class="grid grid-2-lg">
@@ -147,11 +201,45 @@ endif;
             </table>
           </div>
           <div class="dados">
+            <table>
+              <?php if (!is_cfs_field_empty('duracao_minutos')) : ?>
+              <tr>
+                <td class="titulo">Duração</td>
+                <td>
+                  <?php echo CFS()->get('duracao_minutos'); ?>min
+                </td>
+              </tr>
+              <?php endif; ?>
 
+              <?php if (!is_cfs_field_empty('tecnologias')) : ?>
+              <tr>
+                <td class="titulo">Tecnologia</td>
+                <td>
+                  <?php echo render_terms('tecnologias'); ?>
+                </td>
+              </tr>
+              <?php endif; ?>
+
+              <?php if (!is_cfs_field_empty('classificacao')) : ?>
+              <tr>
+                <td class="titulo">Classificação</td>
+                <td>
+                  <?php echo render_terms('classificacao'); ?>
+                </td>
+              </tr>
+              <?php endif; ?>
+            </table>
           </div>
         </div>
         <div class="dados">
-
+          <table>
+            <tr>
+              <td class="titulo">Sinopse</td>
+              <td id="sinopse">
+                <?php echo the_content(); ?>
+              </td>
+            </tr>
+          </table>
         </div>
 
         <?php if (!is_cfs_field_empty('direcao')) : ?>
@@ -189,6 +277,7 @@ endif;
 endif; ?>
 <?php get_template_part('components/Footer/index'); ?>
 <?php get_footer(); ?>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   var splide = new Splide('#fotos', {
@@ -263,7 +352,6 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
   });
-
 });
 
 const sinopse = document.querySelector('#sinopse p');
