@@ -3,6 +3,8 @@ get_header();
 ?>
 
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 $current_page_slug = basename(get_permalink());
 $category_slug = str_replace('boletim/', '', $current_page_slug);
 $banner_id = "185";
