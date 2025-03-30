@@ -147,45 +147,11 @@ endif;
             </table>
           </div>
           <div class="dados">
-            <table>
-              <?php if (!is_cfs_field_empty('duracao_minutos')) : ?>
-              <tr>
-                <td class="titulo">Duração</td>
-                <td>
-                  <?php echo CFS()->get('duracao_minutos'); ?>min
-                </td>
-              </tr>
-              <?php endif; ?>
 
-              <?php if (!is_cfs_field_empty('tecnologias')) : ?>
-              <tr>
-                <td class="titulo">Tecnologia</td>
-                <td>
-                  <?php echo render_terms('tecnologias'); ?>
-                </td>
-              </tr>
-              <?php endif; ?>
-
-              <?php if (!is_cfs_field_empty('classificacao')) : ?>
-              <tr>
-                <td class="titulo">Classificação</td>
-                <td>
-                  <?php echo render_terms('classificacao'); ?>
-                </td>
-              </tr>
-              <?php endif; ?>
-            </table>
           </div>
         </div>
         <div class="dados">
-          <table>
-            <tr>
-              <td class="titulo">Sinopse</td>
-              <td id="sinopse">
-                <?php echo the_content(); ?>
-              </td>
-            </tr>
-          </table>
+
         </div>
 
         <?php if (!is_cfs_field_empty('direcao')) : ?>
