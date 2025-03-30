@@ -49,7 +49,7 @@ function register_customer_membership(WP_REST_Request $request)
   $is_paid = strtotime($expiration_date) > strtotime($current_date);
 
   // Se ainda não expirou, é pago; caso contrário, é Free
-  $membership_level = $is_paid ? 2 : 3;
+  $membership_level = $is_paid ? 3 : 2;
   $account_state = $is_paid ? 'active' : 'inactive';
   $status = $is_paid ? 'paid' : 'free';
 
@@ -78,6 +78,7 @@ function register_customer_membership(WP_REST_Request $request)
     'subscription_starts' => $activation_date,
     'last_accessed' => current_time('mysql'),
     'last_accessed_from_ip' => $_SERVER['REMOTE_ADDR'],
+    'expiration_date' => $expiration_date, // Adicionando o campo expiration_date
   ];
 
   // Inserir na tabela SWPM
