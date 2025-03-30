@@ -1,10 +1,29 @@
 <?php
 get_header();
-?>
 
-<?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+// Define helper functions at the top so they're always available
+function render_terms($field_key)
+{
+  $distribuicao = CFS()->get($field_key);
+  $output = '';
+  if (!empty($distribuicao)) {
+    foreach ($distribuicao as $term_id) {
+      $term = get_term($term_id);
+      if ($term && !is_wp_error($term)) {
+        $output .= '<div>' . esc_html($term->name) . '</div>';
+      }
+    }
+  }
+  return $output;
+}
+
+function is_cfs_field_empty($field_key)
+{
+  $field_value = CFS()->get($field_key);
+  return empty($field_value);
+}
+
+// Main template code
 $current_page_slug = basename(get_permalink());
 $category_slug = str_replace('boletim/', '', $current_page_slug);
 $banner_id = "185";
@@ -19,7 +38,6 @@ $query = new WP_Query($args);
 
 if ($query->have_posts()) :
   while ($query->have_posts()) : $query->the_post();
-
     $banner_superior = CFS()->get('banner_moldura', $banner_id);
     $banner_inferior = CFS()->get('mega_banner', $banner_id);
     $full_banner = CFS()->get('full_banner', $banner_id);
@@ -31,32 +49,6 @@ if ($query->have_posts()) :
     $link_full_banner = CFS()->get('link_full_banner', $banner_id);
     $link_skyscraper = CFS()->get('link_skyscraper', $banner_id);
     $link_super_banner = CFS()->get('link_super_banner', $banner_id);
-
-    $termos = get_terms(array(
-      'taxonomy'   => 'Gêneros',
-      'hide_empty' => false,
-    ));
-
-    function render_terms($field_key)
-    {
-      $distribuicao = CFS()->get($field_key);
-      $output = '';
-      if (!empty($distribuicao)) {
-        foreach ($distribuicao as $term_id) {
-          $term = get_term($term_id);
-          if ($term && !is_wp_error($term)) {
-            $output .= '<div>' . esc_html($term->name) . '</div>';
-          }
-        }
-      }
-      return $output;
-    }
-
-    function is_cfs_field_empty($field_key)
-    {
-      $field_value = CFS()->get($field_key);
-      return empty($field_value);
-    }
 ?>
 <a href="<?php echo esc_url($link_banner_superior); ?>" target="_blank" rel="noopener noreferrer">
   <img src="<?php echo esc_url($banner_superior); ?>" class="w-full p-35 img-banner bannerMobile" alt="banner">
@@ -74,10 +66,10 @@ if ($query->have_posts()) :
   endwhile;
   wp_reset_postdata();
 endif;
-?>
 
-<?php get_template_part('components/MenuMobile/index'); ?>
-<?php get_template_part('components/MenuDesktop/index'); ?>
+get_template_part('components/MenuMobile/index');
+get_template_part('components/MenuDesktop/index');
+?>
 
 <section class="bg-gray padding-banner">
   <div class="container bannerMobile">
@@ -94,14 +86,10 @@ endif;
 <section class="page-filmes-aberta">
   <div class="container">
     <div class="banner"
-      style="background-image: url('<?php echo esc_url(CFS()->get('capa')); ?>'); background-color: #4b4b4b;  background-attachment: fixed;">
+      style="background-image: url('<?php echo esc_url(CFS()->get('capa')); ?>'); background-color: #4b4b4b; background-attachment: fixed;">
       <h1>
-        <strong>
-          <?php the_title(); ?>
-        </strong>
-        <span>
-          <?php echo CFS()->get('titulo_original'); ?>
-        </span>
+        <strong><?php the_title(); ?></strong>
+        <span><?php echo CFS()->get('titulo_original'); ?></span>
       </h1>
     </div>
 
@@ -177,27 +165,21 @@ endif;
               <?php if (!is_cfs_field_empty('distribuicao')) : ?>
               <tr>
                 <td class="titulo">Distribuição</td>
-                <td>
-                  <?php echo render_terms('distribuicao'); ?>
-                </td>
+                <td><?php echo render_terms('distribuicao'); ?></td>
               </tr>
               <?php endif; ?>
 
               <?php if (!is_cfs_field_empty('paises')) : ?>
               <tr>
                 <td class="titulo">País</td>
-                <td>
-                  <?php echo render_terms('paises'); ?>
-                </td>
+                <td><?php echo render_terms('paises'); ?></td>
               </tr>
               <?php endif; ?>
 
               <?php if (!is_cfs_field_empty('generos')) : ?>
               <tr>
                 <td class="titulo">Gênero</td>
-                <td>
-                  <?php echo render_terms('generos'); ?>
-                </td>
+                <td><?php echo render_terms('generos'); ?></td>
               </tr>
               <?php endif; ?>
             </table>
@@ -207,27 +189,21 @@ endif;
               <?php if (!is_cfs_field_empty('duracao_minutos')) : ?>
               <tr>
                 <td class="titulo">Duração</td>
-                <td>
-                  <?php echo CFS()->get('duracao_minutos'); ?>min
-                </td>
+                <td><?php echo CFS()->get('duracao_minutos'); ?>min</td>
               </tr>
               <?php endif; ?>
 
               <?php if (!is_cfs_field_empty('tecnologias')) : ?>
               <tr>
                 <td class="titulo">Tecnologia</td>
-                <td>
-                  <?php echo render_terms('tecnologias'); ?>
-                </td>
+                <td><?php echo render_terms('tecnologias'); ?></td>
               </tr>
               <?php endif; ?>
 
               <?php if (!is_cfs_field_empty('classificacao')) : ?>
               <tr>
                 <td class="titulo">Classificação</td>
-                <td>
-                  <?php echo render_terms('classificacao'); ?>
-                </td>
+                <td><?php echo render_terms('classificacao'); ?></td>
               </tr>
               <?php endif; ?>
             </table>
@@ -237,9 +213,7 @@ endif;
           <table>
             <tr>
               <td class="titulo">Sinopse</td>
-              <td id="sinopse">
-                <?php echo the_content(); ?>
-              </td>
+              <td id="sinopse"><?php the_content(); ?></td>
             </tr>
           </table>
         </div>
@@ -247,27 +221,21 @@ endif;
         <?php if (!is_cfs_field_empty('direcao')) : ?>
         <div class="dados">
           <h3>Direção</h3>
-          <p>
-            <?php echo esc_html(CFS()->get('direcao')); ?>
-          </p>
+          <p><?php echo esc_html(CFS()->get('direcao')); ?></p>
         </div>
         <?php endif; ?>
 
         <?php if (!is_cfs_field_empty('roteiro')) : ?>
         <div class="dados">
           <h3>Roteiro</h3>
-          <p>
-            <?php echo esc_html(CFS()->get('roteiro')); ?>
-          </p>
+          <p><?php echo esc_html(CFS()->get('roteiro')); ?></p>
         </div>
         <?php endif; ?>
 
         <?php if (!is_cfs_field_empty('elenco')) : ?>
         <div class="dados">
           <h3>Elenco</h3>
-          <p>
-            <?php echo esc_html(CFS()->get('elenco')); ?>
-          </p>
+          <p><?php echo esc_html(CFS()->get('elenco')); ?></p>
         </div>
         <?php endif; ?>
       </div>
@@ -275,10 +243,13 @@ endif;
   </div>
 </section>
 
-<?php endwhile;
-endif; ?>
-<?php get_template_part('components/Footer/index'); ?>
-<?php get_footer(); ?>
+<?php
+  endwhile;
+endif;
+
+get_template_part('components/Footer/index');
+get_footer();
+?>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
