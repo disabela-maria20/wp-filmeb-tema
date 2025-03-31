@@ -247,104 +247,104 @@ add_action('woocommerce_register_form_start', 'add_custom_fields_to_registration
 function add_custom_fields_to_registration()
 {
 ?>
-<p class="form-row form-row-wide">
-  <label for="reg_billing_first_name"><?php _e('Nome *', 'woocommerce'); ?></label>
-  <input type="text" class="input-text" name="billing_first_name" id="reg_billing_first_name"
-    value="<?php if (!empty($_POST['billing_first_name'])) esc_attr_e($_POST['billing_first_name']); ?>" required />
-</p>
+  <p class="form-row form-row-wide">
+    <label for="reg_billing_first_name"><?php _e('Nome *', 'woocommerce'); ?></label>
+    <input type="text" class="input-text" name="billing_first_name" id="reg_billing_first_name"
+      value="<?php if (!empty($_POST['billing_first_name'])) esc_attr_e($_POST['billing_first_name']); ?>" required />
+  </p>
 
-<p class="form-row form-row-wide">
-  <label for="reg_billing_last_name"><?php _e('Sobrenome', 'woocommerce'); ?></label>
-  <input type="text" class="input-text" name="billing_last_name" id="reg_billing_last_name"
-    value="<?php if (!empty($_POST['billing_last_name'])) esc_attr_e($_POST['billing_last_name']); ?>" />
-</p>
+  <p class="form-row form-row-wide">
+    <label for="reg_billing_last_name"><?php _e('Sobrenome', 'woocommerce'); ?></label>
+    <input type="text" class="input-text" name="billing_last_name" id="reg_billing_last_name"
+      value="<?php if (!empty($_POST['billing_last_name'])) esc_attr_e($_POST['billing_last_name']); ?>" />
+  </p>
 
-<p class="form-row form-row-wide">
-  <label for="reg_billing_categoria_profissional"><?php _e('Categoria Profissional *', 'woocommerce'); ?></label>
-  <select name="billing_categoria_profissional" id="reg_billing_categoria_profissional" class="form-select required"
-    required>
-    <option value="_none">- Selecione um valor -</option>
-    <option value="1">Advogado</option>
-    <option value="2">Agência</option>
-    <option value="3">Assessoria imprensa</option>
-    <option value="4">Banco</option>
-    <option value="5">Cineasta</option>
-    <option value="6">Corretora</option>
-    <option value="7">Distribuidor</option>
-    <option value="8">Estudante</option>
-    <option value="9">Exibidor</option>
-    <option value="10">Exibidor-distribuidor</option>
-    <option value="11">Festival</option>
-    <option value="12">Imprensa</option>
-    <option value="13">Infraestrutura</option>
-    <option value="14">Investidor</option>
-    <option value="15">Mercado</option>
-    <option value="16">Órgão público</option>
-    <option value="17">Portal internet</option>
-    <option value="18">Produtor</option>
-    <option value="19">Professor</option>
-    <option value="20">Roteirista</option>
-    <option value="21">Shopping</option>
-    <option value="22">TV</option>
-    <option value="23">Universidade</option>
-    <option value="24">Vídeo</option>
-    <option value="25">Outros</option>
-  </select>
-</p>
+  <p class="form-row form-row-wide">
+    <label for="reg_billing_categoria_profissional"><?php _e('Categoria Profissional *', 'woocommerce'); ?></label>
+    <select name="billing_categoria_profissional" id="reg_billing_categoria_profissional" class="form-select required"
+      required>
+      <option value="_none">- Selecione um valor -</option>
+      <option value="1">Advogado</option>
+      <option value="2">Agência</option>
+      <option value="3">Assessoria imprensa</option>
+      <option value="4">Banco</option>
+      <option value="5">Cineasta</option>
+      <option value="6">Corretora</option>
+      <option value="7">Distribuidor</option>
+      <option value="8">Estudante</option>
+      <option value="9">Exibidor</option>
+      <option value="10">Exibidor-distribuidor</option>
+      <option value="11">Festival</option>
+      <option value="12">Imprensa</option>
+      <option value="13">Infraestrutura</option>
+      <option value="14">Investidor</option>
+      <option value="15">Mercado</option>
+      <option value="16">Órgão público</option>
+      <option value="17">Portal internet</option>
+      <option value="18">Produtor</option>
+      <option value="19">Professor</option>
+      <option value="20">Roteirista</option>
+      <option value="21">Shopping</option>
+      <option value="22">TV</option>
+      <option value="23">Universidade</option>
+      <option value="24">Vídeo</option>
+      <option value="25">Outros</option>
+    </select>
+  </p>
 
-<p class="form-row form-row-wide">
-  <label for="reg_billing_cpf_cnpj"><?php _e('CPF/CNPJ *', 'woocommerce'); ?></label>
-  <input type="text" class="input-text" name="billing_cpf_cnpj" id="reg_billing_cpf_cnpj"
-    value="<?php if (!empty($_POST['billing_cpf_cnpj'])) esc_attr_e($_POST['billing_cpf_cnpj']); ?>" required />
-</p>
+  <p class="form-row form-row-wide">
+    <label for="reg_billing_cpf_cnpj"><?php _e('CPF/CNPJ *', 'woocommerce'); ?></label>
+    <input type="text" class="input-text" name="billing_cpf_cnpj" id="reg_billing_cpf_cnpj"
+      value="<?php if (!empty($_POST['billing_cpf_cnpj'])) esc_attr_e($_POST['billing_cpf_cnpj']); ?>" required />
+  </p>
 
-<p class="form-row form-row-wide">
-  <label for="reg_billing_phone"><?php _e('Telefone', 'woocommerce'); ?></label>
-  <input type="tel" class="input-text" name="billing_phone" id="reg_billing_phone"
-    value="<?php if (!empty($_POST['billing_phone'])) esc_attr_e($_POST['billing_phone']); ?>" />
-</p>
+  <p class="form-row form-row-wide">
+    <label for="reg_billing_phone"><?php _e('Telefone', 'woocommerce'); ?></label>
+    <input type="tel" class="input-text" name="billing_phone" id="reg_billing_phone"
+      value="<?php if (!empty($_POST['billing_phone'])) esc_attr_e($_POST['billing_phone']); ?>" />
+  </p>
 
-<p class="form-row form-row-wide">
-  <label for="reg_billing_cellphone"><?php _e('Celular *', 'woocommerce'); ?></label>
-  <input type="tel" class="input-text" name="billing_cellphone" id="reg_billing_cellphone"
-    value="<?php if (!empty($_POST['billing_cellphone'])) esc_attr_e($_POST['billing_cellphone']); ?>" required />
-</p>
+  <p class="form-row form-row-wide">
+    <label for="reg_billing_cellphone"><?php _e('Celular *', 'woocommerce'); ?></label>
+    <input type="tel" class="input-text" name="billing_cellphone" id="reg_billing_cellphone"
+      value="<?php if (!empty($_POST['billing_cellphone'])) esc_attr_e($_POST['billing_cellphone']); ?>" required />
+  </p>
 
-<p class="form-row form-row-wide">
-  <label for="reg_billing_address"><?php _e('Endereço', 'woocommerce'); ?></label>
-  <input type="text" class="input-text" name="billing_address" id="reg_billing_address"
-    value="<?php if (!empty($_POST['billing_address'])) esc_attr_e($_POST['billing_address']); ?>" />
-</p>
+  <p class="form-row form-row-wide">
+    <label for="reg_billing_address"><?php _e('Endereço', 'woocommerce'); ?></label>
+    <input type="text" class="input-text" name="billing_address" id="reg_billing_address"
+      value="<?php if (!empty($_POST['billing_address'])) esc_attr_e($_POST['billing_address']); ?>" />
+  </p>
 
-<p class="form-row form-row-wide">
-  <label for="reg_billing_complemento"><?php _e('Complemento', 'woocommerce'); ?></label>
-  <input type="text" class="input-text" name="billing_complemento" id="reg_billing_complemento"
-    value="<?php if (!empty($_POST['billing_complemento'])) esc_attr_e($_POST['billing_complemento']); ?>" />
-</p>
+  <p class="form-row form-row-wide">
+    <label for="reg_billing_complemento"><?php _e('Complemento', 'woocommerce'); ?></label>
+    <input type="text" class="input-text" name="billing_complemento" id="reg_billing_complemento"
+      value="<?php if (!empty($_POST['billing_complemento'])) esc_attr_e($_POST['billing_complemento']); ?>" />
+  </p>
 
-<p class="form-row form-row-wide">
-  <label for="reg_billing_bairro"><?php _e('Bairro', 'woocommerce'); ?></label>
-  <input type="text" class="input-text" name="billing_bairro" id="reg_billing_bairro"
-    value="<?php if (!empty($_POST['billing_bairro'])) esc_attr_e($_POST['billing_bairro']); ?>" />
-</p>
+  <p class="form-row form-row-wide">
+    <label for="reg_billing_bairro"><?php _e('Bairro', 'woocommerce'); ?></label>
+    <input type="text" class="input-text" name="billing_bairro" id="reg_billing_bairro"
+      value="<?php if (!empty($_POST['billing_bairro'])) esc_attr_e($_POST['billing_bairro']); ?>" />
+  </p>
 
-<p class="form-row form-row-wide">
-  <label for="reg_billing_city"><?php _e('Cidade', 'woocommerce'); ?></label>
-  <input type="text" class="input-text" name="billing_city" id="reg_billing_city"
-    value="<?php if (!empty($_POST['billing_city'])) esc_attr_e($_POST['billing_city']); ?>" />
-</p>
+  <p class="form-row form-row-wide">
+    <label for="reg_billing_city"><?php _e('Cidade', 'woocommerce'); ?></label>
+    <input type="text" class="input-text" name="billing_city" id="reg_billing_city"
+      value="<?php if (!empty($_POST['billing_city'])) esc_attr_e($_POST['billing_city']); ?>" />
+  </p>
 
-<p class="form-row form-row-wide">
-  <label for="reg_billing_state"><?php _e('Estado', 'woocommerce'); ?></label>
-  <input type="text" class="input-text" name="billing_state" id="reg_billing_state"
-    value="<?php if (!empty($_POST['billing_state'])) esc_attr_e($_POST['billing_state']); ?>" />
-</p>
+  <p class="form-row form-row-wide">
+    <label for="reg_billing_state"><?php _e('Estado', 'woocommerce'); ?></label>
+    <input type="text" class="input-text" name="billing_state" id="reg_billing_state"
+      value="<?php if (!empty($_POST['billing_state'])) esc_attr_e($_POST['billing_state']); ?>" />
+  </p>
 
-<p class="form-row form-row-wide">
-  <label for="reg_billing_postcode"><?php _e('CEP', 'woocommerce'); ?></label>
-  <input type="text" class="input-text" name="billing_postcode" id="reg_billing_postcode"
-    value="<?php if (!empty($_POST['billing_postcode'])) esc_attr_e($_POST['billing_postcode']); ?>" />
-</p>
+  <p class="form-row form-row-wide">
+    <label for="reg_billing_postcode"><?php _e('CEP', 'woocommerce'); ?></label>
+    <input type="text" class="input-text" name="billing_postcode" id="reg_billing_postcode"
+      value="<?php if (!empty($_POST['billing_postcode'])) esc_attr_e($_POST['billing_postcode']); ?>" />
+  </p>
 <?php
 }
 
@@ -520,17 +520,6 @@ function handel_assinaturas_content()
 }
 add_action('woocommerce_account_assinaturas_endpoint', 'handel_assinaturas_content');
 
-
-
-function adicionar_produto_ao_carrinho_automaticamente()
-{
-  if (! WC()->cart->is_empty()) {
-    return;
-  }
-  $product_id = 106;
-  WC()->cart->add_to_cart($product_id);
-}
-add_action('template_redirect', 'adicionar_produto_ao_carrinho_automaticamente');
 
 function redirecionar_para_checkout()
 {
