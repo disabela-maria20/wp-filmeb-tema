@@ -116,12 +116,12 @@
     margin: 20px 0;
   }
   img:not(.autor img) {
-    max-height: 350px;
+    max-height: 270px;
     object-fit: cover;
     max-width: 318px;
     border-radius: 20px;
     @include media(lg) {
-      height: 350px;
+      max-height: 270px;
     }
   }
 
