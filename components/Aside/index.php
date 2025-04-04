@@ -1,7 +1,8 @@
 <?php
-$banner_id = "185";
+$banner_id = 185; 
 $args = array(
   'post_type' => 'banner-post',
+  'p' => $banner_id, 
   'posts_per_page' => 1,
 );
 
@@ -9,11 +10,12 @@ $query = new WP_Query($args);
 
 if ($query->have_posts()) :
   while ($query->have_posts()) : $query->the_post();
-
-    $skyscraper = CFS()->get('skyscraper', $banner_id);
+    $skyscraper = CFS()->get('skyscraper'); 
+  
 ?>
 
 <aside class="aside-boletim">
+
   <img src="<?php echo esc_url($skyscraper); ?>" class="img-banner" alt="banner">
   <h2>Boletins</h2>
   <div class="aside-item-boletim">
