@@ -62,7 +62,7 @@ $rapidinhas_id = get_cat_ID('Rapidinhas');
               <a href="<?php the_permalink(); ?>" class="read-more">
                 <h2><?php the_title(); ?></h2>
               </a>
-              <p><?php echo esc_html(CFS()->get('descricao') ?: get_the_excerpt()); ?></p>
+              <p><?php echo wp_trim_words(esc_html(CFS()->get('descricao') ?: get_the_excerpt()), 20, '...'); ?></p>
             </div>
           </div>
         </div>
