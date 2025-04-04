@@ -11,7 +11,7 @@ $edicoes_query = new WP_Query(array(
 
 $recent_posts_query = new WP_Query(array(
   'category_name' => 'Notícias',
-  'posts_per_page' => 10,
+  'posts_per_page' => 6,
 ));
 
 ?>
@@ -101,11 +101,6 @@ $recent_posts_query = new WP_Query(array(
       <div class="aside-flex">
         <?php while ($recent_posts_query->have_posts()) : $recent_posts_query->the_post(); ?>
         <div class="">
-          <?php if( esc_url(CFS()->get('imagem')) != '') {  ?>
-          <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
-            alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
-          <?php }?>
-
           <a href="<?php the_permalink(); ?>" class="read-more">
             <h3><?php the_title(); ?></h3>
           </a>
