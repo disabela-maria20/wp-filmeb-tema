@@ -116,9 +116,9 @@
     margin: 20px 0;
   }
   img:not(.autor img) {
-    height: 225px;
+    max-height: 350px;
     object-fit: cover;
-    width: 100%;
+    max-width: 318px;
     border-radius: 20px;
     @include media(lg) {
       height: 350px;
