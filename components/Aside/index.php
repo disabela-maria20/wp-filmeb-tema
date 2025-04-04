@@ -1,25 +1,5 @@
-<?php
-
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-$banner_id = "185";
-$args = array(
-  'post_type' => 'banner-post',
-  'posts_per_page' => 1,
-);
-
-$query = new WP_Query($args);
-
-if ($query->have_posts()) :
-  while ($query->have_posts()) : $query->the_post();
-
-    $skyscraper = CFS()->get('skyscraper', $banner_id);
-?>
-
 <aside class="aside-boletim">
-
-  <img src="<?php echo esc_url($skyscraper); ?>" class="img-banner" alt="banner">
+  <img src="" class="img-banner" alt="banner">
   <h2>Boletins</h2>
   <div class="aside-item-boletim">
     <div>
@@ -48,9 +28,3 @@ if ($query->have_posts()) :
     </div>
   </div>
 </aside>
-
-<?php
-  endwhile;
-  wp_reset_postdata();
-endif;
-?>
