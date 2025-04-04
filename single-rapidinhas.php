@@ -37,17 +37,17 @@ if ($query->have_posts()) : while ($query->have_posts()) : $query->the_post();
       'posts_per_page' => 10,
     ));
 ?>
-    <a href="<?php echo esc_url($link_banner_superior) ?>" target="_blank" rel="noopener noreferrer">
-      <img src="<?php echo esc_url($banner_superior); ?>" class="w-full p-35 img-banner bannerMobile" alt="banner">
-    </a>
+<a href="<?php echo esc_url($link_banner_superior) ?>" target="_blank" rel="noopener noreferrer">
+  <img src="<?php echo esc_url($banner_superior); ?>" class="w-full p-35 img-banner bannerMobile" alt="banner">
+</a>
 
-    <div class="container bannerDesktop">
-      <div class="grid-banner-superior">
-        <a href="<?php echo esc_url($link_banner_inferior); ?>" target="_blank" rel="noopener noreferrer">
-          <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
-        </a>
-      </div>
-    </div>
+<div class="container bannerDesktop">
+  <div class="grid-banner-superior">
+    <a href="<?php echo esc_url($link_banner_inferior); ?>" target="_blank" rel="noopener noreferrer">
+      <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
+    </a>
+  </div>
+</div>
 
 <?php endwhile;
   wp_reset_postdata();
@@ -77,14 +77,14 @@ endif; ?>
         yoast_breadcrumb('<div id="breadcrumbs">', '</div>');
       } ?>
       <?php if (has_post_thumbnail()): ?>
-        <div class="post-thumbnail">
-          <?php the_post_thumbnail('medium'); ?>
-        </div>
+      <div class="post-thumbnail">
+        <?php the_post_thumbnail('medium'); ?>
+      </div>
       <?php endif; ?>
       <div class="post-content">
-        <span class="data">
+        <strong class="data">
           <?php echo date_i18n('j \d\e F \d\e Y', strtotime((CFS()->get('data')))); ?>
-        </span>
+        </strong>
         <h1 class="opem"><?php the_title(); ?></h1>
         <div class="post-text">
           <?php $id_rapidinha = get_the_ID(); ?>
