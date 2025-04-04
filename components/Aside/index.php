@@ -18,11 +18,7 @@ if ($query->have_posts()) :
 ?>
 
 <aside class="aside-boletim">
-
-  <?php if (esc_url(CFS()->get($skyscraper)) != '') {  ?>
   <img src="<?php echo esc_url($skyscraper); ?>" class="img-banner" alt="banner">
-  <?php } ?>
-
   <h2>Boletins</h2>
   <div class="aside-item-boletim">
     <div>
