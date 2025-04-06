@@ -115,6 +115,22 @@
 }
 
 .aside-info {
+  .btn-edicoes {
+    font-weight: bold;
+    font-size: 1.6rem;
+    line-height: 2rem;
+    text-align: center;
+    color: $color-white;
+    background-color: $color-bright-red;
+    padding: 10px 20px;
+    border-radius: 6px;
+    margin-top: 20px;
+    display: inline-block;
+    &:hover {
+      background-color: $color-red-dark;
+      transition: all 0.3s ease-in-out;
+    }
+  }
   h2 {
     font-weight: bold;
     font-size: 2rem;
@@ -160,7 +176,7 @@
       height: 226px;
     }
 
-    a:not(.btn) {
+    a {
       font-weight: 500;
       i {
         color: $color-bright-red;

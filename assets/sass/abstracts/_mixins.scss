@@ -197,20 +197,3 @@ $grid-breakpoints: (
 @mixin hoveBtn {
   background-color: $color-red-dark;
 }
-
-.btn {
-  font-weight: bold;
-  font-size: 1.6rem;
-  line-height: 2rem;
-  text-align: center;
-  color: $color-white;
-  background-color: $color-bright-red;
-  padding: 10px 20px;
-  border-radius: 6px;
-  margin-top: 20px;
-
-  &:hover {
-    background-color: $color-bright-red-hover;
-    transition: all 0.3s ease-in-out;
-  }
-}

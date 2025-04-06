@@ -122,24 +122,43 @@ if ($query->have_posts()): while ($query->have_posts()): $query->the_post();
 
       <h2>Edições anteriores</h2>
       <?php
-      $recent_posts_query = new WP_Query(array(
-        'post_type' => 'edicoes',
-        'posts_per_page' => 10,
-      ));
-
-      if ($recent_posts_query->have_posts()) {
-        while ($recent_posts_query->have_posts()) {
-          $recent_posts_query->the_post(); ?>
+     $recent_edicoes_query = new WP_Query(array(
+      'post_type' => 'edicoes',
+      'posts_per_page' => -1, // traz todas para ordenar depois
+    ));
+    
+    $posts_ordenados = [];
+    
+    if ($recent_edicoes_query->have_posts()) {
+      while ($recent_edicoes_query->have_posts()) {
+        $recent_edicoes_query->the_post();
+        
+        $titulo = get_the_title();
+        preg_match('/Edição (\d+)/', $titulo, $match);
+        $numero = isset($match[1]) ? intval($match[1]) : 0;
+    
+        $posts_ordenados[] = [
+          'numero' => $numero,
+          'permalink' => get_permalink(),
+          'titulo' => $titulo,
+        ];
+      }
+    
+      usort($posts_ordenados, function ($a, $b) {
+        return $b['numero'] - $a['numero'];
+      });
+    
+      foreach (array_slice($posts_ordenados, 0, 10) as $post) {
+        ?>
       <div class="item-aside">
-        <a href="<?php the_permalink(); ?>" class="edicoes">
+        <a href="<?php echo $post['permalink']; ?>" class="edicoes">
           <i class="bi bi-arrow-right-short"></i>
-          <?php 
-              $texto = the_title();
-              echo formatar_data_personalizada($texto);
-            ?>
+          <?php echo $post['titulo']; ?>
         </a>
       </div>
-      <?php } wp_reset_postdata(); }?>
+      <?php
+      }}
+    ?>
     </aside>
   </div>
 </div>
