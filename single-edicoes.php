@@ -3,10 +3,8 @@ get_header();
 ?>
 
 <?php
-$current_page_slug = basename(get_permalink());
-$category_slug = str_replace('boletim/', '', $current_page_slug);
-$banner_id = "23243";
-$author_id = get_the_author_meta('ID');
+;
+$banner_id = "78846";
 
 $args = array(
   'post_type' => 'banner-post',

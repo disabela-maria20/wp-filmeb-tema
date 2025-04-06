@@ -17,7 +17,7 @@
       text-align: left;
       padding-bottom: 10%;
       @include media(lg) {
-        padding-bottom: 15%;
+        padding-top: 20%;
       }
       h1 {
         font-size: clamp(3rem, 10vw, 5.25rem);

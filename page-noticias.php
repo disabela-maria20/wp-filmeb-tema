@@ -2,7 +2,7 @@
 // Template Name: Notícias
 get_header();
 
-$banner_id = "185";
+$banner_id = "78847";
 
 $args = array(
   'post_type' => 'banner-post',

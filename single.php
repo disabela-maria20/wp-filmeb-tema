@@ -1,7 +1,7 @@
 <?php get_header(); ?>
 
 <?php
-$banner_id = "185";
+$banner_id = "78847";
 
 $args = array(
   'post_type' => 'banner-post',
