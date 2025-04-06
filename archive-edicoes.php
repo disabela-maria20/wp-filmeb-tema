@@ -2,13 +2,8 @@
 
 get_header();
 ?>
-
-
 <?php
-$current_page_slug = basename(get_permalink());
-$category_slug = str_replace('boletim/', '', $current_page_slug);
 $banner_id = "23243";
-$author_id = get_the_author_meta('ID');
 
 $args = array(
   'post_type' => 'banner-post',
@@ -132,7 +127,11 @@ endif;
       <?php endif; ?>
       <?php wp_reset_postdata(); ?>
     </div>
-    <aside class="aside-info">
+    <aside class="aside-boletim">
+      <a href="<?php echo esc_url($link_skyscraper)?>" target="_blank" rel="noopener noreferrer">
+        <img src="<?php echo esc_url($skyscraper); ?>" class="img-banner" alt="banner">
+      </a>
+      <h2>Boletins</h2>
       <?php get_template_part('components/Aside/index'); ?>
     </aside>
   </div>

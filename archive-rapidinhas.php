@@ -118,7 +118,7 @@ $boletim_query = new WP_Query(array(
       <a href="<?php echo esc_url($link_skyscraper); ?>">
         <img src="<?php echo esc_url($skyscraper); ?>" class="img-banner" alt="banner">
       </a>
-      <h2>Rapidinhas desta edição</h2>
+      <h2>Edições anteriores</h2>
       <?php
       $recent_edicoes_query = new WP_Query(array(
         'post_type' => 'edicoes',
@@ -138,6 +138,7 @@ $boletim_query = new WP_Query(array(
         </a>
       </div>
       <?php } wp_reset_postdata(); }?>
+      <a class="btn" href="<?php echo '';?>"> Acessar todas as Edições</a>
     </aside>
   </div>
 

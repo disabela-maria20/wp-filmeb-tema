@@ -160,7 +160,7 @@
       height: 226px;
     }
 
-    a {
+    a:not(.btn) {
       font-weight: 500;
       i {
         color: $color-bright-red;
