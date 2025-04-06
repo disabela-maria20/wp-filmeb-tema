@@ -1,4 +1,6 @@
 .page-distribuidora {
+  overflow: auto;
+  width: 100%;
   @include media(lg) {
     padding: 60px 15px;
   }

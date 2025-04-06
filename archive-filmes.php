@@ -59,34 +59,32 @@ $dias_semana = [
   'Saturday'  => 'Sábado',
 ];
 
-$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
-
-$args = array(
+$args_datas = array(
   'post_type' => 'filmes',
-  'posts_per_page' => 10,
-  'post_status' => 'publish',
-  'paged' => $paged,
+  'posts_per_page' => -1,
+  'fields' => 'ids',
+  'meta_key' => 'estreia',
+  'orderby' => 'meta_value',
+  'order' => 'DESC',
+  'post_status' => 'publish'
 );
 
-// Aplicar filtros
-if (isset($_GET['ano']) && !empty($_GET['ano'])) {
-  $args['meta_query'][] = array(
-    'key' => 'estreia',
-    'value' => sanitize_text_field($_GET['ano']),
-    'compare' => 'REGEXP',
-  );
-}
+if (isset($_GET['ano'], $_GET['mes']) && !empty($_GET['ano']) && !empty($_GET['mes'])) {
+  $ano = sanitize_text_field($_GET['ano']);
+  $mes = sanitize_text_field($_GET['mes']);
+  $primeiro_dia = "$ano-$mes-01";
+  $ultimo_dia = date("Y-m-t", strtotime($primeiro_dia)); 
 
-if (isset($_GET['mes']) && !empty($_GET['mes'])) {
-  $args['meta_query'][] = array(
+  $args_datas['meta_query'][] = array(
     'key' => 'estreia',
-    'value' => sanitize_text_field($_GET['mes']),
-    'compare' => 'REGEXP',
+    'value' => array($primeiro_dia, $ultimo_dia),
+    'compare' => 'BETWEEN',
+    'type' => 'DATE',
   );
 }
 
 if (isset($_GET['origem']) && !empty($_GET['origem'])) {
-  $args['meta_query'][] = array(
+  $args_datas['meta_query'][] = array(
     'key' => 'paises',
     'value' => sanitize_text_field($_GET['origem']),
     'compare' => 'REGEXP',
@@ -94,7 +92,7 @@ if (isset($_GET['origem']) && !empty($_GET['origem'])) {
 }
 
 if (isset($_GET['distribuicao']) && !empty($_GET['distribuicao'])) {
-  $args['meta_query'][] = array(
+  $args_datas['meta_query'][] = array(
     'key' => 'distribuicao',
     'value' => sanitize_text_field($_GET['distribuicao']),
     'compare' => '=',
@@ -102,7 +100,7 @@ if (isset($_GET['distribuicao']) && !empty($_GET['distribuicao'])) {
 }
 
 if (isset($_GET['genero']) && !empty($_GET['genero'])) {
-  $args['meta_query'][] = array(
+  $args_datas['meta_query'][] = array(
     'key' => 'generos',
     'value' => sanitize_text_field($_GET['genero']),
     'compare' => 'REGEXP',
@@ -110,33 +108,101 @@ if (isset($_GET['genero']) && !empty($_GET['genero'])) {
 }
 
 if (isset($_GET['tecnologia']) && !empty($_GET['tecnologia'])) {
-  $args['meta_query'][] = array(
+  $args_datas['meta_query'][] = array(
     'key' => 'tecnologia',
     'value' => sanitize_text_field($_GET['tecnologia']),
     'compare' => 'REGEXP',
   );
 }
 
-$filmes = new WP_Query($args);
+$query_datas = new WP_Query($args_datas);
+$datas_unicas = array();
 
-// Array para armazenar filmes agrupados por dia
+if ($query_datas->have_posts()) {
+  foreach ($query_datas->posts as $post_id) {
+    $data_estreia = CFS()->get('estreia', $post_id);
+    if ($data_estreia && preg_match('/^\d{4}-\d{2}-\d{2}$/', $data_estreia) && !in_array($data_estreia, $datas_unicas)) {
+      $datas_unicas[] = $data_estreia;
+    }
+  }
+}
+
+// Configuração da paginação por datas
+$datas_por_pagina = 7; // Número de dias por página
+$total_datas = count($datas_unicas);
+$total_paginas = ceil($total_datas / $datas_por_pagina);
+$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+$offset = ($paged - 1) * $datas_por_pagina;
+$datas_pagina = array_slice($datas_unicas, $offset, $datas_por_pagina);
+
+// Consulta para os filmes das datas da página atual
+$args_filmes = array(
+  'post_type' => 'filmes',
+  'posts_per_page' => -1, // Traz todos os filmes das datas selecionadas
+  'meta_query' => array(
+    array(
+      'key' => 'estreia',
+      'value' => $datas_pagina,
+      'compare' => 'IN'
+    )
+  ),
+  'meta_key' => 'estreia',
+  'orderby' => 'meta_value',
+  'order' => 'DESC'
+);
+
+// Aplicar os mesmos filtros novamente (necessário para a consulta principal)
+if (isset($_GET['ano'], $_GET['mes']) && !empty($_GET['ano']) && !empty($_GET['mes'])) {
+  // Já filtramos pelas datas, não precisamos aplicar novamente
+}
+
+if (isset($_GET['origem']) && !empty($_GET['origem'])) {
+  $args_filmes['meta_query'][] = array(
+    'key' => 'paises',
+    'value' => sanitize_text_field($_GET['origem']),
+    'compare' => 'REGEXP',
+  );
+}
+
+if (isset($_GET['distribuicao']) && !empty($_GET['distribuicao'])) {
+  $args_filmes['meta_query'][] = array(
+    'key' => 'distribuicao',
+    'value' => sanitize_text_field($_GET['distribuicao']),
+    'compare' => '=',
+  );
+}
+
+if (isset($_GET['genero']) && !empty($_GET['genero'])) {
+  $args_filmes['meta_query'][] = array(
+    'key' => 'generos',
+    'value' => sanitize_text_field($_GET['genero']),
+    'compare' => 'REGEXP',
+  );
+}
+
+if (isset($_GET['tecnologia']) && !empty($_GET['tecnologia'])) {
+  $args_filmes['meta_query'][] = array(
+    'key' => 'tecnologia',
+    'value' => sanitize_text_field($_GET['tecnologia']),
+    'compare' => 'REGEXP',
+  );
+}
+
+$filmes = new WP_Query($args_filmes);
+
+// Agrupar filmes por dia (apenas para as datas da página atual)
 $filmes_por_dia = array();
-
 if ($filmes->have_posts()) {
   while ($filmes->have_posts()) {
     $filmes->the_post();
     $post_id = get_the_ID();
-
-    // Pega a data diretamente e verifica se é válida
     $data_estreia = CFS()->get('estreia', $post_id);
-
+    
     if ($data_estreia && preg_match('/^\d{4}-\d{2}-\d{2}$/', $data_estreia)) {
-      $data_formatada = $data_estreia; // Já está no formato 'Y-m-d'
-
-      if (!isset($filmes_por_dia[$data_formatada])) {
-        $filmes_por_dia[$data_formatada] = array();
+      if (!isset($filmes_por_dia[$data_estreia])) {
+        $filmes_por_dia[$data_estreia] = array();
       }
-      $filmes_por_dia[$data_formatada][] = get_post();
+      $filmes_por_dia[$data_estreia][] = get_post();
     }
   }
   wp_reset_postdata();
@@ -190,6 +256,7 @@ function obter_anos_dos_filmes()
 $anos = obter_anos_dos_filmes();
 ?>
 
+<!-- Restante do template permanece igual -->
 <?php if ($query->have_posts()): ?>
 <?php while ($query->have_posts()): $query->the_post(); ?>
 <?php
@@ -380,14 +447,14 @@ $anos = obter_anos_dos_filmes();
               <?php render_filmes_lista($filmes_por_dia, $dias_semana); ?>
 
               <!-- Paginação -->
-              <?php if ($filmes->max_num_pages > 1) : ?>
+              <?php if ($total_paginas > 1) : ?>
               <div class="pagination">
                 <?php
                     echo paginate_links(array(
                       'base' => str_replace(999999999, '%#%', esc_url(get_pagenum_link(999999999))),
                       'format' => '?paged=%#%',
                       'current' => max(1, $paged),
-                      'total' => $filmes->max_num_pages,
+                      'total' => $total_paginas,
                       'prev_text' => __('« Anterior'),
                       'next_text' => __('Próximo »'),
                     ));
@@ -400,14 +467,14 @@ $anos = obter_anos_dos_filmes();
             <?php render_filmes_tabela($filmes_por_dia, $dias_semana); ?>
 
             <!-- Paginação -->
-            <?php if ($filmes->max_num_pages > 1) : ?>
+            <?php if ($total_paginas > 1) : ?>
             <div class="pagination">
               <?php
                   echo paginate_links(array(
                     'base' => str_replace(999999999, '%#%', esc_url(get_pagenum_link(999999999))),
                     'format' => '?paged=%#%',
                     'current' => max(1, $paged),
-                    'total' => $filmes->max_num_pages,
+                    'total' => $total_paginas,
                     'prev_text' => __('« Anterior'),
                     'next_text' => __('Próximo »'),
                   ));
@@ -431,14 +498,14 @@ $anos = obter_anos_dos_filmes();
           <?php render_filmes_lista($filmes_por_dia, $dias_semana); ?>
 
           <!-- Paginação -->
-          <?php if ($filmes->max_num_pages > 1) : ?>
+          <?php if ($total_paginas > 1) : ?>
           <div class="pagination">
             <?php
                 echo paginate_links(array(
                   'base' => str_replace(999999999, '%#%', esc_url(get_pagenum_link(999999999))),
                   'format' => '?paged=%#%',
                   'current' => max(1, $paged),
-                  'total' => $filmes->max_num_pages,
+                  'total' => $total_paginas,
                   'prev_text' => __('« Anterior'),
                   'next_text' => __('Próximo »'),
                 ));
@@ -454,14 +521,14 @@ $anos = obter_anos_dos_filmes();
         <?php render_filmes_tabela($filmes_por_dia, $dias_semana); ?>
 
         <!-- Paginação -->
-        <?php if ($filmes->max_num_pages > 1) : ?>
+        <?php if ($total_paginas > 1) : ?>
         <div class="pagination">
           <?php
               echo paginate_links(array(
                 'base' => str_replace(999999999, '%#%', esc_url(get_pagenum_link(999999999))),
                 'format' => '?paged=%#%',
                 'current' => max(1, $paged),
-                'total' => $filmes->max_num_pages,
+                'total' => $total_paginas,
                 'prev_text' => __('« Anterior'),
                 'next_text' => __('Próximo »'),
               ));
@@ -479,6 +546,26 @@ $anos = obter_anos_dos_filmes();
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
 
 <script>
+const anoSelect = document.getElementById('ano');
+const mesSelect = document.getElementById('mes');
+
+anoSelect.addEventListener('change', function() {
+  if (this.value) {
+    mesSelect.disabled = false;
+  } else {
+    mesSelect.value = '';
+    mesSelect.disabled = true;
+  }
+});
+
+// Garante o estado correto ao carregar a página (ex: após um submit)
+window.addEventListener('DOMContentLoaded', () => {
+  if (anoSelect.value) {
+    mesSelect.disabled = false;
+  } else {
+    mesSelect.disabled = true;
+  }
+});
 new Vue({
   el: "#app",
   data: {
