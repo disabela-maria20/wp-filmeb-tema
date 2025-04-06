@@ -407,13 +407,85 @@
       height: 200px;
       object-fit: contain;
     }
-    p {
-      font-size: 1.2rem;
-      margin: 0 !important;
-      text-align: center !important;
-    }
     .publi {
       width: 100%;
+    }
+
+    .item {
+      h3 {
+        font-size: 1.4rem;
+        color: $color-darker-gray;
+        text-align: center;
+        padding: 0 15px;
+      }
+      .card {
+        color: $color-darker-gray;
+        width: 100%;
+        height: 379px;
+        background: #fef3f6;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        border-radius: 5px;
+
+        @include media(lg) {
+          height: 200px;
+        }
+        ul {
+          li {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            span {
+              display: block;
+              text-align: end;
+            }
+          }
+        }
+
+        .poster {
+          overflow: auto;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 5px;
+        }
+        .indisponivel {
+          position: absolute;
+          bottom: 0;
+          color: #feadc3;
+          font-weight: 500;
+          font-size: 1rem;
+        }
+
+        h3 {
+          font-size: 1.4rem;
+          color: $color-darker-gray;
+          text-align: center;
+          padding: 0 15px;
+        }
+        &:hover .info {
+          display: block;
+        }
+        .info {
+          position: absolute;
+          display: none;
+          background-color: $color-white;
+          border-radius: 5px;
+          border: 1px solid $color-bright-red;
+          font-size: 1.6rem;
+          padding: 10px;
+          width: 300px;
+          z-index: 999;
+          ul {
+            li {
+              padding: 2.5px;
+            }
+          }
+        }
+      }
     }
   }
 }

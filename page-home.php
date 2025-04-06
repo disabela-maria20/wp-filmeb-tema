@@ -137,16 +137,20 @@ $recent_posts_query_banner = new WP_Query(array(
     <div class="grid-filmes">
       <div>
         <section id="filmesHome" class="owl-carousel">
-          <?php if ($filme->have_posts()) {
-                while ($filme->have_posts()) {
-                  $filme->the_post(); ?>
+          <?php if ($filme->have_posts()) {while ($filme->have_posts()) {$filme->the_post(); ?>
           <div class="item">
-            <a href="<?php the_permalink(); ?>">
-              <?php if (esc_url(CFS()->get('cartaz')) != '') {  ?>
+            <?php if (esc_url(CFS()->get('cartaz')) == '') {  ?>
+            <a href="<?php the_permalink(); ?>" class="card">
+              <h3><?php echo get_the_title() ?></h3>
+              <p class="indisponivel">Poster não disponível</p>
+            </a>
+            <?php } else { ?>
+            <a href="<?php the_permalink(); ?>" class="">
               <img src="<?php echo esc_url(CFS()->get('cartaz')); ?>"
                 alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
-              <?php } ?>
-              <p><?php echo get_the_title() ?></p>
+              <h3><?php echo get_the_title() ?></h3>
+            </a>
+            <?php } ?>
             </a>
           </div>
           <?php }

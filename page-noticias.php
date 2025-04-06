@@ -44,7 +44,7 @@ $rapidinhas_id = get_cat_ID('Rapidinhas');
           $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
           $boletim_query = new WP_Query(array(
             'category_name' => 'Notícias',
-            'posts_per_page' => 4,
+            'posts_per_page' => 6,
             'paged' => $paged,
           ));
 
@@ -81,7 +81,7 @@ $rapidinhas_id = get_cat_ID('Rapidinhas');
               'next_text' => __('>'),
               'mid_size' => 3,
             ));
-            ?>
+          ?>
       </div>
       <?php wp_reset_postdata(); ?>
     </div>
