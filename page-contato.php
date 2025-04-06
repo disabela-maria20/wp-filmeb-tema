@@ -120,5 +120,5 @@ get_header();
 <?php endwhile;
 else: endif; ?>
 
-<?php get_template_part(slug: 'components/Footer/index'); ?>
+<?php get_template_part( 'components/Footer/index'); ?>
 <?php get_footer(); ?>
