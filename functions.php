@@ -529,36 +529,18 @@ function redirecionar_para_checkout()
 add_filter('woocommerce_add_to_cart_redirect', 'redirecionar_para_checkout');
 
 
-function adicionar_produto_automatico_ao_carrinho() {
-  // ID do produto que deve estar sempre no carrinho
-  $produto_id = 106;
-  
-  // Verifica se o produto já está no carrinho
-  $produto_no_carrinho = false;
-  foreach (WC()->cart->get_cart() as $cart_item_key => $values) {
-      $_product = $values['data'];
-      if ($_product->get_id() == $produto_id) {
-          $produto_no_carrinho = true;
-          break;
-      }
+add_action('template_redirect', 'redirecionar_assinatura_filme_b');
+function redirecionar_assinatura_filme_b()
+{
+  if (is_singular('product') && strpos($_SERVER['REQUEST_URI'], '/produto/assinatura-filme-b/') !== false) {
+    wp_redirect(home_url('/assine/'), 301);
+    exit;
   }
-  
-  // Se o produto não está no carrinho, adiciona
-  if (!$produto_no_carrinho) {
-      WC()->cart->add_to_cart($produto_id);
+  if (is_singular('product') && strpos($_SERVER['REQUEST_URI'], '/produto/assinatura-filme-b/') !== false) {
+    wp_redirect(home_url('/assine/'), 301);
+    exit;
   }
 }
-
-// Adiciona o produto quando o carrinho é inicializado
-add_action('woocommerce_init', 'adicionar_produto_automatico_ao_carrinho');
-
-// Adiciona o produto quando um item é removido (para garantir que não seja removido)
-add_action('woocommerce_cart_item_removed', 'adicionar_produto_automatico_ao_carrinho');
-
-function modificar_botao_retornar_loja() {
-  return esc_url(get_permalink(get_page_by_path('assine')));
-}
-add_filter('woocommerce_return_to_shop_redirect', 'modificar_botao_retornar_loja');
 
 function remover_mensagem_padrao_sem_pedidos()
 {
@@ -567,3 +549,21 @@ function remover_mensagem_padrao_sem_pedidos()
   }
 }
 add_action('template_redirect', 'remover_mensagem_padrao_sem_pedidos');
+
+add_action('wp_ajax_add_to_cart_ajax', 'add_to_cart_ajax');
+add_action('wp_ajax_nopriv_add_to_cart_ajax', 'add_to_cart_ajax');
+
+function add_to_cart_ajax() {
+    if (!isset($_GET['product_id'])) {
+        wp_send_json(['success' => false, 'message' => 'ID do produto ausente']);
+    }
+
+    $product_id = intval($_GET['product_id']);
+
+    if (WC()->cart) {
+        WC()->cart->add_to_cart($product_id);
+        wp_send_json(['success' => true]);
+    } else {
+        wp_send_json(['success' => false, 'message' => 'Carrinho não disponível']);
+    }
+}

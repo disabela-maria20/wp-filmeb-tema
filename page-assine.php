@@ -107,15 +107,33 @@ get_header();
           R$ 700,00/ano
         </p>
         <div class="btn-center">
-          <a href="<?php echo get_site_url(); ?>/finalizar-compra/?add-to-cart=106/">
+          <a href="#" id="assinar-filmeb" data-product-id="77471">
             Assine o FilmeB
           </a>
+
         </div>
       </div>
     </div>
     </div>
 
 </main>
+<script>
+document.getElementById('assinar-filmeb').addEventListener('click', function(e) {
+  e.preventDefault();
+
+  const productId = this.getAttribute('data-product-id');
+
+  fetch(`<?php echo admin_url('admin-ajax.php'); ?>?action=add_to_cart_ajax&product_id=${productId}`)
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        window.location.href = "<?php echo get_site_url(); ?>/finalizar-compra/";
+      } else {
+        alert('Erro ao adicionar ao carrinho.');
+      }
+    });
+});
+</script>
 
 
 
