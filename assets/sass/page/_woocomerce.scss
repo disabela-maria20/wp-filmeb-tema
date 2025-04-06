@@ -1,9 +1,4 @@
 .woocommerce {
-  @include media(lg) {
-    display: flex;
-    gap: 90px;
-  }
-
   p {
     margin: 0 !important;
   }
