@@ -63,8 +63,11 @@
     width: 100%;
   }
   .woocommerce-MyAccount-navigation {
-    margin-bottom: 35px;
     ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 35px;
       margin-top: 25px;
       @include media(lg) {
         margin-top: 0;
