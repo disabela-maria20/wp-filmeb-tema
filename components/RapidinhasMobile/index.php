@@ -21,19 +21,19 @@ if ($rapidinhas_posts_query->have_posts()) {
     }
 
 ?>
-    <div class="item-rapidinha">
-      <?php if (esc_url(CFS()->get('imagem')) != '') {  ?>
-        <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
-          alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
-      <?php } ?>
-      <div>
-        <span class="data">
-          <?php echo date_i18n('j \d\e F \d\e Y', strtotime((CFS()->get('data')))); ?>
-        </span>
-        <h3><?php echo get_the_title(); ?></h3>
-        <a href="<?php the_permalink(); ?>">Leia mais</a>
-      </div>
-    </div>
+<div class="item-rapidinha">
+  <?php if (esc_url(CFS()->get('imagem')) != '') {  ?>
+  <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
+    alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
+  <?php } ?>
+  <div>
+    <span class="data">
+      <?php echo date_i18n('j \d\e F \d\e Y', strtotime((CFS()->get('data')))); ?>
+    </span>
+    <h3><?php echo extrair_texto_apos_traco(get_the_title()); ?></h3>
+    <a href="<?php the_permalink(); ?>">Leia mais</a>
+  </div>
+</div>
 <?php $post_count++;
   }
 

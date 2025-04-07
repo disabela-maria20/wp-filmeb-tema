@@ -89,7 +89,7 @@ $boletim_query = new WP_Query(array(
           <div>
             <span class="data"><?php echo date_i18n('j \d\e F \d\e Y', strtotime(get_the_date())); ?></span>
             <a href="<?php the_permalink(); ?>" class="read-more">
-              <h2><?php echo get_the_title();?> </h2>
+              <h2><?php echo extrair_texto_apos_traco(get_the_title());?> </h2>
             </a>
             <a href="<?php the_permalink(); ?>">
               Leia mais

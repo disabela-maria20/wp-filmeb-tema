@@ -105,7 +105,7 @@ endif;
         <a href="<?php echo str_replace("https://filmeb.isabelamribeiro.com.br", get_site_url(), $the_post->guid); ?>"
           class="link-lista-rapidinha">
           <i class="bi bi-arrow-right-short"></i>
-          <span><?php echo $the_post->post_title; ?></span>
+          <span><?php echo extrair_texto_apos_traco($the_post->post_title); ?></span>
         </a>
         <?php } // Fechamento do foreach ?>
         <?php } // Fechamento do if ?>
