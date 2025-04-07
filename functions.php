@@ -568,14 +568,18 @@ function add_to_cart_ajax() {
     }
 }
 function extrair_texto_apos_ultimo_traco($texto) {
+  // Verifica vários tipos de traço (hífen, en dash, em dash)
   $tracos = ['–', '—', '-', '−'];
   
   foreach ($tracos as $traco) {
       $posicao = strrpos($texto, $traco);
+      
+      // Se encontrou o traço, retorna TUDO depois dele (trim para remover espaços extras)
       if ($posicao !== false) {
           return trim(substr($texto, $posicao + strlen($traco)));
       }
   }
   
-  return $texto; 
+  // Se não encontrou nenhum traço, retorna o texto original (ou uma mensagem padrão)
+  return $texto; // ou "Texto sem traço identificável"
 }
