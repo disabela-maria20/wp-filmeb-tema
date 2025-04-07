@@ -567,19 +567,17 @@ function add_to_cart_ajax() {
         wp_send_json(['success' => false, 'message' => 'Carrinho não disponível']);
     }
 }
-function extrair_texto_apos_ultimo_traco($texto) {
-  // Verifica vários tipos de traço (hífen, en dash, em dash)
-  $tracos = ['–', '—', '-', '−'];
+
+function extrair_texto_apos_traco($texto) {
+  // Lista de possíveis caracteres de traço/hífen
+  $tracos = ['–', '—', '-', '−']; // diferentes tipos de traço
   
   foreach ($tracos as $traco) {
-      $posicao = strrpos($texto, $traco);
-      
-      // Se encontrou o traço, retorna TUDO depois dele (trim para remover espaços extras)
-      if ($posicao !== false) {
-          return trim(substr($texto, $posicao + strlen($traco)));
+      $pos = strrpos($texto, $traco);
+      if ($pos !== false) {
+          return trim(substr($texto, $pos + strlen($traco)));
       }
   }
   
-  // Se não encontrou nenhum traço, retorna o texto original (ou uma mensagem padrão)
-  return $texto; // ou "Texto sem traço identificável"
+  return 'texto'; // ou return "teste" se preferir
 }
