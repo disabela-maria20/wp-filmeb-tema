@@ -574,6 +574,5 @@ function extrair_texto_apos_traco($texto) {
   if ($ultimo_traco !== false) {
     return trim(substr($texto, $ultimo_traco + strlen('–')));
   }
-  
-  return $texto;
+  return "teste";
 }
