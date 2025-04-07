@@ -569,11 +569,11 @@ function add_to_cart_ajax() {
 }
 
 function extrair_texto_apos_traco($texto) {
-  $regex = '/^.*[–—\-−]\s*(.+)$/u';
-    
+  $regex = '/(?:\([^\)]*\))?[^–—\-−]*[–—\-−]\s*(.+)$/u';
+  
   if (preg_match($regex, $texto, $matches)) {
-      return trim($matches[1]); // Retorna o texto após o último traço
+      return trim($matches[1]);
   }
   
-  return $texto; // Se não encontrar traço, retorna o original (ou pode retornar "")
+  return $texto; 
 }
