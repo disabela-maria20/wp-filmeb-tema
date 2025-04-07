@@ -71,8 +71,14 @@ endif; ?>
             yoast_breadcrumb('<div id="breadcrumbs">', '</div>');
           } ?>
 
-      <h1 class="titulo"><?php the_title(); ?></h1>
-      <?php the_content(); ?>
+      <div class="post">
+        <div class="post-content">
+          <h1><?php the_title(); ?></h1>
+          <div class="post-text">
+            <?php the_content(); ?>
+          </div>
+        </div>
+      </div>
     </div>
 
     <aside class="aside-boletim">
@@ -83,16 +89,16 @@ endif; ?>
       <?php get_template_part('components/Aside/index'); ?>
     </aside>
   </div>
-  <?php endwhile; endif; ?>
-  <?php get_footer(); ?>
+</div>
+<?php endwhile; endif; ?>
+<?php get_footer(); ?>
+<?php get_template_part('components/Footer/index'); ?>
 
-  <?php get_template_part('components/Footer/index'); ?>
-  <?php get_footer(); ?>
 
-  <script>
-  var splide = new Splide('#datas', {
-    arrows: true,
-    pagination: false,
-  });
-  splide.mount();
-  </script>
+<script>
+var splide = new Splide('#datas', {
+  arrows: true,
+  pagination: false,
+});
+splide.mount();
+</script>

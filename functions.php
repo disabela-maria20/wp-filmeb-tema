@@ -567,3 +567,12 @@ function add_to_cart_ajax() {
         wp_send_json(['success' => false, 'message' => 'Carrinho não disponível']);
     }
 }
+
+function extrair_texto_apos_traco($texto) {
+  $ultimo_traco = strrpos($texto, '–');
+  if ($ultimo_traco !== false) {
+    return trim(substr($texto, $ultimo_traco + strlen('–')));
+  }
+  
+  return $texto;
+}

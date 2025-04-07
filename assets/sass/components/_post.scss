@@ -10,29 +10,20 @@
         background-color: $color-light-red;
 
         th {
-          color: $color-darker-gray;
-          padding: 15px;
+          color: $color-dark-gray;
           font-size: 1.2rem;
-
-          @include media(lg) {
-            font-size: 1.4rem;
-          }
+          line-height: 1.61;
+          padding: 5px 0;
         }
       }
     }
 
     tbody {
       td {
-        color: $color-darker-gray;
-        padding: 15px;
-        font-size: 1.2rem;
-        line-height: 2rem;
-        padding: 25px;
-
-        @include media(lg) {
-          font-size: 1.4rem;
-          line-height: 2.2rem;
-        }
+        color: $color-dark-gray;
+        font-size: 1.1rem;
+        line-height: 1.61;
+        padding: 5px 0;
       }
     }
   }
@@ -64,7 +55,7 @@
     line-height: 3.4rem;
     text-align: left;
     color: $color-bright-red;
-    padding-top: 50px;
+    padding: 35px 0;
 
     @include media(lg) {
       font-size: 4rem;

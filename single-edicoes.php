@@ -91,9 +91,7 @@ if ($query->have_posts()): while ($query->have_posts()): $query->the_post();
               <a href="<?php the_permalink(); ?>" class="read-more">
                 <h2><?php echo $the_post->post_title; ?></h2>
               </a>
-              <a href="<?php echo get_template_directory_uri() . '/' . 'rapidinhas/' . $the_post->post_name; ?>">
-                Leia mais
-              </a>
+              <p><?php echo $the_post->post_content?></p>
             </div>
           </div>
           <?php } // Fechamento do foreach ?>
