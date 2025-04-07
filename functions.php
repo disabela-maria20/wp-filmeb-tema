@@ -569,10 +569,15 @@ function add_to_cart_ajax() {
 }
 
 function extrair_texto_apos_traco($texto) {
-  $ultimo_traco = strrpos($texto, '–');
-  var_dump($ultimo_traco);
-  if ($ultimo_traco !== false) {
-    return trim(substr($texto, $ultimo_traco + strlen('–')));
+  // Lista de possíveis caracteres de traço/hífen
+  $tracos = ['–', '—', '-', '−']; // diferentes tipos de traço
+  
+  foreach ($tracos as $traco) {
+      $pos = strrpos($texto, $traco);
+      if ($pos !== false) {
+          return trim(substr($texto, $pos + strlen($traco)));
+      }
   }
-  return "teste";
+  
+  return 'texto'; // ou return "teste" se preferir
 }
