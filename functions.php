@@ -1,7 +1,7 @@
 <?php
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+// error_reporting(E_ALL);
+// ini_set('display_errors', 1);
 
 function handel_add_woocommerce_support()
 {
@@ -569,15 +569,11 @@ function add_to_cart_ajax() {
 }
 
 function extrair_texto_apos_traco($texto) {
-  // Lista de possíveis caracteres de traço/hífen
-  $tracos = ['–', '—', '-', '−']; // diferentes tipos de traço
-  
-  foreach ($tracos as $traco) {
-      $pos = strrpos($texto, $traco);
-      if ($pos !== false) {
-          return trim(substr($texto, $pos + strlen($traco)));
-      }
+  $regex = '/^.*[–—\-−]\s*(.+)$/u';
+    
+  if (preg_match($regex, $texto, $matches)) {
+      return trim($matches[1]); // Retorna o texto após o último traço
   }
   
-  return 'texto'; // ou return "teste" se preferir
+  return $texto; // Se não encontrar traço, retorna o original (ou pode retornar "")
 }
