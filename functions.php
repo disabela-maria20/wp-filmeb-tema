@@ -567,17 +567,15 @@ function add_to_cart_ajax() {
         wp_send_json(['success' => false, 'message' => 'Carrinho não disponível']);
     }
 }
-
-function extrair_texto_apos_traco($texto) {
-  // Lista de possíveis caracteres de traço/hífen
-  $tracos = ['–', '—', '-', '−']; // diferentes tipos de traço
+function extrair_texto_apos_ultimo_traco($texto) {
+  $tracos = ['–', '—', '-', '−'];
   
   foreach ($tracos as $traco) {
-      $pos = strrpos($texto, $traco);
-      if ($pos !== false) {
-          return trim(substr($texto, $pos + strlen($traco)));
+      $posicao = strrpos($texto, $traco);
+      if ($posicao !== false) {
+          return trim(substr($texto, $posicao + strlen($traco)));
       }
   }
   
-  return 'texto'; // ou return "teste" se preferir
+  return $texto; 
 }
