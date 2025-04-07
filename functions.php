@@ -1,5 +1,8 @@
 <?php
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 function handel_add_woocommerce_support()
 {
   add_theme_support('woocommerce');
@@ -536,10 +539,7 @@ function redirecionar_assinatura_filme_b()
     wp_redirect(home_url('/assine/'), 301);
     exit;
   }
-  if (is_singular('product') && strpos($_SERVER['REQUEST_URI'], '/produto/assinatura-filme-b/') !== false) {
-    wp_redirect(home_url('/assine/'), 301);
-    exit;
-  }
+
 }
 
 function remover_mensagem_padrao_sem_pedidos()
@@ -570,6 +570,7 @@ function add_to_cart_ajax() {
 
 function extrair_texto_apos_traco($texto) {
   $ultimo_traco = strrpos($texto, '–');
+  var_dump($ultimo_traco);
   if ($ultimo_traco !== false) {
     return trim(substr($texto, $ultimo_traco + strlen('–')));
   }
