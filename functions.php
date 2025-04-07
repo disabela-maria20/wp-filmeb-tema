@@ -570,11 +570,11 @@ function add_to_cart_ajax() {
 
 function extrair_texto_apos_traco($texto) {
   // Essa regex encontra o primeiro traço (–, —, -, −) e captura tudo depois dele
-  $regex = '/[–—\-−]\s*(.+)$/u';
-  
-  if (preg_match($regex, $texto, $matches)) {
-      return trim($matches[1]); // Retorna só o texto depois do traço
-  }
+  $regex = '/[–—\-−][^a-zA-Z0-9]*([\p{L}].*)$/u';
 
-  return $texto; // Se não encontrar traço, retorna o texto original
+    if (preg_match($regex, $texto, $matches)) {
+        return trim($matches[1]);
+    }
+
+    return $texto;// Se não encontrar traço, retorna o texto original
 }
