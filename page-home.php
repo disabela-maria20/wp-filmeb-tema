@@ -182,7 +182,7 @@ $recent_posts_query_banner = new WP_Query(array(
             <span><?php echo get_the_category_list(', '); ?></span>
             <a href="<?php the_permalink(); ?>">
               <h3>
-
+                <?php echo extrair_texto_apos_traco(esc_html(CFS()->get('titulo') ?: get_the_title()));  ?>
               </h3>
             </a>
             <span class="data"> <?php echo date_i18n('j \d\e F \d\e Y', strtotime((CFS()->get('data')))); ?></span>
