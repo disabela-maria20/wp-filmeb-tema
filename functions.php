@@ -576,5 +576,5 @@ function extrair_texto_apos_traco($texto) {
         return trim($matches[1]);
     }
 
-    return $texto;// Se não encontrar traço, retorna o texto original
+    return 'teste';// Se não encontrar traço, retorna o texto original
 }
