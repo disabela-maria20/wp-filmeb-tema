@@ -22,14 +22,14 @@ $filme = new WP_Query(array(
   'orderby' => 'meta_value',
   'order' => 'ASC',
   'post_status' => 'publish',
-  // 'meta_query' => array(
-  //   array(
-  //     'key' => 'estreia',
-  //     'value' => $next_thursday_date,
-  //     'compare' => '=',
-  //     'type' => 'DATE'
-  //   )
-  // )
+  'meta_query' => array(
+    array(
+      'key' => 'estreia',
+      'value' => $next_thursday_date,
+      'compare' => '=',
+      'type' => 'DATE'
+    )
+  )
 ));
 
 $banner_estreia = CFS()->get('banner_estreia');
