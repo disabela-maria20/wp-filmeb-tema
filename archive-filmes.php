@@ -59,8 +59,6 @@ $dias_semana = [
   'Saturday'  => 'Sábado',
 ];
 
-$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
-
 // Valores padrão para ano e mês
 $current_year = date('Y');
 $current_month = date('m');
@@ -69,9 +67,8 @@ $selected_mes = isset($_GET['mes']) ? sanitize_text_field($_GET['mes']) : $curre
 
 $args = array(
   'post_type' => 'filmes',
-  'posts_per_page' => 10,
+  'posts_per_page' => -1, // Busca todos os posts
   'post_status' => 'publish',
-  'paged' => $paged,
   'meta_query' => array(
     'relation' => 'AND',
     array(
@@ -143,6 +140,17 @@ if ($filmes->have_posts()) {
   }
   wp_reset_postdata();
 }
+
+// Ordena as datas de forma decrescente
+krsort($filmes_por_dia);
+
+// Configuração de paginação personalizada
+$grupos_por_pagina = 5; // Número de datas por página
+$total_grupos = count($filmes_por_dia);
+$pagina_atual = isset($_GET['pagina']) ? intval($_GET['pagina']) : 1;
+$offset = ($pagina_atual - 1) * $grupos_por_pagina;
+$grupos_pagina = array_slice($filmes_por_dia, $offset, $grupos_por_pagina, true);
+
 function render_terms($field_key, $post_id)
 {
   $distribuicao = CFS()->get($field_key, $post_id);
@@ -187,6 +195,7 @@ function obter_anos_dos_filmes()
 
   return $anos_filmes;
 }
+
 
 $anos = obter_anos_dos_filmes();
 ?>
@@ -350,7 +359,8 @@ $anos = obter_anos_dos_filmes();
             $dia = $data_estreia->format('d');
             $mes = $data_estreia->format('m');
             $ano = $data_estreia->format('Y');
-            echo '<h2><i class="bi bi-calendar-check-fill"></i>' . esc_html($dia_semana) . ', ' . esc_html($dia) . '/' . esc_html($mes) . '/' . esc_html($ano) . '</h2>';
+            echo '<h2><i class="bi bi-calendar-check-fill"></i> ' . esc_html($dia_semana) . ', ' . esc_html($dia) . '/' . esc_html($mes) . '/' . esc_html($ano) . '</h2>';
+           
             echo '<table><thead><tr>
                       <th colspan="2">Título</th>
                       <th>Distribuição</th>
