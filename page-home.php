@@ -2,11 +2,34 @@
 // Template Name: Home
 get_header();
 
+$today = new DateTime();
+
+$next_thursday = clone $today;
+while ($next_thursday->format('N') != 4) { 
+    $next_thursday->modify('+1 day');
+}
+
+if ($today->format('Y-m-d') == $next_thursday->format('Y-m-d')) {
+    $next_thursday->modify('+7 days');
+}
+
+$next_thursday_date = $next_thursday->format('Y-m-d');
+
 $filme = new WP_Query(array(
   'post_type' => 'filmes',
-  'posts_per_page' => 20,
-  'orderby' => 'date',
-  'order' => 'DESC'
+  'posts_per_page' => -1,
+  'meta_key' => 'estreia',
+  'orderby' => 'meta_value',
+  'order' => 'ASC',
+  'post_status' => 'publish',
+  // 'meta_query' => array(
+  //   array(
+  //     'key' => 'estreia',
+  //     'value' => $next_thursday_date,
+  //     'compare' => '=',
+  //     'type' => 'DATE'
+  //   )
+  // )
 ));
 
 $banner_estreia = CFS()->get('banner_estreia');
