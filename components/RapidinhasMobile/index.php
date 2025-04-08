@@ -30,7 +30,8 @@ if ($rapidinhas_posts_query->have_posts()) {
     <span class="data">
       <?php echo date_i18n('j \d\e F \d\e Y', strtotime((CFS()->get('data')))); ?>
     </span>
-    <h3><?php echo extrair_texto_apos_traco(get_the_title()); ?></h3>
+    <h3><?php echo extrair_texto_apos_traco(get_post()->post_title);?></h3>
+
     <a href="<?php the_permalink(); ?>">Leia mais</a>
   </div>
 </div>
