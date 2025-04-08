@@ -54,14 +54,14 @@
           <h2>Redes sociais</h2>
           <ul>
             <li>
-              <a href="https://www.instagram.com/filmebportal/#">
+              <a href="https://www.instagram.com/filmebportal/#" target="_blank">
                 <i class="bi bi-instagram"></i>
                 <span>Instagram</span>
               </a>
             </li>
 
             <li>
-              <a href="https://www.facebook.com/FilmeB">
+              <a href="https://www.facebook.com/FilmeB" target="_blank">
                 <i class="bi bi-facebook"></i>
                 <span>Facebook</span>
               </a>

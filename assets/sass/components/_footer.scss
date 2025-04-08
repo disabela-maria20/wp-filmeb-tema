@@ -1,9 +1,4 @@
 footer.rodape {
-  margin-top: 35px;
-  @include media(lg) {
-    margin-top: 90px;
-  }
-
   .bg-filmeB {
     padding: 35px 0;
     background: linear-gradient(180deg, $color-bright-red, $color-red-dark 90%);

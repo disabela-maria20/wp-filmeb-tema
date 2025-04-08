@@ -48,26 +48,14 @@ get_header();
   </div>
   <div class="grid grid-3-lg gap-32" style="margin: 35px 0;">
     <div class="card-user">
-      <h3 class="titulo">Assinaturas</h3>
+      <h3 class="titulo">Administrativo e Financeiro</h3>
       <div class="item">
-        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/contatos/Elizabeth.png"
-          alt="Elizabeth Ribeiro" />
+        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/contatos/Lysia.png" alt="Lysia" />
         <div>
-          <h4>Elizabeth Ribeiro</h4>
-          <a href="mailto:bethribeiro@filmeb.com.br">bethribeiro@filmeb.com.br</a>
+          <h4>Lysia Barros</h4>
+          <a href="mailto:financeiro@filmeb.com.br">financeiro@filmeb.com.br</a>
         </div>
       </div>
-      <h3 class="titulo">Comunicação, Publicidade e Marketing</h3>
-      <div class="item">
-        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/contatos/Cristiane.png"
-          alt="Cristiane Denik" />
-        <div>
-          <h4>Cristiane Denik</h4>
-          <a href="mailto:crisdenik@filmeb.com.br">crisdenik@filmeb.com.br</a>
-        </div>
-      </div>
-    </div>
-    <div class="card-user">
       <h3 class="titulo">Redação</h3>
       <div class="item">
         <img src="<?php echo get_template_directory_uri(); ?>/assets/images/contatos/Fabiano.png"
@@ -86,16 +74,35 @@ get_header();
           <a href="mailto:taiani@filmeb.com.br">taiani@filmeb.com.br</a>
         </div>
       </div>
+
     </div>
     <div class="card-user">
-      <h3 class="titulo">Administrativo e Financeiro</h3>
+      <h3 class="titulo">Assinaturas</h3>
       <div class="item">
-        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/contatos/Lysia.png" alt="Lysia" />
+        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/contatos/Elizabeth.png"
+          alt="Elizabeth Ribeiro" />
         <div>
-          <h4>Lysia Barros</h4>
-          <a href="mailto:financeiro@filmeb.com.br">financeiro@filmeb.com.br</a>
+          <h4>Elizabeth Ribeiro</h4>
+          <a href="mailto:bethribeiro@filmeb.com.br">bethribeiro@filmeb.com.br</a>
         </div>
       </div>
+
+    </div>
+    <div class="card-user">
+      <h3 class="titulo">Comunicação, Publicidade e Marketing</h3>
+      <div class="item">
+        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/contatos/Cristiane.png"
+          alt="Cristiane Denik" />
+        <div>
+          <h4>Cristiane Denik</h4>
+          <a href="mailto:crisdenik@filmeb.com.br">crisdenik@filmeb.com.br</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="grid grid-3-lg gap-31">
+    <div class="card-user">
       <h3 class="titulo">Box Office Brasil</h3>
       <div class="item">
         <img src="<?php echo get_template_directory_uri(); ?>/assets/images/contatos/Bruno.png" alt="Bruno Salerno" />
@@ -115,7 +122,6 @@ get_header();
       </div>
     </div>
   </div>
-
 </main>
 <?php endwhile;
 else: endif; ?>

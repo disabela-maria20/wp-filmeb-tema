@@ -2,6 +2,8 @@
 // Template Name: Assine
 get_header();
 ?>
+<?php get_template_part('components/MenuMobile/index'); ?>
+<?php get_template_part('components/MenuDesktop/index'); ?>
 <main class="page-assine">
   <section class="bg1"
     style="background: linear-gradient(180deg, #ffffff00, #221115), url('<?php echo get_template_directory_uri(); ?>/assets/images/banner/bg-hero-pagina-de-vendas-1024x450.jpg');">
@@ -66,7 +68,7 @@ get_header();
       </div>
     </div>
   </section>
-  <section class="bg4">
+  <!-- <section class="bg4">
     <div class="container">
       <div class="grid grid-2-md gap-32">
         <div>
@@ -89,7 +91,7 @@ get_header();
         </div>
       </div>
     </div>
-  </section>
+  </section> -->
   <footer class="footer-assine">
     <div class="container">
       <div class="area">
@@ -110,13 +112,78 @@ get_header();
           <a href="#" id="assinar-filmeb" data-product-id="106">
             Assine o FilmeB
           </a>
-
         </div>
       </div>
     </div>
     </div>
-
 </main>
+<footer class="rodape">
+  <div class="area_links_rodape">
+    <div class="container">
+      <div class="grid gap-32">
+        <nav>
+          <h2>Mapa do site</h2>
+          <?php
+					$args = array(
+						'menu' => 'menu rodape',
+						'theme_location' => 'menu-rodape',
+						'container' => false
+					);
+					wp_nav_menu($args); ?>
+        </nav>
+        <nav>
+          <h2>Institucional</h2>
+          <?php
+					$args = array(
+						'menu' => 'institucinal rodape',
+						'theme_location' => 'institucinal-rodape',
+						'container' => false
+					);
+					wp_nav_menu($args); ?>
+        </nav>
+        <nav>
+          <h2>Sobre a Filme B</h2>
+          <?php
+					$args = array(
+						'menu' => 'sobre',
+						'theme_location' => 'sobre',
+						'container' => false
+					);
+					wp_nav_menu($args); ?>
+        </nav>
+        <nav class="produtos">
+          <h2>Produtos Filme B</h2>
+          <a href="<?php echo get_site_url(); ?>/box-office/">
+            <img src="<?php echo get_template_directory_uri(); ?>/assets/images/box-office-brasil.png" alt="cine B" />
+          </a>
+        </nav>
+        <div></div>
+        <nav class="redes">
+          <h2>Redes sociais</h2>
+          <ul>
+            <li>
+              <a href="https://www.instagram.com/filmebportal/#" target="_blank">
+                <i class="bi bi-instagram"></i>
+                <span>Instagram</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="https://www.facebook.com/FilmeB" target="_blank">
+                <i class="bi bi-facebook"></i>
+                <span>Facebook</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+  </div>
+  <p>1997 / 2024 © Filme B - Todos os direitos reservados - Criado por Vibezz</p>
+</footer>
+<?php get_footer(); ?>
+
 <script>
 document.getElementById('assinar-filmeb').addEventListener('click', function(e) {
   e.preventDefault();
@@ -134,7 +201,3 @@ document.getElementById('assinar-filmeb').addEventListener('click', function(e) 
     });
 });
 </script>
-
-
-
-<?php get_footer(); ?>

@@ -68,9 +68,6 @@ if ($query->have_posts()) :
   <div class="grid-list-post gap-124">
     <div>
       <img src="<?php echo esc_url($full_banner); ?>" class="img-banner" alt="banner">
-      <img
-        src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/logo-boletim-filme-b-horizontal.png'); ?>"
-        class="logo" alt="cine B" />
 
       <?php if (function_exists('yoast_breadcrumb')) {
         yoast_breadcrumb('<div id="breadcrumbs">', '</div>');

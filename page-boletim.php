@@ -33,8 +33,7 @@ $recent_posts_query = new WP_Query(array(
   <div class="grid-list-post gap-124">
     <div>
       <img src="<?php echo CFS()->get('full_banner'); ?>" class="img-banner" alt="banner">
-      <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo-boletim-filme-b-horizontal.png"
-        class="logo" alt="cine B" />
+
       <?php
           if (function_exists('yoast_breadcrumb')) {
             yoast_breadcrumb('<div id="breadcrumbs">', '</div>');
@@ -65,7 +64,7 @@ $recent_posts_query = new WP_Query(array(
               class="read-more">
               <h2><?php echo $the_post->post_title; ?></h2>
             </a>
-            <p><?php echo  wp_trim_words($the_post->post_content, 20, '...') ?></p>
+            <p><?php echo  $the_post->post_content;?></p>
           </div>
         </div>
         <?php } // Fechamento do foreach ?>

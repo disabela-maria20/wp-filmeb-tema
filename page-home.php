@@ -90,7 +90,7 @@ $recent_posts_query_banner = new WP_Query(array(
             <h2> 10 maiores bilheterias do fim de semana no Brasil </h2>
             <span></span>
           </div>
-          <?php echo do_shortcode('[table id=3 /]'); ?>
+          <?php echo do_shortcode('[table id=4 /]'); ?>
         </div>
 
         <span>De 08 a 12/05/2024 - Fonte: Filme B Box Office</span>
@@ -101,7 +101,7 @@ $recent_posts_query_banner = new WP_Query(array(
             <h2>10 maiores bilheterias do ano no Brasil</h2>
             <span></span>
           </div>
-          <?php echo do_shortcode('[table id=3 /]'); ?>
+          <?php echo do_shortcode('[table id=5 /]'); ?>
         </div>
 
         <span>De 08 a 12/05/2024 - Fonte: Filme B Box Office</span>

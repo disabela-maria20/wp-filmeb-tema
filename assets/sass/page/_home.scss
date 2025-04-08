@@ -404,8 +404,9 @@
       grid-template-columns: 60% 1fr;
     }
     img:not(.publi) {
+      width: 100%;
       height: 200px;
-      object-fit: contain;
+      object-fit: cover;
     }
     .publi {
       width: 100%;
@@ -416,7 +417,7 @@
         font-size: 1.4rem;
         color: $color-darker-gray;
         text-align: center;
-        padding: 0 15px;
+        padding: 10px 15px;
       }
       .card {
         color: $color-darker-gray;
