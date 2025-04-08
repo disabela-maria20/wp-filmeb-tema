@@ -1,4 +1,8 @@
 .anuncie {
+  margin-top: 35px;
+  @include media(lg) {
+    margin-top: 90px;
+  }
   h1 {
     font-weight: bold;
     font-size: 3rem;
