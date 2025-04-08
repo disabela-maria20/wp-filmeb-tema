@@ -30,9 +30,7 @@
     width: 100%;
     overflow: scroll;
   }
-  #tablepress-Formatosdeannciospadro,
-  #tablepress-Formatosdeannciosespeciais,
-  #tablepress-NomedoanncioDimensespixelsPesoimagensPesoHTML5FormatosAplicaesDuplo600x360500KB600KBGIFJPEGeHTML5IntegradoaocontedodepginasexclusivasdoBoletimMdulo600x160500KB600KBGIFJPEGeHTML5IntegradoaocontedodepginasexclusivasdoBoletimPgina600x1000500KB600KBGIFJPEGeHTML5IntegradoaocontedodepginasexclusivasdoBoletimRetnguloGrande600x450500KB600KBGIFJPEGeHTML5IntegradoaocontedodepginasexclusivasdoBoletim {
+  .tablepress {
     font-family: $font-family;
     width: 100%;
     border: none;
