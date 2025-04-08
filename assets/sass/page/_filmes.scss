@@ -157,6 +157,11 @@
         flex-direction: column;
         border-radius: 5px;
 
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
         @include media(lg) {
           height: 279px;
         }
