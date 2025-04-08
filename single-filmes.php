@@ -160,21 +160,21 @@ get_template_part('components/MenuDesktop/index');
             <table>
               <?php if (!is_cfs_field_empty('distribuicao')) : ?>
               <tr>
-                <td class="titulo">Distribuição</td>
+                <td class="titulo-fixa">Distribuição</td>
                 <td><?php echo render_terms('distribuicao'); ?></td>
               </tr>
               <?php endif; ?>
 
               <?php if (!is_cfs_field_empty('paises')) : ?>
               <tr>
-                <td class="titulo">País</td>
+                <td class="titulo-fixa">País</td>
                 <td><?php echo render_terms('paises'); ?></td>
               </tr>
               <?php endif; ?>
 
               <?php if (!is_cfs_field_empty('generos')) : ?>
               <tr>
-                <td class="titulo">Gênero</td>
+                <td class="titulo-fixa">Gênero</td>
                 <td><?php echo render_terms('generos'); ?></td>
               </tr>
               <?php endif; ?>
@@ -184,21 +184,21 @@ get_template_part('components/MenuDesktop/index');
             <table>
               <?php if (!is_cfs_field_empty('duracao_minutos')) : ?>
               <tr>
-                <td class="titulo">Duração</td>
+                <td class="titulo-fixa">Duração</td>
                 <td><?php echo CFS()->get('duracao_minutos'); ?>min</td>
               </tr>
               <?php endif; ?>
 
               <?php if (!is_cfs_field_empty('tecnologias')) : ?>
               <tr>
-                <td class="titulo">Tecnologia</td>
+                <td class="titulo-fixa">Tecnologia</td>
                 <td><?php echo render_terms('tecnologias'); ?></td>
               </tr>
               <?php endif; ?>
 
               <?php if (!is_cfs_field_empty('classificacao')) : ?>
               <tr>
-                <td class="titulo">Classificação</td>
+                <td class="titulo-fixa">Classificação</td>
                 <td><?php echo render_terms('classificacao'); ?></td>
               </tr>
               <?php endif; ?>

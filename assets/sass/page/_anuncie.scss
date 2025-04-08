@@ -1,8 +1,5 @@
 .anuncie {
   margin-top: 35px;
-  @include media(lg) {
-    margin-top: 90px;
-  }
   h1 {
     font-weight: bold;
     font-size: 3rem;
@@ -24,10 +21,6 @@
     color: $color-darker-gray;
     margin-top: 35px;
     margin-bottom: 15px;
-
-    @include media(lg) {
-      margin-top: 75px;
-    }
   }
 
   .area-table {
