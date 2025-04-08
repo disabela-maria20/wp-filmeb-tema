@@ -10,6 +10,7 @@ $current_month = $current_date->format('m');
 $paged = get_query_var('paged') ? get_query_var('paged') : 1;
 $posts_per_page = 32;
 
+// Argumentos base para pegar filmes do mês/ano atual
 $args = array(
     'post_type' => 'filmes',
     'posts_per_page' => $posts_per_page,
@@ -21,19 +22,23 @@ $args = array(
     'meta_query' => array(
         array(
             'key' => 'estreia',
-            'value' => $current_year . '-' . $current_month,
-            'compare' => 'REGEXP'
+            'value' => array($current_year . '-' . $current_month . '-01', $current_year . '-' . $current_month . '-31'),
+            'compare' => 'BETWEEN',
+            'type' => 'DATE'
         )
     )
 );
 
 // Filtros
 if (isset($_GET['ano']) && !empty($_GET['ano'])) {
-    $args['meta_query'][0]['value'] = sanitize_text_field($_GET['ano']) . ($current_month ? '-' . $current_month : '');
+    $selected_year = sanitize_text_field($_GET['ano']);
+    $args['meta_query'][0]['value'] = array($selected_year . '-' . $current_month . '-01', $selected_year . '-' . $current_month . '-31');
 }
 
 if (isset($_GET['mes']) && !empty($_GET['mes'])) {
-    $args['meta_query'][0]['value'] = ($current_year ? $current_year : '') . '-' . sanitize_text_field($_GET['mes']);
+    $selected_month = sanitize_text_field($_GET['mes']);
+    $year_to_use = isset($_GET['ano']) ? sanitize_text_field($_GET['ano']) : $current_year;
+    $args['meta_query'][0]['value'] = array($year_to_use . '-' . $selected_month . '-01', $year_to_use . '-' . $selected_month . '-31');
 }
 
 if (isset($_GET['origem']) && !empty($_GET['origem'])) {
@@ -187,9 +192,9 @@ if ($filmes_query->have_posts()) {
     }
 }
 
-// Ordenar dias em ordem crescente dentro de cada mês
+// Ordenar dias em ordem decrescente dentro de cada mês (do maior para o menor)
 foreach ($resultData as &$mesData) {
-    ksort($mesData['dias']);
+    krsort($mesData['dias']);
 }
 
 // Ordenar meses em ordem decrescente
