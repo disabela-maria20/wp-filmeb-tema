@@ -62,7 +62,7 @@ $recent_posts_query = new WP_Query(array(
             <span class="data"><?php echo date_i18n('j \d\e F \d\e Y', strtotime($the_post->post_date)); ?></span>
             <a href="<?php echo str_replace("https://filmeb.isabelamribeiro.com.br", get_site_url(), $the_post->guid);  ?>"
               class="read-more">
-              <h2><?php echo extrair_texto_apos_traco($the_post->post_title); ?>></h2>
+              <h2><?php echo extrair_texto_apos_traco($the_post->post_title); ?></h2>
             </a>
             <p><?php echo  $the_post->post_content;?></p>
           </div>
