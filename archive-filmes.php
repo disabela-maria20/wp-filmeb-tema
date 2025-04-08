@@ -61,30 +61,33 @@ $dias_semana = [
 
 $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
 
+// Valores padrão para ano e mês
+$current_year = date('Y');
+$current_month = date('m');
+$selected_ano = isset($_GET['ano']) ? sanitize_text_field($_GET['ano']) : $current_year;
+$selected_mes = isset($_GET['mes']) ? sanitize_text_field($_GET['mes']) : $current_month;
+
 $args = array(
   'post_type' => 'filmes',
   'posts_per_page' => 10,
   'post_status' => 'publish',
   'paged' => $paged,
+  'meta_query' => array(
+    'relation' => 'AND',
+    array(
+      'key' => 'estreia',
+      'value' => '^' . $selected_ano,
+      'compare' => 'REGEXP',
+    ),
+    array(
+      'key' => 'estreia',
+      'value' => '-' . $selected_mes . '-',
+      'compare' => 'REGEXP',
+    )
+  )
 );
 
-// Aplicar filtros
-if (isset($_GET['ano']) && !empty($_GET['ano'])) {
-  $args['meta_query'][] = array(
-    'key' => 'estreia',
-    'value' => sanitize_text_field($_GET['ano']),
-    'compare' => 'REGEXP',
-  );
-}
-
-if (isset($_GET['mes']) && !empty($_GET['mes'])) {
-  $args['meta_query'][] = array(
-    'key' => 'estreia',
-    'value' => sanitize_text_field($_GET['mes']),
-    'compare' => 'REGEXP',
-  );
-}
-
+// Resto dos filtros
 if (isset($_GET['origem']) && !empty($_GET['origem'])) {
   $args['meta_query'][] = array(
     'key' => 'paises',
@@ -127,11 +130,10 @@ if ($filmes->have_posts()) {
     $filmes->the_post();
     $post_id = get_the_ID();
 
-    // Pega a data diretamente e verifica se é válida
     $data_estreia = CFS()->get('estreia', $post_id);
 
     if ($data_estreia && preg_match('/^\d{4}-\d{2}-\d{2}$/', $data_estreia)) {
-      $data_formatada = $data_estreia; // Já está no formato 'Y-m-d'
+      $data_formatada = $data_estreia;
 
       if (!isset($filmes_por_dia[$data_formatada])) {
         $filmes_por_dia[$data_formatada] = array();
@@ -141,7 +143,6 @@ if ($filmes->have_posts()) {
   }
   wp_reset_postdata();
 }
-
 function render_terms($field_key, $post_id)
 {
   $distribuicao = CFS()->get($field_key, $post_id);
@@ -254,16 +255,21 @@ $anos = obter_anos_dos_filmes();
         <form method="GET" action="<?php echo home_url(); ?>/filmes/">
           <div class="grid grid-7-xl gap-22 select-itens">
             <select id="ano" name="ano">
-              <option isabled selected value="">Ano</option>
-              <?php foreach ($anos as $key => $value) { ?>
-              <option value="<?php echo esc_attr($value); ?>"><?php echo esc_html($value); ?></option>
-              <?php } ?>
+              <option disabled value="">Ano</option>
+              <?php foreach ($anos as $value) : ?>
+              <option value="<?php echo esc_attr($value); ?>" <?php selected($value, $selected_ano); ?>>
+                <?php echo esc_html($value); ?>
+              </option>
+              <?php endforeach; ?>
             </select>
+
             <select name="mes" id="mes">
-              <option disabled selected value="">Mês</option>
-              <?php foreach ($meses as $key => $value) { ?>
-              <option value="<?php echo esc_attr($key); ?>"><?php echo esc_html($value); ?></option>
-              <?php } ?>
+              <option disabled value="">Mês</option>
+              <?php foreach ($meses as $key => $value) : ?>
+              <option value="<?php echo esc_attr($key); ?>" <?php selected($key, $selected_mes); ?>>
+                <?php echo esc_html($value); ?>
+              </option>
+              <?php endforeach; ?>
             </select>
             <select name="origem" id="origem">
               <option disabled selected value="">Origem</option>
