@@ -1,6 +1,11 @@
 <?php // Template Name: Distribuidora
 get_header();
 
+// Obter mês e ano atual
+$current_date = new DateTime();
+$current_year = $current_date->format('Y');
+$current_month = $current_date->format('m');
+
 // Configuração da consulta com paginação do WordPress
 $paged = get_query_var('paged') ? get_query_var('paged') : 1;
 $posts_per_page = 32;
@@ -12,24 +17,23 @@ $args = array(
     'meta_key' => 'estreia',
     'orderby' => 'meta_value',
     'order' => 'DESC',
-    'meta_type' => 'DATE'
+    'meta_type' => 'DATE',
+    'meta_query' => array(
+        array(
+            'key' => 'estreia',
+            'value' => $current_year . '-' . $current_month,
+            'compare' => 'REGEXP'
+        )
+    )
 );
 
 // Filtros
 if (isset($_GET['ano']) && !empty($_GET['ano'])) {
-    $args['meta_query'][] = array(
-        'key' => 'estreia',
-        'value' => sanitize_text_field($_GET['ano']),
-        'compare' => 'REGEXP',
-    );
+    $args['meta_query'][0]['value'] = sanitize_text_field($_GET['ano']) . ($current_month ? '-' . $current_month : '');
 }
 
 if (isset($_GET['mes']) && !empty($_GET['mes'])) {
-    $args['meta_query'][] = array(
-        'key' => 'estreia',
-        'value' => sanitize_text_field($_GET['mes']),
-        'compare' => 'REGEXP',
-    );
+    $args['meta_query'][0]['value'] = ($current_year ? $current_year : '') . '-' . sanitize_text_field($_GET['mes']);
 }
 
 if (isset($_GET['origem']) && !empty($_GET['origem'])) {
@@ -66,10 +70,6 @@ if (isset($_GET['tecnologia']) && !empty($_GET['tecnologia'])) {
 
 if (!empty($args['tax_query']) && count($args['tax_query']) > 1) {
     $args['tax_query']['relation'] = 'AND';
-}
-
-if (!empty($args['meta_query']) && count($args['meta_query']) > 1) {
-    $args['meta_query']['relation'] = 'AND';
 }
 
 $filmes_query = new WP_Query($args);
