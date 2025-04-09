@@ -82,7 +82,7 @@ $recent_posts_query_banner = new WP_Query(array(
           echo '<p>Nenhum post encontrado.</p>';
         } ?>
   </section>
-  <section>
+  <section class="home_table">
     <div class="home_table grid grid-2-lg gap-32">
       <div>
 
