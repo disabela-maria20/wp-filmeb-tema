@@ -416,6 +416,89 @@ function save_custom_fields($customer_id)
   }
 }
 
+add_action('woocommerce_created_customer', 'save_custom_fields_and_register_swpm');
+
+function save_custom_fields_and_register_swpm($customer_id) {
+    // Salva todos os campos personalizados no WooCommerce
+    $fields_to_save = array(
+        'billing_first_name', 'billing_last_name', 'billing_categoria_profissional',
+        'billing_cpf_cnpj', 'billing_phone', 'billing_cellphone', 'billing_address',
+        'billing_complemento', 'billing_bairro', 'billing_city', 'billing_state',
+        'billing_postcode'
+    );
+    
+    foreach ($fields_to_save as $field) {
+        if (isset($_POST[$field])) {
+            update_user_meta($customer_id, $field, sanitize_text_field($_POST[$field]));
+        }
+    }
+    
+    // Atualiza nome e sobrenome principais
+    if (isset($_POST['billing_first_name'])) {
+        update_user_meta($customer_id, 'first_name', sanitize_text_field($_POST['billing_first_name']));
+    }
+    if (isset($_POST['billing_last_name'])) {
+        update_user_meta($customer_id, 'last_name', sanitize_text_field($_POST['billing_last_name']));
+    }
+    
+    // Registra o usuário no Simple WordPress Membership
+    register_user_in_swpm($customer_id);
+}
+
+/**
+ * 3. Função para registrar usuário no Simple Membership
+ */
+function register_user_in_swpm($customer_id) {
+    if (!class_exists('SimpleWpMembership')) {
+        return;
+    }
+    
+    $user = get_userdata($customer_id);
+    $email = $user->user_email;
+    $username = $user->user_login;
+    
+    // Configurações básicas de membro
+    $membership_level = 1; // Nível de membro padrão
+    $account_status = 'active'; // Status da conta
+    
+    // Verifica se o usuário já existe no Simple Membership
+    global $wpdb;
+    $query = $wpdb->prepare("SELECT * FROM " . $wpdb->prefix . "swpm_members_tbl WHERE user_name = %s OR email = %s", $username, $email);
+    $existing = $wpdb->get_row($query);
+    
+    if (!$existing) {
+        // Prepara os dados extras do Simple Membership
+        $swpm_user_data = array(
+            'user_name' => $username,
+            'password' => '', // Não definimos senha (usará a do WooCommerce)
+            'first_name' => get_user_meta($customer_id, 'billing_first_name', true),
+            'last_name' => get_user_meta($customer_id, 'billing_last_name', true),
+            'email' => $email,
+            'membership_level' => $membership_level,
+            'member_since' => current_time('mysql'),
+            'account_state' => $account_status,
+            'last_accessed' => current_time('mysql'),
+            // Campos personalizados adicionais
+            'phone' => get_user_meta($customer_id, 'billing_phone', true),
+            'cellphone' => get_user_meta($customer_id, 'billing_cellphone', true),
+            'cpf_cnpj' => get_user_meta($customer_id, 'billing_cpf_cnpj', true),
+            'categoria_profissional' => get_user_meta($customer_id, 'billing_categoria_profissional', true),
+            'address' => get_user_meta($customer_id, 'billing_address', true),
+            'complemento' => get_user_meta($customer_id, 'billing_complemento', true),
+            'bairro' => get_user_meta($customer_id, 'billing_bairro', true),
+            'city' => get_user_meta($customer_id, 'billing_city', true),
+            'state' => get_user_meta($customer_id, 'billing_state', true),
+            'postcode' => get_user_meta($customer_id, 'billing_postcode', true)
+        );
+        
+        // Insere no banco de dados do Simple Membership
+        $wpdb->insert($wpdb->prefix . 'swpm_members_tbl', $swpm_user_data);
+        
+        // Associa o ID do usuário WordPress ao membro
+        $member_id = $wpdb->insert_id;
+        update_user_meta($customer_id, 'swpm_member_id', $member_id);
+    }
+}
 function format_products($products, $img_size = 'medium')
 {
   $products_final = [];
@@ -429,21 +512,6 @@ function format_products($products, $img_size = 'medium')
   }
   return $products_final;
 }
-// function restringir_acesso_membros_pagos() {
-//   // if (is_tax('product_cat') || is_post_type_archive('rapidinhas')) {
-//   //     if (!SwpmMemberUtils::is_member_logged_in()) { 
-//   //         wp_redirect(home_url('/assine')); 
-//   //         exit;
-//   //     }
-//   // }
-//   $membership_level = SwpmMemberUtils::get_logged_in_members_level();
-//   if ($membership_level != 2) { 
-//     wp_redirect(home_url('/carrinho')); 
-//     exit;
-//   }
-// }
-// add_action('template_redirect', 'restringir_acesso_membros_pagos');
-
 
 function handel_custom_menu($menu_links)
 {
@@ -669,3 +737,49 @@ function redirect_specific_pages_for_non_members() {
 }
 
 add_action('template_redirect', 'redirect_specific_pages_for_non_members', 20);
+
+/**
+ * Registra usuários do WooCommerce no Simple WordPress Membership
+ */
+function register_swpm_user_on_woocommerce_registration( $customer_id ) {
+  // Verifica se o plugin Simple Membership está ativo
+  if (!class_exists('SimpleWpMembership')) {
+      return;
+  }
+  
+  // Obtém os dados do usuário
+  $user = get_userdata($customer_id);
+  $email = $user->user_email;
+  $username = $user->user_login;
+  
+  // Configurações básicas de membro (ajuste conforme necessário)
+  $membership_level = 1; // Nível de membro padrão
+  $account_status = 'active'; // Status da conta
+  
+  // Verifica se o usuário já existe no Simple Membership
+  global $wpdb;
+  $query = $wpdb->prepare("SELECT * FROM " . $wpdb->prefix . "swpm_members_tbl WHERE user_name = %s OR email = %s", $username, $email);
+  $existing = $wpdb->get_row($query);
+  
+  if (!$existing) {
+      // Cria o membro no Simple Membership
+      $swpm_user_data = array(
+          'user_name' => $username,
+          'password' => '', // Não definimos senha (usará a do WooCommerce)
+          'first_name' => get_user_meta($customer_id, 'billing_first_name', true),
+          'last_name' => get_user_meta($customer_id, 'billing_last_name', true),
+          'email' => $email,
+          'membership_level' => $membership_level,
+          'member_since' => current_time('mysql'),
+          'account_state' => $account_status,
+          'last_accessed' => current_time('mysql'),
+      );
+      
+      $wpdb->insert($wpdb->prefix . 'swpm_members_tbl', $swpm_user_data);
+      
+      // Associa o ID do usuário WordPress ao membro
+      $member_id = $wpdb->insert_id;
+      update_user_meta($customer_id, 'swpm_member_id', $member_id);
+  }
+}
+add_action( 'woocommerce_created_customer', 'register_swpm_user_on_woocommerce_registration', 10, 1 );
