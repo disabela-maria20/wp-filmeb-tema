@@ -5,14 +5,13 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-$banner_id = "77483";
+$banner_id = "78847";
 
 $args = array(
   'post_type' => 'banner-post',
   'posts_per_page' => 1,
 );
 
-$query = new WP_Query($args);
 
 $termos = get_terms(array(
   'taxonomy' => 'generos',
