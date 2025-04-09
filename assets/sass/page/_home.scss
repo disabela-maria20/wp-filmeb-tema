@@ -106,10 +106,18 @@
     @include media(lg) {
       font-size: 1.5rem;
     }
+    thead {
+      tr {
+        th {
+          color: $color-bright-red;
+          text-align: left;
+        }
+      }
+    }
     tbody {
       td,
       th {
-        padding: 5px 0;
+        padding: 5px;
       }
       tr {
         margin-top: 10px;
@@ -119,7 +127,6 @@
         td {
           color: $color-darker-gray;
           border: none !important;
-          text-align: end;
         }
 
         .column-2 {

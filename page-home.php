@@ -82,18 +82,19 @@ $recent_posts_query_banner = new WP_Query(array(
           echo '<p>Nenhum post encontrado.</p>';
         } ?>
   </section>
-  <section class="home_table">
+  <section>
     <div class="home_table grid grid-2-lg gap-32">
       <div>
+
         <div class="area">
           <div class="titulo">
             <h2> 10 maiores bilheterias do fim de semana no Brasil </h2>
             <span></span>
           </div>
-          <?php echo do_shortcode('[table id=4 /]'); ?>
+          <?php echo do_shortcode('[table id=5 /]'); ?>
         </div>
 
-        <span>De 08 a 12/05/2024 - Fonte: Filme B Box Office</span>
+        <span>Fonte: Filme B Box Office</span>
       </div>
       <div>
         <div class="area">
@@ -101,10 +102,10 @@ $recent_posts_query_banner = new WP_Query(array(
             <h2>10 maiores bilheterias do ano no Brasil</h2>
             <span></span>
           </div>
-          <?php echo do_shortcode('[table id=5 /]'); ?>
+          <?php echo do_shortcode('[table id=4 /]'); ?>
         </div>
 
-        <span>De 08 a 12/05/2024 - Fonte: Filme B Box Office</span>
+        <span>Fonte: Filme B Box Office</span>
       </div>
     </div>
   </section>
