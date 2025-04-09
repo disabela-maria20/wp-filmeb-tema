@@ -610,3 +610,62 @@ function get_thursday_movies() {
       )
   ));
 }
+
+function redirect_specific_pages_for_non_members() {
+  if (!class_exists('SimpleWpMembership')) {
+      return;
+  }
+
+  $protected_slugs = array(
+      'boletim',
+      'edicao',
+      'opiniao',
+      'fim-de-semana-global',
+      'fim-de-semana-brasil',
+      'boletim/fim-de-semana-global/',
+      'boletim/fim-de-semana-brasil/',
+      'boletim/edicao/',
+      'boletim/opiniao/',
+  );
+
+  global $post;
+
+  if (is_singular() && in_array($post->post_name, $protected_slugs)) {
+      if (!SwpmMemberUtils::is_member_logged_in()) {
+          $account_page_url = home_url('/minha-conta/');
+           $redirect_url = add_query_arg('swpm_redirect_to', urlencode(get_permalink()), $account_page_url);
+          wp_redirect($redirect_url);
+          exit();
+      }
+    
+      $required_level = 'premium';
+      $auth = SwpmAuth::get_instance();
+      if (!$auth->userData->subscription_level === $required_level) {
+          $account_page_url = home_url('/minha-conta/');
+          wp_redirect($account_page_url);
+          exit();
+      }
+  }
+  if (is_post_type_archive('edicoes') || is_tax('categoria_edicoes')) {
+    if (!SwpmMemberUtils::is_member_logged_in()) {
+        // URL da página de conta (substitua pela sua URL)
+        $account_page_url = home_url('/minha-conta/');
+        
+        // Redireciona com parâmetro para voltar após login
+        $redirect_url = add_query_arg('swpm_redirect_to', urlencode(get_post_type_archive_link('edicoes')), $account_page_url);
+        wp_redirect($redirect_url);
+        exit();
+    }
+    
+    // Verifica adicionalmente se o usuário tem o nível necessário
+    $required_level = 'assinante'; // Substitua pelo nível necessário
+    $auth = SwpmAuth::get_instance();
+    if (!$auth->userData->subscription_level === $required_level) {
+        $account_page_url = home_url('/minha-conta/');
+        wp_redirect($account_page_url);
+        exit();
+    }
+}
+}
+
+add_action('template_redirect', 'redirect_specific_pages_for_non_members', 20);
