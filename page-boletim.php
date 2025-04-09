@@ -1,7 +1,8 @@
 <?php
 // Template Name: Boletim
-$banner_id = "78913
-";
+get_header();
+
+$banner_id = "78913";
 
 $args = array(
   'post_type' => 'banner-post',
