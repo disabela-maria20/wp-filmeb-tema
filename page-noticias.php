@@ -10,6 +10,7 @@ $args = array(
 );
 
 $query = new WP_Query($args);
+var_dump($banner_superior);
 $banner_superior = CFS()->get('banner_moldura', $banner_id);
 $banner_inferior = CFS()->get('mega_banner', $banner_id);
 $full_banner = CFS()->get('full_banner', $banner_id);
