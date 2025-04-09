@@ -734,4 +734,23 @@ function register_swpm_user_on_woocommerce_registration( $customer_id ) {
       update_user_meta($customer_id, 'swpm_member_id', $member_id);
   }
 }
+
 add_action( 'woocommerce_created_customer', 'register_swpm_user_on_woocommerce_registration', 10, 1 );
+
+add_action('wp_login', 'sync_woocommerce_login_with_swpm', 10, 2);
+
+function sync_woocommerce_login_with_swpm($user_login, $user) {
+    // Checa se o plugin SWPM está ativo
+    if (class_exists('SwpmAuth')) {
+        // Pega o usuário pelo login
+        $wp_user = get_user_by('login', $user_login);
+
+        // Tenta encontrar o membro SWPM correspondente
+        $swpm_member = SwpmMemberUtils::get_user_by_wp_user_id($wp_user->ID);
+
+        if ($swpm_member) {
+            // Faz login no SWPM com o ID do membro
+            SwpmAuth::get_instance()->login_user($swpm_member->user_name, $swpm_member->password);
+        }
+    }
+}
