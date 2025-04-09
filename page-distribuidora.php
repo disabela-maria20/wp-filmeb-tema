@@ -280,7 +280,7 @@ krsort($resultData);
         <th>Sony</th>
         <th>Universal</th>
         <th>Warner</th>
-        <th>downtownParis</th>
+        <th>downtown/ <br /> Paris</th>
         <th>Imagem</th>
         <th>Paris</th>
         <th>Diamond</th>
