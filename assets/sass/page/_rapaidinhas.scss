@@ -93,7 +93,28 @@
 }
 
 // Boletim
+.aside-boletim {
+  h2 {
+    font-weight: bold;
+    font-size: 2rem;
+    line-height: 2.4rem;
+    text-align: center;
+    color: $color-bright-red;
+    margin-top: 70px;
+    margin-bottom: 40px;
 
+    @include media(lg) {
+      text-align: left;
+    }
+  }
+  .img-banner {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 20px;
+  }
+}
 .grid-semanal {
   display: grid;
   gap: 20px;
