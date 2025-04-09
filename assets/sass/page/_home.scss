@@ -224,6 +224,7 @@
   .grid-recentes {
     display: grid;
     gap: 22px;
+    margin-bottom: 10px;
     @include media(lg) {
       grid-template-columns: 2fr 1fr;
     }
