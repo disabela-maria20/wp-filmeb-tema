@@ -20,11 +20,6 @@ $link_banner_superior = CFS()->get('link_banner_moldura', $banner_id);
 $link_banner_inferior = CFS()->get('link_mega_banner', $banner_id);
 $link_full_banner = CFS()->get('link_full_banner', $banner_id);
 $link_skyscraper = CFS()->get('link_skyscraper', $banner_id);
-
-if ($query->have_posts()):
-  while ($query->have_posts()):
-    $query->the_post();
-    echo "teste";
 ?>
 <a href="<?php echo esc_url($link_banner_superior) ?>" target="_blank" rel="noopener noreferrer">
   <img src="<?php echo esc_url($banner_superior); ?>" class="w-full p-35 img-banner bannerMobile" alt="banner">
@@ -38,9 +33,6 @@ if ($query->have_posts()):
   </div>
 </div>
 
-<?php endwhile;
-  wp_reset_postdata();
-endif; ?>
 
 <?php get_template_part('components/MenuMobile/index'); ?>
 <?php get_template_part('components/MenuDesktop/index'); ?>
@@ -54,11 +46,6 @@ endif; ?>
     </div>
   </div>
 </section>
-
-<?php if (have_posts()):
-  while (have_posts()):
-    the_post(); ?>
-
 <div class="container">
   <div class="grid-list-post gap-124">
     <div>
@@ -126,8 +113,7 @@ endif; ?>
   </div>
 </div>
 
-<?php endwhile;
-endif; ?>
+
 <?php get_template_part('components/Footer/index'); ?>
 <?php get_footer(); ?>
 
