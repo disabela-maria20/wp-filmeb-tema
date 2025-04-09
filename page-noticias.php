@@ -11,23 +11,19 @@ $args = array(
 
 $query = new WP_Query($args);
 $banner_superior = CFS()->get('banner_moldura', $banner_id);
-var_dump($query);
-var_dump($banner_superior);
+$banner_inferior = CFS()->get('mega_banner', $banner_id);
+$full_banner = CFS()->get('full_banner', $banner_id);
+$skyscraper = CFS()->get('skyscraper', $banner_id);
+
+$link_banner_superior = CFS()->get('link_banner_moldura', $banner_id);
+$link_banner_inferior = CFS()->get('link_mega_banner', $banner_id);
+$link_full_banner = CFS()->get('link_full_banner', $banner_id);
+$link_skyscraper = CFS()->get('link_skyscraper', $banner_id);
+
 if ($query->have_posts()):
   while ($query->have_posts()):
     $query->the_post();
     echo "teste";
-    
-    $banner_superior = CFS()->get('banner_moldura', $banner_id);
-    $banner_inferior = CFS()->get('mega_banner', $banner_id);
-    $full_banner = CFS()->get('full_banner', $banner_id);
-    $skyscraper = CFS()->get('skyscraper', $banner_id);
-   
-    $link_banner_superior = CFS()->get('link_banner_moldura', $banner_id);
-    $link_banner_inferior = CFS()->get('link_mega_banner', $banner_id);
-    $link_full_banner = CFS()->get('link_full_banner', $banner_id);
-    $link_skyscraper = CFS()->get('link_skyscraper', $banner_id);
-    
 ?>
 <a href="<?php echo esc_url($link_banner_superior) ?>" target="_blank" rel="noopener noreferrer">
   <img src="<?php echo esc_url($banner_superior); ?>" class="w-full p-35 img-banner bannerMobile" alt="banner">
