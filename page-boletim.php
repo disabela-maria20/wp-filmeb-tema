@@ -30,7 +30,7 @@ $recent_posts_query = new WP_Query(array(
 <?php if (have_posts()): while (have_posts()): the_post(); ?>
 
 <div class="container">
-  <div class="grid-list-post gap-124">
+  <div class="grid-list-post-boletim gap-124">
     <div>
       <img src="<?php echo CFS()->get('full_banner'); ?>" class="img-banner" alt="banner">
 

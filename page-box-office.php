@@ -75,7 +75,8 @@ get_header();
       </div>
     </div>
     <a href="<?php echo get_site_url(); ?>/box-office-assine">
-      <img src="<?php echo get_template_directory_uri(); ?>/assets/images/banner-box-office-1140x150.png" alt="banner">
+      <img class="banner-box"
+        src="<?php echo get_template_directory_uri(); ?>/assets/images/banner-box-office-1140x150.png" alt="banner">
     </a>
     <div class="grid-box-assinante">
       <div class="box-office">

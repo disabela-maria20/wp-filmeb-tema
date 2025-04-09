@@ -1,0 +1,115 @@
+.grid-list-post-boletim {
+  @include media(lg) {
+    display: grid;
+    margin-top: 35px;
+    margin-top: 60px;
+    grid-template-columns: 2fr 1fr;
+  }
+
+  .titulo {
+    font-weight: bold;
+    font-size: 2rem;
+    line-height: 2.4rem;
+    text-align: center;
+    color: $color-bright-red;
+    margin-bottom: 35px;
+
+    @include media(lg) {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+  }
+
+  .titulo-cinza {
+    font-weight: bold;
+    font-size: 2rem;
+    line-height: 2.4rem;
+    text-align: center;
+    color: $color-dark-gray;
+    margin-bottom: 35px;
+
+    @include media(lg) {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+  }
+
+  .img-banner {
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 40px;
+    display: block;
+  }
+
+  .logo {
+    margin: 35px 0;
+  }
+
+  #breadcrumbs {
+    margin-bottom: 16px;
+
+    a,
+    span {
+      font-weight: normal;
+      font-size: 1.4rem;
+      line-height: 2.4rem;
+      text-align: left;
+      color: $color-darker-gray;
+    }
+  }
+  .item {
+    @include media(lg) {
+      display: flex;
+      gap: 35px;
+      align-items: center;
+    }
+  }
+  .posts {
+    display: flex;
+    flex-direction: row;
+    gap: 60px;
+    margin-bottom: 60px;
+
+    img {
+      width: 100%;
+      object-fit: cover;
+      height: 225px;
+      margin-bottom: 20px;
+
+      @include media(lg) {
+        width: 269px;
+        height: initial;
+      }
+    }
+
+    span {
+      a {
+        font-weight: bold;
+        font-size: 1.6rem;
+        line-height: 2.4rem;
+        text-align: left;
+        color: $color-black;
+        margin-bottom: 10px;
+      }
+    }
+
+    a {
+      h2 {
+        font-weight: bold;
+        font-size: 2.1rem;
+        line-height: 2.6rem;
+        text-align: left;
+        color: $color-bright-red;
+      }
+    }
+
+    p {
+      margin-top: 10px;
+      font-weight: normal;
+      font-size: 1.6rem;
+      line-height: 2rem;
+      text-align: left;
+      color: $color-darker-gray;
+    }
+  }
+}
