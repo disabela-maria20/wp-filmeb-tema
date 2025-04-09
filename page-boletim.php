@@ -2,46 +2,27 @@
 // Template Name: Boletim
 get_header();
 
-$banner_id = "78913";
-
-$args = array(
-  'post_type' => 'banner-post',
+$edicoes_query = new WP_Query(array(
+  'post_type' => 'edicoes',
   'posts_per_page' => 1,
-);
+  'orderby' => 'date',     
+  'order' => 'DESC',
+));
 
-$query = new WP_Query($args);
+$recent_posts_query = new WP_Query(array(
+  'category_name' => 'Notícias',
+  'posts_per_page' => 6,
+));
 
-if ($query->have_posts()):
-  while ($query->have_posts()):
-    $query->the_post();
-    var_dump($banner_inferior);
-    $banner_superior = CFS()->get('banner_moldura', $banner_id);
-    $banner_inferior = CFS()->get('mega_banner', $banner_id);
-    $full_banner = CFS()->get('full_banner', $banner_id);
-    $skyscraper = CFS()->get('skyscraper', $banner_id);
-   
-    $link_banner_superior = CFS()->get('link_banner_moldura', $banner_id);
-    $link_banner_inferior = CFS()->get('link_mega_banner', $banner_id);
-    $link_full_banner = CFS()->get('link_full_banner', $banner_id);
-    $link_skyscraper = CFS()->get('link_skyscraper', $banner_id);
-    
 ?>
-<a href="<?php echo esc_url($link_banner_superior) ?>" target="_blank" rel="noopener noreferrer">
-  <img src="<?php echo esc_url($banner_superior); ?>" class="w-full p-35 img-banner bannerMobile" alt="banner">
-</a>
-
+<img src="<?php echo CFS()->get('banner_moldura'); ?>" class="w-full p-35 img-banner bannerMobile " alt="banner">
 
 <div class="container bannerDesktop">
   <div class="grid-banner-superior">
-    <a href="<?php echo esc_url($link_banner_inferior); ?>" target="_blank" rel="noopener noreferrer">
-      <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
-    </a>
+    <!-- <img src="<?php echo CFS()->get('banner_moldura'); ?>" class="img-banner" alt="banner"> -->
+    <img src="<?php echo CFS()->get('mega_banner'); ?>" class="img-banner " alt="banner">
   </div>
 </div>
-
-<?php endwhile;
-  wp_reset_postdata();
-endif; ?>
 
 <?php get_template_part('components/MenuMobile/index'); ?>
 <?php get_template_part('components/MenuDesktop/index'); ?>
@@ -51,9 +32,7 @@ endif; ?>
 <div class="container">
   <div class="grid-list-post-boletim gap-124">
     <div>
-      <a href="<?php echo esc_url($link_full_banner); ?>">
-        <img src="<?php echo esc_url($full_banner); ?>" class="img-banner" alt="banner">
-      </a>
+      <img src="<?php echo CFS()->get('full_banner'); ?>" class="img-banner" alt="banner">
 
       <?php
           if (function_exists('yoast_breadcrumb')) {
@@ -112,12 +91,22 @@ endif; ?>
         </div>
       </section>
     </div>
-    <aside class="aside-boletim">
-      <a href="<?php echo esc_url($link_skyscraper)?>" target="_blank" rel="noopener noreferrer">
-        <img src="<?php echo esc_url($skyscraper); ?>" class="img-banner" alt="banner">
-      </a>
-      <h2>Boletins</h2>
-      <?php get_template_part('components/Aside/index'); ?>
+    <aside class="aside-info">
+      <img src="<?php echo CFS()->get('skyscraper'); ?>" class="img-banner" alt="banner">
+      <h2>Notícias recentes</h2>
+      <?php if ($recent_posts_query->have_posts()) : ?>
+      <div class="aside-flex">
+        <?php while ($recent_posts_query->have_posts()) : $recent_posts_query->the_post(); ?>
+        <div class="">
+          <a href="<?php the_permalink(); ?>" class="read-more">
+            <h3><?php the_title(); ?></h3>
+          </a>
+        </div>
+        <?php endwhile; ?>
+      </div>
+      <?php else : ?>
+      <p>Nenhum boletim encontrado.</p>
+      <?php endif; wp_reset_postdata();?>
     </aside>
   </div>
 </div>
