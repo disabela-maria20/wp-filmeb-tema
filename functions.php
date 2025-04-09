@@ -554,6 +554,7 @@ function handel_assinaturas_content()
 
   $member_level = SwpmMemberUtils::get_logged_in_members_level();
   var_dump($member_level);
+  echo 'teste';
   if ($member_level == '3') {
     // Mensagem para não assinantes (convite para assinar)
     echo '
