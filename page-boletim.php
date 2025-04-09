@@ -1,6 +1,7 @@
 <?php
 // Template Name: Boletim
-$banner_id = "78913";
+$banner_id = "78913
+";
 
 $args = array(
   'post_type' => 'banner-post',
@@ -12,7 +13,7 @@ $query = new WP_Query($args);
 if ($query->have_posts()):
   while ($query->have_posts()):
     $query->the_post();
-
+    var_dump($banner_inferior);
     $banner_superior = CFS()->get('banner_moldura', $banner_id);
     $banner_inferior = CFS()->get('mega_banner', $banner_id);
     $full_banner = CFS()->get('full_banner', $banner_id);
