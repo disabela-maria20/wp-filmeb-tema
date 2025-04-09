@@ -815,3 +815,57 @@ function check_swpm_access_for_woocommerce_users() {
   }
 }
 add_action('wp', 'check_swpm_access_for_woocommerce_users', 99);
+
+/**
+ * 1. Verifica se o SWPM está ativo antes de qualquer operação
+ */
+function is_swpm_active() {
+  return class_exists('SimpleWpMembership');
+}
+
+/**
+* 2. Sincroniza login WooCommerce → SWPM (Nível 3)
+*/
+add_action('wp_login', function($user_login, $user) {
+  if (!is_swpm_active()) return;
+
+  // Evita duplo login no SWPM
+  if (SwpmMemberUtils::is_member_logged_in()) return;
+
+  $member_id = SwpmMemberUtils::get_user_by_email($user->user_email);
+  
+  if ($member_id) {
+      $member_level = SwpmMemberUtils::get_membership_level_by_member_id($member_id);
+      
+      // Apenas para membros nível 3 (Free)
+      if ($member_level == 3) {
+          $auth = SwpmAuth::get_instance();
+          $auth->login($member_id);
+      }
+  }
+}, 20, 2);
+
+/**
+* 3. Força verificação de acesso nas páginas restritas
+*/
+add_action('template_redirect', function() {
+  if (!is_swpm_active() || !SwpmProtection::get_instance()->is_protected()) return;
+  
+  // Se já está logado no SWPM, permite acesso
+  if (SwpmMemberUtils::is_member_logged_in()) return;
+  
+  // Se está logado no WooCommerce, tenta autenticar no SWPM
+  if (is_user_logged_in()) {
+      $current_user = wp_get_current_user();
+      $member_id = SwpmMemberUtils::get_user_by_email($current_user->user_email);
+      
+      if ($member_id && SwpmMemberUtils::get_membership_level_by_member_id($member_id) == 3) {
+          $auth = SwpmAuth::get_instance();
+          $auth->login($member_id);
+          return; // Evita redirecionamento loop
+      }
+  }
+  
+  // Redireciona para login se não tiver acesso
+  auth_redirect();
+}, 99);
