@@ -435,30 +435,32 @@ function save_custom_fields_and_register_swpm($customer_id) {
     
     // Atualiza nome e sobrenome principais
     if (isset($_POST['billing_first_name'])) {
-        update_user_meta($customer_id, 'first_name', sanitize_text_field($_POST['billing_first_name']));
+        wp_update_user(array('ID' => $customer_id, 'first_name' => sanitize_text_field($_POST['billing_first_name'])));
     }
     if (isset($_POST['billing_last_name'])) {
-        update_user_meta($customer_id, 'last_name', sanitize_text_field($_POST['billing_last_name']));
+        wp_update_user(array('ID' => $customer_id, 'last_name' => sanitize_text_field($_POST['billing_last_name'])));
     }
     
-    // Registra o usuário no Simple WordPress Membership
+    // Registra o usuário no Simple WordPress Membership com nível Free (ID:3)
     register_user_in_swpm($customer_id);
 }
 
 /**
- * 3. Função para registrar usuário no Simple Membership
+ * 3. Função para registrar usuário no Simple Membership com nível Free
  */
 function register_user_in_swpm($customer_id) {
+    // Verifica se o plugin Simple Membership está ativo
     if (!class_exists('SimpleWpMembership')) {
         return;
     }
     
+    // Obtém os dados do usuário
     $user = get_userdata($customer_id);
     $email = $user->user_email;
     $username = $user->user_login;
     
-    // Configurações básicas de membro
-    $membership_level = 1; // Nível de membro padrão
+    // Configurações de membro - nível Free (ID:3)
+    $membership_level = 3; // Nível Free
     $account_status = 'active'; // Status da conta
     
     // Verifica se o usuário já existe no Simple Membership
@@ -497,8 +499,19 @@ function register_user_in_swpm($customer_id) {
         // Associa o ID do usuário WordPress ao membro
         $member_id = $wpdb->insert_id;
         update_user_meta($customer_id, 'swpm_member_id', $member_id);
+        
+        // Atualiza também a tabela de relacionamento de níveis (se necessário)
+        $wpdb->replace($wpdb->prefix . 'swpm_membership_meta_tbl', array(
+            'user_id' => $member_id,
+            'membership_level' => $membership_level,
+            'meta_key' => 'membership_level',
+            'meta_value' => $membership_level
+        ));
     }
 }
+
+
+
 function format_products($products, $img_size = 'medium')
 {
   $products_final = [];
