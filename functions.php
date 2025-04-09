@@ -751,6 +751,7 @@ function sync_woocommerce_login_with_swpm($user_login, $user) {
         if ($swpm_member) {
             // Faz login no SWPM com o ID do membro
             SwpmAuth::get_instance()->login_user($swpm_member->user_name, $swpm_member->password);
+            var_dump($swpm_member);
         }
     }
 }
