@@ -740,18 +740,18 @@ add_action( 'woocommerce_created_customer', 'register_swpm_user_on_woocommerce_r
 add_action('wp_login', 'sync_woocommerce_login_with_swpm', 10, 2);
 
 function sync_woocommerce_login_with_swpm($user_login, $user) {
-    // Checa se o plugin SWPM está ativo
+    global $wpdb;
+
+    // Verifica se o plugin SWPM está ativo
     if (class_exists('SwpmAuth')) {
-        // Pega o usuário pelo login
-        $wp_user = get_user_by('login', $user_login);
+        // Consulta na tabela do SWPM para encontrar o usuário pelo e-mail
+        $swpm_user = $wpdb->get_row(
+            $wpdb->prepare("SELECT * FROM {$wpdb->prefix}swpm_members_tbl WHERE email = %s", $user->user_email)
+        );
 
-        // Tenta encontrar o membro SWPM correspondente
-        $swpm_member = SwpmMemberUtils::get_user_by_wp_user_id($wp_user->ID);
-
-        if ($swpm_member) {
-            // Faz login no SWPM com o ID do membro
-            SwpmAuth::get_instance()->login_user($swpm_member->user_name, $swpm_member->password);
-            var_dump($swpm_member);
+        if ($swpm_user) {
+            // Faz login no SWPM
+            SwpmAuth::get_instance()->login_user($swpm_user->user_name, $swpm_user->password);
         }
     }
 }
