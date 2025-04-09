@@ -4,30 +4,16 @@ get_header();
 ?>
 <?php
 $banner_id = "78846";
-
-$args = array(
-  'post_type' => 'banner-post',
-  'posts_per_page' => 1,
-);
-
-
-$query = new WP_Query($args);
-
-if ($query->have_posts()): while ($query->have_posts()): $query->the_post();
-
     $banner_superior = CFS()->get('banner_moldura', $banner_id);
     $banner_inferior = CFS()->get('mega_banner', $banner_id);
     $full_banner = CFS()->get('full_banner', $banner_id);
     $skyscraper = CFS()->get('skyscraper', $banner_id);
     $super_banner = CFS()->get('super_banner', $banner_id);
-
     $link_banner_superior = CFS()->get('link_banner_moldura', $banner_id);
     $link_banner_inferior = CFS()->get('link_mega_banner', $banner_id);
     $link_full_banner = CFS()->get('link_full_banner', $banner_id);
     $link_skyscraper = CFS()->get('link_skyscraper', $banner_id);
     $link_super_banner = CFS()->get('link_super_banner', $banner_id);
-
-
     $boletim_query = new WP_Query(array(
       'category_name' => 'Rapidinhas',
       'posts_per_page' => 10,
@@ -48,13 +34,6 @@ if ($query->have_posts()): while ($query->have_posts()): $query->the_post();
   </div>
 </div>
 
-
-
-<?php
-  endwhile;
-  wp_reset_postdata();
-endif;
-?>
 
 <?php get_template_part('components/MenuMobile/index'); ?>
 <?php get_template_part('components/MenuDesktop/index'); ?>

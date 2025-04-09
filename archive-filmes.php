@@ -200,8 +200,7 @@ function obter_anos_dos_filmes()
 $anos = obter_anos_dos_filmes();
 ?>
 
-<?php if ($query->have_posts()): ?>
-<?php while ($query->have_posts()): $query->the_post(); ?>
+
 <?php
     $banner_superior = CFS()->get('banner_moldura', $banner_id);
     $banner_inferior = CFS()->get('mega_banner', $banner_id);
@@ -227,9 +226,6 @@ $anos = obter_anos_dos_filmes();
   </div>
 </div>
 
-<?php endwhile; ?>
-<?php wp_reset_postdata(); ?>
-<?php endif; ?>
 
 <?php get_template_part('components/MenuMobile/index'); ?>
 <?php get_template_part('components/MenuDesktop/index'); ?>

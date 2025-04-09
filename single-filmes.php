@@ -24,27 +24,12 @@ function is_cfs_field_empty($field_key)
 }
 
 $banner_id = "78848";
-
-$args = array(
-  'post_type' => 'banner-post',
-  'posts_per_page' => 1,
-);
-
-$query = new WP_Query($args);
-
-if ($query->have_posts()) :
-  while ($query->have_posts()) : $query->the_post();
     $banner_superior = CFS()->get('banner_moldura', $banner_id);
     $banner_inferior = CFS()->get('mega_banner', $banner_id);
-    $full_banner = CFS()->get('full_banner', $banner_id);
-    $skyscraper = CFS()->get('skyscraper', $banner_id);
-    $super_banner = CFS()->get('super_banner', $banner_id);
-
+  
     $link_banner_superior = CFS()->get('link_banner_moldura', $banner_id);
     $link_banner_inferior = CFS()->get('link_mega_banner', $banner_id);
-    $link_full_banner = CFS()->get('link_full_banner', $banner_id);
-    $link_skyscraper = CFS()->get('link_skyscraper', $banner_id);
-    $link_super_banner = CFS()->get('link_super_banner', $banner_id);
+  
 ?>
 <a href="<?php echo esc_url($link_banner_superior); ?>" target="_blank" rel="noopener noreferrer">
   <img src="<?php echo esc_url($banner_superior); ?>" class="w-full p-35 img-banner bannerMobile" alt="banner">
@@ -59,10 +44,6 @@ if ($query->have_posts()) :
 </div>
 
 <?php
-  endwhile;
-  wp_reset_postdata();
-endif;
-
 get_template_part('components/MenuMobile/index');
 get_template_part('components/MenuDesktop/index');
 ?>
