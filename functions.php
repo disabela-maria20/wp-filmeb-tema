@@ -739,19 +739,45 @@ add_action( 'woocommerce_created_customer', 'register_swpm_user_on_woocommerce_r
 
 add_action('wp_login', 'sync_woocommerce_login_with_swpm', 10, 2);
 
-function sync_woocommerce_login_with_swpm($user_login, $user) {
-    global $wpdb;
+// Atualiza nível do SWPM ao fazer login se o usuário tiver comprado "Assinatura Filme B"
+add_action('wp_login', 'verifica_assinatura_filme_b_e_atualiza_swpm', 20, 2);
 
-    // Verifica se o plugin SWPM está ativo
-    if (class_exists('SwpmAuth')) {
-        // Consulta na tabela do SWPM para encontrar o usuário pelo e-mail
-        $swpm_user = $wpdb->get_row(
-            $wpdb->prepare("SELECT * FROM {$wpdb->prefix}swpm_members_tbl WHERE email = %s", $user->user_email)
-        );
+function verifica_assinatura_filme_b_e_atualiza_swpm($user_login, $user) {
+    if (!function_exists('wc_get_orders')) {
+        return; // WooCommerce não está ativo
+    }
 
-        if ($swpm_user) {
-            // Faz login no SWPM
-            SwpmAuth::get_instance()->login_user($swpm_user->user_name, $swpm_user->password);
+    $user_id = $user->ID;
+
+    // Busca pedidos completos do usuário
+    $orders = wc_get_orders([
+        'customer_id' => $user_id,
+        'status' => 'completed',
+        'limit' => -1,
+    ]);
+
+    foreach ($orders as $order) {
+        foreach ($order->get_items() as $item) {
+            $product_name = $item->get_name();
+
+            if (stripos($product_name, 'Assinatura Filme B') !== false) {
+                global $wpdb;
+                $user_email = $user->user_email;
+
+                $swpm_user = $wpdb->get_row(
+                    $wpdb->prepare("SELECT * FROM {$wpdb->prefix}swpm_members_tbl WHERE email = %s", $user_email)
+                );
+
+                if ($swpm_user && $swpm_user->membership_level != 3) {
+                    $wpdb->update(
+                        "{$wpdb->prefix}swpm_members_tbl",
+                        ['membership_level' => 3],
+                        ['member_id' => $swpm_user->member_id]
+                    );
+                }
+
+                return; // Já achou e atualizou, pode sair
+            }
         }
     }
 }
