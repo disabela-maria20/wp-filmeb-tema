@@ -73,7 +73,7 @@ $recent_posts_query_banner = new WP_Query(array(
         <a href="<?php the_permalink(); ?>">
           <h2><?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?></h2>
         </a>
-        <p><?php echo esc_html(CFS()->get('descricao') ?: get_the_excerpt()); ?></p>
+        <p><?php echo esc_html(wp_trim_words(CFS()->get('descricao') ?: get_the_excerpt(), 20, '...')); ?></p>
       </div>
     </div>
     <?php }
