@@ -91,22 +91,12 @@ $recent_posts_query = new WP_Query(array(
         </div>
       </section>
     </div>
-    <aside class="aside-info">
-      <img src="<?php echo CFS()->get('skyscraper'); ?>" class="img-banner" alt="banner">
-      <h2>Notícias recentes</h2>
-      <?php if ($recent_posts_query->have_posts()) : ?>
-      <div class="aside-flex">
-        <?php while ($recent_posts_query->have_posts()) : $recent_posts_query->the_post(); ?>
-        <div class="">
-          <a href="<?php the_permalink(); ?>" class="read-more">
-            <h3><?php the_title(); ?></h3>
-          </a>
-        </div>
-        <?php endwhile; ?>
-      </div>
-      <?php else : ?>
-      <p>Nenhum boletim encontrado.</p>
-      <?php endif; wp_reset_postdata();?>
+    <aside class="aside-boletim">
+      <a href="<?php echo esc_url($link_skyscraper)?>" target="_blank" rel="noopener noreferrer">
+        <img src="<?php echo esc_url($skyscraper); ?>" class="img-banner" alt="banner">
+      </a>
+      <h2>Boletins</h2>
+      <?php get_template_part('components/Aside/index'); ?>
     </aside>
   </div>
 </div>
