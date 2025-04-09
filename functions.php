@@ -738,59 +738,80 @@ add_action( 'woocommerce_created_customer', 'register_swpm_user_on_woocommerce_r
 
 
 /**
- * Sincroniza o login entre WooCommerce e Simple WordPress Membership (SWPM)
- * Quando um usuário faz login no WooCommerce, também é logado no SWPM
+ * SINCRONIZAÇÃO ENTRE WOOCOMMERCE E SWPM
+ * Quando usuário faz login no WooCommerce, também é autenticado no SWPM
  */
-function sync_woocommerce_swpm_login($user_login, $user) {
-    // Verifica se o plugin SWPM está ativo
-    if (!class_exists('SimpleWpMembership')) {
-        return;
-    }
+function sync_woocommerce_to_swpm_login($user_login, $user) {
+  // Verifica se o plugin SWPM está ativo
+  if (!class_exists('SimpleWpMembership')) {
+      return;
+  }
 
-    // Verifica se o usuário é um membro SWPM
-    if (SwpmMemberUtils::is_member_logged_in()) {
-        return; // Já está logado no SWPM
-    }
+  // Se já estiver logado no SWPM, não faz nada
+  if (SwpmMemberUtils::is_member_logged_in()) {
+      return;
+  }
 
-    // Obtém o ID do membro SWPM associado ao usuário WordPress
-    $member_id = SwpmMemberUtils::get_user_by_email($user->user_email);
-    
-    if ($member_id) {
-        // Cria uma instância do SWPM Auth
-        $auth = SwpmAuth::get_instance();
-        
-        // Autentica o usuário no SWPM
-        $auth->login($member_id);
-        
-        // Atualiza o último acesso
-        SwpmMemberUtils::update_last_accessed_date($member_id);
-    }
+  // Obtém o ID do membro SWPM pelo email do usuário
+  $member_id = SwpmMemberUtils::get_user_by_email($user->user_email);
+  
+  if ($member_id) {
+      // Verifica se é nível 3 (Free)
+      $member_level = SwpmMemberUtils::get_membership_level_by_member_id($member_id);
+      
+      if ($member_level == 3) {
+          // Autentica no SWPM
+          $auth = SwpmAuth::get_instance();
+          $auth->login($member_id);
+          
+          // Atualiza o último acesso
+          SwpmMemberUtils::update_last_accessed_date($member_id);
+      }
+  }
 }
-add_action('wp_login', 'sync_woocommerce_swpm_login', 10, 2);
+add_action('wp_login', 'sync_woocommerce_to_swpm_login', 20, 2);
 
 /**
- * Sincroniza o logout entre WooCommerce e SWPM
- */
-function sync_woocommerce_swpm_logout() {
-    // Verifica se o plugin SWPM está ativo
-    if (!class_exists('SimpleWpMembership')) {
-        return;
-    }
-
-    // Faz logout do SWPM
-    $auth = SwpmAuth::get_instance();
-    $auth->logout();
+* REDIRECIONAMENTO APÓS LOGIN
+* Evita conflitos entre os sistemas
+*/
+function custom_login_redirect($redirect, $user) {
+  if (class_exists('SimpleWpMembership') && SwpmMemberUtils::is_member_logged_in()) {
+      return home_url('/minha-conta/'); // Página da conta WooCommerce
+  }
+  return $redirect;
 }
-add_action('wp_logout', 'sync_woocommerce_swpm_logout');
+add_filter('woocommerce_login_redirect', 'custom_login_redirect', 10, 2);
 
 /**
- * Redireciona para a conta do usuário após login no WooCommerce
- */
-function redirect_after_woocommerce_login($redirect, $user) {
-    // Verifica se é um usuário SWPM
-    if (class_exists('SimpleWpMembership') && SwpmMemberUtils::is_member_logged_in()) {
-        return wc_get_account_endpoint_url('dashboard');
-    }
-    return $redirect;
+* VERIFICA ACESSO ÀS PÁGINAS RESTRITAS
+* Permite acesso se estiver logado no WooCommerce E for nível 3 no SWPM
+*/
+function check_swpm_access_for_woocommerce_users() {
+  // Se não for página restrita, não faz nada
+  if (!SwpmProtection::get_instance()->is_protected()) {
+      return;
+  }
+
+  // Se já estiver logado no SWPM, não faz nada
+  if (SwpmMemberUtils::is_member_logged_in()) {
+      return;
+  }
+
+  // Se estiver logado no WooCommerce
+  if (is_user_logged_in()) {
+      $current_user = wp_get_current_user();
+      $member_id = SwpmMemberUtils::get_user_by_email($current_user->user_email);
+      
+      if ($member_id) {
+          $member_level = SwpmMemberUtils::get_membership_level_by_member_id($member_id);
+          
+          // Se for nível 3, autentica no SWPM
+          if ($member_level == 3) {
+              $auth = SwpmAuth::get_instance();
+              $auth->login($member_id);
+          }
+      }
+  }
 }
-add_filter('woocommerce_login_redirect', 'redirect_after_woocommerce_login', 10, 2);
+add_action('wp', 'check_swpm_access_for_woocommerce_users', 99);
