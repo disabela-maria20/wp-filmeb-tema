@@ -10,7 +10,9 @@ $args = array(
 );
 
 $query = new WP_Query($args);
+$banner_superior = CFS()->get('banner_moldura', $banner_id);
 var_dump($query);
+var_dump($banner_superior);
 if ($query->have_posts()):
   while ($query->have_posts()):
     $query->the_post();
