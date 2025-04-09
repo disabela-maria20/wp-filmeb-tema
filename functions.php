@@ -735,3 +735,44 @@ function register_swpm_user_on_woocommerce_registration( $customer_id ) {
   }
 }
 add_action( 'woocommerce_created_customer', 'register_swpm_user_on_woocommerce_registration', 10, 1 );
+
+
+
+function sync_woocommerce_swpm_login($user_login, $user) {
+  if (!class_exists('SimpleWpMembership')) {
+      return;
+  }
+
+  if (SwpmMemberUtils::is_member_logged_in()) {
+      return; 
+  }
+  $member_id = SwpmMemberUtils::get_user_by_email($user->user_email);
+  
+  if ($member_id) {
+      $auth = SwpmAuth::get_instance();
+      
+      $auth->login($member_id);
+      
+      SwpmMemberUtils::update_last_accessed_date($member_id);
+  }
+}
+add_action('wp_login', 'sync_woocommerce_swpm_login', 10, 2);
+
+function sync_woocommerce_swpm_logout() {
+  if (!class_exists('SimpleWpMembership')) {
+      return;
+  }
+
+  $auth = SwpmAuth::get_instance();
+  $auth->logout();
+}
+add_action('wp_logout', 'sync_woocommerce_swpm_logout');
+
+function redirect_after_woocommerce_login($redirect, $user) {
+  // Verifica se é um usuário SWPM
+  if (class_exists('SimpleWpMembership') && SwpmMemberUtils::is_member_logged_in()) {
+      return wc_get_account_endpoint_url('dashboard');
+  }
+  return $redirect;
+}
+add_filter('woocommerce_login_redirect', 'redirect_after_woocommerce_login', 10, 2);
