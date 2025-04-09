@@ -14,6 +14,7 @@ $query = new WP_Query($args);
 if ($query->have_posts()):
   while ($query->have_posts()):
     $query->the_post();
+    echo "teste";
     var_dump($query);
     $banner_superior = CFS()->get('banner_moldura', $banner_id);
     $banner_inferior = CFS()->get('mega_banner', $banner_id);
