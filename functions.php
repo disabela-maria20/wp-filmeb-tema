@@ -697,9 +697,9 @@ function redirect_specific_pages_for_non_members() {
       return;
   }
 
-  // Páginas protegidas e seus níveis requeridos
+  // Páginas protegidas (só nível 2 pode acessar)
   $protected_pages = array(
-      'boletim' => 2, // Nível 2 pode acessar
+      'boletim' => 2,
       'edicao' => 2,
       'opiniao' => 2,
       'fim-de-semana-global' => 2,
@@ -712,11 +712,11 @@ function redirect_specific_pages_for_non_members() {
 
   global $post;
 
-  // Verifica se é uma página singular protegida
+  // Verifica páginas protegidas
   if (is_singular() && isset($post->post_name) && array_key_exists($post->post_name, $protected_pages)) {
       $required_level = $protected_pages[$post->post_name];
       
-      // Se o usuário não estiver logado
+      // Se não estiver logado, redireciona para login
       if (!SwpmMemberUtils::is_member_logged_in()) {
           $account_page_url = home_url('/minha-conta/');
           $redirect_url = add_query_arg('swpm_redirect_to', urlencode(get_permalink()), $account_page_url);
@@ -724,21 +724,19 @@ function redirect_specific_pages_for_non_members() {
           exit();
       }
       
-      // Verifica o nível de assinatura
+      // Verifica se o nível é DIFERENTE de 2 (bloqueia se não for exatamente 2)
       $auth = SwpmAuth::get_instance();
       $user_level = $auth->get('membership_level');
       
-      if ($user_level > $required_level) {
-          // Usuário tem nível inferior ao requerido (números maiores = níveis mais baixos)
-          $account_page_url = home_url('/minha-conta/');
-          wp_redirect($account_page_url);
+      if ($user_level != $required_level) { // NÍVEL DIFERENTE DE 2 = BLOQUEIA
+          wp_redirect(home_url('/minha-conta/')); 
           exit();
       }
   }
 
-  // Verifica arquivos de edições e taxonomias
+  // Verifica arquivos de edições e taxonomias (só nível 2)
   if (is_post_type_archive('edicoes') || is_tax('categoria_edicoes')) {
-      $required_level = 2; // Nível 2 pode acessar
+      $required_level = 2;
       
       if (!SwpmMemberUtils::is_member_logged_in()) {
           $account_page_url = home_url('/minha-conta/');
@@ -747,21 +745,16 @@ function redirect_specific_pages_for_non_members() {
           exit();
       }
       
-      // Verifica o nível de assinatura
       $auth = SwpmAuth::get_instance();
       $user_level = $auth->get('membership_level');
       
-      if ($user_level > $required_level) {
-          $account_page_url = home_url('/minha-conta/');
-          wp_redirect($account_page_url);
+      if ($user_level != $required_level) { // NÍVEL DIFERENTE DE 2 = BLOQUEIA
+          wp_redirect(home_url('/minha-conta/')); 
           exit();
       }
   }
 }
 add_action('template_redirect', 'redirect_specific_pages_for_non_members');
-/**
- * Registra usuários do WooCommerce no Simple WordPress Membership
- */
 function register_swpm_user_on_woocommerce_registration( $customer_id ) {
   // Verifica se o plugin Simple Membership está ativo
   if (!class_exists('SimpleWpMembership')) {
