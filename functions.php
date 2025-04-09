@@ -697,60 +697,68 @@ function redirect_specific_pages_for_non_members() {
       return;
   }
 
-  $protected_slugs = array(
-      'boletim',
-      'edicao',
-      'opiniao',
-      'fim-de-semana-global',
-      'fim-de-semana-brasil',
-      'boletim/fim-de-semana-global/',
-      'boletim/fim-de-semana-brasil/',
-      'boletim/edicao/',
-      'boletim/opiniao/',
+  // Páginas protegidas e seus níveis requeridos
+  $protected_pages = array(
+      'boletim' => 2, // Nível 2 pode acessar
+      'edicao' => 2,
+      'opiniao' => 2,
+      'fim-de-semana-global' => 2,
+      'fim-de-semana-brasil' => 2,
+      'boletim/fim-de-semana-global/' => 2,
+      'boletim/fim-de-semana-brasil/' => 2,
+      'boletim/edicao/' => 2,
+      'boletim/opiniao/' => 2,
   );
 
   global $post;
 
-  if (is_singular() && in_array($post->post_name, $protected_slugs)) {
+  // Verifica se é uma página singular protegida
+  if (is_singular() && isset($post->post_name) && array_key_exists($post->post_name, $protected_pages)) {
+      $required_level = $protected_pages[$post->post_name];
+      
+      // Se o usuário não estiver logado
       if (!SwpmMemberUtils::is_member_logged_in()) {
           $account_page_url = home_url('/minha-conta/');
-           $redirect_url = add_query_arg('swpm_redirect_to', urlencode(get_permalink()), $account_page_url);
+          $redirect_url = add_query_arg('swpm_redirect_to', urlencode(get_permalink()), $account_page_url);
           wp_redirect($redirect_url);
           exit();
       }
-    
-      $required_level = 'premium';
+      
+      // Verifica o nível de assinatura
       $auth = SwpmAuth::get_instance();
-      if (!$auth->userData->subscription_level === $required_level) {
+      $user_level = $auth->get('membership_level');
+      
+      if ($user_level > $required_level) {
+          // Usuário tem nível inferior ao requerido (números maiores = níveis mais baixos)
           $account_page_url = home_url('/minha-conta/');
           wp_redirect($account_page_url);
           exit();
       }
   }
+
+  // Verifica arquivos de edições e taxonomias
   if (is_post_type_archive('edicoes') || is_tax('categoria_edicoes')) {
-    if (!SwpmMemberUtils::is_member_logged_in()) {
-        // URL da página de conta (substitua pela sua URL)
-        $account_page_url = home_url('/minha-conta/');
-        
-        // Redireciona com parâmetro para voltar após login
-        $redirect_url = add_query_arg('swpm_redirect_to', urlencode(get_post_type_archive_link('edicoes')), $account_page_url);
-        wp_redirect($redirect_url);
-        exit();
-    }
-    
-    // Verifica adicionalmente se o usuário tem o nível necessário
-    $required_level = 'assinante'; // Substitua pelo nível necessário
-    $auth = SwpmAuth::get_instance();
-    if (!$auth->userData->subscription_level === $required_level) {
-        $account_page_url = home_url('/minha-conta/');
-        wp_redirect($account_page_url);
-        exit();
-    }
+      $required_level = 2; // Nível 2 pode acessar
+      
+      if (!SwpmMemberUtils::is_member_logged_in()) {
+          $account_page_url = home_url('/minha-conta/');
+          $redirect_url = add_query_arg('swpm_redirect_to', urlencode(get_post_type_archive_link('edicoes')), $account_page_url);
+          wp_redirect($redirect_url);
+          exit();
+      }
+      
+      // Verifica o nível de assinatura
+      $auth = SwpmAuth::get_instance();
+      $user_level = $auth->get('membership_level');
+      
+      if ($user_level > $required_level) {
+          $account_page_url = home_url('/minha-conta/');
+          wp_redirect($account_page_url);
+          exit();
+      }
+  }
 }
-}
-
-add_action('template_redirect', 'redirect_specific_pages_for_non_members', 20);
-
+add_action('template_redirect', 'redirect_specific_pages_for_non_members');
 /**
  * Registra usuários do WooCommerce no Simple WordPress Membership
  */
@@ -766,7 +774,7 @@ function register_swpm_user_on_woocommerce_registration( $customer_id ) {
   $username = $user->user_login;
   
   // Configurações básicas de membro (ajuste conforme necessário)
-  $membership_level = 1; // Nível de membro padrão
+  $membership_level = 3; // Nível de membro padrão
   $account_status = 'active'; // Status da conta
   
   // Verifica se o usuário já existe no Simple Membership
