@@ -5,7 +5,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-$banner_id = "78847";
+
 
 $args = array(
   'post_type' => 'banner-post',
@@ -201,6 +201,8 @@ $anos = obter_anos_dos_filmes();
 
 
 <?php
+$banner_id = "78847";
+var_dump($banner_superior);
     $banner_superior = CFS()->get('banner_moldura', $banner_id);
     $banner_inferior = CFS()->get('mega_banner', $banner_id);
     $skyscraper = CFS()->get('skyscraper', $banner_id);

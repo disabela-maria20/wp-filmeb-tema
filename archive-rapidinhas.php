@@ -3,16 +3,8 @@ get_header();
 ?>
 
 <?php
-$banner_id = "78845";
-
-$args = array(
-  'post_type' => 'banner-post',
-  'posts_per_page' => 1,
-);
-
-$query = new WP_Query($args);
-
-
+$banner_id = "78847";
+var_dump($banner_superior);
     $banner_superior = CFS()->get('banner_moldura', $banner_id);
     $banner_inferior = CFS()->get('mega_banner', $banner_id);
     $full_banner = CFS()->get('full_banner', $banner_id);
