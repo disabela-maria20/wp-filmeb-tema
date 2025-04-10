@@ -3,7 +3,7 @@ get_header();
 ?>
 
 <?php
-$banner_id = "78845";
+$banner_id = "78847";
 $banner_superior = CFS()->get('banner_moldura', $banner_id);
 $banner_inferior = CFS()->get('mega_banner', $banner_id);
 $full_banner = CFS()->get('full_banner', $banner_id);
@@ -18,7 +18,6 @@ $link_skyscraper = CFS()->get('link_skyscraper', $banner_id);
 $link_super_banner = CFS()->get('link_super_banner', $banner_id);
 $link_modulo = CFS()->get('link_modulo', $banner_id);
 
-var_dump($banner_superior);
 
 $boletim_query = new WP_Query(array(
   'category_name' => 'Rapidinhas',

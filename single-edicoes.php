@@ -18,9 +18,6 @@ $banner_id = "78847";
     $link_skyscraper = CFS()->get('link_skyscraper', $banner_id);
     $link_super_banner = CFS()->get('link_super_banner', $banner_id);
 
-    echo 'teste';
-    var_dump($banner_superior);
-
     $boletim_query = new WP_Query(array(
       'category_name' => 'Rapidinhas',
       'posts_per_page' => 10,
