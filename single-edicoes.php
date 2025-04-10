@@ -3,8 +3,8 @@ get_header();
 ?>
 
 <?php
-;
-$banner_id = "78846";
+
+$banner_id = "78847";
 
     $banner_superior = CFS()->get('banner_moldura', $banner_id);
     $banner_inferior = CFS()->get('mega_banner', $banner_id);
@@ -17,6 +17,9 @@ $banner_id = "78846";
     $link_full_banner = CFS()->get('link_full_banner', $banner_id);
     $link_skyscraper = CFS()->get('link_skyscraper', $banner_id);
     $link_super_banner = CFS()->get('link_super_banner', $banner_id);
+
+    echo 'teste';
+    var_dump($banner_superior);
 
     $boletim_query = new WP_Query(array(
       'category_name' => 'Rapidinhas',
@@ -44,9 +47,6 @@ $banner_id = "78846";
     <div class="grid-banner-superior">
       <a href="<?php echo esc_url($link_banner_superior); ?>" target="_blank" rel="noopener noreferrer">
         <img src="<?php echo esc_url($banner_superior); ?>" class="img-banner" alt="banner">
-      </a>
-      <a href="<?php echo esc_url($link_banner_inferior); ?>" target="_blank" rel="noopener noreferrer">
-        <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
       </a>
     </div>
   </div>

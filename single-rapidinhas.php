@@ -4,27 +4,27 @@ get_header();
 
 <?php
 $banner_id = "78845";
+$banner_superior = CFS()->get('banner_moldura', $banner_id);
+$banner_inferior = CFS()->get('mega_banner', $banner_id);
+$full_banner = CFS()->get('full_banner', $banner_id);
+$skyscraper = CFS()->get('skyscraper', $banner_id);
+$super_banner = CFS()->get('super_banner', $banner_id);
+$modulo = CFS()->get('modulo', $banner_id);
 
+$link_banner_superior = CFS()->get('link_banner_moldura', $banner_id);
+$link_banner_inferior = CFS()->get('link_mega_banner', $banner_id);
+$link_full_banner = CFS()->get('link_full_banner', $banner_id);
+$link_skyscraper = CFS()->get('link_skyscraper', $banner_id);
+$link_super_banner = CFS()->get('link_super_banner', $banner_id);
+$link_modulo = CFS()->get('link_modulo', $banner_id);
 
+var_dump($banner_superior);
 
-    $banner_superior = CFS()->get('banner_moldura', $banner_id);
-    $banner_inferior = CFS()->get('mega_banner', $banner_id);
-    $full_banner = CFS()->get('full_banner', $banner_id);
-    $skyscraper = CFS()->get('skyscraper', $banner_id);
-    $super_banner = CFS()->get('super_banner', $banner_id);
-    $modulo = CFS()->get('modulo', $banner_id);
+$boletim_query = new WP_Query(array(
+  'category_name' => 'Rapidinhas',
+  'posts_per_page' => 10,
+));
 
-    $link_banner_superior = CFS()->get('link_banner_moldura', $banner_id);
-    $link_banner_inferior = CFS()->get('link_mega_banner', $banner_id);
-    $link_full_banner = CFS()->get('link_full_banner', $banner_id);
-    $link_skyscraper = CFS()->get('link_skyscraper', $banner_id);
-    $link_super_banner = CFS()->get('link_super_banner', $banner_id);
-    $link_modulo = CFS()->get('link_modulo', $banner_id);
-
-    $boletim_query = new WP_Query(array(
-      'category_name' => 'Rapidinhas',
-      'posts_per_page' => 10,
-    ));
 ?>
 <a href="<?php echo esc_url($link_banner_superior) ?>" target="_blank" rel="noopener noreferrer">
   <img src="<?php echo esc_url($banner_superior); ?>" class="w-full p-35 img-banner bannerMobile" alt="banner">
