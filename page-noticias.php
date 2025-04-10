@@ -43,7 +43,7 @@ $link_skyscraper = CFS()->get('link_skyscraper', $banner_id);
   <div class="grid-list-post gap-124">
     <div>
       <a href="<?php echo esc_url($link_full_banner); ?>">
-        <img src="<?php echo esc_url($full_banner); ?>" class="img-banner" alt="banner">
+        <img src="<?php echo esc_url($full_banner); ?>" class="img-banner" style="padding-bottom: 25px;" alt="banner">
       </a>
 
       <?php if (function_exists('yoast_breadcrumb')) {

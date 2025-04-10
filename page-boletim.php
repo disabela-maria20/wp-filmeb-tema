@@ -56,7 +56,7 @@ $banner_id = "78847";
   <div class="grid-list-post-boletim gap-124">
     <div>
       <a href="<?php echo esc_url($link_full_banner); ?>">
-        <img src="<?php echo esc_url($full_banner); ?>" class="img-banner" alt="banner">
+        <img src="<?php echo esc_url($full_banner); ?>" class="img-banner" style="padding-bottom: 25px;" alt="banner">
       </a>
 
       <?php

@@ -52,7 +52,7 @@ $banner_id = "78846";
   <div class="grid-list-post-rapidinhas gap-124">
     <div>
       <a href="<?php echo esc_url($link_full_banner); ?>">
-        <img src="<?php echo esc_url($full_banner); ?>" class="img-banner" alt="banner">
+        <img src="<?php echo esc_url($full_banner); ?>" class="img-banner" style="padding-bottom: 25px;" alt="banner">
       </a>
       <?php if (function_exists('yoast_breadcrumb')) {
         yoast_breadcrumb('<div id="breadcrumbs">', '</div>');
