@@ -23,7 +23,7 @@ function is_cfs_field_empty($field_key)
   return empty($field_value);
 }
 
-$banner_id = "78848";
+$banner_id = "78919";
     $banner_superior = CFS()->get('banner_moldura', $banner_id);
     $banner_inferior = CFS()->get('mega_banner', $banner_id);
   
@@ -166,7 +166,7 @@ get_template_part('components/MenuDesktop/index');
               <?php if (!is_cfs_field_empty('duracao_minutos')) : ?>
               <tr>
                 <td class="titulo-fixa">Duração</td>
-                <td><?php echo CFS()->get('duracao_minutos'); ?>min</td>
+                <td><?php echo CFS()->get('duracao_minutos'); ?> &nbsp;min</td>
               </tr>
               <?php endif; ?>
 
