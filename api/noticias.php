@@ -61,15 +61,12 @@ function api_noticia_post($request)
       CFS()->save($field_data, ['ID' => $post_id]);
     }
 
-    // Verifica se a categoria é "plus" e salva os campos personalizados
-    if ($post_category === 'plus') {
-      $custom_fields = [
-        'chapeu' => $chapel,
-        'edicao' => $edicao,
-        'data' => $data_filme
-      ];
-      CFS()->save($custom_fields, ['ID' => $post_id]);
-    }
+    $custom_fields = [
+      'chapeu' => $chapel,
+      'edicao' => $edicao,
+      'data' => $data_filme
+    ];
+    CFS()->save($custom_fields, ['ID' => $post_id]);
 
     return rest_ensure_response([
       'message' => 'Noticia criado com sucesso!',
