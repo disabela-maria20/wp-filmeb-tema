@@ -1,8 +1,8 @@
 .page-filmes {
-  // padding: 35px 0;
+  padding: 35px 0;
 
   @include media(lg) {
-    padding: 60px 15px;
+    padding: 60px 0;
   }
 
   h1 {
@@ -134,10 +134,8 @@
       display: grid;
       gap: 20px;
       margin: 0 auto;
+      grid-template-columns: 1fr 1fr;
 
-      @include media(md) {
-        grid-template-columns: 1fr 1fr;
-      }
       @include media(lg) {
         grid-template-columns: 1fr 1fr 1fr 1fr;
       }
@@ -148,7 +146,7 @@
       .card {
         color: $color-darker-gray;
         width: 100%;
-        height: 379px;
+        height: 200px;
         background: #fef3f6;
         position: relative;
         display: flex;

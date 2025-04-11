@@ -6,7 +6,6 @@
   }
 
   .item {
-    height: 253px;
     @include media(lg) {
       display: flex;
       gap: 40px;
@@ -16,9 +15,12 @@
       height: 400px;
     }
     img {
-      max-width: 45%;
+      width: 100%;
       object-fit: cover;
       border-radius: 5px;
+      @include media(md) {
+        max-width: 45%;
+      }
     }
 
     span,
@@ -433,7 +435,7 @@
       .card {
         color: $color-darker-gray;
         width: 100%;
-        height: 379px;
+        height: 200px;
         background: #fef3f6;
         position: relative;
         display: flex;
@@ -442,9 +444,6 @@
         flex-direction: column;
         border-radius: 5px;
 
-        @include media(lg) {
-          height: 200px;
-        }
         ul {
           li {
             display: grid;
