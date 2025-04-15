@@ -5,13 +5,10 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-
-
 $args = array(
   'post_type' => 'banner-post',
   'posts_per_page' => 1,
 );
-
 
 $termos = get_terms(array(
   'taxonomy' => 'generos',
@@ -59,29 +56,76 @@ $dias_semana = [
 ];
 
 // Valores padrão para ano e mês
-$current_year = date('Y');
-$current_month = date('m');
-$selected_ano = isset($_GET['ano']) ? sanitize_text_field($_GET['ano']) : $current_year;
-$selected_mes = isset($_GET['mes']) ? sanitize_text_field($_GET['mes']) : $current_month;
+$current_date = new DateTime();
+$current_year = $current_date->format('Y');
+$current_month = $current_date->format('m');
 
-$args = array(
-  'post_type' => 'filmes',
-  'posts_per_page' => -1, // Busca todos os posts
-  'post_status' => 'publish',
-  'meta_query' => array(
-    'relation' => 'AND',
-    array(
-      'key' => 'estreia',
-      'value' => '^' . $selected_ano,
-      'compare' => 'REGEXP',
-    ),
-    array(
-      'key' => 'estreia',
-      'value' => '-' . $selected_mes . '-',
-      'compare' => 'REGEXP',
-    )
-  )
-);
+// Obter todos os meses dos próximos 12 meses
+$future_months = [];
+for ($i = 0; $i < 12; $i++) {
+    $date = clone $current_date;
+    $date->add(new DateInterval('P'.$i.'M'));
+    $future_months[$date->format('Y-m')] = $meses[$date->format('m')] . ' ' . $date->format('Y');
+}
+
+// Paginação de meses
+$meses_por_pagina = 3; // Quantidade de meses por página
+$total_paginas = ceil(count($future_months) / $meses_por_pagina);
+$pagina_atual_mes = isset($_GET['pagina_mes']) ? max(1, min($total_paginas, intval($_GET['pagina_mes']))) : 1;
+$offset_mes = ($pagina_atual_mes - 1) * $meses_por_pagina;
+$meses_pagina = array_slice($future_months, $offset_mes, $meses_por_pagina, true);
+
+// Se não houver filtros específicos, buscar filmes dos meses da página atual
+if (!isset($_GET['ano']) && !isset($_GET['mes'])) {
+    $args = array(
+        'post_type' => 'filmes',
+        'posts_per_page' => -1,
+        'post_status' => 'publish',
+        'meta_query' => array(
+            'relation' => 'OR'
+        )
+    );
+    
+    foreach ($meses_pagina as $ym => $label) {
+        list($ano, $mes) = explode('-', $ym);
+        $args['meta_query'][] = array(
+            'relation' => 'AND',
+            array(
+                'key' => 'estreia',
+                'value' => '^' . $ano,
+                'compare' => 'REGEXP',
+            ),
+            array(
+                'key' => 'estreia',
+                'value' => '-' . $mes . '-',
+                'compare' => 'REGEXP',
+            )
+        );
+    }
+} else {
+    // Se houver filtros, manter a lógica original
+    $selected_ano = isset($_GET['ano']) ? sanitize_text_field($_GET['ano']) : $current_year;
+    $selected_mes = isset($_GET['mes']) ? sanitize_text_field($_GET['mes']) : $current_month;
+
+    $args = array(
+        'post_type' => 'filmes',
+        'posts_per_page' => -1,
+        'post_status' => 'publish',
+        'meta_query' => array(
+            'relation' => 'AND',
+            array(
+                'key' => 'estreia',
+                'value' => '^' . $selected_ano,
+                'compare' => 'REGEXP',
+            ),
+            array(
+                'key' => 'estreia',
+                'value' => '-' . $selected_mes . '-',
+                'compare' => 'REGEXP',
+            )
+        )
+    );
+}
 
 // Resto dos filtros
 if (isset($_GET['origem']) && !empty($_GET['origem'])) {
@@ -195,10 +239,8 @@ function obter_anos_dos_filmes()
   return $anos_filmes;
 }
 
-
 $anos = obter_anos_dos_filmes();
 ?>
-
 
 <?php
 $banner_id = "78847";
@@ -226,7 +268,6 @@ $banner_id = "78847";
     </a>
   </div>
 </div>
-
 
 <?php get_template_part('components/MenuMobile/index'); ?>
 <?php get_template_part('components/MenuDesktop/index'); ?>
@@ -263,7 +304,7 @@ $banner_id = "78847";
             <select id="ano" name="ano">
               <option disabled value="">Ano</option>
               <?php foreach ($anos as $value) : ?>
-              <option value="<?php echo esc_attr($value); ?>" <?php selected($value, $selected_ano); ?>>
+              <option value="<?php echo esc_attr($value); ?>" <?php selected($value, $current_year); ?>>
                 <?php echo esc_html($value); ?>
               </option>
               <?php endforeach; ?>
@@ -272,7 +313,7 @@ $banner_id = "78847";
             <select name="mes" id="mes">
               <option disabled value="">Mês</option>
               <?php foreach ($meses as $key => $value) : ?>
-              <option value="<?php echo esc_attr($key); ?>" <?php selected($key, $selected_mes); ?>>
+              <option value="<?php echo esc_attr($key); ?>" <?php selected($key, $current_month); ?>>
                 <?php echo esc_html($value); ?>
               </option>
               <?php endforeach; ?>
@@ -306,6 +347,33 @@ $banner_id = "78847";
             <button type="submit">Filtrar</button>
           </div>
         </form>
+
+        <!-- Navegação entre meses futuros -->
+        <div class="month-navigation">
+          <?php if ($total_paginas > 1): ?>
+          <div class="pagination">
+            <?php if ($pagina_atual_mes > 1): ?>
+            <a href="<?php echo add_query_arg('pagina_mes', $pagina_atual_mes - 1); ?>">&laquo; Anterior</a>
+            <?php endif; ?>
+
+            <span>Página <?php echo $pagina_atual_mes; ?> de <?php echo $total_paginas; ?></span>
+
+            <?php if ($pagina_atual_mes < $total_paginas): ?>
+            <a href="<?php echo add_query_arg('pagina_mes', $pagina_atual_mes + 1); ?>">Próximo &raquo;</a>
+            <?php endif; ?>
+          </div>
+          <?php endif; ?>
+
+          <div class="current-months">
+            <?php foreach ($meses_pagina as $ym => $label): ?>
+            <?php list($ano, $mes) = explode('-', $ym); ?>
+            <a href="<?php echo add_query_arg(array('ano' => $ano, 'mes' => $mes)); ?>"
+              class="<?php echo ($current_year == $ano && $current_month == $mes) ? 'active' : ''; ?>">
+              <?php echo $label; ?>
+            </a>
+            <?php endforeach; ?>
+          </div>
+        </div>
       </section>
       <?php
       function render_filmes_lista($filmes_por_dia, $dias_semana)
@@ -390,19 +458,20 @@ $banner_id = "78847";
         <div>
           <section class="area-filmes" v-if="ativoItem === 'lista'">
             <div class="lista-filmes" id="lista">
-              <?php render_filmes_lista($filmes_por_dia, $dias_semana); ?>
+              <?php render_filmes_lista($grupos_pagina, $dias_semana); ?>
 
               <!-- Paginação -->
-              <?php if ($filmes->max_num_pages > 1) : ?>
+              <?php if ($total_grupos > $grupos_por_pagina) : ?>
               <div class="pagination">
                 <?php
+                    $big = 999999999; // need an unlikely integer
                     echo paginate_links(array(
-                      'base' => str_replace(999999999, '%#%', esc_url(get_pagenum_link(999999999))),
-                      'format' => '?paged=%#%',
-                      'current' => max(1, $paged),
-                      'total' => $filmes->max_num_pages,
-                      'prev_text' => __('« Anterior'),
-                      'next_text' => __('Próximo »'),
+                        'base'    => str_replace($big, '%#%', esc_url(get_pagenum_link($big))),
+                        'format'  => '?pagina=%#%',
+                        'current' => $pagina_atual,
+                        'total'   => ceil($total_grupos / $grupos_por_pagina),
+                        'prev_text' => __('« Anterior'),
+                        'next_text' => __('Próximo »'),
                     ));
                     ?>
               </div>
@@ -410,19 +479,20 @@ $banner_id = "78847";
             </div>
           </section>
           <section class="tabela-filme" v-if="ativoItem === 'tabela'">
-            <?php render_filmes_tabela($filmes_por_dia, $dias_semana); ?>
+            <?php render_filmes_tabela($grupos_pagina, $dias_semana); ?>
 
             <!-- Paginação -->
-            <?php if ($filmes->max_num_pages > 1) : ?>
+            <?php if ($total_grupos > $grupos_por_pagina) : ?>
             <div class="pagination">
               <?php
+                  $big = 999999999; // need an unlikely integer
                   echo paginate_links(array(
-                    'base' => str_replace(999999999, '%#%', esc_url(get_pagenum_link(999999999))),
-                    'format' => '?paged=%#%',
-                    'current' => max(1, $paged),
-                    'total' => $filmes->max_num_pages,
-                    'prev_text' => __('« Anterior'),
-                    'next_text' => __('Próximo »'),
+                      'base'    => str_replace($big, '%#%', esc_url(get_pagenum_link($big))),
+                      'format'  => '?pagina=%#%',
+                      'current' => $pagina_atual,
+                      'total'   => ceil($total_grupos / $grupos_por_pagina),
+                      'prev_text' => __('« Anterior'),
+                      'next_text' => __('Próximo »'),
                   ));
                   ?>
             </div>
@@ -441,19 +511,20 @@ $banner_id = "78847";
       <?php else: ?>
       <section class="area-filmes" v-if="ativoItem === 'lista'">
         <div class="lista-filmes" id="lista">
-          <?php render_filmes_lista($filmes_por_dia, $dias_semana); ?>
+          <?php render_filmes_lista($grupos_pagina, $dias_semana); ?>
 
           <!-- Paginação -->
-          <?php if ($filmes->max_num_pages > 1) : ?>
+          <?php if ($total_grupos > $grupos_por_pagina) : ?>
           <div class="pagination">
             <?php
+                $big = 999999999; // need an unlikely integer
                 echo paginate_links(array(
-                  'base' => str_replace(999999999, '%#%', esc_url(get_pagenum_link(999999999))),
-                  'format' => '?paged=%#%',
-                  'current' => max(1, $paged),
-                  'total' => $filmes->max_num_pages,
-                  'prev_text' => __('« Anterior'),
-                  'next_text' => __('Próximo »'),
+                    'base'    => str_replace($big, '%#%', esc_url(get_pagenum_link($big))),
+                    'format'  => '?pagina=%#%',
+                    'current' => $pagina_atual,
+                    'total'   => ceil($total_grupos / $grupos_por_pagina),
+                    'prev_text' => __('« Anterior'),
+                    'next_text' => __('Próximo »'),
                 ));
                 ?>
           </div>
@@ -464,19 +535,20 @@ $banner_id = "78847";
         <a href="<?php echo esc_url($link_banner_moldura_casado); ?>">
           <img src="<?php echo esc_url($banner_moldura_casado); ?>">
         </a>
-        <?php render_filmes_tabela($filmes_por_dia, $dias_semana); ?>
+        <?php render_filmes_tabela($grupos_pagina, $dias_semana); ?>
 
         <!-- Paginação -->
-        <?php if ($filmes->max_num_pages > 1) : ?>
+        <?php if ($total_grupos > $grupos_por_pagina) : ?>
         <div class="pagination">
           <?php
+              $big = 999999999; // need an unlikely integer
               echo paginate_links(array(
-                'base' => str_replace(999999999, '%#%', esc_url(get_pagenum_link(999999999))),
-                'format' => '?paged=%#%',
-                'current' => max(1, $paged),
-                'total' => $filmes->max_num_pages,
-                'prev_text' => __('« Anterior'),
-                'next_text' => __('Próximo »'),
+                  'base'    => str_replace($big, '%#%', esc_url(get_pagenum_link($big))),
+                  'format'  => '?pagina=%#%',
+                  'current' => $pagina_atual,
+                  'total'   => ceil($total_grupos / $grupos_por_pagina),
+                  'prev_text' => __('« Anterior'),
+                  'next_text' => __('Próximo »'),
               ));
               ?>
         </div>
