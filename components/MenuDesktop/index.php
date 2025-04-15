@@ -22,7 +22,7 @@
             </li>
             <li><a href="<?php echo get_site_url(); ?>/anuncie/">Anuncie</a></li>
             <li>
-              <a href="<?php echo get_site_url(); ?>/sair/">
+              <a href="<?php echo get_site_url(); ?>/?swpm-logout=true/">
                 <span>Sair</span>
               </a>
             </li>
