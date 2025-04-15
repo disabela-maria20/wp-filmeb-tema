@@ -735,3 +735,58 @@ function register_swpm_user_on_woocommerce_registration( $customer_id ) {
   }
 }
 add_action( 'woocommerce_created_customer', 'register_swpm_user_on_woocommerce_registration', 10, 1 );
+
+function redirect_specific_pages_for_non_members() {
+  if (!class_exists('SimpleWpMembership')) {
+      return;
+  }
+
+  $protected_pages = array(
+      'boletim' => 2,
+      'edicao' => 2,
+      'opiniao' => 2,
+      'fim-de-semana-global' => 2,
+      'fim-de-semana-brasil' => 2,
+      'boletim/fim-de-semana-global/' => 2,
+      'boletim/fim-de-semana-brasil/' => 2,
+      'boletim/edicao/' => 2,
+      'boletim/opiniao/' => 2,
+  );
+
+  global $post;
+
+  if (is_singular() && isset($post->post_name) && array_key_exists($post->post_name, $protected_pages)) {
+      if (!SwpmMemberUtils::is_member_logged_in()) {
+          $account_page_url = home_url('/minha-conta/');
+          $redirect_url = add_query_arg('swpm_redirect_to', urlencode(get_permalink()), $account_page_url);
+          wp_redirect($redirect_url);
+          exit();
+      }
+      
+      $auth = SwpmAuth::get_instance();
+      $user_level = $auth->get('membership_level');
+      
+      if ($user_level != 2) { 
+          wp_redirect(home_url('/minha-conta/')); 
+          exit();
+      }
+  }
+
+  if (is_post_type_archive('edicoes') || is_tax('categoria_edicoes')) {
+      if (!SwpmMemberUtils::is_member_logged_in()) {
+          $account_page_url = home_url('/minha-conta/');
+          $redirect_url = add_query_arg('swpm_redirect_to', urlencode(get_post_type_archive_link('edicoes')), $account_page_url);
+          wp_redirect($redirect_url);
+          exit();
+      }
+      
+      $auth = SwpmAuth::get_instance();
+      $user_level = $auth->get('membership_level');
+      
+      if ($user_level != 2) { 
+          wp_redirect(home_url('/minha-conta/')); 
+          exit();
+      }
+  }
+}
+add_action('template_redirect', 'redirect_specific_pages_for_non_members');
