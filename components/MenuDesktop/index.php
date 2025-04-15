@@ -11,28 +11,41 @@
       </div>
       <div>
         <nav>
-          <?php
-          wp_nav_menu(array(
-            'theme_location' => 'institucional',
-            'menu_class' => 'menu-institucional',
-            'container' => false
-          )); ?>
 
+          <?php if (!SwpmMemberUtils::is_member_logged_in()) { ?>
           <ul class="user">
             <li>
-              <?php if (!SwpmMemberUtils::is_member_logged_in()) { ?>
               <a href="<?php echo get_site_url(); ?>/minha-conta/">
-                <span>Entrar</span>
-                <i class=" bi bi-person-circle"></i>
+                <span>Seu cadastro</span>
+                <!-- <i class=" bi bi-person-circle"></i> -->
               </a>
-              <?php } else { ?>
-              <a href="<?php echo get_site_url(); ?>/minha-conta/">
-                <span>Minha conta</span>
-                <i class="bi bi-person-circle"></i>
+            </li>
+            <li><a href="<?php echo get_site_url(); ?>/anuncie/">Anuncie</a></li>
+            <li>
+              <a href="<?php echo get_site_url(); ?>/sair/">
+                <span>Sair</span>
               </a>
-              <?php } ?>
             </li>
           </ul>
+          <?php } else { ?>
+          <ul class="user">
+            <li>
+              <a href="<?php echo get_site_url(); ?>/minha-conta/">
+                <span>Login</span>
+              </a>
+            </li>
+            <li>
+              <a href="<?php echo get_site_url(); ?>/assine/">
+                <span>Assine</span>
+              </a>
+            </li>
+            <li>
+              <a href="<?php echo get_site_url(); ?>/anuncie/">
+                <span>Anuncie</span>
+              </a>
+            </li>
+          </ul>
+          <?php } ?>
         </nav>
       </div>
     </div>
