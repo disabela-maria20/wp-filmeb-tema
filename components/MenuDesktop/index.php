@@ -11,13 +11,11 @@
       </div>
       <div>
         <nav>
-
-          <?php if (!SwpmMemberUtils::is_member_logged_in()) { ?>
+          <?php if (SwpmMemberUtils::is_member_logged_in()) { ?>
           <ul class="user">
             <li>
               <a href="<?php echo get_site_url(); ?>/minha-conta/">
                 <span>Seu cadastro</span>
-                <!-- <i class=" bi bi-person-circle"></i> -->
               </a>
             </li>
             <li><a href="<?php echo get_site_url(); ?>/anuncie/">Anuncie</a></li>
