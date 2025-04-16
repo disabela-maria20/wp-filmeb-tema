@@ -74,6 +74,52 @@ if (!$has_filters) {
     $week_end->modify('+6 days');
 }
 
+// Função para aplicar filtros aos argumentos da query
+function apply_filters_to_args($args) {
+    // Apply filter for origem (country)
+    if (isset($_GET['origem']) && !empty($_GET['origem'])) {
+        $args['tax_query'][] = array(
+            'taxonomy' => 'paises',
+            'field' => 'term_id',
+            'terms' => intval($_GET['origem']),
+        );
+    }
+
+    // Apply filter for distribuidora (distributor)
+    if (isset($_GET['distribuicao']) && !empty($_GET['distribuicao'])) {
+        $args['tax_query'][] = array(
+            'taxonomy' => 'distribuidoras',
+            'field' => 'term_id',
+            'terms' => intval($_GET['distribuicao']),
+        );
+    }
+
+    // Apply filter for genero (genre)
+    if (isset($_GET['genero']) && !empty($_GET['genero'])) {
+        $args['tax_query'][] = array(
+            'taxonomy' => 'generos',
+            'field' => 'term_id',
+            'terms' => intval($_GET['genero']),
+        );
+    }
+
+    // Apply filter for tecnologia (technology)
+    if (isset($_GET['tecnologia']) && !empty($_GET['tecnologia'])) {
+        $args['tax_query'][] = array(
+            'taxonomy' => 'tecnologias',
+            'field' => 'term_id',
+            'terms' => intval($_GET['tecnologia']),
+        );
+    }
+
+    // Ensure proper relation for multiple tax queries
+    if (isset($args['tax_query']) && count($args['tax_query']) > 1) {
+        $args['tax_query']['relation'] = 'AND';
+    }
+
+    return $args;
+}
+
 // Argumentos para buscar filmes da semana atual (apenas sem filtros)
 if (!$has_filters) {
     $args_semana = array(
@@ -132,7 +178,7 @@ if (!$has_filters) {
     );
 }
 
-
+// Aplicar filtros
 if (!$has_filters) {
     $args_semana = apply_filters_to_args($args_semana);
 }
