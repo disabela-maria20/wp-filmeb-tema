@@ -110,9 +110,6 @@ function register_noticias_api_endpoints() {
     register_rest_route('api/v1', '/noticias', [
         'methods' => 'POST',
         'callback' => 'api_noticia_post',
-        'permission_callback' => function() {
-            return current_user_can('edit_posts'); // Apenas usuários que podem editar posts
-        }
     ]);
 }
 add_action('rest_api_init', 'register_noticias_api_endpoints');
