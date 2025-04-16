@@ -390,7 +390,7 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
             foreach ($filmes as $filme) {
               echo '<a v-on:mousemove="hoverCard" href="' . get_permalink($filme->ID) . '" class="card">';
               if (esc_url(CFS()->get('cartaz', $filme->ID)) == '') {
-                echo '<h4>' . get_the_title($filme->ID) . '</h4>';
+                echo '<h3>' . get_the_title($filme->ID) . '</h3>';
                 echo '<p class="indisponivel">Poster não disponível</p>';
               } else {
                 echo '<img src="' . esc_url(CFS()->get('cartaz', $filme->ID)) . '" alt="' . get_the_title($filme->ID) . '">';
