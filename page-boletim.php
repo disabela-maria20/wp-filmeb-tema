@@ -71,9 +71,9 @@ $banner_id = "78919";
           if (!empty($values) && is_array($values)) { 
             foreach ($values as $post_id) { 
               $the_post = get_post($post_id);
-              // echo "<pre>";
-              // var_dump( $the_post);
-              // echo "</pre>";
+              echo "<pre>";
+              var_dump( $the_post);
+              echo "</pre>";
             ?>
         <div class="post">
           <?php if( esc_url(CFS()->get('imagem')) != '') {  ?>
