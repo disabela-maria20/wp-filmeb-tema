@@ -656,8 +656,8 @@ function extrair_texto_apos_traco($texto) {
     if (preg_match($regex, $texto, $matches)) {
         return trim($matches[1]);
     }
-
-    return $texto;// Se não encontrar traço, retorna o texto original
+    var_dump($texto);
+    return $texto;
 }
 
 function get_thursday_movies() {

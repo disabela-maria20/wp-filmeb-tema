@@ -24,13 +24,16 @@ $banner_id = "78846";
   <img src="<?php echo esc_url($banner_superior); ?>" class="w-full p-35 img-banner bannerMobile" alt="banner">
 </a>
 
+
 <div class="container bannerDesktop">
   <div class="grid-banner-superior">
+
     <a href="<?php echo esc_url($link_banner_inferior); ?>" target="_blank" rel="noopener noreferrer">
       <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
     </a>
   </div>
 </div>
+
 
 <?php get_template_part('components/MenuMobile/index'); ?>
 <?php get_template_part('components/MenuDesktop/index'); ?>
@@ -38,6 +41,7 @@ $banner_id = "78846";
 <section class="bg-gray padding-banner">
   <div class="container bannerMobile">
     <div class="grid-banner-superior">
+
       <a href="<?php echo esc_url($link_banner_inferior); ?>" target="_blank" rel="noopener noreferrer">
         <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
       </a>
@@ -76,13 +80,11 @@ $banner_id = "78846";
 
             foreach ($primeiros_dois as $post_id) {
                 $the_post = get_post($post_id);
-                echo $the_post->post_title;
-            ?>
-
+                ?>
         <a href="<?php echo str_replace("https://filmeb.isabelamribeiro.com.br", get_site_url(), $the_post->guid); ?>"
           class="link-lista-rapidinha">
           <i class="bi bi-arrow-right-short"></i>
-          <span><?php echo $the_post->post_title; ?></span>
+          <span><?php echo extrair_texto_apos_traco($the_post->post_title); ?></span>
         </a>
         <?php } // Fechamento do foreach ?>
         <?php } // Fechamento do if ?>
