@@ -69,15 +69,12 @@ $banner_id = "78919";
       <div class="posts">
         <?php
           $values = CFS()->get('edicao');
-          echo "<pre>";
-          var_dump( $values);
-          echo "</pre>";
-          
           if (!empty($values) && is_array($values)) { 
+           
             foreach ($values as $post_id) { 
               $the_post = get_post($post_id);
               echo "<pre>";
-              var_dump( $the_post);
+              var_dump( $values);
               echo "</pre>";
             ?>
         <div class="post">
