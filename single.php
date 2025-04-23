@@ -68,7 +68,7 @@ $query = new WP_Query($args);
             <?php echo date_i18n('j \d\e F \d\e Y', strtotime((CFS()->get('data')))); ?>
           </strong>
           <?php if (esc_url(CFS()->get('imagem')) != '') {  ?>
-          <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
+          <img class="img-post" src="<?php echo esc_url(CFS()->get('imagem')); ?>"
             alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
           <?php } ?>
         </div>
