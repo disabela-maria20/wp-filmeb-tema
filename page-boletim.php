@@ -10,9 +10,8 @@ $edicoes_query = new WP_Query(array(
 ));
 
 echo '<pre>';
-var_dump($edicoes_query);
+print_r($edicoes_query);
 echo '</pre>';
-
 $banner_id = "78919";
     $banner_superior = CFS()->get('banner_moldura', $banner_id);
     $banner_inferior = CFS()->get('mega_banner', $banner_id);
