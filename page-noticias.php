@@ -53,10 +53,9 @@ $link_skyscraper = CFS()->get('link_skyscraper', $banner_id);
       <?php
           $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
           $boletim_query = new WP_Query(array(
-            'category_name' => 'Notícias',
             'posts_per_page' => 8,
             'paged' => $paged,
-          ));
+        ));
 
           if ($boletim_query->have_posts()): ?>
       <div class="posts">

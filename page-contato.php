@@ -56,7 +56,7 @@ get_header();
           <a href="mailto:financeiro@filmeb.com.br">financeiro@filmeb.com.br</a>
         </div>
       </div>
-      <h3 class="titulo">Redação</h3>
+      <h3 class="titulo" style="margin-top: 35px;">Redação</h3>
       <div class="item">
         <img src="<?php echo get_template_directory_uri(); ?>/assets/images/contatos/Fabiano.png"
           alt="Fabiano Ristow" />
