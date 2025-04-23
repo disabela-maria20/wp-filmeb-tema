@@ -29,10 +29,7 @@ $recent_posts_query_banner = new WP_Query(array(
   'order' => 'DESC'
 ));
 
-$categoria = get_the_category_list(', ');
-$chapel = CFS()->get('chapeu');
 
-echo 'teste'.var_dump($categoria);
 ?>
 
 <a href="<?php echo CFS()->get('link_banner_superior'); ?>">
@@ -76,7 +73,10 @@ echo 'teste'.var_dump($categoria);
       <div>
         <span>
           <?php 
+           $categoria = get_the_category_list(', ');
+           $chapel = CFS()->get('chapeu');
            
+           echo 'teste' . var_dump($categoria);
             
             if($categoria === 'plus'){
               echo $chapel;
