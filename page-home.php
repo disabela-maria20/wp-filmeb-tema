@@ -73,8 +73,8 @@ $recent_posts_query_banner = new WP_Query(array(
       <div>
         <a href="<?php the_permalink(); ?>">
           <h2><?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?></h2>
+          <p><?php echo esc_html(wp_trim_words(CFS()->get('descricao') ?: get_the_excerpt(), 30, '...')); ?></p>
         </a>
-        <p><?php echo esc_html(wp_trim_words(CFS()->get('descricao') ?: get_the_excerpt(), 30, '...')); ?></p>
       </div>
     </div>
     <?php }
@@ -166,23 +166,19 @@ $recent_posts_query_banner = new WP_Query(array(
     <?php if (esc_html($banner_lateral) == '1') { ?>
     <div class="grid-recentes">
       <div>
-        <?php if ($recent_posts_query->have_posts()) {
-                while ($recent_posts_query->have_posts()) {
-                  $recent_posts_query->the_post(); ?>
+        <?php if ($recent_posts_query->have_posts()) { while ($recent_posts_query->have_posts()) {$recent_posts_query->the_post(); ?>
         <div class="item">
           <?php if (esc_url(CFS()->get('imagem')) != '') {  ?>
           <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
             alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
           <?php } ?>
-
           <div>
-
             <a href="<?php the_permalink(); ?>">
               <h3>
                 <?php echo esc_html(CFS()->get('titulo') ?: get_the_title());  ?>
               </h3>
+              <span class="data"> <?php echo date_i18n('j \d\e F \d\e Y', strtotime((CFS()->get('data')))); ?></span>
             </a>
-            <span class="data"> <?php echo date_i18n('j \d\e F \d\e Y', strtotime((CFS()->get('data')))); ?></span>
           </div>
         </div>
         <?php }
@@ -213,7 +209,6 @@ $recent_posts_query_banner = new WP_Query(array(
           alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
         <?php } ?>
         <div>
-          <span><?php echo get_the_category_list(', '); ?></span>
           <a href="<?php the_permalink(); ?>">
             <h3><?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?></h3>
           </a>
@@ -222,8 +217,7 @@ $recent_posts_query_banner = new WP_Query(array(
           </span>
         </div>
       </div>
-      <?php }
-            } ?>
+      <?php } } ?>
     </div>
     <?php } ?>
 

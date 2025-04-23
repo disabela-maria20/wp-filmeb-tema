@@ -68,11 +68,10 @@ $link_skyscraper = CFS()->get('link_skyscraper', $banner_id);
               alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
             <?php } ?>
             <div>
-              <span><?php echo get_the_category_list(', '); ?></span>
               <a href="<?php the_permalink(); ?>" class="read-more">
                 <h2><?php the_title(); ?></h2>
+                <p><?php echo wp_trim_words(esc_html(CFS()->get('descricao') ?: get_the_excerpt()), 20, '...'); ?></p>
               </a>
-              <p><?php echo wp_trim_words(esc_html(CFS()->get('descricao') ?: get_the_excerpt()), 20, '...'); ?></p>
             </div>
           </div>
         </div>

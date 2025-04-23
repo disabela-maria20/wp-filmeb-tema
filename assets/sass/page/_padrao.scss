@@ -212,4 +212,7 @@ strong.data {
 .img-post {
   max-width: 100% !important;
   width: 100% !important;
+  @include media(lg) {
+    max-height: 370px !important;
+  }
 }

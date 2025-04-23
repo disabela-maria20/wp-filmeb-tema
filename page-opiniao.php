@@ -77,7 +77,6 @@ $banner_id = "78915";
               alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
             <?php }?>
             <div>
-              <span><?php echo get_the_category_list(', '); ?></span>
               <a href="<?php the_permalink(); ?>" class="read-more">
                 <h2><?php the_title(); ?></h2>
               </a>
