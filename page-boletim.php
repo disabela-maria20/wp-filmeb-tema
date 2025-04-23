@@ -9,9 +9,7 @@ $edicoes_query = new WP_Query(array(
   'order' => 'DESC',
 ));
 
-echo '<pre>';
-print_r($edicoes_query);
-echo '</pre>';
+
 $banner_id = "78919";
     $banner_superior = CFS()->get('banner_moldura', $banner_id);
     $banner_inferior = CFS()->get('mega_banner', $banner_id);
@@ -71,6 +69,10 @@ $banner_id = "78919";
       <div class="posts">
         <?php
           $values = CFS()->get('edicao');
+          echo "<pre>";
+          var_dump( $values);
+          echo "</pre>";
+          
           if (!empty($values) && is_array($values)) { 
             foreach ($values as $post_id) { 
               $the_post = get_post($post_id);
