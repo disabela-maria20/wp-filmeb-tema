@@ -9,7 +9,6 @@ $edicoes_query = new WP_Query(array(
   'order' => 'DESC',
 ));
 
-
 $banner_id = "78919";
     $banner_superior = CFS()->get('banner_moldura', $banner_id);
     $banner_inferior = CFS()->get('mega_banner', $banner_id);
@@ -70,12 +69,11 @@ $banner_id = "78919";
         <?php
           $values = CFS()->get('edicao');
           if (!empty($values) && is_array($values)) { 
-           
             foreach ($values as $post_id) { 
               $the_post = get_post($post_id);
-              echo "<pre>";
-              var_dump( $post_id);
-              echo "</pre>";
+              // echo "<pre>";
+              // var_dump( $the_post);
+              // echo "</pre>";
             ?>
         <div class="post">
           <?php if( esc_url(CFS()->get('imagem')) != '') {  ?>
@@ -86,7 +84,7 @@ $banner_id = "78919";
             <span class="data"><?php echo date_i18n('j \d\e F \d\e Y', strtotime($the_post->post_date)); ?></span>
             <a href="<?php echo str_replace("https://filmeb.isabelamribeiro.com.br", get_site_url(), $the_post->guid);  ?>"
               class="read-more">
-              <h2><?php echo extrair_texto_apos_traco($the_post->post_title); ?></h2>
+              <h2><?php echo $the_post->post_title; ?></h2>
             </a>
             <p><?php echo  $the_post->post_content;?></p>
           </div>
