@@ -32,7 +32,7 @@ $recent_posts_query_banner = new WP_Query(array(
 $categoria = get_the_category_list(', ');
 $chapel = CFS()->get('chapeu');
 
-var_dump($categoria);
+echo 'teste'.var_dump($categoria);
 ?>
 
 <a href="<?php echo CFS()->get('link_banner_superior'); ?>">
