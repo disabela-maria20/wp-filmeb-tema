@@ -70,7 +70,7 @@ $boletim_query = new WP_Query(array(
         <strong class="data">
           <?php echo date_i18n('j \d\e F \d\e Y', strtotime((CFS()->get('data')))); ?>
         </strong>
-        <h1 class="opem"><?php echo $the_post->post_title; ?></h1>
+        <h1 class="opem"><?php echo get_post()->post_title;?></h1>
         <div class="post-text">
           <?php $id_rapidinha = get_the_ID(); ?>
           <?php the_content(); ?>

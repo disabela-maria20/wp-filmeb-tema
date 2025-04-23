@@ -211,10 +211,10 @@ $recent_posts_query_banner = new WP_Query(array(
         <div>
           <a href="<?php the_permalink(); ?>">
             <h3><?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?></h3>
+            <span class="data">
+              <?php echo date_i18n('j \d\e F \d\e Y', strtotime((CFS()->get('data')))); ?>
+            </span>
           </a>
-          <span class="data">
-            <?php echo date_i18n('j \d\e F \d\e Y', strtotime((CFS()->get('data')))); ?>
-          </span>
         </div>
       </div>
       <?php } } ?>
