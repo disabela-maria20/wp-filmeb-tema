@@ -28,6 +28,11 @@ $recent_posts_query_banner = new WP_Query(array(
   'orderby' => 'date',
   'order' => 'DESC'
 ));
+
+$categoria = get_the_category_list(', ');
+$chapel = CFS()->get('chapeu');
+
+var_dump($categoria);
 ?>
 
 <a href="<?php echo CFS()->get('link_banner_superior'); ?>">
@@ -70,11 +75,19 @@ $recent_posts_query_banner = new WP_Query(array(
       <?php } ?>
       <div>
         <span>
-
-          <a href="<?php the_permalink(); ?>">
-            <h2><?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?></h2>
-          </a>
-          <p><?php echo esc_html(wp_trim_words(CFS()->get('descricao') ?: get_the_excerpt(), 30, '...')); ?></p>
+          <?php 
+           
+            
+            if($categoria === 'plus'){
+              echo $chapel;
+            } else {
+              echo $categoria;
+            }?>
+        </span>
+        <a href="<?php the_permalink(); ?>">
+          <h2><?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?></h2>
+        </a>
+        <p><?php echo esc_html(wp_trim_words(CFS()->get('descricao') ?: get_the_excerpt(), 30, '...')); ?></p>
       </div>
     </div>
     <?php }
