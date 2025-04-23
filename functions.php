@@ -650,13 +650,6 @@ function add_to_cart_ajax() {
 }
 
 function extrair_texto_apos_traco($texto) {
-  // Essa regex encontra o primeiro traço (–, —, -, −) e captura tudo depois dele
-  $regex = '/[–—\-−][^a-zA-Z0-9]*([\p{L}].*)$/u';
-
-    if (preg_match($regex, $texto, $matches)) {
-        return trim($matches[1]);
-    }
-    var_dump($texto);
     return $texto;
 }
 
