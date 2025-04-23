@@ -55,6 +55,10 @@ $link_skyscraper = CFS()->get('link_skyscraper', $banner_id);
           $boletim_query = new WP_Query(array(
             'posts_per_page' => 8,
             'paged' => $paged,
+            'meta_key' => 'data',          
+            'meta_type' => 'DATE',         
+            'orderby' => 'meta_value',     
+            'order' => 'DESC',  
         ));
 
           if ($boletim_query->have_posts()): ?>

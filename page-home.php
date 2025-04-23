@@ -57,14 +57,10 @@ $recent_posts_query_banner = new WP_Query(array(
   </div>
 </section>
 
-<?php if (have_posts()):
-  while (have_posts()):
-    the_post(); ?>
+<?php if (have_posts()): while (have_posts()):the_post(); ?>
 <div class="container">
   <section class="owl-carousel slide">
-    <?php if ($recent_posts_query_banner->have_posts()) {
-          while ($recent_posts_query_banner->have_posts()) {
-            $recent_posts_query_banner->the_post(); ?>
+    <?php if ($recent_posts_query_banner->have_posts()) { while ($recent_posts_query_banner->have_posts()) { $recent_posts_query_banner->the_post(); ?>
     <div class="item">
       <?php if (esc_url(CFS()->get('imagem')) != '') {  ?>
       <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
