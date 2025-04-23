@@ -73,16 +73,16 @@ $recent_posts_query_banner = new WP_Query(array(
       <div>
         <span>
           <?php 
-           $categoria = get_the_category_list(', ');
-           $chapel = CFS()->get('chapeu');
-           
-           echo $categoria = 'plus' . 'teste';
-            
-            if($categoria === 'plus'){
-              echo $chapel;
+            $categoria = get_the_category_list(', ');
+            $chapel = CFS()->get('chapeu');
+
+            // Correção do código original
+            if (strpos($categoria, 'plus') !== false) {
+                echo $chapel;
             } else {
-              echo $categoria;
-            }?>
+                echo $categoria;
+            }
+          ?>
         </span>
         <a href="<?php the_permalink(); ?>">
           <h2><?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?></h2>
