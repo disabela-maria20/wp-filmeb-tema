@@ -76,7 +76,7 @@ $recent_posts_query_banner = new WP_Query(array(
            $categoria = get_the_category_list(', ');
            $chapel = CFS()->get('chapeu');
            
-           echo $categoria . 'teste';
+           echo $categoria = 'plus' . 'teste';
             
             if($categoria === 'plus'){
               echo $chapel;
