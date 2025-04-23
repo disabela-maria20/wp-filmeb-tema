@@ -74,7 +74,7 @@ $banner_id = "78919";
             foreach ($values as $post_id) { 
               $the_post = get_post($post_id);
               echo "<pre>";
-              var_dump( get_post($post_id));
+              var_dump( $post_id);
               echo "</pre>";
             ?>
         <div class="post">
