@@ -67,4 +67,28 @@
 }
 
 .swpm-pw-reset-form {
+  label {
+    color: #221115;
+    font-size: 1.6rem;
+  }
+  .swpm-pw-reset-text {
+    font-size: 1.6rem;
+    width: 100%;
+    height: 47px;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+  }
+  .swpm-pw-reset-submit-button {
+    background-color: #f20030;
+    border: none;
+    color: #fff;
+    font-size: 1.6rem;
+    line-height: 2rem;
+    padding: 10px 22px;
+    border-radius: 6px;
+    transition: all 400ms ease-in;
+  }
 }
