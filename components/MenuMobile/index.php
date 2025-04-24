@@ -10,11 +10,11 @@
         <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.png" alt="logo cine B" />
       </a>
       <?php if (!SwpmMemberUtils::is_member_logged_in()) { ?>
-      <a href="<?php echo get_site_url(); ?>/minha-conta/">
+      <a href="<?php echo get_site_url(); ?>/entrar/">
         <i class=" bi bi-person-circle"></i>
       </a>
       <?php } else { ?>
-      <a href="<?php echo get_site_url(); ?>/minha-conta/">
+      <a href="<?php echo get_site_url(); ?>/perfil/">
         <i class="bi bi-person-circle"></i>
       </a>
       <?php } ?>
