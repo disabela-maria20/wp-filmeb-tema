@@ -57,12 +57,12 @@
   padding-bottom: 35px;
   border: 1px solid #cfc8d8;
   padding: 20px;
-  margin: 0 0 45px;
+  margin: 45px auto;
   text-align: left;
   border-radius: 5px;
 
   @include media(lg) {
-    margin: 0 0 90px;
+    margin: 45px auto 90px;
   }
   .swpm-pw-reset-text {
     font-size: 1.6rem;
@@ -92,4 +92,45 @@
 
 .swpm-reset-pw-error {
   font-size: 1.6rem;
+}
+
+.center {
+  text-align: center;
+}
+
+.swpm-registration-form-section {
+  max-width: 450px;
+  padding-bottom: 35px;
+  border: 1px solid #cfc8d8;
+  padding: 20px;
+  margin: 45px auto;
+  text-align: left;
+  border-radius: 5px;
+
+  @include media(lg) {
+    margin: 45px auto 90px;
+  }
+  .swpm-form-field {
+    font-size: 1.6rem;
+    width: 100%;
+    height: 47px;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+  }
+  .swpm-submit {
+    background-color: #f20030;
+    border: none;
+    color: #fff;
+    font-size: 1.6rem;
+    line-height: 2rem;
+    padding: 10px 22px;
+    border-radius: 6px;
+    transition: all 400ms ease-in;
+  }
+  .swpm-form-desc {
+    list-style-type: none !important;
+  }
 }
