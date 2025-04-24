@@ -217,16 +217,3 @@ strong.data {
   }
 }
 
-.swpm-pw-reset-form {
-  max-width: 450px;
-  padding-bottom: 35px;
-  border: 1px solid #cfc8d8;
-  padding: 20px;
-  margin: 45px auto;
-  text-align: left;
-  border-radius: 5px;
-
-  @include media(lg) {
-    margin: 45px auto 90px;
-  }
-}
