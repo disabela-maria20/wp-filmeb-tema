@@ -65,13 +65,6 @@ function register_my_menu()
 add_action('init', 'register_my_menu');
 
 
-function flush_rewrite_rules_on_theme_activation()
-{
-  flush_rewrite_rules();
-}
-add_action('after_switch_theme', 'flush_rewrite_rules_on_theme_activation');
-
-
 function remove_tablepress_default_css()
 {
   wp_deregister_style('tablepress-default');
@@ -526,24 +519,6 @@ function format_products($products, $img_size = 'medium')
   return $products_final;
 }
 
-function handel_custom_menu($menu_links)
-{
-  $menu_links = array_slice($menu_links, 0, 5, true)
-    + ['assinaturas' => 'Assinaturas']
-    + array_slice($menu_links, 3, NULL, true);
-
-  unset($menu_links['downloads']);
-  return $menu_links;
-}
-add_filter('woocommerce_account_menu_items', 'handel_custom_menu');
-
-function handel_add_endpoint()
-{
-  add_rewrite_endpoint('assinaturas', EP_PAGES);
-  // Se quiser adicionar certificados, descomente:
-  // add_rewrite_endpoint('certificados', EP_PAGES);
-}
-add_action('init', 'handel_add_endpoint');
 
 // Corrigindo para o endpoint correto (assinaturas)
 function handel_assinaturas_content()
