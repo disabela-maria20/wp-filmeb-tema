@@ -16,7 +16,7 @@
           <?php if (SwpmMemberUtils::is_member_logged_in()) { ?>
           <ul class="user">
             <li>
-              <a href="<?php echo get_site_url(); ?>/entrar/">
+              <a href="<?php echo get_site_url(); ?>/perfil/">
                 <span>Seu cadastro</span>
               </a>
             </li>
