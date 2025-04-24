@@ -1,9 +1,3 @@
-<?php 
-$data = SwpmMemberUtils::is_member_logged_in();
-var_dump($data);
-echo "teste";
-?>
-
 <header id="desktop">
   <div class="container">
     <div class="grid_institucinal">
