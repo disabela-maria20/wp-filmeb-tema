@@ -783,30 +783,3 @@ function redirect_specific_pages_for_non_members() {
   }
 }
 add_action('template_redirect', 'redirect_specific_pages_for_non_members');
-
-/**
- * Verifica o acesso à categoria Plus para membros assinantes
- */
-function verificar_acesso_categoria_plus() {
-  echo is_category('plus');
-  if (is_category('plus') || (is_single() && has_category('plus'))) {
-      if (function_exists('swpm_autoloader')) {
-          if (is_user_logged_in()) {
-              $auth = SwpmAuth::get_instance();
-              $user_level = $auth->get('membership_level');
-              echo $user_level;
-             
-              $nivel_assinante_permitido = 2;
-              
-              if ($user_level != $nivel_assinante_permitido) {
-                  wp_redirect(home_url('/minha-conta/')); 
-                  exit;
-              }
-          } else {
-              wp_redirect(home_url('/minha-conta/')); 
-              exit;
-          }
-      }
-  }
-}
-add_action('template_redirect', 'verificar_acesso_categoria_plus');
