@@ -110,6 +110,11 @@
   @include media(lg) {
     margin: 45px auto 90px;
   }
+
+  label {
+    color: #221115;
+    font-size: 1.6rem;
+  }
   .swpm-form-field {
     font-size: 1.6rem;
     width: 100%;
@@ -118,7 +123,6 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     box-sizing: border-box;
-    margin-bottom: 15px;
   }
   .swpm-submit {
     background-color: #f20030;
@@ -131,6 +135,15 @@
     transition: all 400ms ease-in;
   }
   .swpm-form-desc {
-    list-style-type: none !important;
+    ul {
+      li {
+        font-size: 1.2rem;
+        list-style-type: none !important;
+      }
+    }
   }
+}
+
+.swpm-membership-level-row {
+  display: none;
 }
