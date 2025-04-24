@@ -686,45 +686,8 @@ function get_thursday_movies() {
 }
 
 
-function register_swpm_user_on_woocommerce_registration( $customer_id ) {
-  // Verifica se o plugin Simple Membership está ativo
-  if (!class_exists('SimpleWpMembership')) {
-      return;
-  }
-  
-  // Obtém os dados do usuário
-  $user = get_userdata($customer_id);
-  $email = $user->user_email;
-  $username = $user->user_login;
-  
-  // Configurações básicas de membro (ajuste conforme necessário)
-  $membership_level = 3; // Nível de membro padrão
-  $account_status = 'active'; // Status da conta
-  
-  // Verifica se o usuário já existe no Simple Membership
-  global $wpdb;
-  $query = $wpdb->prepare("SELECT * FROM " . $wpdb->prefix . "swpm_members_tbl WHERE user_name = %s OR email = %s", $username, $email);
-  $existing = $wpdb->get_row($query);
-  
-  if (!$existing) {
-      // Cria o membro no Simple Membership
-      $swpm_user_data = array(
-          'user_name' => $username,
-          'password' => '', // Não definimos senha (usará a do WooCommerce)
-          'first_name' => get_user_meta($customer_id, 'billing_first_name', true),
-          'last_name' => get_user_meta($customer_id, 'billing_last_name', true),
-          'email' => $email,
-          'membership_level' => $membership_level,
-          'member_since' => current_time('mysql'),
-          'account_state' => $account_status,
-          'last_accessed' => current_time('mysql'),
-      );
-      
-      $wpdb->insert($wpdb->prefix . 'swpm_members_tbl', $swpm_user_data);
-      
-      // Associa o ID do usuário WordPress ao membro
-      $member_id = $wpdb->insert_id;
-      update_user_meta($customer_id, 'swpm_member_id', $member_id);
-  }
+
+function swpm_redirect_to_home_after_login($redirect_url) {
+    // Substitui qualquer redirecionamento pela URL da home
+    return home_url('/');
 }
-add_action( 'woocommerce_created_customer', 'register_swpm_user_on_woocommerce_registration', 10, 1 );
