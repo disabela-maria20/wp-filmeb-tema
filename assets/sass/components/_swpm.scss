@@ -3,12 +3,12 @@
   padding-bottom: 35px;
   border: 1px solid #cfc8d8;
   padding: 20px;
-  margin: 45px auto;
+  margin: 0 auto;
   text-align: left;
   border-radius: 5px;
 
   @include media(lg) {
-    margin: 45px auto 90px;
+    margin: 0 auto 90px;
   }
   .swpm-username-label,
   .swpm-password-label,
@@ -95,7 +95,7 @@
 }
 
 .center {
-  text-align: center;
+  text-align: center !important;
 }
 
 .swpm-registration-form-section {
@@ -103,12 +103,12 @@
   padding-bottom: 35px;
   border: 1px solid #cfc8d8;
   padding: 20px;
-  margin: 45px auto;
+  margin: 0 auto;
   text-align: left;
   border-radius: 5px;
 
   @include media(lg) {
-    margin: 45px auto 90px;
+    margin: 0 auto 90px;
   }
 
   label {
