@@ -64,13 +64,6 @@
   @include media(lg) {
     margin: 45px auto 90px;
   }
-}
-
-.swpm-pw-reset-form {
-  label {
-    color: #221115;
-    font-size: 1.6rem;
-  }
   .swpm-pw-reset-text {
     font-size: 1.6rem;
     width: 100%;
@@ -90,5 +83,9 @@
     padding: 10px 22px;
     border-radius: 6px;
     transition: all 400ms ease-in;
+  }
+  label {
+    color: #221115;
+    font-size: 1.6rem;
   }
 }
