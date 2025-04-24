@@ -1,4 +1,5 @@
-.swpm-login-form-inner {
+.swpm-login-form-inner,
+.swpm-pw-reset-form {
   max-width: 450px;
   padding-bottom: 35px;
   border: 1px solid #cfc8d8;
@@ -12,18 +13,22 @@
   }
   .swpm-username-label,
   .swpm-password-label,
-  .swpm-rember-label {
+  .swpm-rember-label,
+  .swpm_label {
     color: #221115;
     font-size: 1.6rem;
   }
-
+  .swpm-reset-pw-error {
+    font-size: 1.6rem;
+  }
   .swpm-username-label,
   .swpm-password-label {
     padding-bottom: 5px;
   }
   .swpm-password-input,
   .swpm-username-input {
-    input {
+    input,
+    swpm-text-field {
       font-size: 1.6rem;
       width: 100%;
       height: 47px;
