@@ -1,26 +1,31 @@
 .swpm-login-form-inner {
   max-width: 450px;
 
-  .swpm-username-label {
+  .swpm-username-label,
+  .swpm-rember-label {
     color: #221115;
     font-size: 1.6rem;
   }
   .swpm-password-input {
-    width: 100%;
-    height: 47px;
-    padding: 10px 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-    margin-bottom: 15px;
+    input {
+      width: 100%;
+      height: 47px;
+      padding: 10px 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+      margin-bottom: 15px;
+    }
   }
   .swpm-login-submit {
-    background-color: #f20030;
-    color: #fff;
-    font-size: 1.6rem;
-    line-height: 2rem;
-    padding: 10px 22px;
-    border-radius: 6px;
-    transition: all 400msease-in;
+    input {
+      background-color: #f20030;
+      color: #fff;
+      font-size: 1.6rem;
+      line-height: 2rem;
+      padding: 10px 22px;
+      border-radius: 6px;
+      transition: all 400ms ease-in;
+    }
   }
 }
