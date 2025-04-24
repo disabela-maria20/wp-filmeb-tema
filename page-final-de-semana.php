@@ -2,6 +2,9 @@
 // Template Name: Final de Semana
 get_header();
 $banner_id = "78847";
+
+
+
     $banner_superior = CFS()->get('banner_moldura', $banner_id);
     $banner_inferior = CFS()->get('mega_banner', $banner_id);
     $full_banner = CFS()->get('full_banner', $banner_id);
