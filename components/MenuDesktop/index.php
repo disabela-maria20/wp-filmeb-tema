@@ -12,6 +12,15 @@
         <?php get_template_part('components/Search/index'); ?>
       </div>
       <div>
+        [swpm_show_to logged_in="2"]
+        <!-- Conteúdo exclusivo para assinantes logados -->
+        <p>Você é um assinante e pode ver este conteúdo.</p>
+        [/swpm_show_to]
+
+        [swpm_show_to logged_in="0"]
+        <!-- Conteúdo para visitantes não logados -->
+        <p>Faça login ou assine para ver este conteúdo.</p>
+        [/swpm_show_to]
         <nav>
           <?php if (SwpmMemberUtils::is_member_logged_in()) { ?>
           <ul class="user">
