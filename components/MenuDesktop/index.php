@@ -28,7 +28,7 @@
           <?php } else { ?>
           <ul class="user">
             <li>
-              <a href="<?php echo get_site_url(); ?>/conta/">
+              <a href="<?php echo get_site_url(); ?>/entrar/">
                 <span>Login</span>
               </a>
             </li>
