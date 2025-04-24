@@ -1,5 +1,6 @@
 <?php
 // Template Name: Cadastro
+
 get_header();?>
 <?php get_header(); ?>
 
