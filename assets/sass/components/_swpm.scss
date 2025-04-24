@@ -2,11 +2,13 @@
   max-width: 450px;
 
   .swpm-username-label,
+  .swpm-password-label,
   .swpm-rember-label {
     color: #221115;
     font-size: 1.6rem;
   }
-  .swpm-password-input {
+  .swpm-password-input,
+  .swpm-username-input {
     input {
       width: 100%;
       height: 47px;
