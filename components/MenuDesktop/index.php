@@ -1,4 +1,4 @@
-<?php echo SwpmMemberUtils::is_member_logged_in();?>
+<?php var_dump( SwpmMemberUtils::is_member_logged_in());?>
 
 <header id="desktop">
   <div class="container">
