@@ -1,10 +1,10 @@
 <?php
-// Template Name: Cadastro
+// Template Name: Perfil
 get_header();
 ?>
 <?php if (have_posts()): while (have_posts()):the_post(); ?>
 
-<h1>Cadastro</h1>
+<h1>Perfil</h1>
 
 <?php endwhile; else: endif; ?>
 
