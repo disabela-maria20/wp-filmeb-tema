@@ -53,6 +53,7 @@
 }
 
 .swpm-pw-reset-widget-form {
+  max-width: 450px;
   padding-bottom: 35px;
   border: 1px solid #cfc8d8;
   padding: 20px;
@@ -61,7 +62,7 @@
   border-radius: 5px;
 
   @include media(lg) {
-    margin: 45px auto 90px;
+    margin: 45px 0 90px;
   }
   .swpm-pw-reset-text {
     font-size: 1.6rem;
