@@ -14,7 +14,7 @@
           <?php if (SwpmMemberUtils::is_member_logged_in()) { ?>
           <ul class="user">
             <li>
-              <a href="<?php echo get_site_url(); ?>/minha-conta/">
+              <a href="<?php echo get_site_url(); ?>/entrar/">
                 <span>Seu cadastro</span>
               </a>
             </li>
@@ -28,7 +28,7 @@
           <?php } else { ?>
           <ul class="user">
             <li>
-              <a href="<?php echo get_site_url(); ?>/entrar/">
+              <a href="<?php echo get_site_url(); ?>/conta/">
                 <span>Login</span>
               </a>
             </li>
