@@ -666,3 +666,5 @@ function swpm_redirect_to_home_after_login($redirect_url) {
     // Substitui qualquer redirecionamento pela URL da home
     return home_url('/');
 }
+
+var_dump( SwpmMemberUtils::is_member_logged_in());
