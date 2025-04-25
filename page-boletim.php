@@ -1,6 +1,8 @@
 <?php
 // Template Name: Boletim
 get_header();
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 $edicoes_query = new WP_Query(array(
   'post_type' => 'edicoes',
@@ -20,7 +22,13 @@ $banner_id = "78919";
     $link_full_banner = CFS()->get('link_full_banner', $banner_id);
     $link_skyscraper = CFS()->get('link_skyscraper', $banner_id);
     
-
+    $post_id = get_the_ID();
+    $gerenciador = new GerenciadorAssinaturas();
+    if ($gerenciador->usuario_tem_acesso()) {
+        echo 'mostrar conteudo';
+    } else {
+      wp_redirect( wc_get_page_permalink( 'myaccount' ) );
+    }
 ?>
 <a href="<?php echo esc_url($link_banner_superior) ?>" target="_blank" rel="noopener noreferrer">
   <img src="<?php echo esc_url($banner_superior); ?>" class="w-full p-35 img-banner bannerMobile" alt="banner">

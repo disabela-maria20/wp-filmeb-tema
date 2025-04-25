@@ -1,7 +1,6 @@
 <?php
 // Template Name: Home
 get_header();
-
 $filme = get_thursday_movies();
 
 $banner_estreia = CFS()->get('banner_estreia');

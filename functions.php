@@ -72,20 +72,6 @@ function remove_tablepress_default_css()
 add_action('wp_enqueue_scripts', 'remove_tablepress_default_css', 20);
 
 
-function custom_breadcrumb_category($links)
-{
-  if (is_single() && in_category('Rapidinhas')) {
-    foreach ($links as &$link) {
-      if ($link['text'] === 'Notícias') {
-        $link['text'] = 'Rapidinhas';
-        $link['url'] = get_category_link(get_cat_ID('Rapidinhas'));
-      }
-    }
-  }
-  return $links;
-}
-add_filter('wpseo_breadcrumb_links', 'custom_breadcrumb_category');
-
 function formatar_data_estreia($estreia, $mostrar_dia_da_semana = false)
 {
   $data = CFS()->get($estreia);
@@ -221,15 +207,6 @@ function formatar_data_personalizada($texto)
 add_filter('the_title', 'formatar_data_personalizada');
 
 add_filter('the_content', 'formatar_data_personalizada');
-
-function custom_archive_filmes_title($title)
-{
-  if (is_post_type_archive('filmes')) {
-    $title = 'Lista de Filmes - ' . get_bloginfo('name');
-  }
-  return $title;
-}
-add_filter('pre_get_document_title', 'custom_archive_filmes_title');
 
 
 
@@ -411,99 +388,6 @@ function save_custom_fields($customer_id)
 
 add_action('woocommerce_created_customer', 'save_custom_fields_and_register_swpm');
 
-function save_custom_fields_and_register_swpm($customer_id) {
-    // Salva todos os campos personalizados no WooCommerce
-    $fields_to_save = array(
-        'billing_first_name', 'billing_last_name', 'billing_categoria_profissional',
-        'billing_cpf_cnpj', 'billing_phone', 'billing_cellphone', 'billing_address',
-        'billing_complemento', 'billing_bairro', 'billing_city', 'billing_state',
-        'billing_postcode'
-    );
-    
-    foreach ($fields_to_save as $field) {
-        if (isset($_POST[$field])) {
-            update_user_meta($customer_id, $field, sanitize_text_field($_POST[$field]));
-        }
-    }
-    
-    // Atualiza nome e sobrenome principais
-    if (isset($_POST['billing_first_name'])) {
-        wp_update_user(array('ID' => $customer_id, 'first_name' => sanitize_text_field($_POST['billing_first_name'])));
-    }
-    if (isset($_POST['billing_last_name'])) {
-        wp_update_user(array('ID' => $customer_id, 'last_name' => sanitize_text_field($_POST['billing_last_name'])));
-    }
-    
-    // Registra o usuário no Simple WordPress Membership com nível Free (ID:3)
-    register_user_in_swpm($customer_id);
-}
-
-/**
- * 3. Função para registrar usuário no Simple Membership com nível Free
- */
-function register_user_in_swpm($customer_id) {
-    // Verifica se o plugin Simple Membership está ativo
-    if (!class_exists('SimpleWpMembership')) {
-        return;
-    }
-    
-    // Obtém os dados do usuário
-    $user = get_userdata($customer_id);
-    $email = $user->user_email;
-    $username = $user->user_login;
-    
-    // Configurações de membro - nível Free (ID:3)
-    $membership_level = 3; // Nível Free
-    $account_status = 'active'; // Status da conta
-    
-    // Verifica se o usuário já existe no Simple Membership
-    global $wpdb;
-    $query = $wpdb->prepare("SELECT * FROM " . $wpdb->prefix . "swpm_members_tbl WHERE user_name = %s OR email = %s", $username, $email);
-    $existing = $wpdb->get_row($query);
-    
-    if (!$existing) {
-        // Prepara os dados extras do Simple Membership
-        $swpm_user_data = array(
-            'user_name' => $username,
-            'password' => '', // Não definimos senha (usará a do WooCommerce)
-            'first_name' => get_user_meta($customer_id, 'billing_first_name', true),
-            'last_name' => get_user_meta($customer_id, 'billing_last_name', true),
-            'email' => $email,
-            'membership_level' => $membership_level,
-            'member_since' => current_time('mysql'),
-            'account_state' => $account_status,
-            'last_accessed' => current_time('mysql'),
-            // Campos personalizados adicionais
-            'phone' => get_user_meta($customer_id, 'billing_phone', true),
-            'cellphone' => get_user_meta($customer_id, 'billing_cellphone', true),
-            'cpf_cnpj' => get_user_meta($customer_id, 'billing_cpf_cnpj', true),
-            'categoria_profissional' => get_user_meta($customer_id, 'billing_categoria_profissional', true),
-            'address' => get_user_meta($customer_id, 'billing_address', true),
-            'complemento' => get_user_meta($customer_id, 'billing_complemento', true),
-            'bairro' => get_user_meta($customer_id, 'billing_bairro', true),
-            'city' => get_user_meta($customer_id, 'billing_city', true),
-            'state' => get_user_meta($customer_id, 'billing_state', true),
-            'postcode' => get_user_meta($customer_id, 'billing_postcode', true)
-        );
-        
-        // Insere no banco de dados do Simple Membership
-        $wpdb->insert($wpdb->prefix . 'swpm_members_tbl', $swpm_user_data);
-        
-        // Associa o ID do usuário WordPress ao membro
-        $member_id = $wpdb->insert_id;
-        update_user_meta($customer_id, 'swpm_member_id', $member_id);
-        
-        // Atualiza também a tabela de relacionamento de níveis (se necessário)
-        $wpdb->replace($wpdb->prefix . 'swpm_membership_meta_tbl', array(
-            'user_id' => $member_id,
-            'membership_level' => $membership_level,
-            'meta_key' => 'membership_level',
-            'meta_value' => $membership_level
-        ));
-    }
-}
-
-
 
 function format_products($products, $img_size = 'medium')
 {
@@ -518,66 +402,6 @@ function format_products($products, $img_size = 'medium')
   }
   return $products_final;
 }
-
-
-// Corrigindo para o endpoint correto (assinaturas)
-function handel_assinaturas_content()
-{
-  if (!SwpmMemberUtils::is_member_logged_in()) {
-    return 0;
-  }
-
-  $member_level = SwpmMemberUtils::get_logged_in_members_level();
-
-  if ($member_level == '3') {
-    // Mensagem para não assinantes (convite para assinar)
-    echo '
-      <div class="filme-b-promo" style="background: #f8f8f8; border-left: 4px solid #ff6b00; padding: 20px; margin: 20px 0; border-radius: 4px;">
-          <h3 style="color: #ff6b00; margin-top: 0;">🎬 ACESSO EXCLUSIVO FILME B</h3>
-          <p>Você está no nível <strong>Grátis</strong>. Assine o <strong>Filme B Premium</strong> e tenha:</p>
-          <ul style="padding-left: 20px;">
-              <li>✅ Conteúdos VIP exclusivos</li>
-              <li>✅ Bastidores e making-of</li>
-              <li>✅ Acesso antecipado a lançamentos</li>
-          </ul>
-          <a href="/assine/" style="background: #ff6b00; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; display: inline-block; margin-top: 10px; font-weight: bold;">QUERO ASSINAR AGORA</a>
-          <p style="font-size: 0.9em; margin-top: 10px; color: #666;">Garanta seu acesso ilimitado!</p>
-      </div>';
-  } else if ($member_level == '2') {
-    $user_id = SwpmMemberUtils::get_logged_in_members_id();
-    if ($user_id) {
-      $user_info = SwpmMemberUtils::get_user_by_id($user_id);
-
-      // Calcula a data de expiração (assumindo 1 ano de duração)
-      $subscription_start = $user_info->subscription_starts;
-      $expiry_date = date('Y-m-d', strtotime($subscription_start . ' +1 year'));
-      $current_date = date('Y-m-d');
-      $days_remaining = floor((strtotime($expiry_date) - strtotime($current_date)) / (60 * 60 * 24));
-
-      // Mensagem personalizada conforme o status
-      echo '
-          <div class="assinatura-info" style="background: #f0f8ff; border-left: 4px solid #0066cc; padding: 20px; margin: 20px 0; border-radius: 4px;">
-              <h3 style="color: #0066cc; margin-top: 0;">📅 SUA ASSINATURA FILME B</h3>
-              <p><strong>👋 Olá, ' . esc_html($user_info->first_name) . '!</strong></p>
-              <p><strong>📅 Início:</strong> ' . date('d/m/Y', strtotime($subscription_start)) . '</p>';
-
-      if ($days_remaining > 0) {
-        echo '
-              <p><strong>⏳ Expira em:</strong> ' . date('d/m/Y', strtotime($expiry_date)) . ' <span style="color: #0066cc;">(' . floor($days_remaining) . ' dias restantes)</span></p>
-              <p style="font-size: 1.4rem; color: #666;">Sua assinatura está ativa. Aproveite todos os benefícios!</p>';
-      } else {
-        echo '
-              <p><strong>⚠️ Expirou em:</strong> ' . date('d/m/Y', strtotime($expiry_date)) . ' <span style="color: #cc0000;">(Assinatura encerrada)</span></p>
-              <p style="font-size: 1.4rem; color: #cc0000;">Renove agora para continuar acessando o conteúdo exclusivo!</p>
-              <a href="/renovar/" style="background: #cc0000; color: white; padding: 8px 15px; text-decoration: none; border-radius: 4px; display: inline-block; margin-top: 5px; font-weight: bold;">RENOVAR ASSINATURA</a>';
-      }
-
-      echo '
-          </div>';
-    }
-  }
-}
-add_action('woocommerce_account_assinaturas_endpoint', 'handel_assinaturas_content');
 
 
 function redirecionar_para_checkout()
@@ -659,12 +483,3 @@ function get_thursday_movies() {
       )
   ));
 }
-
-
-
-function swpm_redirect_to_home_after_login($redirect_url) {
-    // Substitui qualquer redirecionamento pela URL da home
-    return home_url('/');
-}
-
-echo var_dump( SwpmMemberUtils::is_member_logged_in());
