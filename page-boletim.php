@@ -1,6 +1,7 @@
 <?php
 // Template Name: Boletim
 get_header();
+
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -148,13 +149,7 @@ $banner_id = "78919";
                     }
                     ?>
     </aside>
-    <aside class="aside-boletim">
-      <a href="<?php echo esc_url($link_skyscraper)?>" target="_blank" rel="noopener noreferrer">
-        <img src="<?php echo esc_url($skyscraper); ?>" class="img-banner" alt="banner">
-      </a>
-      <h2>Boletins</h2>
-      <?php get_template_part('components/Aside/index'); ?>
-    </aside>
+
   </div>
 </div>
 <?php endwhile;
