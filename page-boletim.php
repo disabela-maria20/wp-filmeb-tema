@@ -28,8 +28,7 @@ echo $gerenciador->usuario_tem_acesso();
 if ($gerenciador->usuario_tem_acesso()) {
     echo 'mostrar conteudo';
 } else {
-    wp_redirect(get_permalink('16'));
-    exit;
+    echo 'não mostrar conteudo';
 }
 ?>
 
