@@ -170,15 +170,7 @@ if ($gerenciador->usuario_tem_acesso()) {
       }
       ?>
     </aside>
-    <aside class="aside-boletim">
-      <?php if (!empty($skyscraper)) : ?>
-      <a href="<?php echo esc_url($link_skyscraper); ?>" target="_blank" rel="noopener noreferrer">
-        <img src="<?php echo esc_url($skyscraper); ?>" class="img-banner" alt="banner">
-      </a>
-      <?php endif; ?>
-      <h2>Boletins</h2>
-      <?php get_template_part('components/Aside/index'); ?>
-    </aside>
+
   </div>
 </div>
 <?php endwhile; else: endif; ?>
