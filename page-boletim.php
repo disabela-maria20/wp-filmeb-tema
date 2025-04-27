@@ -94,6 +94,7 @@ if ($gerenciador->usuario_tem_acesso()) {
                 ?>
         <div class="post">
           <?php if (esc_url(CFS()->get('imagem', $post_id))) : ?>
+
           <img src="<?php echo esc_url(CFS()->get('imagem', $post_id)); ?>"
             alt="<?php echo esc_attr(CFS()->get('titulo', $post_id) ?: $the_post->post_title); ?>" />
           <?php endif; ?>
