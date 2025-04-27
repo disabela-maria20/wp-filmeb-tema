@@ -27,7 +27,7 @@ $banner_id = "78919";
     if ($gerenciador->usuario_tem_acesso()) {
         echo 'mostrar conteudo';
     } else {
-      wp_redirect( wc_get_page_permalink( 'myaccount' ) );
+      wp_redirect( get_permalink( '16' ) );
     }
 ?>
 <a href="<?php echo esc_url($link_banner_superior) ?>" target="_blank" rel="noopener noreferrer">
