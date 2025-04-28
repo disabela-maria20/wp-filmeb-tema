@@ -21,6 +21,7 @@ function registrar_cpt_rapidinhas()
         'publicly_queryable' => true,
         'has_archive' => true,
         'show_in_rest' => true,
+        'taxonomies' => array('category'),
     ));
 }
 add_action('init', 'registrar_cpt_rapidinhas');
