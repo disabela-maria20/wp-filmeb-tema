@@ -357,7 +357,7 @@
     }
     .enviar {
       display: flex;
-
+      font-size: 1.4rem;
       input {
         width: 100%;
         padding: 10px;
@@ -368,8 +368,11 @@
         margin-top: 10px;
         background-color: $color-white;
         color: $color-darker-gray;
-        font-size: 1.2rem;
         transition: background-color 0.2s ease;
+        font-family: 1.4rem;
+        &::placeholder {
+          font-size: 1.4rem;
+        }
       }
       button {
         background-color: $color-bright-red;

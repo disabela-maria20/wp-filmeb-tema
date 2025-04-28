@@ -118,10 +118,7 @@ $recent_posts_query_banner = new WP_Query(array(
           Fique por dentro do que movimenta o mercado de cinema! Receba tendências, estreias, bilheterias e os temas
           mais relevantes da indústria diretamente no seu e-mail.</p>
       </div>
-      <div class="enviar">
-        <input type="text" placeholder="Digite o seu e-mail">
-        <button>Enviar</button>
-      </div>
+      <?php echo do_shortcode('[newsletter_form]'); ?>
     </div>
   </section>
   <section class="home-filmes">
