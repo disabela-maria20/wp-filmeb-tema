@@ -486,26 +486,26 @@ function render_filmes_tabela($filmes_por_semana, $dias_semana, $titulo = '', $h
       <?php endif;
 
     foreach ($filmes_por_semana as $semana) :
+      if (!is_array($semana) || !isset($semana['inicio_semana']) || !isset($semana['filmes'])) {
+        continue;
+      }
+      
       $inicio_semana = $semana['inicio_semana'];
       $fim_semana = clone $inicio_semana;
       $fim_semana->modify('+6 days');
       ?>
-      <h3 class="week-header">
-        <i class="bi bi-calendar-week"></i> Semana de
-        <?= esc_html($inicio_semana->format('d/m/Y')); ?> a
-        <?= esc_html($fim_semana->format('d/m/Y')); ?>
-      </h3>
+
       <?php
-      foreach ($semana['filmes'] as $data => $filmes) :
+      foreach ($semana['filmes'] as $data => $filmes_ids) :
         $data_estreia = DateTime::createFromFormat('Y-m-d', $data);
         $dia_semana_ingles = $data_estreia->format('l');
-        $dia_semana = $dias_semana[$dia_semana_ingles];
+        $dia_semana = $dias_semana[$dia_semana_ingles] ?? $dia_semana_ingles;
         $dia = $data_estreia->format('d');
         $mes = $data_estreia->format('m');
         $ano = $data_estreia->format('Y');
         ?>
-      <h4><i class="bi bi-calendar-check-fill"></i> <?= esc_html($dia_semana); ?>,
-        <?= esc_html($dia); ?>/<?= esc_html($mes); ?>/<?= esc_html($ano); ?></h4>
+      <h2><i class="bi bi-calendar-check-fill"></i> <?= esc_html($dia_semana); ?>,
+        <?= esc_html($dia); ?>/<?= esc_html($mes); ?>/<?= esc_html($ano); ?></h2>
 
       <table>
         <thead>
@@ -520,32 +520,58 @@ function render_filmes_tabela($filmes_por_semana, $dias_semana, $titulo = '', $h
           </tr>
         </thead>
         <tbody>
-          <?php foreach ($filmes as $filme) : ?>
+          <?php foreach ($filmes_ids as $post_id) : 
+            $filme = get_post($post_id); // Obter o objeto do post
+            ?>
           <tr>
             <td class="titulo" colspan="2">
-              <a href="<?= get_permalink($filme->ID); ?>">
-                <h4><?= get_the_title($filme->ID); ?></h4>
-                <span><?= esc_html(CFS()->get('titulo_original', $filme->ID)); ?></span>
+              <a href="<?= get_permalink($post_id); ?>">
+                <h4><?= get_the_title($post_id); ?></h4>
+                <span><?= esc_html(CFS()->get('titulo_original', $post_id)); ?></span>
               </a>
             </td>
-            <td><?= render_terms('distribuicao', $filme->ID); ?></td>
+            <td><?= render_terms('distribuicao', $post_id); ?></td>
             <td>
-              <?php $diretores = CFS()->get('direcao'); ?>
+              <?php $diretores = CFS()->get('direcao', $post_id); ?>
               <?php if ($diretores) : ?>
-              <?php foreach ($diretores as $diretor) : ?>
-              <?php echo esc_html($diretor['nome']); ?>
-              <?php endforeach; ?>
+              <?php 
+                $nomes_diretores = array();
+                if (is_array($diretores)) {
+                  foreach ($diretores as $diretor) {
+                    if (is_array($diretor) && isset($diretor['nome'])) {
+                      $nomes_diretores[] = esc_html($diretor['nome']);
+                    } elseif (is_string($diretor)) {
+                      $nomes_diretores[] = esc_html($diretor);
+                    }
+                  }
+                  echo implode(', ', $nomes_diretores);
+                } elseif (is_string($diretores)) {
+                  echo esc_html($diretores);
+                }
+                ?>
               <?php endif; ?>
             </td>
-            <td><?= render_terms('paises', $filme->ID); ?></td>
-            <td><?= render_terms('generos', $filme->ID); ?></td>
-            <td><?= CFS()->get('duracao_minutos', $filme->ID); ?> min</td>
+            <td><?= render_terms('paises', $post_id); ?></td>
+            <td><?= render_terms('generos', $post_id); ?></td>
+            <td><?= CFS()->get('duracao_minutos', $post_id); ?> min</td>
             <td>
-              <?php $diretores = CFS()->get('elenco'); ?>
-              <?php if ($diretores) : ?>
-              <?php foreach ($diretores as $diretor) : ?>
-              <?php echo esc_html($diretor['nome']); ?>
-              <?php endforeach; ?>
+              <?php $elenco = CFS()->get('elenco', $post_id); ?>
+              <?php if ($elenco) : ?>
+              <?php 
+                $nomes_elenco = array();
+                if (is_array($elenco)) {
+                  foreach ($elenco as $ator) {
+                    if (is_array($ator) && isset($ator['nome'])) {
+                      $nomes_elenco[] = esc_html($ator['nome']);
+                    } elseif (is_string($ator)) {
+                      $nomes_elenco[] = esc_html($ator);
+                    }
+                  }
+                  echo implode(', ', $nomes_elenco);
+                } elseif (is_string($elenco)) {
+                  echo esc_html($elenco);
+                }
+                ?>
               <?php endif; ?>
             </td>
           </tr>
