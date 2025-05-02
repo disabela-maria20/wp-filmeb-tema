@@ -16,6 +16,7 @@ require_once(get_template_directory() . "/api/rapidinhas.php");
 require_once(get_template_directory() . "/api/noticias.php");
 require_once(get_template_directory() . "/api/usuario.php");
 require_once(get_template_directory() . "/api/taxionomia.php");
+require_once(get_template_directory() . "/inc/woocommerce.php");
 
 add_filter('wp_image_editors', 'wpb_image_editor_default_to_gd');
 
@@ -210,183 +211,6 @@ add_filter('the_content', 'formatar_data_personalizada');
 
 
 
-// Usuarios associados
-
-
-// 1. Adicionar campos personalizados ao formulário de registro
-add_action('woocommerce_register_form_start', 'add_custom_fields_to_registration');
-
-function add_custom_fields_to_registration()
-{
-?>
-<p class="form-row form-row-wide">
-  <label for="reg_billing_first_name"><?php _e('Nome *', 'woocommerce'); ?></label>
-  <input type="text" class="input-text" name="billing_first_name" id="reg_billing_first_name"
-    value="<?php if (!empty($_POST['billing_first_name'])) esc_attr_e($_POST['billing_first_name']); ?>" required />
-</p>
-
-<p class="form-row form-row-wide">
-  <label for="reg_billing_last_name"><?php _e('Sobrenome', 'woocommerce'); ?></label>
-  <input type="text" class="input-text" name="billing_last_name" id="reg_billing_last_name"
-    value="<?php if (!empty($_POST['billing_last_name'])) esc_attr_e($_POST['billing_last_name']); ?>" />
-</p>
-
-<p class="form-row form-row-wide">
-  <label for="reg_billing_categoria_profissional"><?php _e('Categoria Profissional *', 'woocommerce'); ?></label>
-  <select name="billing_categoria_profissional" id="reg_billing_categoria_profissional" class="form-select required"
-    required>
-    <option value="_none">- Selecione um valor -</option>
-    <option value="1">Advogado</option>
-    <option value="2">Agência</option>
-    <option value="3">Assessoria imprensa</option>
-    <option value="4">Banco</option>
-    <option value="5">Cineasta</option>
-    <option value="6">Corretora</option>
-    <option value="7">Distribuidor</option>
-    <option value="8">Estudante</option>
-    <option value="9">Exibidor</option>
-    <option value="10">Exibidor-distribuidor</option>
-    <option value="11">Festival</option>
-    <option value="12">Imprensa</option>
-    <option value="13">Infraestrutura</option>
-    <option value="14">Investidor</option>
-    <option value="15">Mercado</option>
-    <option value="16">Órgão público</option>
-    <option value="17">Portal internet</option>
-    <option value="18">Produtor</option>
-    <option value="19">Professor</option>
-    <option value="20">Roteirista</option>
-    <option value="21">Shopping</option>
-    <option value="22">TV</option>
-    <option value="23">Universidade</option>
-    <option value="24">Vídeo</option>
-    <option value="25">Outros</option>
-  </select>
-</p>
-
-<p class="form-row form-row-wide">
-  <label for="reg_billing_cpf_cnpj"><?php _e('CPF/CNPJ *', 'woocommerce'); ?></label>
-  <input type="text" class="input-text" name="billing_cpf_cnpj" id="reg_billing_cpf_cnpj"
-    value="<?php if (!empty($_POST['billing_cpf_cnpj'])) esc_attr_e($_POST['billing_cpf_cnpj']); ?>" required />
-</p>
-
-<p class="form-row form-row-wide">
-  <label for="reg_billing_phone"><?php _e('Telefone', 'woocommerce'); ?></label>
-  <input type="tel" class="input-text" name="billing_phone" id="reg_billing_phone"
-    value="<?php if (!empty($_POST['billing_phone'])) esc_attr_e($_POST['billing_phone']); ?>" />
-</p>
-
-<p class="form-row form-row-wide">
-  <label for="reg_billing_cellphone"><?php _e('Celular *', 'woocommerce'); ?></label>
-  <input type="tel" class="input-text" name="billing_cellphone" id="reg_billing_cellphone"
-    value="<?php if (!empty($_POST['billing_cellphone'])) esc_attr_e($_POST['billing_cellphone']); ?>" required />
-</p>
-
-<p class="form-row form-row-wide">
-  <label for="reg_billing_address"><?php _e('Endereço', 'woocommerce'); ?></label>
-  <input type="text" class="input-text" name="billing_address" id="reg_billing_address"
-    value="<?php if (!empty($_POST['billing_address'])) esc_attr_e($_POST['billing_address']); ?>" />
-</p>
-
-<p class="form-row form-row-wide">
-  <label for="reg_billing_complemento"><?php _e('Complemento', 'woocommerce'); ?></label>
-  <input type="text" class="input-text" name="billing_complemento" id="reg_billing_complemento"
-    value="<?php if (!empty($_POST['billing_complemento'])) esc_attr_e($_POST['billing_complemento']); ?>" />
-</p>
-
-<p class="form-row form-row-wide">
-  <label for="reg_billing_bairro"><?php _e('Bairro', 'woocommerce'); ?></label>
-  <input type="text" class="input-text" name="billing_bairro" id="reg_billing_bairro"
-    value="<?php if (!empty($_POST['billing_bairro'])) esc_attr_e($_POST['billing_bairro']); ?>" />
-</p>
-
-<p class="form-row form-row-wide">
-  <label for="reg_billing_city"><?php _e('Cidade', 'woocommerce'); ?></label>
-  <input type="text" class="input-text" name="billing_city" id="reg_billing_city"
-    value="<?php if (!empty($_POST['billing_city'])) esc_attr_e($_POST['billing_city']); ?>" />
-</p>
-
-<p class="form-row form-row-wide">
-  <label for="reg_billing_state"><?php _e('Estado', 'woocommerce'); ?></label>
-  <input type="text" class="input-text" name="billing_state" id="reg_billing_state"
-    value="<?php if (!empty($_POST['billing_state'])) esc_attr_e($_POST['billing_state']); ?>" />
-</p>
-
-<p class="form-row form-row-wide">
-  <label for="reg_billing_postcode"><?php _e('CEP', 'woocommerce'); ?></label>
-  <input type="text" class="input-text" name="billing_postcode" id="reg_billing_postcode"
-    value="<?php if (!empty($_POST['billing_postcode'])) esc_attr_e($_POST['billing_postcode']); ?>" />
-</p>
-<?php
-}
-
-// 2. Validar campos obrigatórios
-add_action('woocommerce_register_post', 'validate_custom_fields', 10, 3);
-
-function validate_custom_fields($username, $email, $validation_errors)
-{
-  if (isset($_POST['billing_first_name']) && empty($_POST['billing_first_name'])) {
-    $validation_errors->add('billing_first_name_error', __('O campo Nome é obrigatório!', 'woocommerce'));
-  }
-  if (isset($_POST['billing_categoria_profissional']) && empty($_POST['billing_categoria_profissional'])) {
-    $validation_errors->add('billing_categoria_profissional_error', __('O campo Categoria Profissional é obrigatório!', 'woocommerce'));
-  }
-  if (isset($_POST['billing_cpf_cnpj']) && empty($_POST['billing_cpf_cnpj'])) {
-    $validation_errors->add('billing_cpf_cnpj_error', __('O campo CPF/CNPJ é obrigatório!', 'woocommerce'));
-  }
-  if (isset($_POST['billing_cellphone']) && empty($_POST['billing_cellphone'])) {
-    $validation_errors->add('billing_cellphone_error', __('O campo Celular é obrigatório!', 'woocommerce'));
-  }
-  return $validation_errors;
-}
-
-// 3. Salvar campos personalizados no banco de dados
-add_action('woocommerce_created_customer', 'save_custom_fields');
-
-function save_custom_fields($customer_id)
-{
-  if (isset($_POST['billing_first_name'])) {
-    update_user_meta($customer_id, 'billing_first_name', sanitize_text_field($_POST['billing_first_name']));
-    update_user_meta($customer_id, 'first_name', sanitize_text_field($_POST['billing_first_name']));
-  }
-  if (isset($_POST['billing_last_name'])) {
-    update_user_meta($customer_id, 'billing_last_name', sanitize_text_field($_POST['billing_last_name']));
-    update_user_meta($customer_id, 'last_name', sanitize_text_field($_POST['billing_last_name']));
-  }
-  if (isset($_POST['billing_categoria_profissional'])) {
-    update_user_meta($customer_id, 'billing_categoria_profissional', sanitize_text_field($_POST['billing_categoria_profissional']));
-  }
-  if (isset($_POST['billing_cpf_cnpj'])) {
-    update_user_meta($customer_id, 'billing_cpf_cnpj', sanitize_text_field($_POST['billing_cpf_cnpj']));
-  }
-  if (isset($_POST['billing_phone'])) {
-    update_user_meta($customer_id, 'billing_phone', sanitize_text_field($_POST['billing_phone']));
-  }
-  if (isset($_POST['billing_cellphone'])) {
-    update_user_meta($customer_id, 'billing_cellphone', sanitize_text_field($_POST['billing_cellphone']));
-  }
-  if (isset($_POST['billing_address'])) {
-    update_user_meta($customer_id, 'billing_address', sanitize_text_field($_POST['billing_address']));
-  }
-  if (isset($_POST['billing_complemento'])) {
-    update_user_meta($customer_id, 'billing_complemento', sanitize_text_field($_POST['billing_complemento']));
-  }
-  if (isset($_POST['billing_bairro'])) {
-    update_user_meta($customer_id, 'billing_bairro', sanitize_text_field($_POST['billing_bairro']));
-  }
-  if (isset($_POST['billing_city'])) {
-    update_user_meta($customer_id, 'billing_city', sanitize_text_field($_POST['billing_city']));
-  }
-  if (isset($_POST['billing_state'])) {
-    update_user_meta($customer_id, 'billing_state', sanitize_text_field($_POST['billing_state']));
-  }
-  if (isset($_POST['billing_postcode'])) {
-    update_user_meta($customer_id, 'billing_postcode', sanitize_text_field($_POST['billing_postcode']));
-  }
-}
-
-add_action('woocommerce_created_customer', 'save_custom_fields_and_register_swpm');
-
 
 function format_products($products, $img_size = 'medium')
 {
@@ -482,3 +306,30 @@ function get_thursday_movies() {
       )
   ));
 }
+
+
+// Shortcode para mostrar apenas o formulário de cadastro do WooCommerce
+function custom_woocommerce_registration_form() {
+  if ( is_user_logged_in() ) return '<p>Você já está logado.</p>';
+
+  ob_start();
+  do_action( 'woocommerce_before_customer_login_form' );
+
+  ?>
+<div class="u-columns col2-set" id="customer_login">
+  <div class="u-column2 col-2">
+    <h2>Criar Conta</h2>
+    <?php
+          do_action( 'woocommerce_register_form_start' );
+
+          woocommerce_register_form();
+
+          do_action( 'woocommerce_register_form_end' );
+          ?>
+  </div>
+</div>
+<?php
+
+  return ob_get_clean();
+}
+add_shortcode( 'custom_woocommerce_register', 'custom_woocommerce_registration_form' );

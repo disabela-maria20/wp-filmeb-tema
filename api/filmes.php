@@ -231,35 +231,57 @@ function api_anos_filmes_get()
     return rest_ensure_response($anos_filmes);
 }
 
-
-function api_filmes_post($request)
-{
+function api_filmes_post($request) {
     $data = $request->get_json_params();
 
     $titulo = isset($data['titulo']) ? sanitize_text_field($data['titulo']) : '';
     $descricao = isset($data['descricao']) ? sanitize_textarea_field($data['descricao']) : '';
-
     $titulo_original = isset($data['titulo_original']) ? sanitize_text_field($data['titulo_original']) : '';
     $trailer = isset($data['trailer']) ? esc_url_raw($data['trailer']) : '';
     $cartaz = isset($data['cartaz']) ? esc_url_raw($data['cartaz']) : '';
     $capa = isset($data['capa']) ? esc_url_raw($data['capa']) : '';
     $estreia = isset($data['estreia']) ? sanitize_text_field($data['estreia']) : '';
     $duracao_minutos = isset($data['duracao_minutos']) ? intval($data['duracao_minutos']) : 0;
-    $direcao = isset($data['direcao']) ? sanitize_text_field($data['direcao']) : '';
-    $roteiro = isset($data['roteiro']) ? sanitize_text_field($data['roteiro']) : '';
-    $elenco = isset($data['elenco']) ? sanitize_text_field($data['elenco']) : '';
+    
+    // Tratamento dos arrays de objetos
+    $direcao = isset($data['direcao']) && is_array($data['direcao']) 
+        ? array_map(function($item) {
+            return [
+                'nome' => sanitize_text_field($item['nome'] ?? ''),
+                'foto' => esc_url_raw($item['foto'] ?? '')
+            ];
+        }, $data['direcao']) 
+        : [];
+
+    $roteiro = isset($data['roteiro']) && is_array($data['roteiro'])
+        ? array_map(function($item) {
+            return [
+                'nome' => sanitize_text_field($item['nome'] ?? ''),
+                'foto' => esc_url_raw($item['foto'] ?? '')
+            ];
+        }, $data['roteiro']) 
+        : [];
+
+    $elenco = isset($data['elenco']) && is_array($data['elenco'])
+        ? array_map(function($item) {
+            return [
+                'nome' => sanitize_text_field($item['nome'] ?? ''),
+                'foto' => esc_url_raw($item['foto'] ?? '')
+            ];
+        }, $data['elenco']) 
+        : [];
 
     // Ajuste para obter corretamente as URLs das fotos
     $fotos = isset($data['fotos']) && is_array($data['fotos'])
-        ? array_map(fn($foto) => esc_url_raw($foto['foto'] ?? ''), $data['fotos'])
+        ? array_map(fn($foto) => ['foto' => esc_url_raw($foto['foto'] ?? '')], $data['fotos'])
         : [];
 
-    $distribuicao = isset($data['distribuicao']) ? (array) $data['distribuicao'] : [];
-    $paises = isset($data['paises']) ? (array) $data['paises'] : [];
-    $generos = isset($data['generos']) ? (array) $data['generos'] : [];
-    $classificacao = isset($data['classificacoes']) ? (array) $data['classificacoes'] : [];
-    $tecnologias = isset($data['tecnologias']) ? (array) $data['tecnologias'] : [];
-    $feriados = isset($data['feriados']) ? (array) $data['feriados'] : [];
+    $distribuicao = isset($data['distribuicao']) ? ((array) $data['distribuicao']) : [];
+    $paises = isset($data['paises']) ? ((array) $data['paises']) : [];
+    $generos = isset($data['generos']) ? ((array) $data['generos']) : [];
+    $classificacao = isset($data['classificacoes']) ? ((array) $data['classificacoes']) : [];
+    $tecnologias = isset($data['tecnologias']) ? ((array) $data['tecnologias']) : [];
+    $feriados = isset($data['feriados']) ? ((array) $data['feriados']) : [];
 
     $distribuicao_ids = obter_term_ids($distribuicao, 'distribuidoras');
     $paises_ids = obter_term_ids($paises, 'paises');
@@ -285,10 +307,38 @@ function api_filmes_post($request)
         }
     }
 
+    // Upload fotos de direção, roteiro e elenco
+    foreach ($direcao as &$diretor) {
+        if (!empty($diretor['foto'])) {
+            $foto_id = upload_image_from_url($diretor['foto']);
+            if (!is_wp_error($foto_id)) {
+                $diretor['foto'] = wp_get_attachment_url($foto_id);
+            }
+        }
+    }
+
+    foreach ($roteiro as &$roteirista) {
+        if (!empty($roteirista['foto'])) {
+            $foto_id = upload_image_from_url($roteirista['foto']);
+            if (!is_wp_error($foto_id)) {
+                $roteirista['foto'] = wp_get_attachment_url($foto_id);
+            }
+        }
+    }
+
+    foreach ($elenco as &$ator) {
+        if (!empty($ator['foto'])) {
+            $foto_id = upload_image_from_url($ator['foto']);
+            if (!is_wp_error($foto_id)) {
+                $ator['foto'] = wp_get_attachment_url($foto_id);
+            }
+        }
+    }
+
     $fotos_id = [];
-    foreach ($fotos as $foto_url) {
-        if (!empty($foto_url)) {
-            $foto_id = upload_image_from_url($foto_url);
+    foreach ($fotos as $foto) {
+        if (!empty($foto['foto'])) {
+            $foto_id = upload_image_from_url($foto['foto']);
             if (!is_wp_error($foto_id)) {
                 $fotos_id[] = $foto_id;
             }

@@ -194,30 +194,57 @@ get_template_part('components/MenuDesktop/index');
             </tr>
           </table>
         </div>
-
-        <?php if (!is_cfs_field_empty('direcao')) : ?>
         <div class="dados">
           <h3>Direção</h3>
-          <p><?php echo esc_html(CFS()->get('direcao')); ?></p>
-        </div>
-        <?php endif; ?>
+          <div class="info-array">
+            <?php $diretores = CFS()->get('direcao'); ?>
+            <?php if (is_array($diretores)) : ?>
+            <?php foreach ($diretores as $diretor) : ?>
+            <div>
+              <?php if (!empty($diretor['foto'])) : ?>
+              <img src="<?php echo esc_url($diretor['foto']); ?>" alt="<?php echo esc_attr($diretor['nome']); ?>">
+              <?php endif; ?>
+              <p><?php echo esc_html($diretor['nome']); ?></p>
+            </div>
 
+            <?php endforeach; ?>
+            <?php endif; ?>
+          </div>
+        </div>
         <?php if (!is_cfs_field_empty('roteiro')) : ?>
         <div class="dados">
           <h3>Roteiro</h3>
-          <p><?php echo esc_html(CFS()->get('roteiro')); ?></p>
-        </div>
-        <?php endif; ?>
+          <div class="info-array">
+            <?php $roteiristas = CFS()->get('roteiro'); ?>
+            <?php if ($roteiristas) : ?>
+            <?php foreach ($roteiristas as $roteirista) : ?>
+            <div>
+              <img src="<?php echo esc_html($roteirista['foto']);?>" alt="<?php echo esc_html($roteirista['nome']); ?>">
+              <p><?php echo esc_html($roteirista['nome']); ?></p>
+            </div>
+            <?php endforeach; ?>
+            <?php endif; ?>
+          </div>
+          <?php endif; ?>
 
-        <?php if (!is_cfs_field_empty('elenco')) : ?>
-        <div class="dados">
-          <h3>Elenco</h3>
-          <p><?php echo esc_html(CFS()->get('elenco')); ?></p>
+          <?php if (!is_cfs_field_empty('elenco')) : ?>
+          <div class="dados">
+            <h3>Elenco</h3>
+            <div class="info-array">
+              <?php $elenco = CFS()->get('elenco'); ?>
+              <?php if ($elenco) : ?>
+              <?php foreach ($elenco as $ator) : ?>
+              <div>
+                <img src="<?php echo esc_html($ator['foto']);?>" alt="<?php echo esc_html($ator['nome']); ?>">
+                <p><?php echo esc_html($diretor['nome']); ?></p>
+              </div>
+              <?php endforeach; ?>
+              <?php endif; ?>
+            </div>
+            <?php endif; ?>
+          </div>
         </div>
-        <?php endif; ?>
       </div>
-    </div>
-  </div>
 </section>
 
 <?php

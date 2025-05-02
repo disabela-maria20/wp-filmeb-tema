@@ -39,50 +39,7 @@ get_header(); ?>
     </a>
     <section class="area-form">
       <h1>Assine o Box Office Brasil</h1>
-      <form action="">
-        <label for="nome">
-          <input type="text" name="nome" id="nome" placeholder="Nome">
-        </label>
-        <label for="sobreNome">
-          <input type="text" name="sobreNome" id="sobreNome" placeholder="Sobre Nome">
-        </label>
-        <label for="email">
-          <input type="email" name="email" id="email" placeholder="E-mail">
-        </label>
-        <label for="telefone">
-          <input type="email" name="telefone" id="telefone" placeholder="Telefone">
-        </label>
-
-        <fieldset>
-          <legend>Selecione os produtos do seu interesse</legend>
-          <div class="flex">
-            <div class="radio">
-              <input type="radio" name="Dados" id="Dados" value="email">
-              <label for="">Banco de Dados</label>
-            </div>
-            <div class="radio">
-              <input type="radio" name="Report" id="Report" value="ftp">
-              <label for="">Filme B Report</label>
-            </div>
-            <div class="radio">
-              <input type="radio" name="Ontime" id="Ontime" value="ftp">
-              <label for="">Filme B Ontime</label>
-            </div>
-            <div class="radio">
-              <input type="radio" name="Sadis" id="Sadis" value="ftp">
-              <label for="">Sadis ANCINE</label>
-            </div>
-          </div>
-          <div class="msg">
-            <label for="mensagem">
-              <textarea name="mensagem" id="mensagem" placeholder="Mensagem"></textarea>
-            </label>
-          </div>
-        </fieldset>
-        <div class="area-btn-form">
-          <button>Enviar</button>
-        </div>
-      </form>
+      <?php echo do_shortcode('[box_office_form]'); ?>
     </section>
     <h2 class="titulo">Outros produtos Filme B | Box Office Brasil</h2>
     <div class="grid-box-produtos">

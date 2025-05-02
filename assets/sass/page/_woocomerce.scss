@@ -29,7 +29,7 @@
       @include hoveBtn();
     }
   }
-  .woocommerce-form:not(.login) {
+  .woocommerce-form:not(.login, .woocommerce-form-register) {
     margin: 35px auto 0 !important;
     max-width: 550px;
   }

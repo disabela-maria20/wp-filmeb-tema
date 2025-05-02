@@ -68,7 +68,7 @@ $recent_posts_query_banner = new WP_Query(array(
       <div>
         <a href="<?php the_permalink(); ?>">
           <h2><?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?></h2>
-          <p><?php echo esc_html(wp_trim_words(CFS()->get('descricao') ?: get_the_excerpt(), 30, '...')); ?></p>
+          <p><?php echo esc_html(wp_trim_words(CFS()->get('descricao') ?: get_the_excerpt(), 100, '...')); ?></p>
         </a>
       </div>
     </div>
@@ -97,7 +97,8 @@ $recent_posts_query_banner = new WP_Query(array(
           <div class="titulo">
             <h2>10 maiores bilheterias do ano no Brasil</h2>
             <span></span>
-          </div>
+          </div>3
+          <?php echo do_shortcode('[custom_woocommerce_register]'); ?>
           <?php echo do_shortcode('[table id=4 /]'); ?>
         </div>
 

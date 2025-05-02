@@ -372,83 +372,139 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
         </form>
       </section>
       <?php
-      function render_filmes_lista($filmes_por_dia, $dias_semana, $titulo = '') {
-        if (!empty($filmes_por_dia)) {
-          if ($titulo) {
-            echo '<h2 class="section-title">' . esc_html($titulo) . '</h2>';
-          }
-          
-          foreach ($filmes_por_dia as $data => $filmes) {
-            $data_estreia = DateTime::createFromFormat('Y-m-d', $data);
-            $dia_semana_ingles = $data_estreia->format('l');
-            $dia_semana = $dias_semana[$dia_semana_ingles];
-            $dia = $data_estreia->format('d');
-            $mes = $data_estreia->format('m');
-            $ano = $data_estreia->format('Y');
-            echo '<h2><i class="bi bi-calendar-check-fill"></i> ' . esc_html($dia_semana) . ', ' . esc_html($dia) . '/' . esc_html($mes) . '/' . esc_html($ano) . '</h2>';
-            echo '<div class="grid-filmes">';
-            foreach ($filmes as $filme) {
-              echo '<a v-on:mousemove="hoverCard" href="' . get_permalink($filme->ID) . '" class="card">';
-              if (esc_url(CFS()->get('cartaz', $filme->ID)) == '') {
-                echo '<h3>' . get_the_title($filme->ID) . '</h3>';
-                echo '<p class="indisponivel">Poster não disponível</p>';
-              } else {
-                echo '<img src="' . esc_url(CFS()->get('cartaz', $filme->ID)) . '" alt="' . get_the_title($filme->ID) . '">';
-              }
-              echo '<div class="info"><ul>';
-              echo '<li><span>Título:</span><strong>' . get_the_title($filme->ID) . '</strong></li>';
-              if ($d = render_terms('distribuicao', $filme->ID)) echo '<li><span>Distribuição:</span><strong>' . $d . '</strong></li>';
-              if ($p = render_terms('paises', $filme->ID)) echo '<li><span>País:</span><strong>' . $p . '</strong></li>';
-              if ($g = render_terms('generos', $filme->ID)) echo '<li><span>Gênero(s)</span><strong>' . $g . '</strong></li>';
-              if ($dir = CFS()->get('direcao', $filme->ID)) echo '<li><span>Direção</span><strong>' . $dir . '</strong></li>';
-              if ($dur = CFS()->get('duracao_minutos', $filme->ID)) echo '<li><span>Duração</span><strong>' . $dur . ' min</strong></li>';
-              echo '</ul></div></a>';
-            }
-            echo '</div>';
-          }
-        }
-      }
+function render_filmes_lista($filmes_por_dia, $dias_semana, $titulo = '') {
+  if (!empty($filmes_por_dia)) :
+    if ($titulo) : ?>
+      <h2 class="section-title"><?= esc_html($titulo); ?></h2>
+      <?php endif;
 
-      function render_filmes_tabela($filmes_por_dia, $dias_semana, $titulo = '') {
-        if (!empty($filmes_por_dia)) {
-          if ($titulo) {
-            echo '<h2 class="section-title">' . esc_html($titulo) . '</h2>';
-          }
-          
-          foreach ($filmes_por_dia as $data => $filmes) {
-            $data_estreia = DateTime::createFromFormat('Y-m-d', $data);
-            $dia_semana_ingles = $data_estreia->format('l');
-            $dia_semana = $dias_semana[$dia_semana_ingles];
-            $dia = $data_estreia->format('d');
-            $mes = $data_estreia->format('m');
-            $ano = $data_estreia->format('Y');
-            echo '<h2><i class="bi bi-calendar-check-fill"></i> ' . esc_html($dia_semana) . ', ' . esc_html($dia) . '/' . esc_html($mes) . '/' . esc_html($ano) . '</h2>';
-           
-            echo '<table><thead><tr>
-                      <th colspan="2">Título</th>
-                      <th>Distribuição</th>
-                      <th>Direção</th>
-                      <th>País</th>
-                      <th>Gênero</th>
-                      <th>Duração</th>
-                      <th>Elenco</th>
-                      </tr></thead><tbody>';
-            foreach ($filmes as $filme) {
-              echo '<tr>
-                          <td class="titulo" colspan="2"><a href="' . get_permalink($filme->ID) . '"><h4>' . get_the_title($filme->ID) . '</h4><span>' . esc_html(CFS()->get('titulo_original', $filme->ID)) . '</span></a></td>
-                          <td>' . render_terms('distribuicao', $filme->ID) . '</td>
-                          <td>' . esc_html(CFS()->get('direcao', $filme->ID)) . '</td>
-                          <td>' . render_terms('paises', $filme->ID) . '</td>
-                          <td>' . render_terms('generos', $filme->ID) . '</td>
-                          <td>' . CFS()->get('duracao_minutos', $filme->ID) . ' min</td>
-                          <td>' . CFS()->get('elenco', $filme->ID) . '</td>
-                          </tr>';
-            }
-            echo '</tbody></table>';
-          }
-        }
-      }
-      
+    foreach ($filmes_por_dia as $data => $filmes) :
+      $data_estreia = DateTime::createFromFormat('Y-m-d', $data);
+      $dia_semana_ingles = $data_estreia->format('l');
+      $dia_semana = $dias_semana[$dia_semana_ingles];
+      $dia = $data_estreia->format('d');
+      $mes = $data_estreia->format('m');
+      $ano = $data_estreia->format('Y');
+      ?>
+      <h2><i class="bi bi-calendar-check-fill"></i> <?= esc_html($dia_semana); ?>,
+        <?= esc_html($dia); ?>/<?= esc_html($mes); ?>/<?= esc_html($ano); ?></h2>
+      <div class="grid-filmes">
+        <?php foreach ($filmes as $filme) :
+          $cartaz = esc_url(CFS()->get('cartaz', $filme->ID));
+          ?>
+        <a v-on:mousemove="hoverCard" href="<?= get_permalink($filme->ID); ?>" class="card">
+          <?php if ($cartaz === '') : ?>
+          <h3><?= get_the_title($filme->ID); ?></h3>
+          <p class="indisponivel">Poster não disponível</p>
+          <?php else : ?>
+          <img src="<?= $cartaz; ?>" alt="<?= get_the_title($filme->ID); ?>">
+          <?php endif; ?>
+
+          <div class="info">
+            <ul>
+              <li><span>Título:</span><strong><?= get_the_title($filme->ID); ?></strong></li>
+              <?php if ($d = render_terms('distribuicao', $filme->ID)) : ?>
+              <li><span>Distribuição:</span><strong><?= $d; ?></strong></li>
+              <?php endif; ?>
+              <?php if ($p = render_terms('paises', $filme->ID)) : ?>
+              <li><span>País:</span><strong><?= $p; ?></strong></li>
+              <?php endif; ?>
+              <?php if ($g = render_terms('generos', $filme->ID)) : ?>
+              <li><span>Gênero(s):</span><strong><?= $g; ?></strong></li>
+              <?php endif; ?>
+
+              <li>
+                <span>Direção:</span>
+                <?php $diretores = CFS()->get('direcao'); ?>
+                <?php if ($diretores) : ?>
+                <?php foreach ($diretores as $diretor) : ?>
+                <strong><?php echo esc_html($diretor['nome']); ?></strong>
+                <?php endforeach; ?>
+                <?php endif; ?>
+              </li>
+
+              <?php if ($dur = CFS()->get('duracao_minutos', $filme->ID)) : ?>
+              <li><span>Duração:</span><strong><?= esc_html($dur); ?> min</strong></li>
+              <?php endif; ?>
+            </ul>
+          </div>
+        </a>
+        <?php endforeach; ?>
+      </div>
+      <?php endforeach;
+  endif;
+}
+?>
+
+      <?php
+function render_filmes_tabela($filmes_por_dia, $dias_semana, $titulo = '') {
+  if (!empty($filmes_por_dia)) :
+    if ($titulo) : ?>
+      <h2 class="section-title"><?= esc_html($titulo); ?></h2>
+      <?php endif;
+
+    foreach ($filmes_por_dia as $data => $filmes) :
+      $data_estreia = DateTime::createFromFormat('Y-m-d', $data);
+      $dia_semana_ingles = $data_estreia->format('l');
+      $dia_semana = $dias_semana[$dia_semana_ingles];
+      $dia = $data_estreia->format('d');
+      $mes = $data_estreia->format('m');
+      $ano = $data_estreia->format('Y');
+      ?>
+      <h2><i class="bi bi-calendar-check-fill"></i> <?= esc_html($dia_semana); ?>,
+        <?= esc_html($dia); ?>/<?= esc_html($mes); ?>/<?= esc_html($ano); ?></h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th colspan="2">Título</th>
+            <th>Distribuição</th>
+            <th>Direção</th>
+            <th>País</th>
+            <th>Gênero</th>
+            <th>Duração</th>
+            <th>Elenco</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php foreach ($filmes as $filme) : ?>
+          <tr>
+            <td class="titulo" colspan="2">
+              <a href="<?= get_permalink($filme->ID); ?>">
+                <h4><?= get_the_title($filme->ID); ?></h4>
+                <span><?= esc_html(CFS()->get('titulo_original', $filme->ID)); ?></span>
+              </a>
+            </td>
+            <td><?= render_terms('distribuicao', $filme->ID); ?></td>
+            <td>
+              <?php $diretores = CFS()->get('direcao'); ?>
+              <?php if ($diretores) : ?>
+              <?php foreach ($diretores as $diretor) : ?>
+              <?php echo esc_html($diretor['nome']); ?>
+              <?php endforeach; ?>
+              <?php endif; ?>
+            </td>
+            <td><?= render_terms('paises', $filme->ID); ?></td>
+            <td><?= render_terms('generos', $filme->ID); ?></td>
+            <td><?= CFS()->get('duracao_minutos', $filme->ID); ?> min</td>
+            <td>
+              <?php $diretores = CFS()->get('elenco'); ?>
+              <?php if ($diretores) : ?>
+              <?php foreach ($diretores as $diretor) : ?>
+              <?php echo esc_html($diretor['nome']); ?>
+              <?php endforeach; ?>
+              <?php endif; ?>
+            </td>
+          </tr>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
+      <?php endforeach;
+  endif;
+}
+?>
+
+      <?php
       $banner_lateral = CFS()->get('banner_lateral', $banner_id);
       if (esc_html($banner_lateral) == '1') : ?>
       <div class="grid-lateral">
