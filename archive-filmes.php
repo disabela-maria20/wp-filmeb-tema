@@ -65,16 +65,16 @@ $selected_mes = isset($_GET['mes']) ? sanitize_text_field($_GET['mes']) : $curre
 $has_filters = isset($_GET['ano']) || isset($_GET['mes']) || isset($_GET['origem']) || 
                isset($_GET['distribuicao']) || isset($_GET['genero']) || isset($_GET['tecnologia']);
 
-// Calcular início e fim da semana atual apenas se não houver filtros
+// Calcular início e fim das próximas 5 semanas (semana atual + 4) apenas se não houver filtros
 if (!$has_filters) {
     $today = new DateTime();
     $week_start = clone $today;
     $week_start->modify('this week');
     $week_end = clone $week_start;
-    $week_end->modify('+6 days');
+    $week_end->modify('+6 days +4 weeks'); // Fim da semana atual + 4 semanas
 }
 
-// Argumentos para buscar filmes da semana atual (apenas sem filtros)
+// Argumentos para buscar filmes das próximas 5 semanas (apenas sem filtros)
 if (!$has_filters) {
     $args_semana = array(
       'post_type' => 'filmes',
@@ -114,7 +114,7 @@ $args_mes = array(
   'order' => 'ASC'
 );
 
-// Se não houver filtros, excluir filmes da semana atual da query do mês
+// Se não houver filtros, excluir filmes das próximas 5 semanas da query do mês
 if (!$has_filters) {
     $args_mes['meta_query'][] = array(
       'relation' => 'OR',
@@ -180,9 +180,8 @@ if (!$has_filters) {
 }
 $filmes_mes = new WP_Query($args_mes);
 
-// Função para agrupar filmes por dia
 function agrupar_filmes_por_dia($wp_query) {
-  $filmes_por_dia = array();
+  $filmes_por_semana = array();
   
   if ($wp_query->have_posts()) {
     while ($wp_query->have_posts()) {
@@ -191,25 +190,37 @@ function agrupar_filmes_por_dia($wp_query) {
       $data_estreia = CFS()->get('estreia', $post_id);
 
       if ($data_estreia && preg_match('/^\d{4}-\d{2}-\d{2}$/', $data_estreia)) {
-        if (!isset($filmes_por_dia[$data_estreia])) {
-          $filmes_por_dia[$data_estreia] = array();
+        $data_obj = DateTime::createFromFormat('Y-m-d', $data_estreia);
+        $semana_numero = $data_obj->format('W');
+        
+        if (!isset($filmes_por_semana[$semana_numero])) {
+          $filmes_por_semana[$semana_numero] = array(
+            'inicio_semana' => clone $data_obj,
+            'filmes' => array()
+          );
+          $filmes_por_semana[$semana_numero]['inicio_semana']->modify('this week');
         }
-        $filmes_por_dia[$data_estreia][] = get_post();
+        
+        if (!isset($filmes_por_semana[$semana_numero]['filmes'][$data_estreia])) {
+          $filmes_por_semana[$semana_numero]['filmes'][$data_estreia] = array();
+        }
+        
+        $filmes_por_semana[$semana_numero]['filmes'][$data_estreia][] = $post_id;
       }
     }
     wp_reset_postdata();
   }
   
-  // Ordenar por data (mais antiga primeiro)
-  ksort($filmes_por_dia);
+  // Ordenar por semana
+  ksort($filmes_por_semana);
   
-  return $filmes_por_dia;
+  return $filmes_por_semana;
 }
 
 if (!$has_filters) {
-    $filmes_semana_por_dia = agrupar_filmes_por_dia($filmes_semana);
+    $filmes_semana_por_semana = agrupar_filmes_por_dia($filmes_semana);
 }
-$filmes_mes_por_dia = agrupar_filmes_por_dia($filmes_mes);
+$filmes_mes_por_semana = agrupar_filmes_por_dia($filmes_mes);
 
 function render_terms($field_key, $post_id) {
   $distribuicao = CFS()->get($field_key, $post_id);
@@ -372,58 +383,86 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
         </form>
       </section>
       <?php
-function render_filmes_lista($filmes_por_dia, $dias_semana, $titulo = '') {
-  if (!empty($filmes_por_dia)) :
+function render_filmes_lista($filmes_por_semana, $dias_semana, $titulo = '', $has_filters = false) {
+  if (!empty($filmes_por_semana) && is_array($filmes_por_semana)) :
     if ($titulo) : ?>
       <h2 class="section-title"><?= esc_html($titulo); ?></h2>
       <?php endif;
 
-    foreach ($filmes_por_dia as $data => $filmes) :
-      $data_estreia = DateTime::createFromFormat('Y-m-d', $data);
-      $dia_semana_ingles = $data_estreia->format('l');
-      $dia_semana = $dias_semana[$dia_semana_ingles];
-      $dia = $data_estreia->format('d');
-      $mes = $data_estreia->format('m');
-      $ano = $data_estreia->format('Y');
+    foreach ($filmes_por_semana as $semana_numero => $semana) :
+      if (!is_array($semana) || !isset($semana['inicio_semana']) || !isset($semana['filmes'])) {
+        continue;
+      }
+      
+      $inicio_semana = $semana['inicio_semana'];
+      $fim_semana = clone $inicio_semana;
+      $fim_semana->modify('+6 days');
       ?>
-      <h2><i class="bi bi-calendar-check-fill"></i> <?= esc_html($dia_semana); ?>,
-        <?= esc_html($dia); ?>/<?= esc_html($mes); ?>/<?= esc_html($ano); ?></h2>
+
+      <?php
+      foreach ($semana['filmes'] as $data => $filmes_ids) :
+        $data_estreia = DateTime::createFromFormat('Y-m-d', $data);
+        $dia_semana_ingles = $data_estreia->format('l');
+        $dia_semana = $dias_semana[$dia_semana_ingles] ?? $dia_semana_ingles;
+        $dia = $data_estreia->format('d');
+        $mes = $data_estreia->format('m');
+        $ano = $data_estreia->format('Y');
+        ?>
+      <h2>
+        <i class="bi bi-calendar-check-fill"></i><?= esc_html($dia_semana); ?>,
+        <?= esc_html($dia); ?>/<?= esc_html($mes); ?>/<?= esc_html($ano); ?>
+      </h2>
       <div class="grid-filmes">
-        <?php foreach ($filmes as $filme) :
-          $cartaz = esc_url(CFS()->get('cartaz', $filme->ID));
-          ?>
-        <a v-on:mousemove="hoverCard" href="<?= get_permalink($filme->ID); ?>" class="card">
+        <?php foreach ($filmes_ids as $post_id) :
+            $filme = get_post($post_id);
+            $cartaz = esc_url(CFS()->get('cartaz', $post_id));
+            ?>
+        <a v-on:mousemove="hoverCard" href="<?= get_permalink($post_id); ?>" class="card">
           <?php if ($cartaz === '') : ?>
-          <h3><?= get_the_title($filme->ID); ?></h3>
+          <h3><?= get_the_title($post_id); ?></h3>
           <p class="indisponivel">Poster não disponível</p>
           <?php else : ?>
-          <img src="<?= $cartaz; ?>" alt="<?= get_the_title($filme->ID); ?>">
+          <img src="<?= $cartaz; ?>" alt="<?= get_the_title($post_id); ?>">
           <?php endif; ?>
 
           <div class="info">
             <ul>
-              <li><span>Título:</span><strong><?= get_the_title($filme->ID); ?></strong></li>
-              <?php if ($d = render_terms('distribuicao', $filme->ID)) : ?>
+              <li><span>Título:</span><strong><?= get_the_title($post_id); ?></strong></li>
+              <?php if ($d = render_terms('distribuicao', $post_id)) : ?>
               <li><span>Distribuição:</span><strong><?= $d; ?></strong></li>
               <?php endif; ?>
-              <?php if ($p = render_terms('paises', $filme->ID)) : ?>
+              <?php if ($p = render_terms('paises', $post_id)) : ?>
               <li><span>País:</span><strong><?= $p; ?></strong></li>
               <?php endif; ?>
-              <?php if ($g = render_terms('generos', $filme->ID)) : ?>
+              <?php if ($g = render_terms('generos', $post_id)) : ?>
               <li><span>Gênero(s):</span><strong><?= $g; ?></strong></li>
               <?php endif; ?>
 
               <li>
+                <?php 
+                  $diretores = CFS()->get('direcao', $post_id);
+                  if (!empty($diretores)) : ?>
                 <span>Direção:</span>
-                <?php $diretores = CFS()->get('direcao'); ?>
-                <?php if ($diretores) : ?>
-                <?php foreach ($diretores as $diretor) : ?>
-                <strong><?php echo esc_html($diretor['nome']); ?></strong>
-                <?php endforeach; ?>
+                <strong>
+                  <?php 
+                      $nomes_diretores = array();
+                      if (is_array($diretores)) {
+                        foreach ($diretores as $diretor) {
+                          if (is_array($diretor) && isset($diretor['nome'])) {
+                            $nomes_diretores[] = esc_html($diretor['nome']);
+                          } elseif (is_string($diretor)) {
+                            $nomes_diretores[] = esc_html($diretor);
+                          }
+                        }
+                        echo implode(', ', $nomes_diretores);
+                      } elseif (is_string($diretores)) {
+                        echo esc_html($diretores);
+                      }
+                    ?>
+                </strong>
                 <?php endif; ?>
               </li>
-
-              <?php if ($dur = CFS()->get('duracao_minutos', $filme->ID)) : ?>
+              <?php if ($dur = CFS()->get('duracao_minutos', $post_id)) : ?>
               <li><span>Duração:</span><strong><?= esc_html($dur); ?> min</strong></li>
               <?php endif; ?>
             </ul>
@@ -432,27 +471,41 @@ function render_filmes_lista($filmes_por_dia, $dias_semana, $titulo = '') {
         <?php endforeach; ?>
       </div>
       <?php endforeach;
-  endif;
+    endforeach;
+  elseif ($has_filters): ?>
+      <div class="no-results">
+        <p>Nenhum filme encontrado com os filtros selecionados.</p>
+      </div>
+      <?php endif;
 }
-?>
 
-      <?php
-function render_filmes_tabela($filmes_por_dia, $dias_semana, $titulo = '') {
-  if (!empty($filmes_por_dia)) :
+function render_filmes_tabela($filmes_por_semana, $dias_semana, $titulo = '', $has_filters = false) {
+  if (!empty($filmes_por_semana)) :
     if ($titulo) : ?>
       <h2 class="section-title"><?= esc_html($titulo); ?></h2>
       <?php endif;
 
-    foreach ($filmes_por_dia as $data => $filmes) :
-      $data_estreia = DateTime::createFromFormat('Y-m-d', $data);
-      $dia_semana_ingles = $data_estreia->format('l');
-      $dia_semana = $dias_semana[$dia_semana_ingles];
-      $dia = $data_estreia->format('d');
-      $mes = $data_estreia->format('m');
-      $ano = $data_estreia->format('Y');
+    foreach ($filmes_por_semana as $semana) :
+      $inicio_semana = $semana['inicio_semana'];
+      $fim_semana = clone $inicio_semana;
+      $fim_semana->modify('+6 days');
       ?>
-      <h2><i class="bi bi-calendar-check-fill"></i> <?= esc_html($dia_semana); ?>,
-        <?= esc_html($dia); ?>/<?= esc_html($mes); ?>/<?= esc_html($ano); ?></h2>
+      <h3 class="week-header">
+        <i class="bi bi-calendar-week"></i> Semana de
+        <?= esc_html($inicio_semana->format('d/m/Y')); ?> a
+        <?= esc_html($fim_semana->format('d/m/Y')); ?>
+      </h3>
+      <?php
+      foreach ($semana['filmes'] as $data => $filmes) :
+        $data_estreia = DateTime::createFromFormat('Y-m-d', $data);
+        $dia_semana_ingles = $data_estreia->format('l');
+        $dia_semana = $dias_semana[$dia_semana_ingles];
+        $dia = $data_estreia->format('d');
+        $mes = $data_estreia->format('m');
+        $ano = $data_estreia->format('Y');
+        ?>
+      <h4><i class="bi bi-calendar-check-fill"></i> <?= esc_html($dia_semana); ?>,
+        <?= esc_html($dia); ?>/<?= esc_html($mes); ?>/<?= esc_html($ano); ?></h4>
 
       <table>
         <thead>
@@ -500,7 +553,12 @@ function render_filmes_tabela($filmes_por_dia, $dias_semana, $titulo = '') {
         </tbody>
       </table>
       <?php endforeach;
-  endif;
+    endforeach;
+  elseif ($has_filters): ?>
+      <div class="no-results">
+        <p>Nenhum filme encontrado com os filtros selecionados.</p>
+      </div>
+      <?php endif;
 }
 ?>
 
@@ -512,13 +570,13 @@ function render_filmes_tabela($filmes_por_dia, $dias_semana, $titulo = '') {
           <section class="area-filmes" v-if="ativoItem === 'lista'">
             <div class="lista-filmes" id="lista">
               <?php 
-              // Mostrar filmes da semana atual apenas se não houver filtros
-              if (!$has_filters && isset($filmes_semana_por_dia)) {
-                  render_filmes_lista($filmes_semana_por_dia, $dias_semana, 'Filmes da Semana Atual');
+              // Mostrar filmes das próximas 5 semanas apenas se não houver filtros
+              if (!$has_filters && isset($filmes_semana_por_semana)) {
+                  render_filmes_lista($filmes_semana_por_semana, $dias_semana, 'Cine-semana Atual', $has_filters);
               }
               
               // Filmes do mês/ano selecionado
-              render_filmes_lista($filmes_mes_por_dia, $dias_semana, $has_filters ? 'Filmes Encontrados' : 'Outros Lançamentos do Mês');
+              render_filmes_lista($filmes_mes_por_semana, $dias_semana, $has_filters ? 'Filmes Encontrados' : 'Outros Lançamentos do Mês', $has_filters);
               ?>
 
               <!-- Paginação -->
@@ -543,13 +601,13 @@ function render_filmes_tabela($filmes_por_dia, $dias_semana, $titulo = '') {
           </section>
           <section class="tabela-filme" v-if="ativoItem === 'tabela'">
             <?php 
-              // Mostrar filmes da semana atual apenas se não houver filtros
-              if (!$has_filters && isset($filmes_semana_por_dia)) {
-                  render_filmes_tabela($filmes_semana_por_dia, $dias_semana, 'Filmes da Semana Atual');
+              // Mostrar filmes das próximas 5 semanas apenas se não houver filtros
+              if (!$has_filters && isset($filmes_semana_por_semana)) {
+                  render_filmes_tabela($filmes_semana_por_semana, $dias_semana, 'Cine-semana Atual', $has_filters);
               }
               
               // Filmes do mês/ano selecionado
-              render_filmes_tabela($filmes_mes_por_dia, $dias_semana, $has_filters ? 'Filmes Encontrados' : 'Outros Lançamentos do Mês');
+              render_filmes_tabela($filmes_mes_por_semana, $dias_semana, $has_filters ? 'Filmes Encontrados' : 'Outros Lançamentos do Mês', $has_filters);
             ?>
 
             <!-- Paginação -->
@@ -585,13 +643,13 @@ function render_filmes_tabela($filmes_por_dia, $dias_semana, $titulo = '') {
       <section class="area-filmes" v-if="ativoItem === 'lista'">
         <div class="lista-filmes" id="lista">
           <?php 
-          // Mostrar filmes da semana atual apenas se não houver filtros
-          if (!$has_filters && isset($filmes_semana_por_dia)) {
-              render_filmes_lista($filmes_semana_por_dia, $dias_semana, 'Filmes da Semana Atual');
+          // Mostrar filmes das próximas 5 semanas apenas se não houver filtros
+          if (!$has_filters && isset($filmes_semana_por_semana)) {
+              render_filmes_lista($filmes_semana_por_semana, $dias_semana, 'Cine-semana Atual', $has_filters);
           }
           
           // Filmes do mês/ano selecionado
-          render_filmes_lista($filmes_mes_por_dia, $dias_semana, $has_filters ? 'Filmes Encontrados' : 'Outros Lançamentos do Mês');
+          render_filmes_lista($filmes_mes_por_semana, $dias_semana, $has_filters ? 'Filmes Encontrados' : 'Outros Lançamentos do Mês', $has_filters);
           ?>
 
           <!-- Paginação -->
@@ -619,13 +677,13 @@ function render_filmes_tabela($filmes_por_dia, $dias_semana, $titulo = '') {
           <img src="<?php echo esc_url($banner_moldura_casado); ?>">
         </a>
         <?php 
-        // Mostrar filmes da semana atual apenas se não houver filtros
-        if (!$has_filters && isset($filmes_semana_por_dia)) {
-            render_filmes_tabela($filmes_semana_por_dia, $dias_semana, 'Filmes da Semana Atual');
+        // Mostrar filmes das próximas 5 semanas apenas se não houver filtros
+        if (!$has_filters && isset($filmes_semana_por_semana)) {
+            render_filmes_tabela($filmes_semana_por_semana, $dias_semana, 'Cine-semana Atual', $has_filters);
         }
         
         // Filmes do mês/ano selecionado
-        render_filmes_tabela($filmes_mes_por_dia, $dias_semana, $has_filters ? 'Filmes Encontrados' : 'Outros Lançamentos do Mês');
+        render_filmes_tabela($filmes_mes_por_semana, $dias_semana, $has_filters ? 'Filmes Encontrados' : 'Outros Lançamentos do Mês', $has_filters);
         ?>
 
         <!-- Paginação -->
@@ -714,7 +772,6 @@ new Vue({
     },
   },
   created() {
-    console.log("Vue está sendo inicializado");
     this.getListaAnos();
   },
 });

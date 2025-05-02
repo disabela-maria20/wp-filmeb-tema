@@ -97,8 +97,7 @@ $recent_posts_query_banner = new WP_Query(array(
           <div class="titulo">
             <h2>10 maiores bilheterias do ano no Brasil</h2>
             <span></span>
-          </div>3
-          <?php echo do_shortcode('[custom_woocommerce_register]'); ?>
+          </div>
           <?php echo do_shortcode('[table id=4 /]'); ?>
         </div>
 
