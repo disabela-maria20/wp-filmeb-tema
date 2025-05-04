@@ -122,21 +122,21 @@
   @include media(xxl) {
     max-width: 100%;
   }
-  .tabela-boletim {
-    h2 {
-      font-weight: bold;
-      font-size: 1.8rem;
-      line-height: 24px;
-      text-align: left;
-      color: $color-bright-red;
-      margin-top: 35px;
-      margin-bottom: 15px;
+  h2 {
+    font-weight: bold;
+    font-size: 1.8rem;
+    line-height: 24px;
+    text-align: left;
+    color: $color-bright-red;
+    margin-top: 35px;
+    margin-bottom: 15px;
 
-      @include media(lg) {
-        font-size: 2.2rem;
-        line-height: 2.4rem;
-      }
+    @include media(lg) {
+      font-size: 2.2rem;
+      line-height: 2.4rem;
     }
+  }
+  .tabela-boletim {
     .tablepress {
       @include table();
     }
