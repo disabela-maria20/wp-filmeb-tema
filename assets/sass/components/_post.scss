@@ -19,11 +19,14 @@
     }
 
     tbody {
+      tr:nth-child(odd) {
+        background-color: $color-off-white;
+      }
       td {
         color: $color-dark-gray;
-        font-size: 1.1rem;
+        font-size: 1.2rem;
         line-height: 1.61;
-        padding: 5px 0;
+        padding: 5px;
       }
     }
   }
