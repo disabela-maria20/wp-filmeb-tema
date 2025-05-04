@@ -58,10 +58,12 @@ $banner_id = "78847";
 
       <div class="post">
         <div class="post-content">
-          <h1><?php the_title(); ?></h1>
-          <div class="post-text">
-            <?php the_content(); ?>
-          </div>
+          <section class="table-over">
+            <div class="tabela-boletim">
+              <h1><?php the_title(); ?></h1>
+              <?php the_content(); ?>
+            </div>
+          </section>
         </div>
       </div>
     </div>
