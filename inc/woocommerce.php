@@ -201,6 +201,7 @@ function conteudo_pagina_assinaturas() {
             $days_remaining = $today->diff($end_date)->format('%a');
             $is_expired = $today > $end_date;
             
+            var_dump($today, $end_date, $days_remaining, $is_expired);
             echo '<div class="woocommerce-message woocommerce-success">';
             echo '<h3>Sua Assinatura ' . esc_html(ucfirst($tipo_assinatura)) . '</h3>';
             echo '<p><strong>Data de início:</strong> ' . $start_date->format('d/m/Y') . '</p>';
