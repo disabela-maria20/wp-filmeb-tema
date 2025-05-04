@@ -197,3 +197,34 @@ $grid-breakpoints: (
 @mixin hoveBtn {
   background-color: $color-red-dark;
 }
+
+@mixin table() {
+  font-family: $font-family;
+  width: 100%;
+  border: none;
+  border-spacing: 0;
+
+  thead {
+    tr {
+      background-color: $color-light-red;
+
+      th {
+        color: $color-darker-gray;
+        padding: 15px;
+        font-size: 1.2rem;
+      }
+    }
+  }
+
+  tbody {
+    tr:nth-child(odd) {
+      background-color: $color-off-white;
+    }
+    td {
+      color: $color-dark-gray;
+      font-size: 1.2rem;
+      line-height: 1.61;
+      padding: 5px;
+    }
+  }
+}

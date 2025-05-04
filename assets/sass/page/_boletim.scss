@@ -115,4 +115,16 @@
 }
 
 .tabela-boletim {
+  h2 {
+    font-weight: bold;
+    font-size: 1.8rem;
+    line-height: 24px;
+    text-align: left;
+    color: $color-bright-red;
+    margin-top: 35px;
+    margin-bottom: 15px;
+  }
+  .tablepress {
+    @include table();
+  }
 }

@@ -123,7 +123,7 @@ $post_id = get_the_ID();
         <h2>Top 20 bilheteria fim de semana Brasil</h2>
         <?php echo do_shortcode('[table id=14 /]'); ?>
       </section>
-      <section>
+      <section class="tabela-boletim">
         <h2>Ranking 2025 Brasil</h2>
         <?php echo do_shortcode('[table id=15 /]'); ?>
       </section>
