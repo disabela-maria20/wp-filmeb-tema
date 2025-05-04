@@ -18,7 +18,7 @@ get_header(); ?>
 <?php get_template_part('components/MenuDesktop/index'); ?>
 
 <section class="bg-gray">
-  <div class="container bannerMobile bg-gray padding-banner ">
+  <div class="bannerMobile bg-gray padding-banner ">
     <div class="grid-banner-superior">
       <a href="<?php echo CFS()->get('link_mega_banner'); ?>">
         <img src="<?php echo CFS()->get('mega_banner'); ?>" class="img-banner " alt="banner">

@@ -36,7 +36,7 @@ $banner_id = "78915";
 <?php get_template_part('components/MenuDesktop/index'); ?>
 
 <section class="bg-gray padding-banner">
-  <div class="container bannerMobile bg-gray ">
+  <div class="bannerMobile bg-gray ">
     <div class="grid-banner-superior">
       <a href="<?php echo esc_url($link_banner_inferior); ?>" target="_blank" rel="noopener noreferrer">
         <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">

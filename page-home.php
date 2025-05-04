@@ -47,7 +47,7 @@ $recent_posts_query_banner = new WP_Query(array(
 <?php get_template_part('components/MenuDesktop/index'); ?>
 
 <section class="bg-gray">
-  <div class="container bannerMobile bg-gray padding-banner ">
+  <div class="bannerMobile bg-gray padding-banner ">
     <div class="grid-banner-superior">
       <a href="<?php echo CFS()->get('link_banner_inferior'); ?>">
         <img src="<?php echo CFS()->get('banner_inferior'); ?>" class="img-banner " alt="banner">
