@@ -111,16 +111,15 @@
         line-height: 2.6rem;
         text-align: left;
         color: $color-bright-red;
+        p {
+          margin-top: 10px;
+          font-weight: normal;
+          font-size: 1.6rem;
+          line-height: 2rem;
+          text-align: left;
+          color: $color-darker-gray;
+        }
       }
-    }
-
-    p {
-      margin-top: 10px;
-      font-weight: normal;
-      font-size: 1.6rem;
-      line-height: 2rem;
-      text-align: left;
-      color: $color-darker-gray;
     }
   }
 }
