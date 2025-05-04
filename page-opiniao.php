@@ -74,7 +74,7 @@ $banner_id = "78915";
         <div class="post">
           <div class="item">
             <?php if( CFS()->get('imagem') != '') {  ?>
-            <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
+            <img class="img-opniao" src="<?php echo esc_url(CFS()->get('imagem')); ?>"
               alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
             <?php }?>
             <div>
