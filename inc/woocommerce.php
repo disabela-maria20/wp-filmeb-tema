@@ -204,7 +204,7 @@ function conteudo_pagina_assinaturas() {
             
            
             echo '<div class="woocommerce-message woocommerce-success">';
-            echo '<h3>Sua Assinatura ' . esc_html(ucfirst($tipo_assinatura)) . '</h3>';
+            echo '<h4>Sua Assinatura ' . esc_html(ucfirst($tipo_assinatura)) . '</h4>';
             echo '<p><strong>Data de início:</strong> ' . $start_date->format('d/m/Y') . '</p>';
             echo '<p><strong>Data de término:</strong> ' . $end_date->format('d/m/Y') . '</p>';
             
@@ -216,11 +216,8 @@ function conteudo_pagina_assinaturas() {
                 echo '<p><strong>Dias restantes:</strong> ' . $days_remaining . ' dias</p>';
             }
             
-            echo '<p>Vigência: ' . $vigencia . ' dias</p>';
+            echo '<p> <strong>Vigência:</strong> ' . $vigencia . ' dias</p>';
             echo '</div>';
-            
-            // Adiciona botão para renovar (opcional)
-            echo '<a href="' . esc_url(get_permalink($product_id)) . '" class="button">Renovar Assinatura</a>';
         }
     } else {
         echo '<div class="woocommerce-message woocommerce-info">';
