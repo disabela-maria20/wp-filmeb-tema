@@ -190,7 +190,8 @@ function conteudo_pagina_assinaturas() {
     if ($active_subscription && $latest_order_date) {
         $vigencia = get_post_meta($product_id, '_vigencia_assinatura', true);
         $tipo_assinatura = get_post_meta($product_id, '_tipo_assinatura', true);
-        
+
+        echo var_dump($vigencia);
         if ($vigencia && $tipo_assinatura) {
             $order_date = $latest_order_date->date('Y-m-d H:i:s');
             $start_date = new DateTime($order_date);
@@ -201,7 +202,7 @@ function conteudo_pagina_assinaturas() {
             $days_remaining = $today->diff($end_date)->format('%a');
             $is_expired = $today > $end_date;
             
-           echo var_dump($today, $end_date, $days_remaining, $is_expired);
+           
             echo '<div class="woocommerce-message woocommerce-success">';
             echo '<h3>Sua Assinatura ' . esc_html(ucfirst($tipo_assinatura)) . '</h3>';
             echo '<p><strong>Data de início:</strong> ' . $start_date->format('d/m/Y') . '</p>';
