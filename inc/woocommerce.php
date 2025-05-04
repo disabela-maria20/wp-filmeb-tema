@@ -189,7 +189,6 @@ function conteudo_pagina_assinaturas() {
         $vigencia = get_post_meta($product_id, '_vigencia_assinatura', true);
         $tipo_assinatura = get_post_meta($product_id, '_tipo_assinatura', true);
 
-        echo var_dump($vigencia);
         if ($vigencia && $tipo_assinatura) {
             $order_date = $latest_order_date->date('Y-m-d H:i:s');
             $start_date = new DateTime($order_date);
@@ -201,7 +200,7 @@ function conteudo_pagina_assinaturas() {
             $is_expired = $today > $end_date;
             
            
-            echo '<div class="woocommerce-message woocommerce-success">';
+            echo '<div class="woocommerce-message-user-account">';
             echo '<h4>Sua Assinatura ' . esc_html(ucfirst($tipo_assinatura)) . '</h4>';
             echo '<p><strong>Data de início:</strong> ' . $start_date->format('d/m/Y') . '</p>';
             echo '<p><strong>Data de término:</strong> ' . $end_date->format('d/m/Y') . '</p>';
