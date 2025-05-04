@@ -95,7 +95,6 @@ function custom_show_user_fields($user) {
 add_action('woocommerce_edit_account_form', 'custom_edit_account_form_fields');
 function custom_edit_account_form_fields() {
     $user_id = get_current_user_id();
-    $nome_completo = get_user_meta($user_id, 'nome_completo', true);
     $categoria_profissional = get_user_meta($user_id, 'categoria_profissional', true);
 
     ?>
@@ -122,7 +121,7 @@ function custom_edit_account_form_fields() {
 <?php
 }
 
-// 6. Salva os dados quando o usuário edita a conta
+
 add_action('woocommerce_save_account_details', 'custom_save_account_details_fields');
 function custom_save_account_details_fields($user_id) {
 
@@ -130,3 +129,120 @@ function custom_save_account_details_fields($user_id) {
         update_user_meta($user_id, 'categoria_profissional', sanitize_text_field($_POST['categoria_profissional']));
     }
 }
+
+add_action('woocommerce_save_account_details', 'custom_save_account_details_fields');
+add_action('woocommerce_checkout_update_user_meta', 'custom_save_account_details_fields');
+
+add_action( 'init', 'adicionar_endpoint_assinaturas' );
+function adicionar_endpoint_assinaturas() {
+    add_rewrite_endpoint( 'assinaturas', EP_ROOT | EP_PAGES );
+}
+
+add_filter ( 'woocommerce_account_menu_items', 'adicionar_item_assinaturas_menu' );
+function adicionar_item_assinaturas_menu( $menu_links ) {
+    unset( $menu_links['dashboard'] );
+    unset( $menu_links['downloads'] );
+    
+    // Adiciona Assinaturas como primeiro item
+    $new_menu = array( 'assinaturas' => 'Assinaturas' ) + $menu_links;
+    
+    return $new_menu;
+}
+
+add_action( 'woocommerce_account_assinaturas_endpoint', 'conteudo_pagina_assinaturas' );
+add_action( 'woocommerce_account_assinaturas_endpoint', 'conteudo_pagina_assinaturas' );
+function conteudo_pagina_assinaturas() {
+    echo '<h2>Minhas Assinaturas</h2>';
+    
+    if (!is_user_logged_in()) {
+        echo '<p>Por favor, faça login para visualizar suas assinaturas.</p>';
+        return;
+    }
+
+    $user_id = get_current_user_id();
+    $product_id = 106 ; // ID do produto de assinatura
+
+    // Verifica se o usuário comprou o produto 106 e está pago
+    $customer_orders = wc_get_orders(array(
+        'customer_id' => $user_id,
+        'status'      => array('completed', 'processing'),
+        'limit'       => -1,
+        'orderby'    => 'date',
+        'order'      => 'DESC', // Ordena do pedido mais recente para o mais antigo
+    ));
+
+    $active_subscription = false;
+    $latest_order_date = null;
+    $latest_order_id = null;
+
+    foreach ($customer_orders as $order) {
+        $items = $order->get_items();
+        foreach ($items as $item) {
+            if ($item->get_product_id() == $product_id) {
+                $latest_order_date = $order->get_date_created();
+                $latest_order_id = $order->get_id();
+                $active_subscription = true;
+                break 2; // Pega apenas o pedido mais recente
+            }
+        }
+    }
+
+    if ($active_subscription && $latest_order_date) {
+        $vigencia = get_post_meta($product_id, '_vigencia_assinatura', true);
+        $tipo_assinatura = get_post_meta($product_id, '_tipo_assinatura', true);
+        
+        if ($vigencia && $tipo_assinatura) {
+            $order_date = $latest_order_date->date('Y-m-d H:i:s');
+            $start_date = new DateTime($order_date);
+            $end_date = clone $start_date;
+            $end_date->add(new DateInterval('P' . $vigencia . 'D'));
+            
+            $today = new DateTime();
+            $days_remaining = $today->diff($end_date)->format('%a');
+            $is_expired = $today > $end_date;
+            
+            echo '<div class="woocommerce-message woocommerce-success">';
+            echo '<h3>Sua Assinatura ' . esc_html(ucfirst($tipo_assinatura)) . '</h3>';
+            echo '<p><strong>Data de início:</strong> ' . $start_date->format('d/m/Y') . '</p>';
+            echo '<p><strong>Data de término:</strong> ' . $end_date->format('d/m/Y') . '</p>';
+            
+            if ($is_expired) {
+                echo '<p><strong>Status:</strong> <span style="color:red;">Expirada</span></p>';
+                echo '<p>Sua assinatura expirou em ' . $end_date->format('d/m/Y') . '.</p>';
+            } else {
+                echo '<p><strong>Status:</strong> <span style="color:green;">Ativa</span></p>';
+                echo '<p><strong>Dias restantes:</strong> ' . $days_remaining . ' dias</p>';
+            }
+            
+            echo '<p>Vigência: ' . $vigencia . ' dias</p>';
+            echo '</div>';
+            
+            // Adiciona botão para renovar (opcional)
+            echo '<a href="' . esc_url(get_permalink($product_id)) . '" class="button">Renovar Assinatura</a>';
+        }
+    } else {
+        echo '<div class="woocommerce-message woocommerce-info">';
+        echo '<p>Você não possui assinaturas ativas.</p>';
+        echo '<p><a href="' . esc_url(get_permalink($product_id)) . '" class="button">Assinar Agora</a></p>';
+        echo '</div>';
+    }
+
+    // Conteúdo adicional (opcional)
+    echo '<div class="assinatura-detalhes-adicionais">';
+    echo '<h3>Benefícios da sua assinatura</h3>';
+    echo '<ul>';
+    echo '<li>Acesso exclusivo a conteúdo premium</li>';
+    echo '<li>Descontos em produtos selecionados</li>';
+    echo '<li>Suporte prioritário</li>';
+    echo '</ul>';
+    echo '</div>';
+}
+
+// // Redireciona para Assinaturas ao acessar Minha Conta
+// add_action( 'template_redirect', 'redirect_my_account_to_subscriptions' );
+// function redirect_my_account_to_subscriptions() {
+//     if ( is_account_page() && ! is_wc_endpoint_url() ) {
+//         wp_safe_redirect( wc_get_account_endpoint_url( 'assinaturas' ) );
+//         exit;
+//     }
+// }
