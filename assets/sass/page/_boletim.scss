@@ -119,6 +119,9 @@
 .table-over {
   max-width: 714px;
   overflow: auto;
+  @include media(xxl) {
+    max-width: 100%;
+  }
   .tabela-boletim {
     h2 {
       font-weight: bold;
