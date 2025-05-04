@@ -16,7 +16,7 @@
           <ul class="user">
             <li>
               <a href="<?php echo get_site_url(); ?>/minha-conta/">
-                <span>Seu cadastro</span>
+                <span>Minha Conta</span>
                 <!-- <i class=" bi bi-person-circle"></i> -->
               </a>
             </li>
@@ -29,7 +29,7 @@
           <ul class="user">
             <li>
               <a href="<?php echo get_site_url(); ?>/minha-conta/">
-                <span>Login</span>
+                <span>Minha Conta</span>
               </a>
             </li>
             <li>
