@@ -119,6 +119,15 @@ $post_id = get_the_ID();
       <?php else: ?>
       <p>Nenhum boletim encontrado.</p>
       <?php endif; ?>
+
+      <h2>Top 20 bilheteria fim de semana Brasil</h2>
+      <section>
+        <?php echo do_shortcode('[table id=14 /]'); ?>
+      </section>
+      <h2>Ranking 2025 Brasil</h2>
+      <section>
+        <?php echo do_shortcode('[table id=15 /]'); ?>
+      </section>
       <?php wp_reset_postdata(); ?>
 
       <?php if (!empty($super_banner)) : ?>
