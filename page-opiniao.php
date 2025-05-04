@@ -65,14 +65,7 @@ $banner_id = "78915";
           'category_name' => 'Opinião',
           'posts_per_page' => 6,
           'paged' => $paged,   
-          'meta_query' => array(
-            array(
-                'key' => 'estreia',
-                'value' => $next_thursday_date,
-                'compare' => '=',
-                'type' => 'DATE'
-            )
-        )
+          
         ));
 
       if ($boletim_query->have_posts()): ?>
@@ -89,6 +82,7 @@ $banner_id = "78915";
                 <strong class="data">
                   <?php echo date_i18n('j \d\e F \d\e Y', strtotime((CFS()->get('data')))); ?>
                 </strong>
+
                 <h2><?php the_title(); ?></h2>
                 <p>
                   <?php echo wp_trim_words(esc_html(CFS()->get('descricao') ?: get_the_excerpt()), 20, '...'); ?>
