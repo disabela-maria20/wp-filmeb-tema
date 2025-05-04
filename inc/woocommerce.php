@@ -222,16 +222,6 @@ function conteudo_pagina_assinaturas() {
         echo '<p><a href="' . esc_url(get_permalink($product_id)) . '" class="button">Assinar Agora</a></p>';
         echo '</div>';
     }
-
-    // Conteúdo adicional (opcional)
-    echo '<div class="assinatura-detalhes-adicionais">';
-    echo '<h3>Benefícios da sua assinatura</h3>';
-    echo '<ul>';
-    echo '<li>Acesso exclusivo a conteúdo premium</li>';
-    echo '<li>Descontos em produtos selecionados</li>';
-    echo '<li>Suporte prioritário</li>';
-    echo '</ul>';
-    echo '</div>';
 }
 
 // // Redireciona para Assinaturas ao acessar Minha Conta
