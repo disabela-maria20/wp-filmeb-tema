@@ -1,6 +1,11 @@
-<?php 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+<?php
+
+if ( is_user_logged_in() ) {
+    echo 'Welcome, registered user!';
+} else {
+    echo 'Welcome, visitor!';
+}
+
 ?>
 
 <header id="desktop">
