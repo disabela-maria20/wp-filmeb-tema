@@ -151,9 +151,7 @@ function adicionar_item_assinaturas_menu( $menu_links ) {
 
 add_action( 'woocommerce_account_assinaturas_endpoint', 'conteudo_pagina_assinaturas' );
 add_action( 'woocommerce_account_assinaturas_endpoint', 'conteudo_pagina_assinaturas' );
-function conteudo_pagina_assinaturas() {
-    echo '<h2>Minhas Assinaturas</h2>';
-    
+function conteudo_pagina_assinaturas() {    
     if (!is_user_logged_in()) {
         echo '<p>Por favor, faça login para visualizar suas assinaturas.</p>';
         return;
