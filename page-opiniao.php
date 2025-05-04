@@ -66,13 +66,13 @@ $banner_id = "78915";
           'posts_per_page' => 6,
           'paged' => $paged,
         ));
-        $imagem = CFS()->get('imagem') ?: '';
+
       if ($boletim_query->have_posts()): ?>
       <div class="posts">
         <?php while ($boletim_query->have_posts()):$boletim_query->the_post(); ?>
         <div class="post">
           <div class="item">
-            <?php if($imagem) {  ?>
+            <?php if( CFS()->get('imagem') != '') {  ?>
             <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
               alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
             <?php }?>
