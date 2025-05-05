@@ -23,12 +23,12 @@ function is_cfs_field_empty($field_key)
 }
 
 $banner_id = "78919";
-    $banner_superior = CFS()->get('banner_moldura', $banner_id);
-    $banner_inferior = CFS()->get('mega_banner', $banner_id);
-  
-    $link_banner_superior = CFS()->get('link_banner_moldura', $banner_id);
-    $link_banner_inferior = CFS()->get('link_mega_banner', $banner_id);
-  
+$banner_superior = CFS()->get('banner_moldura', $banner_id);
+$banner_inferior = CFS()->get('mega_banner', $banner_id);
+
+$link_banner_superior = CFS()->get('link_banner_moldura', $banner_id);
+$link_banner_inferior = CFS()->get('link_mega_banner', $banner_id);
+
 ?>
 <a href="<?php echo esc_url($link_banner_superior); ?>" target="_blank" rel="noopener noreferrer">
   <img src="<?php echo esc_url($banner_superior); ?>" class="w-full p-35 img-banner bannerMobile" alt="banner">
@@ -200,13 +200,14 @@ get_template_part('components/MenuDesktop/index');
             <?php $diretores = CFS()->get('direcao'); ?>
             <?php if (is_array($diretores)) : ?>
             <?php foreach ($diretores as $diretor) : ?>
+            <?php if (is_array($diretor) && !empty($diretor['nome'])) : ?>
             <div>
               <?php if (!empty($diretor['foto'])) : ?>
               <img src="<?php echo esc_url($diretor['foto']); ?>" alt="<?php echo esc_attr($diretor['nome']); ?>">
               <?php endif; ?>
               <p><?php echo esc_html($diretor['nome']); ?></p>
             </div>
-
+            <?php endif; ?>
             <?php endforeach; ?>
             <?php endif; ?>
           </div>
@@ -217,35 +218,44 @@ get_template_part('components/MenuDesktop/index');
           <h3>Roteiro</h3>
           <div class="info-array">
             <?php $roteiristas = CFS()->get('roteiro'); ?>
-            <?php if ($roteiristas) : ?>
+            <?php if (is_array($roteiristas)) : ?>
             <?php foreach ($roteiristas as $roteirista) : ?>
+            <?php if (is_array($roteirista) && !empty($roteirista['nome'])) : ?>
             <div>
-              <img src="<?php echo esc_html($roteirista['foto']);?>" alt="<?php echo esc_html($roteirista['nome']); ?>">
+              <?php if (!empty($roteirista['foto'])) : ?>
+              <img src="<?php echo esc_url($roteirista['foto']); ?>" alt="<?php echo esc_attr($roteirista['nome']); ?>">
+              <?php endif; ?>
               <p><?php echo esc_html($roteirista['nome']); ?></p>
             </div>
+            <?php endif; ?>
             <?php endforeach; ?>
             <?php endif; ?>
           </div>
-          <?php endif; ?>
+        </div>
+        <?php endif; ?>
 
-          <?php if (!is_cfs_field_empty('elenco')) : ?>
-          <div class="dados">
-            <h3>Elenco</h3>
-            <div class="info-array">
-              <?php $elenco = CFS()->get('elenco'); ?>
-              <?php if ($elenco) : ?>
-              <?php foreach ($elenco as $ator) : ?>
-              <div>
-                <img src="<?php echo esc_html($ator['foto']);?>" alt="<?php echo esc_html($ator['nome']); ?>">
-                <p><?php echo esc_html($ator['nome']); ?></p>
-              </div>
-              <?php endforeach; ?>
+        <?php if (!is_cfs_field_empty('elenco')) : ?>
+        <div class="dados">
+          <h3>Elenco</h3>
+          <div class="info-array">
+            <?php $elenco = CFS()->get('elenco'); ?>
+            <?php if (is_array($elenco)) : ?>
+            <?php foreach ($elenco as $ator) : ?>
+            <?php if (is_array($ator) && !empty($ator['nome'])) : ?>
+            <div>
+              <?php if (!empty($ator['foto'])) : ?>
+              <img src="<?php echo esc_url($ator['foto']); ?>" alt="<?php echo esc_attr($ator['nome']); ?>">
               <?php endif; ?>
+              <p><?php echo esc_html($ator['nome']); ?></p>
             </div>
+            <?php endif; ?>
+            <?php endforeach; ?>
             <?php endif; ?>
           </div>
         </div>
+        <?php endif; ?>
       </div>
+    </div>
 </section>
 
 <?php
@@ -334,7 +344,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 const sinopse = document.querySelector('#sinopse p');
 
-if (sinopse.textContent.trim() === "NULL" || sinopse.textContent.trim() === "") {
+if (sinopse && (sinopse.textContent.trim() === "NULL" || sinopse.textContent.trim() === "")) {
   sinopse.innerHTML = "Sinopse não disponível";
 }
 </script>
