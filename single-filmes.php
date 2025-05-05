@@ -237,7 +237,7 @@ get_template_part('components/MenuDesktop/index');
               <?php foreach ($elenco as $ator) : ?>
               <div>
                 <img src="<?php echo esc_html($ator['foto']);?>" alt="<?php echo esc_html($ator['nome']); ?>">
-                <p><?php echo esc_html($diretor['nome']); ?></p>
+                <p><?php echo esc_html($ator['nome']); ?></p>
               </div>
               <?php endforeach; ?>
               <?php endif; ?>
