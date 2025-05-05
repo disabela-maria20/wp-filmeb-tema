@@ -42,36 +42,37 @@ $args = array(
 
 // Adicionar filtros de taxonomia
 if (isset($_GET['origem']) && !empty($_GET['origem'])) {
-  $args['tax_query'][] = array(
-    'taxonomy' => 'paises',
-    'field' => 'term_id',
-    'terms' => sanitize_text_field($_GET['origem']),
+  $args['meta_query'][] = array(
+    'key' => 'paises',
+    'value' => sanitize_text_field($_GET['origem']),
+    'compare' => 'REGEXP',
   );
 }
 
 if (isset($_GET['distribuicao']) && !empty($_GET['distribuicao'])) {
-  $args['tax_query'][] = array(
-    'taxonomy' => 'distribuidoras',
-    'field' => 'term_id',
-    'terms' => sanitize_text_field($_GET['distribuicao']),
+  $args['meta_query'][] = array(
+    'key' => 'distribuicao',
+    'value' => sanitize_text_field($_GET['distribuicao']),
+    'compare' => '=',
   );
 }
 
 if (isset($_GET['genero']) && !empty($_GET['genero'])) {
-  $args['tax_query'][] = array(
-    'taxonomy' => 'generos',
-    'field' => 'term_id',
-    'terms' => sanitize_text_field($_GET['genero']),
+  $args['meta_query'][] = array(
+    'key' => 'generos',
+    'value' => sanitize_text_field($_GET['genero']),
+    'compare' => 'REGEXP',
   );
 }
 
 if (isset($_GET['tecnologia']) && !empty($_GET['tecnologia'])) {
-  $args['tax_query'][] = array(
-    'taxonomy' => 'tecnologias',
-    'field' => 'term_id',
-    'terms' => sanitize_text_field($_GET['tecnologia']),
+  $args['meta_query'][] = array(
+    'key' => 'tecnologia',
+    'value' => sanitize_text_field($_GET['tecnologia']),
+    'compare' => 'REGEXP',
   );
 }
+
 
 // Criar a query
 $filmes_query = new WP_Query($args);
@@ -329,45 +330,47 @@ if ($filmes_query->have_posts()) {
   </section>
 
   <?php if (!empty($resultData)) : ?>
-  <table class="tabela-distribuidora">
-    <thead>
-      <tr>
-        <th>Data de Estreia</th>
-        <th>Ano</th>
-        <th>Mês</th>
-        <th>Disney</th>
-        <th>Paramount</th>
-        <th>Sony</th>
-        <th>Universal</th>
-        <th>Warner</th>
-        <th>downtown</th>
-        <th>Imagem</th>
-        <th>Paris</th>
-        <th>Diamond</th>
-        <th>Outras</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php foreach ($resultData as $item) : ?>
-      <tr data-date="<?php echo esc_attr($item['estreia'] ?? ''); ?>">
-        <td class="data"><?php echo formatar_data_estreia_dist($item['estreia'] ?? ''); ?></td>
-        <td><?php echo esc_html($item['ano'] ?? ''); ?></td>
-        <td><?php echo esc_html(traduzir_mes_para_portugues($item['mes'] ?? '')); ?></td>
-        <td><?php echo !empty($item['Disney']) ? format_filmes($item['Disney']) : ''; ?></td>
-        <td><?php echo !empty($item['Paramount']) ? format_filmes($item['Paramount']) : ''; ?></td>
-        <td><?php echo !empty($item['Sony']) ? format_filmes($item['Sony']) : ''; ?></td>
-        <td><?php echo !empty($item['Universal']) ? format_filmes($item['Universal']) : ''; ?></td>
-        <td><?php echo !empty($item['Warner']) ? format_filmes($item['Warner']) : ''; ?></td>
-        <td><?php echo !empty($item['downtownParis']) ? format_filmes($item['downtownParis']) : ''; ?></td>
-        <td><?php echo !empty($item['Imagem']) ? format_filmes($item['Imagem']) : ''; ?></td>
-        <td><?php echo !empty($item['Paris']) ? format_filmes($item['Paris']) : ''; ?></td>
-        <td><?php echo !empty($item['Diamond']) ? format_filmes($item['Diamond']) : ''; ?></td>
-        <td><?php echo !empty($item['OutrasDistribuidoras']) ? format_filmes($item['OutrasDistribuidoras']) : ''; ?>
-        </td>
-      </tr>
-      <?php endforeach; ?>
-    </tbody>
-  </table>
+  <section class="area-tabela">
+    <table class="tabela-distribuidora">
+      <thead>
+        <tr>
+          <th>Data de Estreia</th>
+          <th>Ano</th>
+          <th>Mês</th>
+          <th>Disney</th>
+          <th>Paramount</th>
+          <th>Sony</th>
+          <th>Universal</th>
+          <th>Warner</th>
+          <th>downtown</th>
+          <th>Imagem</th>
+          <th>Paris</th>
+          <th>Diamond</th>
+          <th>Outras</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php foreach ($resultData as $item) : ?>
+        <tr data-date="<?php echo esc_attr($item['estreia'] ?? ''); ?>">
+          <td class="data"><?php echo formatar_data_estreia_dist($item['estreia'] ?? ''); ?></td>
+          <td><?php echo esc_html($item['ano'] ?? ''); ?></td>
+          <td><?php echo esc_html(traduzir_mes_para_portugues($item['mes'] ?? '')); ?></td>
+          <td><?php echo !empty($item['Disney']) ? format_filmes($item['Disney']) : ''; ?></td>
+          <td><?php echo !empty($item['Paramount']) ? format_filmes($item['Paramount']) : ''; ?></td>
+          <td><?php echo !empty($item['Sony']) ? format_filmes($item['Sony']) : ''; ?></td>
+          <td><?php echo !empty($item['Universal']) ? format_filmes($item['Universal']) : ''; ?></td>
+          <td><?php echo !empty($item['Warner']) ? format_filmes($item['Warner']) : ''; ?></td>
+          <td><?php echo !empty($item['downtownParis']) ? format_filmes($item['downtownParis']) : ''; ?></td>
+          <td><?php echo !empty($item['Imagem']) ? format_filmes($item['Imagem']) : ''; ?></td>
+          <td><?php echo !empty($item['Paris']) ? format_filmes($item['Paris']) : ''; ?></td>
+          <td><?php echo !empty($item['Diamond']) ? format_filmes($item['Diamond']) : ''; ?></td>
+          <td><?php echo !empty($item['OutrasDistribuidoras']) ? format_filmes($item['OutrasDistribuidoras']) : ''; ?>
+          </td>
+        </tr>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+  </section>
 
   <div class="pagination">
     <?php

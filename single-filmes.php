@@ -1,7 +1,6 @@
 <?php
 get_header();
 
-// Define helper functions at the top so they're always available
 function render_terms($field_key)
 {
   $distribuicao = CFS()->get($field_key);
@@ -194,6 +193,7 @@ get_template_part('components/MenuDesktop/index');
             </tr>
           </table>
         </div>
+        <?php if (!is_cfs_field_empty('direcao')) : ?>
         <div class="dados">
           <h3>Direção</h3>
           <div class="info-array">
@@ -211,6 +211,7 @@ get_template_part('components/MenuDesktop/index');
             <?php endif; ?>
           </div>
         </div>
+        <?php endif; ?>
         <?php if (!is_cfs_field_empty('roteiro')) : ?>
         <div class="dados">
           <h3>Roteiro</h3>
