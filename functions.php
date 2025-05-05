@@ -335,3 +335,8 @@ function custom_woocommerce_registration_form() {
   return ob_get_clean();
 }
 add_shortcode( 'custom_woocommerce_register', 'custom_woocommerce_registration_form' );
+
+function redirecionar_apos_login( $redirect ) {
+  return site_url( '/minha-conta/assinaturas/' );
+}
+add_filter( 'woocommerce_login_redirect', 'redirecionar_apos_login' );
