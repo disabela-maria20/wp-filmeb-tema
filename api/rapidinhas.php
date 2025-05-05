@@ -136,7 +136,7 @@ function api_edicoes_post($request)
     global $wpdb;
     $placeholders = implode(',', array_fill(0, count($edicao_ids), '%d'));
     $query = $wpdb->prepare(
-        "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'rapidinhas' AND post_status = 'publish' AND ID IN ($placeholders)",
+        "SELECT ID FROM {$wpdb->posts} WHERE post_status = 'publish' AND ID IN ($placeholders)",
         ...$edicao_ids
     );
     $rapidinhas = $wpdb->get_col($query);

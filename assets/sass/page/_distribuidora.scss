@@ -232,6 +232,7 @@
         margin-top: 5px;
       }
     }
+    table-layout: fixed;
     border-spacing: 0;
     width: 100%;
     font-size: 1.4rem;
@@ -240,6 +241,8 @@
       color: $color-darker-gray;
 
       tr {
+        display: block;
+        position: relative;
         th {
           padding: 10px;
           text-align: left;
@@ -247,6 +250,12 @@
       }
     }
     tbody {
+      display: block;
+      width: 100%;
+      height: 70dvh;
+      overflow-y: auto;
+      overflow-x: hidden;
+
       tr,
       td {
         border: 1px solid $color-lightest-gray-alt;
