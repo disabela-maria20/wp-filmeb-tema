@@ -84,7 +84,7 @@ $post_id = get_the_ID();
         <?php
           $values = CFS()->get('edicao');
           if (!empty($values) && is_array($values)) { 
-            $counter = 0;
+           // $counter = 0;
             foreach ($values as $post_id) { 
               
              // if ($counter >= 3) break; 
@@ -95,7 +95,7 @@ $post_id = get_the_ID();
               $post_content = $the_post->post_content ?: '';
               $post_date = $the_post->post_date ?: '';
               $post_url = str_replace("https://filmeb.isabelamribeiro.com.br", get_site_url(), $the_post->guid) ?: '#';
-              $counter++;
+              // $counter++;
             ?>
         <div class="post">
           <?php if(!empty($post_image)) : ?>
