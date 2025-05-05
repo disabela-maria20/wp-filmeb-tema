@@ -1,8 +1,7 @@
 <?php
 get_header();
 
-function render_terms($field_key)
-{
+function render_terms($field_key) {
   $distribuicao = CFS()->get($field_key);
   $output = '';
   if (!empty($distribuicao)) {
@@ -16,10 +15,20 @@ function render_terms($field_key)
   return $output;
 }
 
-function is_cfs_field_empty($field_key)
-{
+function is_cfs_field_empty($field_key) {
   $field_value = CFS()->get($field_key);
   return empty($field_value);
+}
+
+function has_valid_items($array) {
+  if (!is_array($array)) return false;
+  
+  foreach ($array as $item) {
+    if (is_array($item) && !empty($item['nome'])) {
+      return true;
+    }
+  }
+  return false;
 }
 
 $banner_id = "78919";
@@ -193,12 +202,14 @@ get_template_part('components/MenuDesktop/index');
             </tr>
           </table>
         </div>
+
+        <?php // Seção de Direção ?>
         <?php if (!is_cfs_field_empty('direcao')) : ?>
+        <?php $diretores = CFS()->get('direcao'); ?>
+        <?php if (is_array($diretores) && has_valid_items($diretores)) : ?>
         <div class="dados">
           <h3>Direção</h3>
           <div class="info-array">
-            <?php $diretores = CFS()->get('direcao'); ?>
-            <?php if (is_array($diretores)) : ?>
             <?php foreach ($diretores as $diretor) : ?>
             <?php if (is_array($diretor) && !empty($diretor['nome'])) : ?>
             <div>
@@ -209,16 +220,18 @@ get_template_part('components/MenuDesktop/index');
             </div>
             <?php endif; ?>
             <?php endforeach; ?>
-            <?php endif; ?>
           </div>
         </div>
         <?php endif; ?>
+        <?php endif; ?>
+
+        <?php // Seção de Roteiro ?>
         <?php if (!is_cfs_field_empty('roteiro')) : ?>
+        <?php $roteiristas = CFS()->get('roteiro'); ?>
+        <?php if (is_array($roteiristas) && has_valid_items($roteiristas)) : ?>
         <div class="dados">
           <h3>Roteiro</h3>
           <div class="info-array">
-            <?php $roteiristas = CFS()->get('roteiro'); ?>
-            <?php if (is_array($roteiristas)) : ?>
             <?php foreach ($roteiristas as $roteirista) : ?>
             <?php if (is_array($roteirista) && !empty($roteirista['nome'])) : ?>
             <div>
@@ -229,17 +242,18 @@ get_template_part('components/MenuDesktop/index');
             </div>
             <?php endif; ?>
             <?php endforeach; ?>
-            <?php endif; ?>
           </div>
         </div>
         <?php endif; ?>
+        <?php endif; ?>
 
+        <?php // Seção de Elenco ?>
         <?php if (!is_cfs_field_empty('elenco')) : ?>
+        <?php $elenco = CFS()->get('elenco'); ?>
+        <?php if (is_array($elenco) && has_valid_items($elenco)) : ?>
         <div class="dados">
           <h3>Elenco</h3>
           <div class="info-array">
-            <?php $elenco = CFS()->get('elenco'); ?>
-            <?php if (is_array($elenco)) : ?>
             <?php foreach ($elenco as $ator) : ?>
             <?php if (is_array($ator) && !empty($ator['nome'])) : ?>
             <div>
@@ -250,9 +264,9 @@ get_template_part('components/MenuDesktop/index');
             </div>
             <?php endif; ?>
             <?php endforeach; ?>
-            <?php endif; ?>
           </div>
         </div>
+        <?php endif; ?>
         <?php endif; ?>
       </div>
     </div>
