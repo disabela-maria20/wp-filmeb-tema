@@ -86,6 +86,7 @@ $post_id = get_the_ID();
           if (!empty($values) && is_array($values)) { 
             $counter = 0;
             foreach ($values as $post_id) { 
+              echo var_dump($values);
               if ($counter >= 3) break; // Limita a 3 edições
               $the_post = get_post($post_id);
               $post_image = CFS()->get('imagem', $post_id) ?: '';
