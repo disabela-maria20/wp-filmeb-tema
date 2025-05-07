@@ -334,8 +334,6 @@ if ($filmes_query->have_posts()) {
     <thead>
       <tr>
         <th>Data de Estreia</th>
-        <th>Ano</th>
-        <th>Mês</th>
         <th>Disney</th>
         <th>Paramount</th>
         <th>Sony</th>
@@ -352,8 +350,7 @@ if ($filmes_query->have_posts()) {
       <?php foreach ($resultData as $item) : ?>
       <tr data-date="<?php echo esc_attr($item['estreia'] ?? ''); ?>">
         <td class="data"><?php echo formatar_data_estreia_dist($item['estreia'] ?? ''); ?></td>
-        <td><?php echo esc_html($item['ano'] ?? ''); ?></td>
-        <td><?php echo esc_html(traduzir_mes_para_portugues($item['mes'] ?? '')); ?></td>
+
         <td><?php echo !empty($item['Disney']) ? format_filmes($item['Disney']) : ''; ?></td>
         <td><?php echo !empty($item['Paramount']) ? format_filmes($item['Paramount']) : ''; ?></td>
         <td><?php echo !empty($item['Sony']) ? format_filmes($item['Sony']) : ''; ?></td>
