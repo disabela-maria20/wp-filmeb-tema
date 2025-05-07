@@ -7,9 +7,9 @@ $mes_atual_nome = date('F');
 $semana_atual = date('W');
 $ano_atual = date('Y');
 
-// Configuração da consulta com paginação do WordPress
-$paged = get_query_var('paged') ? get_query_var('paged') : 1;
-$posts_per_page = 32;
+// // Configuração da consulta com paginação do WordPress
+// $paged = get_query_var('paged') ? get_query_var('paged') : 1;
+// $posts_per_page = 32;
 
 // Valores selecionados nos filtros
 $mes_selecionado = isset($_GET['mes']) ? sanitize_text_field($_GET['mes']) : $mes_atual_num;
@@ -22,8 +22,8 @@ $ultimo_dia = date("$ano_selecionado-$mes_selecionado-t");
 // Argumentos base da query
 $args = array(
   'post_type' => 'filmes',
-  'posts_per_page' => $posts_per_page,
-  'paged' => $paged,
+  // 'posts_per_page' => $posts_per_page,
+  // 'paged' => $paged,
   'meta_key' => 'estreia',
   'orderby' => 'meta_value',
   'order' => 'ASC',
