@@ -371,20 +371,7 @@ if ($filmes_query->have_posts()) {
     </tbody>
   </table>
 </section>
-<div class="container">
-  <div class="pagination">
-    <?php
-    echo paginate_links(array(
-      'base' => str_replace(999999999, '%#%', esc_url(get_pagenum_link(999999999))),
-      'format' => '?paged=%#%',
-      'current' => max(1, $paged),
-      'total' => $filmes_query->max_num_pages,
-      'prev_text' => __('« Anterior'),
-      'next_text' => __('Próxima »'),
-    ));
-    ?>
-  </div>
-</div>
+
 
 <?php else : ?>
 <p>Nenhum filme encontrado para o período selecionado.</p>
