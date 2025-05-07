@@ -102,9 +102,11 @@ $link_skyscraper = CFS()->get('link_skyscraper', $banner_id);
     </div>
 
     <aside class="aside-boletim">
-      <a href="<?php echo esc_url($link_skyscraper)?>" target="_blank" rel="noopener noreferrer">
+      <?php if( esc_url($skyscraper != '')) {  ?>
+      <a href="<?php echo esc_url($link_skyscraper); ?>">
         <img src="<?php echo esc_url($skyscraper); ?>" class="img-banner" alt="banner">
       </a>
+      <?php }?>
       <h2>Boletins</h2>
       <?php get_template_part('components/Aside/index'); ?>
     </aside>

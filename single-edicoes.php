@@ -99,9 +99,11 @@ $banner_id = "78847";
       </div>
     </div>
     <aside class="aside-info">
+      <?php if( esc_url($skyscraper != '')) {  ?>
       <a href="<?php echo esc_url($link_skyscraper); ?>">
         <img src="<?php echo esc_url($skyscraper); ?>" class="img-banner" alt="banner">
       </a>
+      <?php }?>
 
       <h2>Edições anteriores</h2>
       <?php
