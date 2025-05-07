@@ -7,9 +7,9 @@ $mes_atual_nome = date('F');
 $semana_atual = date('W');
 $ano_atual = date('Y');
 
-// // Configuração da consulta com paginação do WordPress
-// $paged = get_query_var('paged') ? get_query_var('paged') : 1;
-// $posts_per_page = 32;
+// Configuração da consulta com paginação do WordPress
+$paged = get_query_var('paged') ? get_query_var('paged') : 1;
+$posts_per_page = 32;
 
 // Valores selecionados nos filtros
 $mes_selecionado = isset($_GET['mes']) ? sanitize_text_field($_GET['mes']) : $mes_atual_num;
@@ -22,8 +22,7 @@ $ultimo_dia = date("$ano_selecionado-$mes_selecionado-t");
 // Argumentos base da query
 $args = array(
   'post_type' => 'filmes',
-  // 'posts_per_page' => $posts_per_page,
-  // 'paged' => $paged,
+  'posts_per_page' => -1, // Traz todos os posts de uma vez
   'meta_key' => 'estreia',
   'orderby' => 'meta_value',
   'order' => 'ASC',
@@ -371,7 +370,20 @@ if ($filmes_query->have_posts()) {
     </tbody>
   </table>
 </section>
-
+<div class="container">
+  <div class="pagination">
+    <?php
+    echo paginate_links(array(
+      'base' => str_replace(999999999, '%#%', esc_url(get_pagenum_link(999999999))),
+      'format' => '?paged=%#%',
+      'current' => max(1, $paged),
+      'total' => $filmes_query->max_num_pages,
+      'prev_text' => __('« Anterior'),
+      'next_text' => __('Próxima »'),
+    ));
+    ?>
+  </div>
+</div>
 
 <?php else : ?>
 <p>Nenhum filme encontrado para o período selecionado.</p>
