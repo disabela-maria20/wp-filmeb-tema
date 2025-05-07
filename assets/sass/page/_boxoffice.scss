@@ -135,6 +135,7 @@
       }
     }
     form {
+      font-size: 1.4rem;
       max-width: 870px;
       margin: 0 auto;
       background-color: $color-off-white-alt;
@@ -225,4 +226,111 @@
       }
     }
   }
+}
+
+.error-field {
+  border-color: #fc8181 !important;
+  background-color: #fff5f5 !important;
+  animation: pulse 0.5s ease;
+}
+
+.error-message {
+  display: block;
+  color: #e53e3e;
+  font-size: 14px;
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+.box-office-message.success {
+  background-color: #f0fff4;
+  color: #2f855a;
+  font-size: 1.4rem;
+  border: 2px solid #c6f6d5;
+}
+
+.box-office-message.error {
+  background-color: #fff5f5;
+  color: #c53030;
+  border: 2px solid #fed7d7;
+  font-size: 1.4rem;
+}
+
+/* Radio buttons */
+.radio-options {
+  margin: 20px 0;
+  padding: 18px;
+  border: 2px solid #e2e8f0;
+  border-radius: 6px;
+  background: #ffffff;
+}
+
+.radio-options.error-field {
+  border-color: #fc8181;
+  background-color: #fff5f5;
+  animation: pulse 0.5s ease;
+}
+
+.radio {
+  margin: 12px 0;
+  display: flex;
+  align-items: center;
+}
+
+.radio input[type="radio"] {
+  margin-right: 12px;
+  width: 18px;
+  height: 18px;
+}
+
+.radio label {
+  margin-bottom: 0;
+  cursor: pointer;
+}
+
+.flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+
+#box-office-submit:disabled {
+  background-color: #a0aec0;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Animações */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-5px);
+  }
+  40%,
+  80% {
+    transform: translateX(5px);
+  }
+}
+
+/* Placeholder */
+#telefone::placeholder {
+  color: #a0aec0;
+  opacity: 1;
 }
