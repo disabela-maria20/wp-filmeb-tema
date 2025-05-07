@@ -328,50 +328,50 @@ if ($filmes_query->have_posts()) {
       </div>
     </form>
   </section>
-
-  <?php if (!empty($resultData)) : ?>
-  <section class="area-tabela">
-    <table class="tabela-distribuidora">
-      <thead>
-        <tr>
-          <th>Data de Estreia</th>
-          <th>Ano</th>
-          <th>Mês</th>
-          <th>Disney</th>
-          <th>Paramount</th>
-          <th>Sony</th>
-          <th>Universal</th>
-          <th>Warner</th>
-          <th>downtown</th>
-          <th>Imagem</th>
-          <th>Paris</th>
-          <th>Diamond</th>
-          <th>Outras</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php foreach ($resultData as $item) : ?>
-        <tr data-date="<?php echo esc_attr($item['estreia'] ?? ''); ?>">
-          <td class="data"><?php echo formatar_data_estreia_dist($item['estreia'] ?? ''); ?></td>
-          <td><?php echo esc_html($item['ano'] ?? ''); ?></td>
-          <td><?php echo esc_html(traduzir_mes_para_portugues($item['mes'] ?? '')); ?></td>
-          <td><?php echo !empty($item['Disney']) ? format_filmes($item['Disney']) : ''; ?></td>
-          <td><?php echo !empty($item['Paramount']) ? format_filmes($item['Paramount']) : ''; ?></td>
-          <td><?php echo !empty($item['Sony']) ? format_filmes($item['Sony']) : ''; ?></td>
-          <td><?php echo !empty($item['Universal']) ? format_filmes($item['Universal']) : ''; ?></td>
-          <td><?php echo !empty($item['Warner']) ? format_filmes($item['Warner']) : ''; ?></td>
-          <td><?php echo !empty($item['downtownParis']) ? format_filmes($item['downtownParis']) : ''; ?></td>
-          <td><?php echo !empty($item['Imagem']) ? format_filmes($item['Imagem']) : ''; ?></td>
-          <td><?php echo !empty($item['Paris']) ? format_filmes($item['Paris']) : ''; ?></td>
-          <td><?php echo !empty($item['Diamond']) ? format_filmes($item['Diamond']) : ''; ?></td>
-          <td><?php echo !empty($item['OutrasDistribuidoras']) ? format_filmes($item['OutrasDistribuidoras']) : ''; ?>
-          </td>
-        </tr>
-        <?php endforeach; ?>
-      </tbody>
-    </table>
-  </section>
-
+</div>
+<?php if (!empty($resultData)) : ?>
+<section class="area-tabela">
+  <table class="tabela-distribuidora">
+    <thead>
+      <tr>
+        <th>Data de Estreia</th>
+        <th>Ano</th>
+        <th>Mês</th>
+        <th>Disney</th>
+        <th>Paramount</th>
+        <th>Sony</th>
+        <th>Universal</th>
+        <th>Warner</th>
+        <th>downtown</th>
+        <th>Imagem</th>
+        <th>Paris</th>
+        <th>Diamond</th>
+        <th>Outras</th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php foreach ($resultData as $item) : ?>
+      <tr data-date="<?php echo esc_attr($item['estreia'] ?? ''); ?>">
+        <td class="data"><?php echo formatar_data_estreia_dist($item['estreia'] ?? ''); ?></td>
+        <td><?php echo esc_html($item['ano'] ?? ''); ?></td>
+        <td><?php echo esc_html(traduzir_mes_para_portugues($item['mes'] ?? '')); ?></td>
+        <td><?php echo !empty($item['Disney']) ? format_filmes($item['Disney']) : ''; ?></td>
+        <td><?php echo !empty($item['Paramount']) ? format_filmes($item['Paramount']) : ''; ?></td>
+        <td><?php echo !empty($item['Sony']) ? format_filmes($item['Sony']) : ''; ?></td>
+        <td><?php echo !empty($item['Universal']) ? format_filmes($item['Universal']) : ''; ?></td>
+        <td><?php echo !empty($item['Warner']) ? format_filmes($item['Warner']) : ''; ?></td>
+        <td><?php echo !empty($item['downtownParis']) ? format_filmes($item['downtownParis']) : ''; ?></td>
+        <td><?php echo !empty($item['Imagem']) ? format_filmes($item['Imagem']) : ''; ?></td>
+        <td><?php echo !empty($item['Paris']) ? format_filmes($item['Paris']) : ''; ?></td>
+        <td><?php echo !empty($item['Diamond']) ? format_filmes($item['Diamond']) : ''; ?></td>
+        <td><?php echo !empty($item['OutrasDistribuidoras']) ? format_filmes($item['OutrasDistribuidoras']) : ''; ?>
+        </td>
+      </tr>
+      <?php endforeach; ?>
+    </tbody>
+  </table>
+</section>
+<div class="container">
   <div class="pagination">
     <?php
     echo paginate_links(array(
@@ -384,10 +384,12 @@ if ($filmes_query->have_posts()) {
     ));
     ?>
   </div>
-  <?php else : ?>
-  <p>Nenhum filme encontrado para o período selecionado.</p>
-  <?php endif; ?>
 </div>
+
+<?php else : ?>
+<p>Nenhum filme encontrado para o período selecionado.</p>
+<?php endif; ?>
+
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

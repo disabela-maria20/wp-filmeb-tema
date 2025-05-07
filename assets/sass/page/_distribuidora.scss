@@ -2,7 +2,7 @@
   overflow: auto;
   width: 100%;
   @include media(lg) {
-    padding: 60px 15px;
+    padding: 60px 15px 0;
   }
 
   h1 {
@@ -264,7 +264,7 @@
       th {
         width: 100%;
         padding: 5px;
-        text-align: center;
+        // text-align: center;
       }
     }
   }
@@ -273,6 +273,7 @@
     max-height: 70dvb;
     overflow-y: scroll;
     overflow-x: hidden;
+    scrollbar-width: none;
     tr,
     td {
       border: 1px solid $color-lightest-gray-alt;
