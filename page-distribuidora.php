@@ -339,7 +339,7 @@ if ($filmes_query->have_posts()) {
         <th>Sony</th>
         <th>Universal</th>
         <th>Warner</th>
-        <th>downtown</th>
+        <th>Downtown</th>
         <th>Imagem</th>
         <th>Paris</th>
         <th>Diamond</th>

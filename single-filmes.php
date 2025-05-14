@@ -94,11 +94,7 @@ get_template_part('components/MenuDesktop/index');
                 ?>
           </div>
           <div class="dados">
-            <?php if (CFS()->get('trailer') === 'http://NULL') : ?>
-            <h3>Trailer</h3>
-            <p>Trailer Não disponível</p>
-            <div class="video"></div>
-            <?php else: ?>
+            <?php if (CFS()->get('trailer') !== 'http://NULL') : ?>
             <h3>Trailer</h3>
             <div class="video">
               <?php echo better_youtube_embed_block_render_block(['url' => CFS()->get('trailer')]); ?>

@@ -598,7 +598,7 @@ function render_filmes_tabela($filmes_por_semana, $dias_semana, $titulo = '', $h
               <?php 
               // Mostrar filmes das próximas 5 semanas apenas se não houver filtros
               if (!$has_filters && isset($filmes_semana_por_semana)) {
-                  render_filmes_lista($filmes_semana_por_semana, $dias_semana, 'Cine-semana Atual', $has_filters);
+                  render_filmes_lista($filmes_semana_por_semana, $dias_semana, '', $has_filters);
               }
               
               // Filmes do mês/ano selecionado
@@ -629,7 +629,7 @@ function render_filmes_tabela($filmes_por_semana, $dias_semana, $titulo = '', $h
             <?php 
               // Mostrar filmes das próximas 5 semanas apenas se não houver filtros
               if (!$has_filters && isset($filmes_semana_por_semana)) {
-                  render_filmes_tabela($filmes_semana_por_semana, $dias_semana, 'Cine-semana Atual', $has_filters);
+                  render_filmes_tabela($filmes_semana_por_semana, $dias_semana, '', $has_filters);
               }
               
               // Filmes do mês/ano selecionado
@@ -671,7 +671,7 @@ function render_filmes_tabela($filmes_por_semana, $dias_semana, $titulo = '', $h
           <?php 
           // Mostrar filmes das próximas 5 semanas apenas se não houver filtros
           if (!$has_filters && isset($filmes_semana_por_semana)) {
-              render_filmes_lista($filmes_semana_por_semana, $dias_semana, 'Cine-semana Atual', $has_filters);
+              render_filmes_lista($filmes_semana_por_semana, $dias_semana, '', $has_filters);
           }
           
           // Filmes do mês/ano selecionado
@@ -705,7 +705,7 @@ function render_filmes_tabela($filmes_por_semana, $dias_semana, $titulo = '', $h
         <?php 
         // Mostrar filmes das próximas 5 semanas apenas se não houver filtros
         if (!$has_filters && isset($filmes_semana_por_semana)) {
-            render_filmes_tabela($filmes_semana_por_semana, $dias_semana, 'Cine-semana Atual', $has_filters);
+            render_filmes_tabela($filmes_semana_por_semana, $dias_semana, '', $has_filters);
         }
         
         // Filmes do mês/ano selecionado
