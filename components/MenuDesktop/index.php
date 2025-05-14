@@ -17,7 +17,6 @@
             <li>
               <a href="<?php echo get_site_url(); ?>/minha-conta/">
                 <span>Minha Conta</span>
-                <!-- <i class=" bi bi-person-circle"></i> -->
               </a>
             </li>
             <li><a href="<?php echo get_site_url(); ?>/anuncie/">Anuncie</a></li>
@@ -28,11 +27,6 @@
           <?php } else { ?>
           <ul class="user">
             <li>
-              <a href="<?php echo get_site_url(); ?>/minha-conta/">
-                <span>Minha Conta</span>
-              </a>
-            </li>
-            <li>
               <a href="<?php echo get_site_url(); ?>/assine/">
                 <span>Assine</span>
               </a>
@@ -42,6 +36,12 @@
                 <span>Anuncie</span>
               </a>
             </li>
+            <li>
+              <a href="<?php echo get_site_url(); ?>/minha-conta/">
+                <span>Minha Conta</span>
+              </a>
+            </li>
+
           </ul>
           <?php } ?>
         </nav>

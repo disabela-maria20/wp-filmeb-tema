@@ -340,3 +340,20 @@ function redirecionar_apos_login( $redirect ) {
   return site_url( '/minha-conta/assinaturas/' );
 }
 add_filter( 'woocommerce_login_redirect', 'redirecionar_apos_login' );
+
+
+add_action('init', function() {
+  // Verifica todas as taxonomias registradas
+  foreach (get_taxonomies() as $taxonomy) {
+      $taxonomy_object = get_taxonomy($taxonomy);
+      
+      // Garante que as propriedades necessárias existam
+      if (!property_exists($taxonomy_object, 'hierarchical')) {
+          $taxonomy_object->hierarchical = false;
+      }
+      
+      if (!property_exists($taxonomy_object, 'show_in_rest')) {
+          $taxonomy_object->show_in_rest = true;
+      }
+  }
+}, 999);

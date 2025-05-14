@@ -162,36 +162,40 @@ $post_id = get_the_ID();
       </a>
       <?php endif; ?>
 
-      <h2>Boletim da semana</h2>
+      <h2>Notícias recentes</h2>
       <?php
-        $rapidinhas_id = get_cat_ID('Nacional');
-        $recent_posts_query = new WP_Query(array(
-            'post_type' => 'post',
-            'posts_per_page' => 5,
-            'orderby' => 'date',
-            'order' => 'DESC',
-            'category__in' => array($rapidinhas_id),
-        ));
+      $recent_posts_query = new WP_Query(array(
+          'post_type'      => 'post',
+          'posts_per_page' => 5,  // Limita a 5 posts
+          'orderby'        => 'date',
+          'order'          => 'DESC',  // Do mais recente para o mais antigo
+          'post_status'    => 'publish', 
+          'no_found_rows'  => true, // Garante que só pegue posts publicados
+      ));
 
-        if ($recent_posts_query->have_posts()) {
-            while ($recent_posts_query->have_posts()) {
-                $recent_posts_query->the_post();
-                $post_title = CFS()->get('titulo') ?: get_the_title();
-                if (!empty($post_title)) :
-      ?>
+if ($recent_posts_query->have_posts()) {
+    while ($recent_posts_query->have_posts()) {
+        $recent_posts_query->the_post();
+        $post_title = CFS()->get('titulo') ?: get_the_title();
+        
+        if (!empty($post_title)) :
+?>
       <div class="item-aside">
-        <a href="<?php the_permalink();?>">
+        <a href="<?php the_permalink(); ?>">
+          <?php if (esc_url(CFS()->get('imagem')) != '') { ?>
+          <img src="<?php echo esc_url(CFS()->get('imagem')); ?>" alt="<?php echo esc_attr($post_title); ?>" />
+          <?php } ?>
           <h3><?php echo esc_html($post_title); ?></h3>
         </a>
       </div>
-      <?php 
-                endif;
-            } 
-            wp_reset_postdata();
-        } else {
-            echo '<p>Nenhum post encontrado.</p>';
-        }
-      ?>
+      <?php
+        endif;
+    }
+    wp_reset_postdata();  // Reseta a query para evitar conflitos
+} else {
+    echo '<p>Nenhum post encontrado.</p>';
+}
+?>
     </aside>
   </div>
 </div>
