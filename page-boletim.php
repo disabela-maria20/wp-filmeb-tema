@@ -62,7 +62,7 @@ $post_id = get_the_ID();
 <?php if (have_posts()): while (have_posts()): the_post(); ?>
 
 <div class="container">
-  <div class="grid-list-post-boletim gap-124">
+  <div class="grid-list-post-boletim gap-64-md">
     <div>
       <?php if (!empty($full_banner)) : ?>
       <a href="<?php echo esc_url($link_full_banner); ?>">
@@ -108,8 +108,8 @@ $post_id = get_the_ID();
               <h2><?php echo esc_html($post_title); ?></h2>
             </a>
             <?php if(!empty($post_content)) : ?>
-            <p><?php echo wp_kses_post($post_content); ?></p>
-            <?php endif; ?>
+            <p> <?php echo esc_html(wp_trim_words($post_content ?: get_the_excerpt(), 50, '...')); ?>
+              <?php endif; ?>
           </div>
         </div>
         <?php } // Fechamento do foreach ?>
