@@ -97,6 +97,11 @@ $boletim_query = new WP_Query(array(
       <?php }?>
       <h2>Boletins</h2>
       <?php get_template_part('components/Aside/index'); ?>
+      <?php if ($big_stamp != '') { ?>
+      <a href="<?php echo esc_url($link_big_stampr); ?>">
+        <img src="<?php echo esc_url($big_stamp); ?>">
+      </a>
+      <?php } ?>
     </aside>
   </div>
 </div>

@@ -25,6 +25,10 @@ $link_banner_inferior = CFS()->get('link_mega_banner', $banner_id) ?: '#';
 $link_full_banner = CFS()->get('link_full_banner', $banner_id) ?: '#';
 $link_skyscraper = CFS()->get('link_skyscraper', $banner_id) ?: '#';
 
+$big_stamp = CFS()->get('big_stamp', $banner_id);
+$link_big_stampr = CFS()->get('link_big_stamp', $banner_id);
+
+
 $post_id = get_the_ID();
 ?>
 
@@ -196,6 +200,12 @@ if ($recent_posts_query->have_posts()) {
     echo '<p>Nenhum post encontrado.</p>';
 }
 ?>
+      <?php if ($big_stamp != '') { ?>
+      <a href="<?php echo esc_url($link_big_stampr); ?>">
+        <img src="<?php echo esc_url($big_stamp); ?>">
+      </a>
+      <?php } ?>
+
     </aside>
   </div>
 </div>
