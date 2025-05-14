@@ -72,10 +72,10 @@ $link_skyscraper = CFS()->get('link_skyscraper', $banner_id);
             <?php } ?>
             <div>
               <a href="<?php the_permalink(); ?>" class="read-more">
-                <strong class="data">
-                  <?php echo date_i18n('j \d\e F \d\e Y', strtotime((CFS()->get('data')))); ?>
-                </strong>
                 <h2><?php the_title(); ?></h2>
+                <span class="data">
+                  <?php echo date_i18n('j \d\e F \d\e Y', strtotime((CFS()->get('data')))); ?>
+                </span>
                 <p><?php echo wp_trim_words(esc_html(CFS()->get('descricao') ?: get_the_excerpt()), 20, '...'); ?></p>
               </a>
             </div>

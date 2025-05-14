@@ -199,10 +199,10 @@ input {
   }
 }
 
-strong.data {
+span.data {
   font-size: 1.4rem;
   font-weight: bold;
-  margin-bottom: 25px;
+  margin: 10px 0;
   display: block;
   @include media(lg) {
     font-size: 1.6rem;
