@@ -18,6 +18,9 @@ $link_skyscraper = CFS()->get('link_skyscraper', $banner_id);
 $link_super_banner = CFS()->get('link_super_banner', $banner_id);
 $link_modulo = CFS()->get('link_modulo', $banner_id);
 
+$big_stamp = CFS()->get('big_stamp', $banner_id);
+$link_big_stampr = CFS()->get('link_big_stamp', $banner_id);
+
 
 $boletim_query = new WP_Query(array(
   'category_name' => 'Rapidinhas',

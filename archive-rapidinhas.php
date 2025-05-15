@@ -83,7 +83,6 @@ $boletim_query = new WP_Query(array(
             </a>
             <span class="data">
               <?php $data=strtotime(CFS()->get('data')); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
-
             </span>
             <a href="<?php the_permalink(); ?>">
               Leia mais
