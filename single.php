@@ -71,7 +71,8 @@ $query = new WP_Query($args);
             alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
           <?php } ?>
           <span class="data">
-            <?php echo strtolower(date_i18n('j M Y', strtotime(CFS()->get('data')))); ?>
+            <?php $data=strtotime(CFS()->get('data')); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
+
           </span>
         </div>
         <div class="post-content">

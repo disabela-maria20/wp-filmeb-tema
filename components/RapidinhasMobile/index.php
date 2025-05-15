@@ -29,7 +29,8 @@ if ($rapidinhas_posts_query->have_posts()) {
   <div>
     <h3><?php echo get_post()->post_title;?></h3>
     <span class="data">
-      <?php echo strtolower(date_i18n('j M Y', strtotime(CFS()->get('data')))); ?>
+      <?php $data=strtotime(CFS()->get('data')); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
+
     </span>
     <a href="<?php the_permalink(); ?>">Leia mais</a>
   </div>

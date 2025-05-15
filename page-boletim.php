@@ -107,7 +107,7 @@ $post_id = get_the_ID();
           <div>
             <?php if(!empty($post_date)) : ?>
             <span class="data">
-              <?php echo strtolower(date_i18n('j M Y', strtotime($post_date))); ?>
+              <?php $data=strtotime($post_date); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
             </span>
             <?php endif; ?>
             <a href="<?php echo esc_url($post_url); ?>" class="read-more">

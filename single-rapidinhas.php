@@ -68,7 +68,8 @@ $boletim_query = new WP_Query(array(
       <?php endif; ?>
       <div class="post-content">
         <strong class="data">
-          <?php echo strtolower(date_i18n('j M Y', strtotime(CFS()->get('data')))); ?>
+          <?php $data=strtotime(CFS()->get('data')); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
+
         </strong>
         <h1 class="opem"><?php echo get_post()->post_title;?></h1>
         <div class="post-text">

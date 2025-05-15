@@ -169,7 +169,8 @@ $recent_posts_query_banner = new WP_Query(array(
               <h3>
                 <?php echo esc_html(CFS()->get('titulo') ?: get_the_title());  ?>
               </h3>
-              <span class="data"><?php echo strtolower(date_i18n('j M Y', strtotime(CFS()->get('data')))); ?></span>
+              <span class="data"><?php $data=strtotime(CFS()->get('data')); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
+</span>
             </a>
           </div>
         </div>
@@ -204,7 +205,8 @@ $recent_posts_query_banner = new WP_Query(array(
           <a href="<?php the_permalink(); ?>">
             <h3><?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?></h3>
             <span class="data">
-              <?php echo strtolower(date_i18n('j M Y', strtotime(CFS()->get('data')))); ?>
+              <?php $data=strtotime(CFS()->get('data')); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
+
             </span>
           </a>
         </div>

@@ -79,7 +79,8 @@ $banner_id = "78847";
                 <h2><?php echo $the_post->post_title; ?></h2>
               </a>
               <span class="data">
-                <?php echo strtolower(date_i18n('j M Y', strtotime(CFS()->get('data')))); ?>
+                <?php $data=strtotime(CFS()->get('data')); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
+
               </span>
               <p><?php echo $the_post->post_content?></p>
             </div>
