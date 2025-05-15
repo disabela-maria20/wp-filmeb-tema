@@ -70,15 +70,15 @@ $banner_id = "78847";
           <div class="item-rapidinha">
             <?php if( esc_url(CFS()->get('imagem')) != '') {  ?>
             <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
-              alt="<?php echo esc_attr(CFS()->get('titulo') ?: esc_attr(get_the_title())); ?>" />
-            <?php } ?>
+              alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
+            <?php }?>
 
             <div>
-              <span class="data"><?php echo date_i18n('j \d\e F \d\e Y', strtotime(get_the_date())); ?></span>
+              <span class="data"><?php echo date_i18n('j \d\e F \d\e Y', strtotime($the_post->post_date)); ?></span>
               <a href="<?php the_permalink(); ?>" class="read-more">
-                <h2><?php echo esc_html(get_the_title()); ?></h2>
+                <h2><?php echo $the_post->post_title; ?></h2>
               </a>
-              <?php the_content(); ?>
+              <p><?php echo $the_post->post_content?></p>
             </div>
           </div>
           <?php } // Fechamento do foreach ?>
