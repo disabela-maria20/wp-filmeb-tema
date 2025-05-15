@@ -317,7 +317,7 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
         <div class="ordem">
           <button aria-label="ordem 1" @click="setTabAtivo('lista')"><i class="bi bi-border-all"></i></button>
           <button aria-label="ordem 2" @click="setTabAtivo('tabela')"><i class="bi bi-grid-1x2"></i></button>
-          <button aria-label="imprimir" @click="window.print()"><i class="bi bi-printer"></i></button>
+          <button aria-label="imprimir" onclick="window.print()"><i class="bi bi-printer"></i></button>
         </div>
         <div></div>
         <div class="lancamento">
@@ -329,7 +329,7 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
         <form method="GET" action="<?php echo home_url(); ?>/filmes/">
           <div class="grid grid-7-xl gap-22 select-itens">
             <select id="ano" name="ano">
-              <option disabled value="">Ano</option>
+              <option value="">Ano</option>
               <?php foreach ($anos as $value) : ?>
               <option value="<?php echo esc_attr($value); ?>" <?php selected($value, $selected_ano); ?>>
                 <?php echo esc_html($value); ?>
@@ -338,7 +338,7 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
             </select>
 
             <select name="mes" id="mes">
-              <option disabled value="">Mês</option>
+              <option value="">Mês</option>
               <?php foreach ($meses as $key => $value) : ?>
               <option value="<?php echo esc_attr($key); ?>" <?php selected($key, $selected_mes); ?>>
                 <?php echo esc_html($value); ?>
@@ -346,7 +346,7 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
               <?php endforeach; ?>
             </select>
             <select name="origem" id="origem">
-              <option disabled selected value="">Origem</option>
+              <option selected value="">Origem</option>
               <?php foreach ($paises as $paise) { ?>
               <option value="<?php echo esc_attr($paise->term_id); ?>"
                 <?php selected($paise->term_id, isset($_GET['origem']) ? $_GET['origem'] : ''); ?>>
@@ -354,7 +354,7 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
               <?php } ?>
             </select>
             <select name="distribuicao" id="distribuidoras">
-              <option disabled selected value="">Distribuidor</option>
+              <option selected value="">Distribuidor</option>
               <?php foreach ($distribuidoras as $distribuidora) { ?>
               <option value="<?php echo esc_attr($distribuidora->term_id); ?>"
                 <?php selected($distribuidora->term_id, isset($_GET['distribuicao']) ? $_GET['distribuicao'] : ''); ?>>
@@ -362,7 +362,7 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
               <?php } ?>
             </select>
             <select name="genero" id="genero">
-              <option disabled selected value="">Gênero</option>
+              <option selected value="">Gênero</option>
               <?php foreach ($termos as $termo) { ?>
               <option value="<?php echo esc_attr($termo->term_id); ?>"
                 <?php selected($termo->term_id, isset($_GET['genero']) ? $_GET['genero'] : ''); ?>>
@@ -370,7 +370,7 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
               <?php } ?>
             </select>
             <select name="tecnologia" id="tecnologia">
-              <option disabled selected value="">Tecnologia</option>
+              <option selected value="">Tecnologia</option>
               <?php foreach ($tecnologias as $tecnologia) { ?>
               <option value="<?php echo esc_attr($tecnologia->term_id); ?>"
                 <?php selected($tecnologia->term_id, isset($_GET['tecnologia']) ? $_GET['tecnologia'] : ''); ?>>

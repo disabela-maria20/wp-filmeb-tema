@@ -152,7 +152,7 @@ $boletim_query = new WP_Query(array(
       <?php
       }
     }?>
-      <a class="btn-edicoes" href="<?php echo '';?>"> Acessar todas as edições</a>
+      <a class="btn-edicoes" href="<?php echo '';?>"> Acessar edições anteriores</a>
     </aside>
   </div>
 

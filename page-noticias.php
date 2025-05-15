@@ -76,7 +76,6 @@ $link_skyscraper = CFS()->get('link_skyscraper', $banner_id);
                 <h2><?php the_title(); ?></h2>
                 <span class="data">
                   <?php $data=strtotime(CFS()->get('data')); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
-
                 </span>
                 <p><?php echo wp_trim_words(esc_html(CFS()->get('descricao') ?: get_the_excerpt()), 20, '...'); ?></p>
               </a>
