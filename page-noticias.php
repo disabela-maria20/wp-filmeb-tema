@@ -66,8 +66,9 @@ $link_skyscraper = CFS()->get('link_skyscraper', $banner_id);
         <?php while ($boletim_query->have_posts()): $boletim_query->the_post(); ?>
         <div class="post">
           <div class="item">
-            <?php if (esc_url(CFS()->get('imagem')) != '') {  ?>
-            <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
+            <?php $imagem = CFS()->get('imagem') ?: ''; ?>
+            <?php if( $imagem !== '' ) { ?>
+            <img src="<?php echo esc_url($imagem); ?>"
               alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
             <?php } ?>
             <div>

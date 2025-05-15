@@ -110,7 +110,7 @@
     line-height: 1.61;
     margin: 20px 0;
   }
-  img:not(.autor img) {
+  img:not(.autor img, .img-post) {
     max-height: 270px;
     object-fit: cover;
     max-width: 318px;

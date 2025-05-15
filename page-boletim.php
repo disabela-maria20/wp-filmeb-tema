@@ -102,7 +102,7 @@ $post_id = get_the_ID();
             ?>
         <div class="post">
           <?php if(!empty($post_image)) : ?>
-          <img src="<?php echo esc_url($post_image); ?>" alt="<?php echo esc_attr($post_title); ?>" />
+          <img class="img-post" src="<?php echo esc_url($post_image); ?>" alt="<?php echo esc_attr($post_title); ?>" />
           <?php endif; ?>
           <div>
             <?php if(!empty($post_date)) : ?>

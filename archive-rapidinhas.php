@@ -72,10 +72,11 @@ $boletim_query = new WP_Query(array(
       <div class="posts">
         <?php while ($boletim_query->have_posts()): $boletim_query->the_post(); ?>
         <div class="item-rapidinha">
-          <?php if( esc_url(CFS()->get('imagem')) != '') {  ?>
-          <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
+          <?php $imagem = CFS()->get('imagem') ?: ''; ?>
+          <?php if( $imagem !== '' ) { ?>
+          <img src="<?php echo esc_url($imagem); ?>"
             alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
-          <?php }?>
+          <?php } ?>
           <div>
             <a href="<?php the_permalink(); ?>" class="read-more">
               <h2><?php echo get_post()->post_title;?></h2>
