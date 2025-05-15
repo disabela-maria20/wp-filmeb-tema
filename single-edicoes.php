@@ -68,10 +68,11 @@ $banner_id = "78847";
               $the_post = get_post($post_id);
               ?>
           <div class="item-rapidinha">
-            <?php if( esc_url(CFS()->get('imagem')) != '') {  ?>
-            <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
+            <?php $imagem = CFS()->get('imagem') ?: ''; ?>
+            <?php if( $imagem !== '' ) { ?>
+            <img src="<?php echo esc_url($imagem); ?>"
               alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
-            <?php }?>
+            <?php } ?>
 
             <div>
               <span class="data"><?php echo date_i18n('j \d\e F \d\e Y', strtotime($the_post->post_date)); ?></span>
