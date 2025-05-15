@@ -27,11 +27,10 @@ if ($rapidinhas_posts_query->have_posts()) {
     alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
   <?php } ?>
   <div>
-    <span class="data">
-      <?php echo date_i18n('j \d\e F \d\e Y', strtotime((CFS()->get('data')))); ?>
-    </span>
     <h3><?php echo get_post()->post_title;?></h3>
-
+    <span class="data">
+      <?php echo strtolower(date_i18n('j M Y', strtotime(CFS()->get('data')))); ?>
+    </span>
     <a href="<?php the_permalink(); ?>">Leia mais</a>
   </div>
 </div>
