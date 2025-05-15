@@ -77,10 +77,12 @@ $boletim_query = new WP_Query(array(
             alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
           <?php }?>
           <div>
-            <span class="data"><?php echo date_i18n('j \d\e F \d\e Y', strtotime(get_the_date())); ?></span>
             <a href="<?php the_permalink(); ?>" class="read-more">
               <h2><?php echo get_post()->post_title;?></h2>
             </a>
+            <span class="data">
+              <?php echo strtolower(date_i18n('j M Y', strtotime(CFS()->get('data')))); ?>
+            </span>
             <a href="<?php the_permalink(); ?>">
               Leia mais
             </a>

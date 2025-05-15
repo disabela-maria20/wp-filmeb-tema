@@ -66,13 +66,13 @@ $query = new WP_Query($args);
       <?php if (function_exists('yoast_breadcrumb')) { yoast_breadcrumb('<div id="breadcrumbs">', '</div>'); } ?>
       <section class="post">
         <div>
-          <strong class="data">
-            <?php echo date_i18n('j \d\e F \d\e Y', strtotime((CFS()->get('data')))); ?>
-          </strong>
           <?php if (esc_url(CFS()->get('imagem')) != '') {  ?>
           <img class="img-post" src="<?php echo esc_url(CFS()->get('imagem')); ?>"
             alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
           <?php } ?>
+          <span class="data">
+            <?php echo strtolower(date_i18n('j M Y', strtotime(CFS()->get('data')))); ?>
+          </span>
         </div>
         <div class="post-content">
           <h1><?php the_title(); ?></h1>

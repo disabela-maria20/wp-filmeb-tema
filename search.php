@@ -74,10 +74,12 @@ $banner_id = "23243";
           <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
             alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
           <?php }?>
-          <span><?php echo get_the_category_list(', '); ?></span>
           <a href="<?php the_permalink(); ?>" class="read-more">
             <h2><?php the_title(); ?></h2>
           </a>
+          <span class="data">
+            <?php echo strtolower(date_i18n('j M Y', strtotime(CFS()->get('data')))); ?>
+          </span>
           <p><?php echo esc_html(CFS()->get('descricao') ?: get_the_excerpt()); ?></p>
         </div>
         <?php endwhile; ?>
