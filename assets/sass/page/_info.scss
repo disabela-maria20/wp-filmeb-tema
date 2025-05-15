@@ -165,11 +165,8 @@
     font-weight: bold;
     font-size: 1.6rem;
     line-height: 2.4rem;
-    text-align: center;
+    text-align: left;
     color: $color-red-dark !important;
-    @include media(lg) {
-      text-align: left;
-    }
   }
 
   .item {
