@@ -58,6 +58,11 @@ $banner_id = "78847";
 
       <div class="post">
         <div class="post-content">
+          <?php if (has_post_thumbnail()): ?>
+          <div class="post-thumbnail">
+            <?php the_post_thumbnail('medium'); ?>
+          </div>
+          <?php endif; ?>
           <section class="table-over">
             <div class="tabela-boletim">
               <h1><?php the_title(); ?></h1>

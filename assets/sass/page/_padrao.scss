@@ -77,14 +77,11 @@
     margin: 20px 0;
   }
 
-  img:not(.woocommerce img) {
+  img:not(.woocommerce img, * img) {
     height: 225px;
     object-fit: cover;
     margin: 0 auto;
     display: block;
-    @include media(lg) {
-      height: 450px;
-    }
   }
 
   ul:not(.woocommerce ul) {
@@ -203,6 +200,7 @@ span.data {
   font-size: 1.4rem;
   margin: 10px 0;
   display: block;
+  font-weight: 400 !important;
   @include media(lg) {
     font-size: 1.6rem;
   }

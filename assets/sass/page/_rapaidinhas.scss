@@ -157,14 +157,24 @@
 
 .link-lista-rapidinha {
   display: flex;
-  gap: 5px;
+  gap: 10px;
   align-items: center;
   font-size: 1.4rem;
-  i {
+
+  @include media(lg) {
+    gap: 10px;
+  }
+  img {
+    border-radius: 6px;
     font-size: 1.6rem;
+    width: 100%;
+    max-width: 100px;
+    max-height: 65px;
+    object-fit: cover;
     color: $color-bright-red;
   }
   span {
+    font-weight: 700;
     font-size: 1.4rem;
     color: $color-dark-gray;
   }
