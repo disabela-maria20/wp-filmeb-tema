@@ -9,12 +9,13 @@ $banner_id = "78847";
     $banner_inferior = CFS()->get('mega_banner', $banner_id);
     $full_banner = CFS()->get('full_banner', $banner_id);
     $skyscraper = CFS()->get('skyscraper', $banner_id);
-   
+    $modulo = CFS()->get('modulo', $banner_id);
+     
     $link_banner_superior = CFS()->get('link_banner_moldura', $banner_id);
     $link_banner_inferior = CFS()->get('link_mega_banner', $banner_id);
     $link_full_banner = CFS()->get('link_full_banner', $banner_id);
     $link_skyscraper = CFS()->get('link_skyscraper', $banner_id);
-    
+    $link_modulo = CFS()->get('link_modulo', $banner_id);
 ?>
 <a href="<?php echo esc_url($link_banner_superior) ?>" target="_blank" rel="noopener noreferrer">
   <img src="<?php echo esc_url($banner_superior); ?>" class="w-full p-35 img-banner bannerMobile" alt="banner">
@@ -71,6 +72,9 @@ $banner_id = "78847";
           </section>
         </div>
       </div>
+      <a href="<?php echo esc_url($link_modulo); ?>" target="_blank" rel="noopener noreferrer">
+        <img src="<?php echo esc_url($modulo); ?>" class="img-banner" alt="banner">
+      </a>
     </div>
 
     <aside class="aside-boletim">

@@ -77,11 +77,9 @@
     margin: 20px 0;
   }
 
-  img:not(.woocommerce img, * img) {
-    height: 225px;
-    object-fit: cover;
-    margin: 0 auto;
+  img:not(.woocommerce img) {
     display: block;
+    margin: 0 auto;
   }
 
   ul:not(.woocommerce ul) {
