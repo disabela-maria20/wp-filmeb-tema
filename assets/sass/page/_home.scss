@@ -114,6 +114,10 @@
           color: $color-bright-red;
           text-align: left;
         }
+        .column-3,
+        .column-4 {
+          text-align: right !important;
+        }
       }
     }
     tbody {
@@ -121,10 +125,7 @@
       th {
         padding: 5px;
       }
-      .column-3,
-      .column-4 {
-        text-align: right;
-      }
+
       tr {
         margin-top: 10px;
         .column-1 {
