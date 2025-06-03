@@ -20,15 +20,6 @@ require_once(get_template_directory() . "/api/usuario.php");
 require_once(get_template_directory() . "/api/taxionomia.php");
 require_once(get_template_directory() . "/inc/woocommerce.php");
 
-add_filter('wp_image_editors', 'wpb_image_editor_default_to_gd');
-
-function wpb_image_editor_default_to_gd($editors)
-{
-  $gd_editor = 'WP_Image_Editor_GD';
-  $editors = array_diff($editors, array($gd_editor));
-  array_unshift($editors, $gd_editor);
-  return $editors;
-}
 
 function use_scripts()
 {
