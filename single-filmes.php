@@ -8,7 +8,7 @@ function render_terms($field_key) {
     foreach ($distribuicao as $term_id) {
       $term = get_term($term_id);
       if ($term && !is_wp_error($term)) {
-        $output .= '<div>' . esc_html($term->name) . '</div>';
+        $output .= '<p>' . esc_html($term->name) . '</p>';
       }
     }
   }
@@ -31,13 +31,18 @@ function has_valid_items($array) {
   return false;
 }
 
-$banner_id = "78919";
+$banner_id = "78848";
 $banner_superior = CFS()->get('banner_moldura', $banner_id);
 $banner_inferior = CFS()->get('mega_banner', $banner_id);
-
+$big_stamp = CFS()->get('big_stamp', $banner_id);
+$skyscraper = CFS()->get('skyscraper', $banner_id);
+ 
 $link_banner_superior = CFS()->get('link_banner_moldura', $banner_id);
 $link_banner_inferior = CFS()->get('link_mega_banner', $banner_id);
+$link_big_stampr = CFS()->get('link_big_stamp', $banner_id);
+$link_skyscraper = CFS()->get('link_skyscraper', $banner_id);
 
+$banner_lateral = CFS()->get('banner_lateral', $banner_id);
 ?>
 <a href="<?php echo esc_url($link_banner_superior); ?>" target="_blank" rel="noopener noreferrer">
   <img src="<?php echo esc_url($banner_superior); ?>" class="w-full p-35 img-banner bannerMobile" alt="banner">
@@ -51,10 +56,8 @@ $link_banner_inferior = CFS()->get('link_mega_banner', $banner_id);
   </div>
 </div>
 
-<?php
-get_template_part('components/MenuMobile/index');
-get_template_part('components/MenuDesktop/index');
-?>
+<?php get_template_part('components/MenuMobile/index'); ?>
+<?php get_template_part('components/MenuDesktop/index'); ?>
 
 <section class="bg-gray padding-banner">
   <div class="container bannerMobile">
@@ -70,153 +73,125 @@ get_template_part('components/MenuDesktop/index');
 
 <section class="page-filmes-aberta">
   <div class="container">
-    <div class="banner"
-      style="background-image: url('<?php echo esc_url(CFS()->get('capa')); ?>'); background-color: #4b4b4b; background-attachment: fixed;">
-      <h1>
-        <strong><?php the_title(); ?></strong>
-        <span><?php echo CFS()->get('titulo_original'); ?></span>
-      </h1>
-    </div>
-
-    <h2>Ficha técnica</h2>
-    <div class="grid-filmes">
-      <div class="item">
-        <img src="<?php echo esc_url(CFS()->get('cartaz')); ?>" class="cartaz">
-        <div class="area-poster">
-          <div class="dados">
-            <h3>Estreia</h3>
-            <?php
-                $estreia = CFS()->get('estreia');
-                if (!empty($estreia)) {
-                  $data_formatada = date_i18n('j \d\e F \d\e Y', strtotime($estreia));
-                  echo '<p>' . esc_html($data_formatada) . '</p>';
-                }
-                ?>
-          </div>
-          <div class="dados">
-            <?php if (CFS()->get('trailer') !== 'http://NULL') : ?>
-            <h3>Trailer</h3>
-            <div class="video">
-              <?php echo better_youtube_embed_block_render_block(['url' => CFS()->get('trailer')]); ?>
-            </div>
-            <?php endif; ?>
-          </div>
-          <div class="dados">
-            <?php if (!is_cfs_field_empty('fotos')) : ?>
-            <h3>Fotos</h3>
-            <section id="fotos" class="splide">
-              <div class="splide__track">
-                <ul class="splide__list">
-                  <?php $fields = CFS()->get('fotos'); ?>
-                  <?php if ($fields) : ?>
-                  <?php foreach ($fields as $field) : ?>
-                  <li class="splide__slide">
-                    <img src="<?php echo esc_url($field['foto']); ?>" class="img-slide" alt="">
-                  </li>
-                  <?php endforeach; ?>
-                  <?php endif; ?>
-                </ul>
-              </div>
-            </section>
-            <section id="modalFilme" class="modal">
-              <div class="modal-body">
-                <button class="close" aria-label="Fechar">
-                  <i class="bi bi-x"></i>
-                </button>
-                <div class="modal-img"></div>
-                <div class="arrow">
-                  <button>
-                    <i class="bi bi-chevron-left"></i>
-                  </button>
-                  <button>
-                    <i class="bi bi-chevron-right"></i>
-                  </button>
-                </div>
-              </div>
-            </section>
-            <?php endif; ?>
-          </div>
-        </div>
-      </div>
-
+    <h1>
+      <strong><?php the_title(); ?></strong>
+      <span><?php echo CFS()->get('titulo_original'); ?></span>
+    </h1>
+    <h2>
+      <?php
+    $estreia = CFS()->get('estreia');
+    if (!empty($estreia)) {
+      $dia_semana = date_i18n('l', strtotime($estreia));
+      $data_formatada = date_i18n('j \d\e F \d\e Y', strtotime($estreia));
+      echo '<p class="semana">' . esc_html($data_formatada).", ". esc_html($dia_semana) . '</p>';
+    }
+  ?>
+    </h2>
+    <div class="grid-filmes <?php echo  ($banner_lateral == '1' ? 'grid-publi' : '')?>">
       <div>
-        <div class="grid grid-2-lg">
-          <div class="dados">
-            <table>
-              <?php if (!is_cfs_field_empty('distribuicao')) : ?>
-              <tr>
-                <td class="titulo-fixa">Distribuição</td>
-                <td><?php echo render_terms('distribuicao'); ?></td>
-              </tr>
-              <?php endif; ?>
-
-              <?php if (!is_cfs_field_empty('paises')) : ?>
-              <tr>
-                <td class="titulo-fixa">País</td>
-                <td><?php echo render_terms('paises'); ?></td>
-              </tr>
-              <?php endif; ?>
-
-              <?php if (!is_cfs_field_empty('generos')) : ?>
-              <tr>
-                <td class="titulo-fixa">Gênero</td>
-                <td><?php echo render_terms('generos'); ?></td>
-              </tr>
-              <?php endif; ?>
-            </table>
-          </div>
-          <div class="dados">
-            <table>
-              <?php if (!is_cfs_field_empty('duracao_minutos')) : ?>
-              <tr>
-                <td class="titulo-fixa">Duração</td>
-                <td><?php echo CFS()->get('duracao_minutos'); ?> &nbsp;min</td>
-              </tr>
-              <?php endif; ?>
-
-              <?php if (!is_cfs_field_empty('tecnologias')) : ?>
-              <tr>
-                <td class="titulo-fixa">Tecnologia</td>
-                <td><?php echo render_terms('tecnologias'); ?></td>
-              </tr>
-              <?php endif; ?>
-
-              <?php if (!is_cfs_field_empty('classificacao')) : ?>
-              <tr>
-                <td class="titulo-fixa">Classificação</td>
-                <td><?php echo render_terms('classificacao'); ?></td>
-              </tr>
-              <?php endif; ?>
-            </table>
-          </div>
+        <img src="<?php echo esc_url(CFS()->get('cartaz')); ?>" class="cartaz">
+        <?php if (CFS()->get('trailer') !== 'http://NULL') : ?>
+        <h3>Trailer</h3>
+        <div class="video">
+          <?php echo better_youtube_embed_block_render_block(['url' => CFS()->get('trailer')]); ?>
         </div>
-        <div class="dados">
-          <table>
-            <tr>
-              <td class="titulo">Sinopse</td>
-              <td id="sinopse"><?php the_content(); ?></td>
-            </tr>
-          </table>
-        </div>
+        <?php endif; ?>
+        <?php if (!is_cfs_field_empty('fotos')) : ?>
+        <h3>Fotos</h3>
+        <section id="fotos" class="splide">
+          <div class="splide__track">
+            <ul class="splide__list">
+              <?php $fields = CFS()->get('fotos'); ?>
+              <?php if ($fields) : ?>
+              <?php foreach ($fields as $field) : ?>
+              <li class="splide__slide">
+                <img src="<?php echo esc_url($field['foto']); ?>" class="img-slide" alt="">
+              </li>
+              <?php endforeach; ?>
+              <?php endif; ?>
+            </ul>
+          </div>
+        </section>
+        <section id="modalFilme" class="modal">
+          <div class="modal-body">
+            <button class="close" aria-label="Fechar">
+              <i class="bi bi-x"></i>
+            </button>
+            <div class="modal-img"></div>
+            <div class="arrow">
+              <button>
+                <i class="bi bi-chevron-left"></i>
+              </button>
+              <button>
+                <i class="bi bi-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+        </section>
+        <?php endif; ?>
+      </div>
+      <div>
+        <div class="fichaTecnica">
+          <div class="grid-fixa-tecnica">
+            <?php if (!is_cfs_field_empty('distribuicao')) : ?>
+            <h3>Distribuição</h3>
+            <?php endif; ?>
+            <div><?php echo render_terms('distribuicao'); ?></div>
+          </div>
+          <div class="grid-fixa-tecnica">
+            <?php if (!is_cfs_field_empty('paises')) : ?>
+            <h3>País</h3>
+            <?php endif; ?>
+            <div><?php echo render_terms('paises'); ?></div>
+          </div>
 
+          <div class="grid-fixa-tecnica">
+            <?php if (!is_cfs_field_empty('generos')) : ?>
+            <h3>Gênero</h3>
+            <?php endif; ?>
+            <div><?php echo render_terms('generos'); ?></div>
+          </div>
+          <div class="grid-fixa-tecnica">
+            <?php if (!is_cfs_field_empty('duracao_minutos')) : ?>
+            <h3>Duração</h3>
+            <?php endif; ?>
+            <p><?php echo CFS()->get('duracao_minutos'); ?>&nbsp;min</p>
+          </div>
+          <div class="grid-fixa-tecnica">
+            <?php if (!is_cfs_field_empty('classificacao')) : ?>
+            <h3>Classificação</h3>
+            <?php endif; ?>
+            <?php echo render_terms('classificacao'); ?>
+          </div>
+          <div class="grid-fixa-tecnica">
+            <?php if (!is_cfs_field_empty('tecnologias')) : ?>
+            <h3>Tecnologia</h3>
+            <?php endif; ?>
+            <div><?php echo render_terms('tecnologias'); ?></div>
+          </div>
+          <div class="grid-fixa-tecnica">
+            <div>
+              <h3>Sinopse</h3>
+            </div>
+            <div>
+              <?php the_content(); ?>
+            </div>
+
+          </div>
+
+        </div>
         <?php // Seção de Direção ?>
         <?php if (!is_cfs_field_empty('direcao')) : ?>
         <?php $diretores = CFS()->get('direcao'); ?>
         <?php if (is_array($diretores) && has_valid_items($diretores)) : ?>
-        <div class="dados">
+        <div class="grid-fixa-tecnica">
           <h3>Direção</h3>
-          <div class="info-array">
-            <?php foreach ($diretores as $diretor) : ?>
-            <?php if (is_array($diretor) && !empty($diretor['nome'])) : ?>
-            <div>
-              <?php if (!empty($diretor['foto'])) : ?>
-              <img src="<?php echo esc_url($diretor['foto']); ?>" alt="<?php echo esc_attr($diretor['nome']); ?>">
-              <?php endif; ?>
-              <p><?php echo esc_html($diretor['nome']); ?></p>
-            </div>
-            <?php endif; ?>
-            <?php endforeach; ?>
-          </div>
+          <?php foreach ($diretores as $diretor) : ?>
+          <?php if (is_array($diretor) && !empty($diretor['nome'])) : ?>
+          <p><?php echo esc_html($diretor['nome']); ?></p>
+          <?php endif; ?>
+
+          <?php endforeach; ?>
         </div>
         <?php endif; ?>
         <?php endif; ?>
@@ -225,20 +200,13 @@ get_template_part('components/MenuDesktop/index');
         <?php if (!is_cfs_field_empty('roteiro')) : ?>
         <?php $roteiristas = CFS()->get('roteiro'); ?>
         <?php if (is_array($roteiristas) && has_valid_items($roteiristas)) : ?>
-        <div class="dados">
+        <div class="grid-fixa-tecnica">
           <h3>Roteiro</h3>
-          <div class="info-array">
-            <?php foreach ($roteiristas as $roteirista) : ?>
-            <?php if (is_array($roteirista) && !empty($roteirista['nome'])) : ?>
-            <div>
-              <?php if (!empty($roteirista['foto'])) : ?>
-              <img src="<?php echo esc_url($roteirista['foto']); ?>" alt="<?php echo esc_attr($roteirista['nome']); ?>">
-              <?php endif; ?>
-              <p><?php echo esc_html($roteirista['nome']); ?></p>
-            </div>
-            <?php endif; ?>
-            <?php endforeach; ?>
-          </div>
+          <?php foreach ($roteiristas as $roteirista) : ?>
+          <?php if (is_array($roteirista) && !empty($roteirista['nome'])) : ?>
+          <p><?php echo esc_html($roteirista['nome']); ?></p>
+          <?php endif; ?>
+          <?php endforeach; ?>
         </div>
         <?php endif; ?>
         <?php endif; ?>
@@ -247,24 +215,31 @@ get_template_part('components/MenuDesktop/index');
         <?php if (!is_cfs_field_empty('elenco')) : ?>
         <?php $elenco = CFS()->get('elenco'); ?>
         <?php if (is_array($elenco) && has_valid_items($elenco)) : ?>
-        <div class="dados">
+        <div class="grid-fixa-tecnica">
           <h3>Elenco</h3>
-          <div class="info-array">
-            <?php foreach ($elenco as $ator) : ?>
-            <?php if (is_array($ator) && !empty($ator['nome'])) : ?>
-            <div>
-              <?php if (!empty($ator['foto'])) : ?>
-              <img src="<?php echo esc_url($ator['foto']); ?>" alt="<?php echo esc_attr($ator['nome']); ?>">
-              <?php endif; ?>
-              <p><?php echo esc_html($ator['nome']); ?></p>
-            </div>
-            <?php endif; ?>
-            <?php endforeach; ?>
-          </div>
+          <?php foreach ($elenco as $ator) : ?>
+          <?php if (is_array($ator) && !empty($ator['nome'])) : ?>
+          <p><?php echo esc_html($ator['nome']); ?></p>
+          <?php endif; ?>
+          <?php endforeach; ?>
         </div>
         <?php endif; ?>
         <?php endif; ?>
       </div>
+      <?php
+      
+      if (esc_html($banner_lateral) == '1') : ?>
+      <div class="<?php echo ($banner_lateral == '1' ? 'aside-info' : ''); ?>">
+        <aside>
+          <a href="<?php echo esc_url($link_skyscraper); ?>">
+            <img src="<?php echo esc_url($skyscraper); ?>">
+          </a>
+          <a href="<?php echo esc_url($link_big_stampr); ?>">
+            <img src="<?php echo esc_url($big_stamp); ?>">
+          </a>
+        </aside>
+      </div>
+      <?php endif; ?>
     </div>
 </section>
 
