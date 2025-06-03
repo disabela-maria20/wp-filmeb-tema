@@ -31,7 +31,7 @@ function has_valid_items($array) {
   return false;
 }
 
-$banner_id = "78848";
+$banner_id = "77483";
 $banner_superior = CFS()->get('banner_moldura', $banner_id);
 $banner_inferior = CFS()->get('mega_banner', $banner_id);
 $big_stamp = CFS()->get('big_stamp', $banner_id);

@@ -124,6 +124,7 @@
     height: auto;
     object-fit: cover;
     border-radius: 20px;
+    height: inherit;
     @include media(lg) {
       max-height: 470px;
     }
@@ -163,5 +164,6 @@
     width: 100% !important;
     object-fit: cover !important;
     border-radius: 20px !important;
+    height: inherit !important;
   }
 }
