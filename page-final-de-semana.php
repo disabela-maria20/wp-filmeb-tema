@@ -61,7 +61,7 @@ $banner_id = "78847";
         <div class="post-content">
           <?php if (has_post_thumbnail()): ?>
           <div class="post-thumbnail">
-            <?php the_post_thumbnail('thumbnail'); ?>
+            <?php the_post_thumbnail('full'); ?>
           </div>
           <?php endif; ?>
           <section class="table-over">
