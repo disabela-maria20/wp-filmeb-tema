@@ -95,6 +95,12 @@
     }
   }
 
+  .post-text {
+    color: $color-darker-gray;
+    font-size: 1.6rem;
+    line-height: 1.61;
+    margin: 20px 0;
+  }
   p:not(.item p),
   .swpm-post-not-logged-in-msg {
     color: $color-darker-gray;

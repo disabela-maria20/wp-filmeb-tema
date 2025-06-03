@@ -66,7 +66,7 @@ $boletim_query = new WP_Query(array(
       } ?>
       <?php if (has_post_thumbnail()): ?>
       <div class="post-thumbnail">
-        <?php the_post_thumbnail('medium'); ?>
+        <?php the_post_thumbnail('thumbnail'); ?>
       </div>
       <?php endif; ?>
       <div class="post-content">
