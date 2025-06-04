@@ -34,8 +34,7 @@
     color: $color-bright-red;
   }
   .data {
-    font-size: 1.6rem;
-    display: block;
+    font-size: 1.4rem;
     margin-bottom: 10px !important;
     color: $color-dark-gray !important;
   }
@@ -114,6 +113,19 @@
     font-size: 1.4rem;
     line-height: 1.61;
     margin: 20px 0;
+  }
+  .item p.paragrafo {
+    display: inline !important;
+    color: $color-darker-gray;
+    font-size: 1.4rem;
+    line-height: 1.61;
+  }
+  .item i {
+    color: $color-darker-gray;
+    font-size: 1.4rem;
+    line-height: 1.61;
+    font-size: initial;
+    font-style: normal;
   }
   img:not(.autor img, .img-post, .post-text img, .post-thumbnail img) {
     max-height: 270px;

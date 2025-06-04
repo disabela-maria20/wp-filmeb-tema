@@ -242,7 +242,7 @@
     color: $color-red-dark;
     margin-bottom: 30px;
     @include media(md) {
-      padding: 60px 0;
+      padding: 35px 0;
       font-size: 3.1rem;
     }
     span {
@@ -308,7 +308,6 @@
     gap: 20px;
     padding: 35px 0;
     @include media(lg) {
-      padding: 60px 0;
       grid-template-columns: 1fr 2fr;
     }
     &.grid-publi {
