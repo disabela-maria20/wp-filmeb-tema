@@ -15,7 +15,7 @@
           <?php if (is_user_logged_in()) { ?>
           <ul class="user">
             <li>
-              <a href="<?php echo get_site_url(); ?>/minha-conta/">
+              <a href="<?php echo get_site_url(); ?>/minha-conta/assinaturas/">
                 <span>Minha Conta</span>
               </a>
             </li>
@@ -27,17 +27,17 @@
           <?php } else { ?>
           <ul class="user">
             <li>
-              <a href="<?php echo get_site_url(); ?>/assine/">
+              <a href="<?php echo get_site_url(); ?>/quemsomos/">
                 <span>Assine</span>
               </a>
             </li>
             <li>
-              <a href="<?php echo get_site_url(); ?>/anuncie/">
+              <a href=" <?php echo get_site_url(); ?>/anuncie/">
                 <span>Anuncie</span>
               </a>
             </li>
             <li>
-              <a href="<?php echo get_site_url(); ?>/minha-conta/">
+              <a href="<?php echo get_site_url(); ?>/minha-conta/assinaturas/">
                 <span>Minha Conta</span>
               </a>
             </li>

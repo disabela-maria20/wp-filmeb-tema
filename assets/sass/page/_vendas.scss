@@ -1,0 +1,22 @@
+.page-vendas {
+  padding: 35px 0;
+  @include media(lg) {
+    padding: 90px 0;
+  }
+
+  button {
+    background-color: $color-bright-red;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 2rem;
+    padding: 10px 25px;
+    transition: all 400ms ease;
+    cursor: pointer;
+    text-align: center;
+    &:hover {
+      background-color: $color-red-dark;
+      color: #fff;
+    }
+  }
+}

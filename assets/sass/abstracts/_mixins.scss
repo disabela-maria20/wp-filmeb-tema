@@ -209,6 +209,7 @@ $grid-breakpoints: (
       background-color: $color-light-red;
 
       th {
+        text-transform: capitalize;
         color: $color-darker-gray;
         padding: 15px;
         font-size: 1.2rem;

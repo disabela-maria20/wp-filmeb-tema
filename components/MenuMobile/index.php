@@ -9,7 +9,7 @@
       <a href="<?php echo get_template_directory_uri(); ?>">
         <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.png" alt="logo cine B" />
       </a>
-      <a href="<?php echo get_site_url(); ?>/minha-conta/">
+      <a href="<?php echo get_site_url(); ?>/minha-conta/assinaturas/">
         <i class=" bi bi-person-circle"></i>
       </a>
     </div>
