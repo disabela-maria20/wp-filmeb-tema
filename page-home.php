@@ -63,7 +63,7 @@ $recent_posts_query_banner = new WP_Query(array(
     while ($recent_posts_query_banner->have_posts()) { 
       $recent_posts_query_banner->the_post(); 
 
-     $imagem = CFS()->get('imagem');
+      $imagem = CFS()->get('imagem');
       $imagem = is_string($imagem) ? $imagem : '';
       
       
@@ -142,32 +142,38 @@ $recent_posts_query_banner = new WP_Query(array(
     <div class="grid-filmes">
       <div>
         <section id="filmesHome" class="owl-carousel">
-          <?php if ($filme->have_posts()) {while ($filme->have_posts()) {$filme->the_post(); ?>
+          <?php if ($filme->have_posts()) {
+        while ($filme->have_posts()) {
+          $filme->the_post();
+          $cartaz = CFS()->get('cartaz') ?? '';
+          $titulo = CFS()->get('titulo') ?? get_the_title();
+      ?>
           <div class="item">
-            <?php if (esc_url(CFS()->get('cartaz')) == '') {  ?>
+            <?php if (esc_url($cartaz) == '') { ?>
             <a href="<?php the_permalink(); ?>" class="card">
-              <h3><?php echo get_the_title() ?></h3>
+              <h3><?php echo get_the_title(); ?></h3>
               <p class="indisponivel">Poster não disponível</p>
             </a>
             <?php } else { ?>
-            <a href="<?php the_permalink(); ?>" class="">
-              <img src="<?php echo esc_url(CFS()->get('cartaz')); ?>"
-                alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
-              <h3><?php echo get_the_title() ?></h3>
+            <a href="<?php the_permalink(); ?>">
+              <img src="<?php echo esc_url($cartaz); ?>" alt="<?php echo esc_attr($titulo); ?>" />
+              <h3><?php echo get_the_title(); ?></h3>
             </a>
             <?php } ?>
-            </a>
           </div>
-          <?php }
-              } ?>
+          <?php
+        }
+      } ?>
         </section>
       </div>
+
       <div>
-        <a href="<?php echo esc_attr($link_banner_estreia); ?>">
-          <img class="publi" src="<?php echo esc_html($banner_estreia) ?>" alt="Banner de publicidade" />
+        <a href="<?php echo esc_url($link_banner_estreia ?? '#'); ?>">
+          <img class="publi" src="<?php echo esc_url($banner_estreia ?? ''); ?>" alt="Banner de publicidade" />
         </a>
       </div>
     </div>
+
   </section>
   <section class="home_lista_noticias">
     <h2>Publicações recentes</h2>
