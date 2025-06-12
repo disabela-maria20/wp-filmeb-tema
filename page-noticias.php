@@ -109,7 +109,7 @@ $link_skyscraper = CFS()->get('link_skyscraper', $banner_id);
         <img src="<?php echo esc_url($skyscraper); ?>" class="img-banner" alt="banner">
       </a>
       <?php }?>
-      <h2>Boletins</h2>
+      <h2>Boletim da semana</h2>
       <?php get_template_part('components/Aside/index'); ?>
     </aside>
   </div>

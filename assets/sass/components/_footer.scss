@@ -1,11 +1,29 @@
-footer.rodape {
+.rodape {
+  .home_newllater {
+    background-color: $color-off-white-alt;
+    padding: 35px !important;
+    margin: 0 !important;
+    .grid {
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+    p {
+      text-align: left !important;
+      font-size: 1.4rem;
+      line-height: 1.61;
+      font-weight: 400;
+      @include media(lg) {
+        font-size: 1.6rem;
+      }
+    }
+  }
   .bg-filmeB {
     padding: 70px 0;
 
     background: linear-gradient(180deg, $color-bright-red, $color-red-dark 90%);
 
     @include media(lg) {
-      padding: 90px 0;
+      padding: 60px 0;
     }
     img {
       display: block;
@@ -17,7 +35,7 @@ footer.rodape {
     display: block;
     margin: 0 auto;
     color: $color-white;
-    max-width: 320px;
+    max-width: 420px;
     text-align: center;
     margin: 0 auto;
 

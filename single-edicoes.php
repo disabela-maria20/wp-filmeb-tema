@@ -151,5 +151,6 @@ $banner_id = "78847";
   </div>
 </div>
 
+
 <?php get_template_part('components/Footer/index'); ?>
 <?php get_footer(); ?>

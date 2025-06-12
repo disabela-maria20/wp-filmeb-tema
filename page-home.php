@@ -111,15 +111,6 @@ $recent_posts_query_banner = new WP_Query(array(
         <img src="<?php echo CFS()->get('banner_newsllater'); ?>" class="img-banner d-block m-auto" alt="banner">
       </a>
     </div>
-    <div class="grid">
-      <div>
-        <h2>Receba a nossa newsletter</h2>
-        <p>
-          Fique por dentro do que movimenta o mercado de cinema! Receba tendências, estreias, bilheterias e os temas
-          mais relevantes da indústria diretamente no seu e-mail.</p>
-      </div>
-      <?php echo do_shortcode('[newsletter_form]'); ?>
-    </div>
   </section>
   <section class="home-filmes">
     <h2>Lançamentos da semana</h2>
@@ -169,8 +160,9 @@ $recent_posts_query_banner = new WP_Query(array(
               <h3>
                 <?php echo esc_html(CFS()->get('titulo') ?: get_the_title());  ?>
               </h3>
-              <span class="data"><?php $data=strtotime(CFS()->get('data')); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
-</span>
+              <span
+                class="data"><?php $data=strtotime(CFS()->get('data')); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
+              </span>
             </a>
           </div>
         </div>
@@ -237,6 +229,20 @@ $recent_posts_query_banner = new WP_Query(array(
 <?php endwhile;
 else:
 endif; ?>
+<div class="rodape">
+  <div class="bg-filmeB">
+    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo-boletim-filme-b.png" alt="cine B" />
+
+    <div class="container">
+      <div class="area_saiba_mais">
+        <h2>Conheça o Boletim</h2>
+        <p>Acompanhe de perto o mercado de cinema! Assine o Boletim Filme B e receba, toda semana, bilheterias,
+          análises e as principais movimentações da indústria no Brasil e no mundo.</p>
+        <a href="<?php echo get_site_url(); ?>/assine/">Saiba Mais</a>
+      </div>
+    </div>
+  </div>
+</div>
 <?php get_template_part('components/Footer/index'); ?>
 <?php get_footer(); ?>
 
@@ -259,7 +265,7 @@ document.addEventListener("DOMContentLoaded", function() {
           items: 3
         },
         1024: {
-          items: 5
+          items: 4
         },
       }
     });
