@@ -432,7 +432,7 @@
     }
     img:not(.publi) {
       width: 100%;
-      height: 200px;
+      height: 350px;
       object-fit: cover;
     }
     .publi {
@@ -449,7 +449,7 @@
       .card {
         color: $color-darker-gray;
         width: 100%;
-        height: 200px;
+        height: 350px;
         background: #fef3f6;
         position: relative;
         display: flex;
