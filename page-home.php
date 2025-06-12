@@ -180,26 +180,33 @@ $recent_posts_query_banner = new WP_Query(array(
     <?php if (esc_html($banner_lateral) == '1') { ?>
     <div class="grid-recentes">
       <div>
-        <?php if ($recent_posts_query->have_posts()) { while ($recent_posts_query->have_posts()) {$recent_posts_query->the_post(); ?>
+        <?php if ($recent_posts_query->have_posts()) {
+        while ($recent_posts_query->have_posts()) {
+          $recent_posts_query->the_post(); ?>
         <div class="item">
-          <?php if (esc_url(CFS()->get('imagem')) != '') {  ?>
+          <?php if (esc_url(CFS()->get('imagem')) != '') { ?>
           <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
             alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
           <?php } ?>
           <div>
             <a href="<?php the_permalink(); ?>">
-              <h3>
-                <?php echo esc_html(CFS()->get('titulo') ?: get_the_title());  ?>
-              </h3>
-              <span
-                class="data"><?php $data=strtotime(CFS()->get('data')); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
+              <h3><?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?></h3>
+              <span class="data">
+                <?php
+                    $data_raw = CFS()->get('data');
+                    if (!empty($data_raw)) {
+                      $data = strtotime($data_raw);
+                      echo date('j', $data) . ' ' . mb_substr(strtolower(date_i18n('F', $data)), 0, 3) . ' ' . date('Y', $data);
+                    }
+                  ?>
               </span>
             </a>
           </div>
         </div>
         <?php }
-              } ?>
+      } ?>
       </div>
+
       <aside>
         <a href="<?php echo esc_url(CFS()->get('link_banner_skyscraper')); ?>">
           <img src="<?php echo esc_url($banner_skyscraper); ?>">
@@ -211,16 +218,15 @@ $recent_posts_query_banner = new WP_Query(array(
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         </div>
-
       </aside>
     </div>
     <?php } else { ?>
     <div class="grid grid-2-lg gap-32">
       <?php if ($recent_posts_query->have_posts()) {
-              while ($recent_posts_query->have_posts()) {
-                $recent_posts_query->the_post(); ?>
+      while ($recent_posts_query->have_posts()) {
+        $recent_posts_query->the_post(); ?>
       <div class="item">
-        <?php if (esc_url(CFS()->get('imagem')) != '') {  ?>
+        <?php if (esc_url(CFS()->get('imagem')) != '') { ?>
         <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
           alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
         <?php } ?>
@@ -228,15 +234,22 @@ $recent_posts_query_banner = new WP_Query(array(
           <a href="<?php the_permalink(); ?>">
             <h3><?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?></h3>
             <span class="data">
-              <?php $data=strtotime(CFS()->get('data')); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
-
+              <?php
+                  $data_raw = CFS()->get('data');
+                  if (!empty($data_raw)) {
+                    $data = strtotime($data_raw);
+                    echo date('j', $data) . ' ' . mb_substr(strtolower(date_i18n('F', $data)), 0, 3) . ' ' . date('Y', $data);
+                  }
+                ?>
             </span>
           </a>
         </div>
       </div>
-      <?php } } ?>
+      <?php }
+    } ?>
     </div>
     <?php } ?>
+
 
   </section>
   <section class="home_lista_rapinhas">
