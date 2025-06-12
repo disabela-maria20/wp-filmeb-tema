@@ -1,7 +1,7 @@
 <?php
 $recent_posts_query = new WP_Query(array(
   'post_type' => 'rapidinhas',
-  'posts_per_page' => 10,
+  'posts_per_page' => 8,
   'orderby' => 'date',
   'order' => 'DESC'
 ));
