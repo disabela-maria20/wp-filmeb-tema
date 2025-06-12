@@ -176,8 +176,12 @@ if ($recent_posts_query->have_posts()) {
 ?>
       <div class="item-aside">
         <a href="<?php the_permalink(); ?>">
-          <?php if (esc_url(CFS()->get('imagem')) != '') { ?>
-          <img src="<?php echo esc_url(CFS()->get('imagem')); ?>" alt="<?php echo esc_attr($post_title); ?>" />
+          <?php 
+            $imagem_url = CFS()->get('imagem');
+            if (!empty($imagem_url)) {  
+            ?>
+          <img class="img-post" src="<?php echo esc_url($imagem_url); ?>"
+            alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
           <?php } ?>
           <h3><?php echo esc_html($post_title); ?></h3>
         </a>
