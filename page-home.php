@@ -60,39 +60,48 @@ $recent_posts_query_banner = new WP_Query(array(
 <div class="container">
   <section class="owl-carousel slide">
     <?php if ($recent_posts_query_banner->have_posts()) { 
-        while ($recent_posts_query_banner->have_posts()) { 
-            $recent_posts_query_banner->the_post(); 
-            $imagem = CFS()->get('imagem');
-            $titulo = CFS()->get('titulo') ?: get_the_title();
-            $data_field = CFS()->get('data');
-            $descricao = CFS()->get('descricao') ?: get_the_excerpt();
-    ?>
+    while ($recent_posts_query_banner->have_posts()) { 
+      $recent_posts_query_banner->the_post(); 
+
+      // Garantindo que os campos retornem strings
+      $imagem = CFS()->get('imagem');
+      
+      $titulo = CFS()->get('titulo');
+      $titulo = is_string($titulo) ? $titulo : get_the_title();
+
+      $data_field = CFS()->get('data');
+
+      $descricao = CFS()->get('descricao');
+      $descricao = is_string($descricao) ? $descricao : get_the_excerpt();
+  ?>
     <div class="item">
-      <?php if (!empty($imagem)) {  ?>
+      <?php if (!empty($imagem)) { ?>
       <img src="<?php echo esc_url($imagem); ?>" alt="<?php echo esc_attr($titulo); ?>" />
       <?php } ?>
       <div>
         <a href="<?php the_permalink(); ?>">
-          <h2><?php echo esc_html($titulo); ?></h2>
+          <h2><?php echo esc_html((string) $titulo); ?></h2>
           <span class="data">
             <?php 
-            if (!empty($data_field)) {
-                $data = strtotime($data_field); 
-                echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); 
-            }
-            ?>
+          if (!empty($data_field)) {
+              $data = strtotime($data_field); 
+              echo date('j', $data) . ' ' . mb_substr(strtolower(date_i18n('F', $data)), 0, 3) . ' ' . date('Y', $data); 
+          }
+          ?>
           </span> <i>&nbsp;⎸</i>
           <p class="paragrafo">
-            <?php echo wp_trim_words(esc_html($descricao), 100, '...'); ?></p>
+            <?php echo wp_trim_words(esc_html((string) $descricao), 100, '...'); ?>
+          </p>
         </a>
       </div>
     </div>
     <?php }
-          wp_reset_postdata();
-        } else {
-          echo '<p>Nenhum post encontrado.</p>';
-        } ?>
+    wp_reset_postdata();
+  } else {
+    echo '<p>Nenhum post encontrado.</p>';
+  } ?>
   </section>
+
   <section class="home_table">
     <div class="home_table grid grid-2-lg gap-32">
       <div>
