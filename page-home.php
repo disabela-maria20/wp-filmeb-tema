@@ -59,20 +59,31 @@ $recent_posts_query_banner = new WP_Query(array(
 <?php if (have_posts()): while (have_posts()):the_post(); ?>
 <div class="container">
   <section class="owl-carousel slide">
-    <?php if ($recent_posts_query_banner->have_posts()) { while ($recent_posts_query_banner->have_posts()) { $recent_posts_query_banner->the_post(); ?>
+    <?php if ($recent_posts_query_banner->have_posts()) { 
+        while ($recent_posts_query_banner->have_posts()) { 
+            $recent_posts_query_banner->the_post(); 
+            $imagem = CFS()->get('imagem');
+            $titulo = CFS()->get('titulo') ?: get_the_title();
+            $data_field = CFS()->get('data');
+            $descricao = CFS()->get('descricao') ?: get_the_excerpt();
+    ?>
     <div class="item">
-      <?php if (esc_url(CFS()->get('imagem')) != '') {  ?>
-      <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
-        alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
+      <?php if (!empty($imagem)) {  ?>
+      <img src="<?php echo esc_url($imagem); ?>" alt="<?php echo esc_attr($titulo); ?>" />
       <?php } ?>
       <div>
         <a href="<?php the_permalink(); ?>">
-          <h2><?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?></h2>
+          <h2><?php echo esc_html($titulo); ?></h2>
           <span class="data">
-            <?php $data=strtotime(CFS()->get('data')); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
+            <?php 
+            if (!empty($data_field)) {
+                $data = strtotime($data_field); 
+                echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); 
+            }
+            ?>
           </span> <i>&nbsp;⎸</i>
           <p class="paragrafo">
-            <?php echo wp_trim_words(esc_html(CFS()->get('descricao') ?: get_the_excerpt()), 100, '...'); ?></p>
+            <?php echo wp_trim_words(esc_html($descricao), 100, '...'); ?></p>
         </a>
       </div>
     </div>
