@@ -77,9 +77,7 @@ $recent_posts_query_banner = new WP_Query(array(
   ?>
     <div class="item">
       <?php echo var_dump($imagem)  ?>
-      <?php if (!empty($imagem)) { ?>
-      <img src="<?php echo esc_url($imagem); ?>" alt="<?php echo esc_attr($titulo); ?>" />
-      <?php } ?>
+
       <div>
         <a href="<?php the_permalink(); ?>">
           <h2><?php echo esc_html((string) $titulo); ?></h2>
