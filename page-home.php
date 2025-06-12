@@ -63,8 +63,8 @@ $recent_posts_query_banner = new WP_Query(array(
     while ($recent_posts_query_banner->have_posts()) { 
       $recent_posts_query_banner->the_post(); 
 
-      // Garantindo que os campos retornem strings
-      $imagem = CFS()->get('imagem');
+     $imagem = CFS()->get('imagem');
+      $imagem = is_string($imagem) ? $imagem : '';
       
       $titulo = CFS()->get('titulo');
       $titulo = is_string($titulo) ? $titulo : get_the_title();
@@ -75,6 +75,7 @@ $recent_posts_query_banner = new WP_Query(array(
       $descricao = is_string($descricao) ? $descricao : get_the_excerpt();
   ?>
     <div class="item">
+      <?php  ?>
       <?php if (!empty($imagem)) { ?>
       <img src="<?php echo esc_url($imagem); ?>" alt="<?php echo esc_attr($titulo); ?>" />
       <?php } ?>
