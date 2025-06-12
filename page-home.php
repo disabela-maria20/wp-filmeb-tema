@@ -265,7 +265,7 @@ document.addEventListener("DOMContentLoaded", function() {
           items: 3
         },
         1024: {
-          items: 4
+          items: 3
         },
       }
     });
