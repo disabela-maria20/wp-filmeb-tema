@@ -177,76 +177,88 @@ $recent_posts_query_banner = new WP_Query(array(
   </section>
   <section class="home_lista_noticias">
     <h2>Publicações recentes</h2>
-    <?php if (esc_html($banner_lateral) == '1') { ?>
+    <?php if (!empty($banner_lateral) && esc_html($banner_lateral) == '1') { ?>
     <div class="grid-recentes">
       <div>
         <?php if ($recent_posts_query->have_posts()) {
-        while ($recent_posts_query->have_posts()) {
-          $recent_posts_query->the_post(); ?>
+      while ($recent_posts_query->have_posts()) {
+        $recent_posts_query->the_post(); 
+        $imagem_url = CFS()->get('imagem');
+        $titulo = CFS()->get('titulo') ?: get_the_title();
+    ?>
         <div class="item">
-          <?php if (esc_url(CFS()->get('imagem')) != '') { ?>
-          <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
-            alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
+          <?php if (!empty($imagem_url) && is_string($imagem_url)) { ?>
+          <img src="<?php echo esc_url($imagem_url); ?>" alt="<?php echo esc_attr($titulo); ?>" />
           <?php } ?>
           <div>
             <a href="<?php the_permalink(); ?>">
-              <h3><?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?></h3>
+              <h3><?php echo esc_html($titulo); ?></h3>
               <span class="data">
                 <?php
-                    $data_raw = CFS()->get('data');
-                    if (!empty($data_raw)) {
-                      $data = strtotime($data_raw);
-                      echo date('j', $data) . ' ' . mb_substr(strtolower(date_i18n('F', $data)), 0, 3) . ' ' . date('Y', $data);
-                    }
-                  ?>
+              $data_raw = CFS()->get('data');
+              if (!empty($data_raw)) {
+                $data = strtotime($data_raw);
+                echo date('j', $data) . ' ' . mb_substr(strtolower(date_i18n('F', $data)), 0, 3) . ' ' . date('Y', $data);
+              }
+            ?>
               </span>
             </a>
           </div>
         </div>
         <?php }
-      } ?>
+    } ?>
       </div>
 
       <aside>
-        <a href="<?php echo esc_url(CFS()->get('link_banner_skyscraper')); ?>">
-          <img src="<?php echo esc_url($banner_skyscraper); ?>">
+        <?php $banner_link = CFS()->get('link_banner_skyscraper'); ?>
+        <?php if (!empty($banner_link) && !empty($banner_skyscraper)) { ?>
+        <a href="<?php echo esc_url($banner_link); ?>">
+          <img src="<?php echo esc_url($banner_skyscraper); ?>" alt="Banner">
         </a>
+        <?php } ?>
 
+        <?php if (!empty($video)) { ?>
         <div class="video">
           <iframe width="560" height="315" src="<?php echo esc_url($video); ?>" title="YouTube video player"
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         </div>
+        <?php } ?>
       </aside>
     </div>
     <?php } else { ?>
     <div class="grid grid-2-lg gap-32">
       <?php if ($recent_posts_query->have_posts()) {
-      while ($recent_posts_query->have_posts()) {
-        $recent_posts_query->the_post(); ?>
+    while ($recent_posts_query->have_posts()) {
+      $recent_posts_query->the_post();
+     
+      $imagem_url = CFS()->get('imagem');
+      $imagem_url = is_string($imagem) ? $imagem : '';
+
+      $titulo = CFS()->get('titulo') ?: get_the_title();
+  ?>
       <div class="item">
-        <?php if (esc_url(CFS()->get('imagem')) != '') { ?>
-        <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
-          alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
+        <?php if (!empty($imagem_url) && is_string($imagem_url)) { ?>
+        <img src="<?php echo esc_url($imagem_url); ?>" alt="<?php echo esc_attr($titulo); ?>" />
         <?php } ?>
         <div>
           <a href="<?php the_permalink(); ?>">
-            <h3><?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?></h3>
+            <h3><?php echo esc_html($titulo); ?></h3>
             <span class="data">
               <?php
-                  $data_raw = CFS()->get('data');
-                  if (!empty($data_raw)) {
-                    $data = strtotime($data_raw);
-                    echo date('j', $data) . ' ' . mb_substr(strtolower(date_i18n('F', $data)), 0, 3) . ' ' . date('Y', $data);
-                  }
-                ?>
+              $data_raw = CFS()->get('data');
+              if (!empty($data_raw)) {
+                $data = strtotime($data_raw);
+                echo date('j', $data) . ' ' . mb_substr(strtolower(date_i18n('F', $data)), 0, 3) . ' ' . date('Y', $data);
+              }
+            ?>
             </span>
           </a>
         </div>
       </div>
       <?php }
-    } ?>
+  } ?>
     </div>
     <?php } ?>
 
