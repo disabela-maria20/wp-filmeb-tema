@@ -27,7 +27,7 @@
           <?php } else { ?>
           <ul class="user">
             <li>
-              <a href="<?php echo get_site_url(); ?>/quemsomos/">
+              <a href="<?php echo get_site_url(); ?>/quem-somos/">
                 <span>Assine</span>
               </a>
             </li>
