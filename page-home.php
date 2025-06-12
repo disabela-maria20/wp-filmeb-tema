@@ -15,7 +15,7 @@ $video = CFS()->get('video');
 
 $recent_posts_query = new WP_Query(array(
   'post_type' => 'post',
-  'posts_per_page' => 10,
+  'posts_per_page' => 8,
   'orderby' => 'date',
   'order' => 'DESC',
   'category__not_in' => 'Rapidinhas',
@@ -68,7 +68,11 @@ $recent_posts_query_banner = new WP_Query(array(
       <div>
         <a href="<?php the_permalink(); ?>">
           <h2><?php echo esc_html(CFS()->get('titulo') ?: get_the_title()); ?></h2>
-          <p><?php echo esc_html(wp_trim_words(CFS()->get('descricao') ?: get_the_excerpt(), 100, '...')); ?></p>
+          <span class="data">
+            <?php $data=strtotime(CFS()->get('data')); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
+          </span> <i>&nbsp;⎸</i>
+          <p class="paragrafo">
+            <?php echo wp_trim_words(esc_html(CFS()->get('descricao') ?: get_the_excerpt()), 100, '...'); ?></p>
         </a>
       </div>
     </div>
