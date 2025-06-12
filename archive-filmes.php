@@ -132,7 +132,6 @@ if (!$has_filters) {
     );
 }
 
-// Aplicar filtros adicionais se existirem
 function apply_filters_to_args($args) {
   if (isset($_GET['origem']) && !empty($_GET['origem'])) {
     $args['meta_query'][] = array(
