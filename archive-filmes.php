@@ -89,48 +89,50 @@ $args_mes = array(
 );
 
 function apply_filters_to_args($args) {
-  if (!isset($args['tax_query'])) {
-    $args['tax_query'] = array();
-  }
-
   if (isset($_GET['origem']) && !empty($_GET['origem'])) {
-    $args['tax_query'][] = array(
-      'taxonomy' => 'paises',
-      'field' => 'term_id',
-      'terms' => sanitize_text_field($_GET['origem']),
+    $args['meta_query'][] = array(
+      'key' => 'paises',
+      'value' => sanitize_text_field($_GET['origem']),
+      'compare' => 'REGEXP',
     );
   }
 
   if (isset($_GET['distribuicao']) && !empty($_GET['distribuicao'])) {
-    $args['tax_query'][] = array(
-      'taxonomy' => 'distribuidoras',
-      'field' => 'term_id',
-      'terms' => sanitize_text_field($_GET['distribuicao']),
+    $args['meta_query'][] = array(
+      'key' => 'distribuicao',
+      'value' => sanitize_text_field($_GET['distribuicao']),
+      'compare' => '=',
     );
   }
 
   if (isset($_GET['genero']) && !empty($_GET['genero'])) {
-    $args['tax_query'][] = array(
-      'taxonomy' => 'generos',
-      'field' => 'term_id',
-      'terms' => sanitize_text_field($_GET['genero']),
+    $args['meta_query'][] = array(
+      'key' => 'generos',
+      'value' => sanitize_text_field($_GET['genero']),
+      'compare' => 'REGEXP',
     );
   }
 
   if (isset($_GET['tecnologia']) && !empty($_GET['tecnologia'])) {
-    $args['tax_query'][] = array(
-      'taxonomy' => 'tecnologias',
-      'field' => 'term_id',
-      'terms' => sanitize_text_field($_GET['tecnologia']),
+    $args['meta_query'][] = array(
+      'key' => 'tecnologia',
+      'value' => sanitize_text_field($_GET['tecnologia']),
+      'compare' => 'REGEXP',
     );
   }
   
   return $args;
 }
 
+if (!$has_filters) {
+    $args_semana = apply_filters_to_args($args_semana);
+}
 $args_mes = apply_filters_to_args($args_mes);
 
 // Buscar filmes
+if (!$has_filters) {
+    $filmes_semana = new WP_Query($args_semana);
+}
 $filmes_mes = new WP_Query($args_mes);
 
 function agrupar_filmes_por_dia($wp_query) {
