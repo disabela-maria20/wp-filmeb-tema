@@ -455,7 +455,7 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
       <table>
         <thead>
           <tr>
-            <th colspan="2" style="width: 35%;">Título</th>
+            <th colspan="2" style="width: 20%;">Título</th>
             <th>Distribuição</th>
             <th>Direção</th>
             <th>País</th>
