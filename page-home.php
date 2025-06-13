@@ -109,7 +109,7 @@ $recent_posts_query_banner = new WP_Query(array(
 
         <div class="area">
           <div class="titulo">
-            <h2> 10 maiores bilheterias do fim de semana no Brasil </h2>
+            <h2> Bilheteria fim de semana Brasil </h2>
             <span></span>
           </div>
           <?php echo do_shortcode('[table id=5 /]'); ?>
