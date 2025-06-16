@@ -106,16 +106,15 @@ $post_id = get_the_ID();
           <?php endif; ?>
           <div>
             <?php if(!empty($post_date)) : ?>
-            <span class="data">
-              <?php $data=strtotime($post_date); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
-            </span>
-            <?php endif; ?>
             <a href="<?php echo esc_url($post_url); ?>" class="read-more">
               <h2><?php echo esc_html($post_title); ?></h2>
             </a>
-            <?php if(!empty($post_content)) : ?>
-            <p> <?php echo esc_html(wp_trim_words($post_content ?: get_the_excerpt(), 50, '...')); ?>
-              <?php endif; ?>
+            <span class="data">
+              <?php $data=strtotime(CFS()->get('data')); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
+            </span> <i>&nbsp;⎸</i>
+            <p class="paragrafo">
+              <?php echo wp_trim_words(esc_html($post_content ?: get_the_excerpt()), 20, '...'); ?></p>
+            <?php endif; ?>
           </div>
         </div>
         <?php } // Fechamento do foreach ?>
@@ -189,11 +188,11 @@ if ($recent_posts_query->have_posts()) {
       <?php
         endif;
     }
-    wp_reset_postdata();  // Reseta a query para evitar conflitos
-} else {
-    echo '<p>Nenhum post encontrado.</p>';
-}
-?>
+       wp_reset_postdata();  // Reseta a query para evitar conflitos
+      } else {
+          echo '<p>Nenhum post encontrado.</p>';
+      }
+      ?>
       <?php if ($big_stamp != '') { ?>
       <a href="<?php echo esc_url($link_big_stampr); ?>">
         <img src="<?php echo esc_url($big_stamp); ?>">

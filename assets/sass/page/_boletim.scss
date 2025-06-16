@@ -111,7 +111,11 @@
       font-size: 1.6rem;
       line-height: 2rem;
       text-align: left;
+      display: inline;
       color: $color-darker-gray;
+    }
+    i {
+      font-style: normal;
     }
   }
 }

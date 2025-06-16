@@ -71,7 +71,7 @@ document.getElementById('assinar-filmeb').addEventListener('click', function(e) 
   const productId = botao.getAttribute('data-product-id');
 
   // Altera o texto do botão
-  spanTexto.textContent = 'Adicionando ao carrinho...';
+  spanTexto.textContent = 'Carregando...';
   botao.classList.add('loading');
 
   // Faz a requisição AJAX para adicionar ao carrinho
