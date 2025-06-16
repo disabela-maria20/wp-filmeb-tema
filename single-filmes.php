@@ -151,12 +151,15 @@ $banner_lateral = CFS()->get('banner_lateral', $banner_id);
             <?php endif; ?>
             <div><?php echo render_terms('generos'); ?></div>
           </div>
+          <?php 
+              $duracao = CFS()->get('duracao_minutos');
+              if ($duracao && $duracao !== '0') : 
+            ?>
           <div class="grid-fixa-tecnica">
-            <?php if (!is_cfs_field_empty('duracao_minutos')) : ?>
             <h3>Duração</h3>
-            <?php endif; ?>
-            <p><?php echo CFS()->get('duracao_minutos'); ?>&nbsp;min</p>
+            <p><?php echo esc_html($duracao); ?>&nbsp;min</p>
           </div>
+          <?php endif; ?>
           <div class="grid-fixa-tecnica">
             <?php if (!is_cfs_field_empty('classificacao')) : ?>
             <h3>Classificação</h3>
@@ -173,7 +176,7 @@ $banner_lateral = CFS()->get('banner_lateral', $banner_id);
             <div>
               <h3>Sinopse</h3>
             </div>
-            <div>
+            <div id="sinopse">
               <?php the_content(); ?>
             </div>
 

@@ -53,13 +53,21 @@ $link_skyscraper = CFS()->get('link_skyscraper', $banner_id);
       <?php
           $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
           $boletim_query = new WP_Query(array(
-            'posts_per_page' => 8,
-            'paged' => $paged,
-            'meta_key' => 'data',          
-            'meta_type' => 'DATE',         
-            'orderby' => 'meta_value',     
-            'order' => 'DESC',  
-        ));
+              'posts_per_page' => 8,
+              'paged' => $paged,
+              'meta_key' => 'data',          
+              'meta_type' => 'DATE',         
+              'orderby' => 'meta_value',     
+              'order' => 'DESC',
+              'tax_query' => array(
+                  array(
+                      'taxonomy' => 'category',
+                      'field' => 'slug',
+                      'terms' => 'boletim',
+                      'operator' => 'NOT IN'
+                  )
+              )
+          ));
 
           if ($boletim_query->have_posts()): ?>
       <div class="posts">
