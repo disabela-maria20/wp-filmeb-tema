@@ -65,6 +65,9 @@ $selected_mes = isset($_GET['mes']) ? sanitize_text_field($_GET['mes']) : $curre
 $has_filters = isset($_GET['ano']) || isset($_GET['mes']) || isset($_GET['origem']) || 
                isset($_GET['distribuicao']) || isset($_GET['genero']) || isset($_GET['tecnologia']);
 
+// Verificar se foi selecionado "Todos" no mês
+$mostrar_todos = isset($_GET['mes']) && $_GET['mes'] === 'todos';
+
 // Argumentos para buscar filmes
 $args_mes = array(
   'post_type' => 'filmes',
@@ -102,7 +105,11 @@ if ($selected_mes !== 'todos') {
 }
 
 function apply_filters_to_args($args) {
-  if (isset($_GET['origem']) && !empty($_GET['origem'])) {
+  if (!isset($args['meta_query'])) {
+    $args['meta_query'] = array();
+  }
+
+  if (isset($_GET['origem']) && !empty($_GET['origem']) && $_GET['origem'] !== 'todos') {
     $args['meta_query'][] = array(
       'key' => 'paises',
       'value' => sanitize_text_field($_GET['origem']),
@@ -110,7 +117,7 @@ function apply_filters_to_args($args) {
     );
   }
 
-  if (isset($_GET['distribuicao']) && !empty($_GET['distribuicao'])) {
+  if (isset($_GET['distribuicao']) && !empty($_GET['distribuicao']) && $_GET['distribuicao'] !== 'todos') {
     $args['meta_query'][] = array(
       'key' => 'distribuicao',
       'value' => sanitize_text_field($_GET['distribuicao']),
@@ -118,7 +125,7 @@ function apply_filters_to_args($args) {
     );
   }
 
-  if (isset($_GET['genero']) && !empty($_GET['genero'])) {
+  if (isset($_GET['genero']) && !empty($_GET['genero']) && $_GET['genero'] !== 'todos') {
     $args['meta_query'][] = array(
       'key' => 'generos',
       'value' => sanitize_text_field($_GET['genero']),
@@ -126,7 +133,7 @@ function apply_filters_to_args($args) {
     );
   }
 
-  if (isset($_GET['tecnologia']) && !empty($_GET['tecnologia'])) {
+  if (isset($_GET['tecnologia']) && !empty($_GET['tecnologia']) && $_GET['tecnologia'] !== 'todos') {
     $args['meta_query'][] = array(
       'key' => 'tecnologia',
       'value' => sanitize_text_field($_GET['tecnologia']),
@@ -142,12 +149,14 @@ $args_mes = apply_filters_to_args($args_mes);
 // Buscar filmes
 $filmes_mes = new WP_Query($args_mes);
 
-function agrupar_filmes_por_categoria($wp_query) {
+function agrupar_filmes_por_categoria($wp_query, $mostrar_todos = false) {
     $agrupados = array(
         'semana_atual' => array(),
         'proxima_semana' => array(),
+        'semanas_seguintes' => array(),
         'sem_data' => array(),
-        'semanas_passadas' => array()
+        'semanas_passadas' => array(),
+        'todos_ordenados' => array()
     );
     
     $hoje = new DateTime();
@@ -179,26 +188,45 @@ function agrupar_filmes_por_categoria($wp_query) {
 
             if ($tem_tag_sem_data) {
                 $agrupados['sem_data'][] = $post_id;
+                $agrupados['todos_ordenados'][$post_id] = '9999-99-99';
             } elseif ($data_estreia && preg_match('/^\d{4}-\d{2}-\d{2}$/', $data_estreia)) {
                 $data_obj = DateTime::createFromFormat('Y-m-d', $data_estreia);
                 
-                if ($data_obj >= $semana_atual_inicio && $data_obj <= $semana_atual_fim) {
-                    $agrupados['semana_atual'][$data_estreia][] = $post_id;
-                } 
-                elseif ($data_obj >= $proxima_semana_inicio && $data_obj <= $proxima_semana_fim) {
-                    $agrupados['proxima_semana'][$data_estreia][] = $post_id;
-                }
-                elseif ($data_obj < $semana_atual_inicio) {
-                    $agrupados['semanas_passadas'][$data_estreia][] = $post_id;
+                // Adicionar sempre ao array todos_ordenados
+                $agrupados['todos_ordenados'][$post_id] = $data_estreia;
+                
+                if (!$mostrar_todos) {
+                    if ($data_obj >= $semana_atual_inicio && $data_obj <= $semana_atual_fim) {
+                        $agrupados['semana_atual'][$data_estreia][] = $post_id;
+                    }
+                    elseif ($data_obj >= $proxima_semana_inicio && $data_obj <= $proxima_semana_fim) {
+                        $agrupados['proxima_semana'][$data_estreia][] = $post_id;
+                    } 
+                    elseif ($data_obj > $proxima_semana_fim) {
+                        $agrupados['semanas_seguintes'][$data_estreia][] = $post_id;
+                    }
+                    elseif ($data_obj < $semana_atual_inicio) {
+                        $agrupados['semanas_passadas'][$data_estreia][] = $post_id;
+                    }
                 }
             }
         }
         wp_reset_postdata();
     }
     
+    // Ordenar semanas seguintes em ordem crescente
+    if (!empty($agrupados['semanas_seguintes'])) {
+        ksort($agrupados['semanas_seguintes']);
+    }
+    
     // Ordenar semanas passadas em ordem decrescente
     if (!empty($agrupados['semanas_passadas'])) {
         krsort($agrupados['semanas_passadas']);
+    }
+    
+    // Ordenar todos os filmes por data (do mais recente para o mais antigo)
+    if (!empty($agrupados['todos_ordenados'])) {
+        asort($agrupados['todos_ordenados']);
     }
     
     return $agrupados;
@@ -233,7 +261,7 @@ function obter_anos_dos_filmes() {
 }
 
 $anos = obter_anos_dos_filmes();
-$filmes_agrupados = agrupar_filmes_por_categoria($filmes_mes);
+$filmes_agrupados = agrupar_filmes_por_categoria($filmes_mes, $mostrar_todos);
 ?>
 
 <?php
@@ -442,46 +470,86 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
       <?php
       }
 
-      function render_filmes_lista($filmes_agrupados, $dias_semana, $has_filters = false) {
-          // Semana atual
-          if (!empty($filmes_agrupados['semana_atual'])) {
-              echo '<h2 class="section-title">Filmes desta semana</h2>';
-              foreach ($filmes_agrupados['semana_atual'] as $data => $filmes_ids) {
-                  render_dia_filmes($data, $filmes_ids, $dias_semana);
-              }
-          }
+      function render_filmes_lista($filmes_agrupados, $dias_semana, $has_filters = false, $mostrar_todos = false) {
+          if ($mostrar_todos) {
+            echo '<div class="lista-completa">';
+            
+            // Reorganiza por datas para agrupar os filmes com mesma data
+            $filmes_por_data = [];
 
-          // Próxima semana
-          if (!empty($filmes_agrupados['proxima_semana'])) {
-              echo '<h2 class="section-title">Próxima semana</h2>';
-              foreach ($filmes_agrupados['proxima_semana'] as $data => $filmes_ids) {
-                  render_dia_filmes($data, $filmes_ids, $dias_semana);
-              }
-          }
+            foreach ($filmes_agrupados['todos_ordenados'] as $post_id => $data_estreia) {
+                if (!isset($filmes_por_data[$data_estreia])) {
+                    $filmes_por_data[$data_estreia] = [];
+                }
+                $filmes_por_data[$data_estreia][] = $post_id;
+            }
 
-          // Filmes sem data - SEM TÍTULO
-          if (!empty($filmes_agrupados['sem_data'])) {
-              echo '<div class="grid-filmes" style="margin-top: 20px;">';
-              foreach ($filmes_agrupados['sem_data'] as $post_id) {
-                  render_card_filme($post_id);
-              }
-              echo '</div>';
-          }
+            foreach ($filmes_por_data as $data_estreia => $filmes_ids) {
+                if ($data_estreia === '9999-99-99') {
+                    echo '<h2 class="section-title">Filmes sem data definida</h2>';
+                    echo '<div class="grid-filmes">';
+                    foreach ($filmes_ids as $post_id) {
+                        render_card_filme($post_id);
+                    }
+                    echo '</div>';
+                } else {
+                    render_dia_filmes($data_estreia, $filmes_ids, $dias_semana);
+                }
+            }
 
-          // Semanas que já passaram
-          if (!empty($filmes_agrupados['semanas_passadas'])) {
-              echo '<h2 class="section-title">Lançamentos recentes</h2>';
-              $semanas_passadas = array_slice($filmes_agrupados['semanas_passadas'], 0, 3, true);
-              foreach ($semanas_passadas as $data => $filmes_ids) {
-                  render_dia_filmes($data, $filmes_ids, $dias_semana);
+            echo '</div>';
+        } else {
+              // Semana atual
+              if (!empty($filmes_agrupados['semana_atual'])) {
+                  echo '<h2 class="section-title">Filmes desta semana</h2>';
+                  foreach ($filmes_agrupados['semana_atual'] as $data => $filmes_ids) {
+                      render_dia_filmes($data, $filmes_ids, $dias_semana);
+                  }
+              }
+
+              // Próxima semana
+              if (!empty($filmes_agrupados['proxima_semana'])) {
+                  echo '<h2 class="section-title">Próxima semana</h2>';
+                  foreach ($filmes_agrupados['proxima_semana'] as $data => $filmes_ids) {
+                      render_dia_filmes($data, $filmes_ids, $dias_semana);
+                  }
+              }
+
+              // Semanas seguintes
+              if (!empty($filmes_agrupados['semanas_seguintes'])) {
+                  echo '<h2 class="section-title">Semanas seguintes</h2>';
+                  foreach ($filmes_agrupados['semanas_seguintes'] as $data => $filmes_ids) {
+                      render_dia_filmes($data, $filmes_ids, $dias_semana);
+                  }
+              }
+
+              // Filmes sem data
+              if (!empty($filmes_agrupados['sem_data'])) {
+                  echo '<h2 class="section-title">Filmes sem data definida</h2>';
+                  echo '<div class="grid-filmes">';
+                  foreach ($filmes_agrupados['sem_data'] as $post_id) {
+                      render_card_filme($post_id);
+                  }
+                  echo '</div>';
+              }
+
+              // Semanas que já passaram
+              if (!empty($filmes_agrupados['semanas_passadas'])) {
+                  echo '<h2 class="section-title">Lançamentos recentes</h2>';
+                  $semanas_passadas = array_slice($filmes_agrupados['semanas_passadas'], 0, 3, true);
+                  foreach ($semanas_passadas as $data => $filmes_ids) {
+                      render_dia_filmes($data, $filmes_ids, $dias_semana);
+                  }
               }
           }
           
           // Mensagem quando não há resultados com filtros
           if ($has_filters && empty($filmes_agrupados['semana_atual']) && 
               empty($filmes_agrupados['proxima_semana']) && 
+              empty($filmes_agrupados['semanas_seguintes']) && 
               empty($filmes_agrupados['sem_data']) && 
-              empty($filmes_agrupados['semanas_passadas'])) {
+              empty($filmes_agrupados['semanas_passadas']) &&
+              empty($filmes_agrupados['todos_ordenados'])) {
               echo '<div class="no-results">';
               echo '<p>Nenhum filme encontrado com os filtros selecionados.</p>';
               echo '</div>';
@@ -578,26 +646,9 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
       <?php
       }
 
-      function render_filmes_tabela($filmes_agrupados, $dias_semana, $has_filters = false) {
-          // Semana atual
-          if (!empty($filmes_agrupados['semana_atual'])) {
-              echo '<h2 class="section-title">Filmes desta semana</h2>';
-              foreach ($filmes_agrupados['semana_atual'] as $data => $filmes_ids) {
-                  render_dia_tabela($data, $filmes_ids, $dias_semana);
-              }
-          }
-
-          // Próxima semana
-          if (!empty($filmes_agrupados['proxima_semana'])) {
-              echo '<h2 class="section-title">Próxima semana</h2>';
-              foreach ($filmes_agrupados['proxima_semana'] as $data => $filmes_ids) {
-                  render_dia_tabela($data, $filmes_ids, $dias_semana);
-              }
-          }
-
-          // Filmes sem data - SEM TÍTULO
-          if (!empty($filmes_agrupados['sem_data'])) {
-              echo '<table style="margin-top: 20px;">';
+      function render_filmes_tabela($filmes_agrupados, $dias_semana, $has_filters = false, $mostrar_todos = false) {
+          if ($mostrar_todos) {
+              echo '<table class="tabela-completa">';
               echo '<thead><tr>
                   <th colspan="2" style="width: 20%;">Título</th>
                   <th>Distribuição</th>
@@ -608,26 +659,74 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
                   <th>Elenco</th>
               </tr></thead>';
               echo '<tbody>';
-              foreach ($filmes_agrupados['sem_data'] as $post_id) {
+              
+              foreach ($filmes_agrupados['todos_ordenados'] as $post_id => $data_estreia) {
                   render_linha_tabela($post_id);
               }
+              
               echo '</tbody></table>';
-          }
+          } else {
+              // Semana atual
+              if (!empty($filmes_agrupados['semana_atual'])) {
+                  echo '<h2 class="section-title">Filmes desta semana</h2>';
+                  foreach ($filmes_agrupados['semana_atual'] as $data => $filmes_ids) {
+                      render_dia_tabela($data, $filmes_ids, $dias_semana);
+                  }
+              }
 
-          // Semanas que já passaram
-          if (!empty($filmes_agrupados['semanas_passadas'])) {
-              echo '<h2 class="section-title">Lançamentos recentes</h2>';
-              $semanas_passadas = array_slice($filmes_agrupados['semanas_passadas'], 0, 3, true);
-              foreach ($semanas_passadas as $data => $filmes_ids) {
-                  render_dia_tabela($data, $filmes_ids, $dias_semana);
+              // Próxima semana
+              if (!empty($filmes_agrupados['proxima_semana'])) {
+                  echo '<h2 class="section-title">Próxima semana</h2>';
+                  foreach ($filmes_agrupados['proxima_semana'] as $data => $filmes_ids) {
+                      render_dia_tabela($data, $filmes_ids, $dias_semana);
+                  }
+              }
+
+              // Semanas seguintes
+              if (!empty($filmes_agrupados['semanas_seguintes'])) {
+                  echo '<h2 class="section-title">Semanas seguintes</h2>';
+                  foreach ($filmes_agrupados['semanas_seguintes'] as $data => $filmes_ids) {
+                      render_dia_tabela($data, $filmes_ids, $dias_semana);
+                  }
+              }
+
+              // Filmes sem data
+              if (!empty($filmes_agrupados['sem_data'])) {
+                  echo '<h2 class="section-title">Filmes sem data definida</h2>';
+                  echo '<table>';
+                  echo '<thead><tr>
+                      <th colspan="2" style="width: 20%;">Título</th>
+                      <th>Distribuição</th>
+                      <th>Direção</th>
+                      <th>País</th>
+                      <th>Gênero</th>
+                      <th style="width: 5%;">Duração</th>
+                      <th>Elenco</th>
+                  </tr></thead>';
+                  echo '<tbody>';
+                  foreach ($filmes_agrupados['sem_data'] as $post_id) {
+                      render_linha_tabela($post_id);
+                  }
+                  echo '</tbody></table>';
+              }
+
+              // Semanas que já passaram
+              if (!empty($filmes_agrupados['semanas_passadas'])) {
+                  echo '<h2 class="section-title">Lançamentos recentes</h2>';
+                  $semanas_passadas = array_slice($filmes_agrupados['semanas_passadas'], 0, 3, true);
+                  foreach ($semanas_passadas as $data => $filmes_ids) {
+                      render_dia_tabela($data, $filmes_ids, $dias_semana);
+                  }
               }
           }
           
           // Mensagem quando não há resultados com filtros
           if ($has_filters && empty($filmes_agrupados['semana_atual']) && 
               empty($filmes_agrupados['proxima_semana']) && 
+              empty($filmes_agrupados['semanas_seguintes']) && 
               empty($filmes_agrupados['sem_data']) && 
-              empty($filmes_agrupados['semanas_passadas'])) {
+              empty($filmes_agrupados['semanas_passadas']) &&
+              empty($filmes_agrupados['todos_ordenados'])) {
               echo '<div class="no-results">';
               echo '<p>Nenhum filme encontrado com os filtros selecionados.</p>';
               echo '</div>';
@@ -642,11 +741,11 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
         <div>
           <section class="area-filmes" v-if="ativoItem === 'lista'">
             <div class="lista-filmes" id="lista">
-              <?php render_filmes_lista($filmes_agrupados, $dias_semana, $has_filters); ?>
+              <?php render_filmes_lista($filmes_agrupados, $dias_semana, $has_filters, $mostrar_todos); ?>
             </div>
           </section>
           <section class="tabela-filme" v-if="ativoItem === 'tabela'">
-            <?php render_filmes_tabela($filmes_agrupados, $dias_semana, $has_filters); ?>
+            <?php render_filmes_tabela($filmes_agrupados, $dias_semana, $has_filters, $mostrar_todos); ?>
           </section>
         </div>
         <aside>
@@ -661,14 +760,14 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
       <?php else: ?>
       <section class="area-filmes" v-if="ativoItem === 'lista'">
         <div class="lista-filmes" id="lista">
-          <?php render_filmes_lista($filmes_agrupados, $dias_semana, $has_filters); ?>
+          <?php render_filmes_lista($filmes_agrupados, $dias_semana, $has_filters, $mostrar_todos); ?>
         </div>
       </section>
       <section class="tabela-filme" v-if="ativoItem === 'tabela'">
         <a href="<?php echo esc_url($link_banner_moldura_casado); ?>">
           <img src="<?php echo esc_url($banner_moldura_casado); ?>">
         </a>
-        <?php render_filmes_tabela($filmes_agrupados, $dias_semana, $has_filters); ?>
+        <?php render_filmes_tabela($filmes_agrupados, $dias_semana, $has_filters, $mostrar_todos); ?>
       </section>
       <?php endif; ?>
     </div>
