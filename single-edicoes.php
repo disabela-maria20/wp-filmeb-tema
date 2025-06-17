@@ -110,38 +110,38 @@ $banner_id = "78847";
 
       <h2>Edições anteriores</h2>
       <?php 
-$recent_edicoes_query = new WP_Query(array(
-  'post_type' => 'edicoes',
-  'posts_per_page' => -1,
-));
+          $recent_edicoes_query = new WP_Query(array(
+            'post_type' => 'edicoes',
+            'posts_per_page' => -1,
+          ));
 
-$posts_ordenados = [];
+          $posts_ordenados = [];
 
-if ($recent_edicoes_query->have_posts()) {
-  while ($recent_edicoes_query->have_posts()) {
-    $recent_edicoes_query->the_post();
-    
-    $titulo = get_the_title();
-    preg_match('/Edição (\d+)/', $titulo, $match);
-    $numero = isset($match[1]) ? intval($match[1]) : 0;
+          if ($recent_edicoes_query->have_posts()) {
+            while ($recent_edicoes_query->have_posts()) {
+              $recent_edicoes_query->the_post();
+              
+              $titulo = get_the_title();
+              preg_match('/Edição (\d+)/', $titulo, $match);
+              $numero = isset($match[1]) ? intval($match[1]) : 0;
 
-    $data_raw = CFS()->get('data');
-    $data_formatada = $data_raw ? date_i18n('d M Y', strtotime($data_raw)) : '';
+              $data_raw = CFS()->get('data');
+              $data_formatada = $data_raw ? date_i18n('d M Y', strtotime($data_raw)) : '';
 
-    $posts_ordenados[] = [
-      'numero' => $numero,
-      'permalink' => get_permalink(),
-      'data' => $data_formatada
-    ];
-  }
+              $posts_ordenados[] = [
+                'numero' => $numero,
+                'permalink' => get_permalink(),
+                'data' => $data_formatada
+              ];
+            }
 
-  // Ordena da maior para a menor edição
-  usort($posts_ordenados, function ($a, $b) {
-    return $b['numero'] - $a['numero'];
-  });
+            // Ordena da maior para a menor edição
+            usort($posts_ordenados, function ($a, $b) {
+              return $b['numero'] - $a['numero'];
+            });
 
-  foreach (array_slice($posts_ordenados, 0, 10) as $post) {
-    ?>
+            foreach (array_slice($posts_ordenados, 0, 10) as $post) {
+              ?>
       <div class="item-aside">
         <a href="<?php echo esc_url($post['permalink']); ?>" class="edicoes">
           <i class="bi bi-arrow-right-short"></i>
@@ -149,11 +149,11 @@ if ($recent_edicoes_query->have_posts()) {
         </a>
       </div>
       <?php
-  }
+            }
 
-  wp_reset_postdata();
-}
-?>
+            wp_reset_postdata();
+          }
+          ?>
 
     </aside>
   </div>

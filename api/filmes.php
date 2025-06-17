@@ -64,7 +64,7 @@ function registrar_cpt_filmes()
         'has_archive' => true,
         'publicly_queryable' => true,
         'show_in_rest' => true,
-        'taxonomies' => array('distribuidoras', 'paises', 'generos', 'classificacoes', 'tecnologias', 'feriados'),
+        'taxonomies' => array('distribuidoras', 'paises', 'generos', 'classificacoes', 'tecnologias', 'feriados', 'post_tag'),
     ));
 }
 add_action('init', 'registrar_cpt_filmes');
