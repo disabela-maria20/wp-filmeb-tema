@@ -445,7 +445,7 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
       function render_filmes_lista($filmes_agrupados, $dias_semana, $has_filters = false) {
           // Semana atual
           if (!empty($filmes_agrupados['semana_atual'])) {
-              echo '<h2 class="section-title"></h2>';
+              echo '<h2 class="section-title">Filmes desta semana</h2>';
               foreach ($filmes_agrupados['semana_atual'] as $data => $filmes_ids) {
                   render_dia_filmes($data, $filmes_ids, $dias_semana);
               }
@@ -453,7 +453,7 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
 
           // Próxima semana
           if (!empty($filmes_agrupados['proxima_semana'])) {
-              echo '<h2 class="section-title"></h2>';
+              echo '<h2 class="section-title">Próxima semana</h2>';
               foreach ($filmes_agrupados['proxima_semana'] as $data => $filmes_ids) {
                   render_dia_filmes($data, $filmes_ids, $dias_semana);
               }
@@ -470,7 +470,7 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
 
           // Semanas que já passaram
           if (!empty($filmes_agrupados['semanas_passadas'])) {
-              echo '<h2 class="section-title"></h2>';
+              echo '<h2 class="section-title">Lançamentos recentes</h2>';
               $semanas_passadas = array_slice($filmes_agrupados['semanas_passadas'], 0, 3, true);
               foreach ($semanas_passadas as $data => $filmes_ids) {
                   render_dia_filmes($data, $filmes_ids, $dias_semana);
@@ -581,7 +581,7 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
       function render_filmes_tabela($filmes_agrupados, $dias_semana, $has_filters = false) {
           // Semana atual
           if (!empty($filmes_agrupados['semana_atual'])) {
-              echo '<h2 class="section-title"></h2>';
+              echo '<h2 class="section-title">Filmes desta semana</h2>';
               foreach ($filmes_agrupados['semana_atual'] as $data => $filmes_ids) {
                   render_dia_tabela($data, $filmes_ids, $dias_semana);
               }
@@ -589,7 +589,7 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
 
           // Próxima semana
           if (!empty($filmes_agrupados['proxima_semana'])) {
-              echo '<h2 class="section-title"></h2>';
+              echo '<h2 class="section-title">Próxima semana</h2>';
               foreach ($filmes_agrupados['proxima_semana'] as $data => $filmes_ids) {
                   render_dia_tabela($data, $filmes_ids, $dias_semana);
               }
@@ -616,7 +616,7 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
 
           // Semanas que já passaram
           if (!empty($filmes_agrupados['semanas_passadas'])) {
-              echo '<h2 class="section-title"></h2>';
+              echo '<h2 class="section-title">Lançamentos recentes</h2>';
               $semanas_passadas = array_slice($filmes_agrupados['semanas_passadas'], 0, 3, true);
               foreach ($semanas_passadas as $data => $filmes_ids) {
                   render_dia_tabela($data, $filmes_ids, $dias_semana);
