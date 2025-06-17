@@ -46,7 +46,7 @@
 					wp_nav_menu($args); ?>
         </nav>
         <nav class="produtos">
-          <h2>Produtos Filme B</h2>
+          <h2>Produto Filme B</h2>
           <a href="http://www.filmebboxofficebrasil.com.br/Login" target="_blank" rel="noopener noreferrer">
             <img src="<?php echo get_template_directory_uri(); ?>/assets/images/box-office-brasil.png" alt="cine B" />
           </a>
