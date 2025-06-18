@@ -74,31 +74,34 @@ function registrar_cpt_filmes() {
 
 /**
  * Função auxiliar para obter IDs de termos
+ * Adicionada verificação para evitar redeclaração
  */
-function obter_term_ids($terms, $taxonomy) {
-    $term_ids = [];
-    
-    if (!is_array($terms)) {
-        return $term_ids;
-    }
+if (!function_exists('obter_term_ids')) {
+    function obter_term_ids($terms, $taxonomy) {
+        $term_ids = [];
+        
+        if (!is_array($terms)) {
+            return $term_ids;
+        }
 
-    foreach ($terms as $term_name) {
-        if (!empty($term_name)) {
-            // Verifica se o termo existe
-            $term = term_exists($term_name, $taxonomy);
-            
-            // Se não existir, cria o termo
-            if (!$term) {
-                $term = wp_insert_term($term_name, $taxonomy);
-            }
-            
-            // Se não houver erro e existir ID, adiciona ao array
-            if (!is_wp_error($term) && isset($term['term_id'])) {
-                $term_ids[] = $term['term_id'];
+        foreach ($terms as $term_name) {
+            if (!empty($term_name)) {
+                // Verifica se o termo existe
+                $term = term_exists($term_name, $taxonomy);
+                
+                // Se não existir, cria o termo
+                if (!$term) {
+                    $term = wp_insert_term($term_name, $taxonomy);
+                }
+                
+                // Se não houver erro e existir ID, adiciona ao array
+                if (!is_wp_error($term) && isset($term['term_id'])) {
+                    $term_ids[] = $term['term_id'];
+                }
             }
         }
+        return $term_ids;
     }
-    return $term_ids;
 }
 
 /**
