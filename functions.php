@@ -123,29 +123,48 @@ function upload_image_from_url($image_url)
   return $attachment_id;
 }
 
-function obter_term_ids($itens, $taxonomia)
-{
-  $ids = [];
+function obter_term_ids($terms, $taxonomy) {
+    $term_ids = [];
 
-  foreach ($itens as $item) {
-    if (is_numeric($item)) {
-
-      $ids[] = intval($item);
-    } else {
-
-      $term = get_term_by('name', $item, $taxonomia);
-
-      if ($term && !is_wp_error($term)) {
-
-        $ids[] = $term->term_id;
-      } else {
-
-        error_log('Termo não encontrado para ' . $taxonomia . ': ' . $item);
-      }
+    if (!is_array($terms) || !taxonomy_exists($taxonomy)) {
+        return $term_ids;
     }
-  }
 
-  return $ids;
+    foreach ($terms as $term_name) {
+        if (!empty($term_name)) {
+            $term = term_exists($term_name, $taxonomy);
+            if (!$term) {
+                $term = wp_insert_term($term_name, $taxonomy);
+            }
+
+            if (!is_wp_error($term) && isset($term['term_id'])) {
+                $term_ids[] = $term['term_id'];
+            }
+        }
+    }
+
+    return $term_ids;
+}
+
+function processar_terms($field_name, $taxonomy, $post_id) {
+    $terms = [];
+
+    if (!taxonomy_exists($taxonomy)) {
+        return $terms;
+    }
+
+    $term_ids = cfs()->get($field_name, $post_id);
+
+    if (is_array($term_ids)) {
+        foreach ($term_ids as $term_id) {
+            $term = get_term($term_id, $taxonomy);
+            if ($term && !is_wp_error($term) && isset($term->name)) {
+                $terms[] = $term->name;
+            }
+        }
+    }
+
+    return $terms;
 }
 
 

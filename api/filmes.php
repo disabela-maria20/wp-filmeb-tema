@@ -1,23 +1,19 @@
 <?php
 
-add_action('init', 'registrar_taxonomias_filmes');
-function registrar_taxonomias_filmes()
-{
+add_action('init', 'registrar_taxonomias_filmes', 5);
+function registrar_taxonomias_filmes() {
     $taxonomias = [
         'distribuidoras' => 'Distribuidoras',
         'paises' => 'Países',
         'generos' => 'Gêneros',
         'classificacoes' => 'Classificações',
         'tecnologias' => 'Tecnologias',
-        'feriados' => 'Feriados',
     ];
 
     foreach ($taxonomias as $slug => $nome) {
-        register_taxonomy(
-            $slug,
-            'filmes',
-            array(
-                'labels' => array(
+        if (!taxonomy_exists($slug)) {
+            register_taxonomy($slug, 'filmes', [
+                'labels' => [
                     'name' => $nome,
                     'singular_name' => $nome,
                     'search_items' => "Buscar $nome",
@@ -27,17 +23,18 @@ function registrar_taxonomias_filmes()
                     'add_new_item' => "Adicionar Novo $nome",
                     'new_item_name' => "Novo $nome",
                     'menu_name' => $nome,
-                ),
+                ],
                 'hierarchical' => true,
                 'show_ui' => true,
                 'show_in_menu' => true,
                 'show_in_rest' => true,
-                'rewrite' => array('slug' => $slug),
+                'rewrite' => ['slug' => $slug],
                 'rest_controller_class' => 'WP_REST_Terms_Controller',
-            )
-        );
+            ]);
+        }
     }
 }
+
 
 function registrar_cpt_filmes()
 {
@@ -283,6 +280,8 @@ function api_filmes_post($request) {
     $tecnologias = isset($data['tecnologias']) ? ((array) $data['tecnologias']) : [];
     $feriados = isset($data['feriados']) ? ((array) $data['feriados']) : [];
 
+
+
     $distribuicao_ids = obter_term_ids($distribuicao, 'distribuidoras');
     $paises_ids = obter_term_ids($paises, 'paises');
     $genero_ids = obter_term_ids($generos, 'generos');
@@ -353,7 +352,7 @@ function api_filmes_post($request) {
     ];
 
     $post_id = wp_insert_post($post_data);
-
+  
     if ($post_id) {
         // Define a imagem destacada somente se o cartaz foi enviado
         if ($cartaz_id) {
@@ -378,7 +377,7 @@ function api_filmes_post($request) {
             'generos' => $genero_ids,
             'classificacao' => $classificacao_ids,
             'tecnologias' => $tecnologia_ids,
-            'feriados' => $feriado_ids,
+            'feriados' => $feriado_ids ?? null
         ];
 
         CFS()->save($field_data, ['ID' => $post_id]);
