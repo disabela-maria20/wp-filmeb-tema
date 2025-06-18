@@ -231,6 +231,7 @@ function api_anos_filmes_get()
 function api_filmes_post($request) {
     $data = $request->get_json_params();
 
+    $post_id = isset($data['id']) ? intval($data['id']) : 0;
     $titulo = isset($data['titulo']) ? sanitize_text_field($data['titulo']) : '';
     $descricao = isset($data['descricao']) ? sanitize_textarea_field($data['descricao']) : '';
     $titulo_original = isset($data['titulo_original']) ? sanitize_text_field($data['titulo_original']) : '';
@@ -268,7 +269,6 @@ function api_filmes_post($request) {
         }, $data['elenco']) 
         : [];
 
-    // Ajuste para obter corretamente as URLs das fotos
     $fotos = isset($data['fotos']) && is_array($data['fotos'])
         ? array_map(fn($foto) => ['foto' => esc_url_raw($foto['foto'] ?? '')], $data['fotos'])
         : [];
@@ -280,8 +280,6 @@ function api_filmes_post($request) {
     $tecnologias = isset($data['tecnologias']) ? ((array) $data['tecnologias']) : [];
     $feriados = isset($data['feriados']) ? ((array) $data['feriados']) : [];
 
-
-
     $distribuicao_ids = obter_term_ids($distribuicao, 'distribuidoras');
     $paises_ids = obter_term_ids($paises, 'paises');
     $genero_ids = obter_term_ids($generos, 'generos');
@@ -289,60 +287,8 @@ function api_filmes_post($request) {
     $tecnologia_ids = obter_term_ids($tecnologias, 'tecnologias');
     $feriado_ids = obter_term_ids($feriados, 'feriados');
 
-    // Upload de imagens - somente se a URL não estiver vazia
-    $cartaz_id = null;
-    if (!empty($cartaz)) {
-        $cartaz_id = upload_image_from_url($cartaz);
-        if (is_wp_error($cartaz_id)) {
-            return new WP_Error('upload_error', 'Erro ao baixar a imagem do cartaz.', ['status' => 500, 'data' => $cartaz]);
-        }
-    }
-
-    $capa_id = null;
-    if (!empty($capa)) {
-        $capa_id = upload_image_from_url($capa);
-        if (is_wp_error($capa_id)) {
-            return new WP_Error('upload_error', 'Erro ao baixar a imagem da capa.', ['status' => 500, 'data' => $capa]);
-        }
-    }
-
-    // Upload fotos de direção, roteiro e elenco
-    foreach ($direcao as &$diretor) {
-        if (!empty($diretor['foto'])) {
-            $foto_id = upload_image_from_url($diretor['foto']);
-            if (!is_wp_error($foto_id)) {
-                $diretor['foto'] = wp_get_attachment_url($foto_id);
-            }
-        }
-    }
-
-    foreach ($roteiro as &$roteirista) {
-        if (!empty($roteirista['foto'])) {
-            $foto_id = upload_image_from_url($roteirista['foto']);
-            if (!is_wp_error($foto_id)) {
-                $roteirista['foto'] = wp_get_attachment_url($foto_id);
-            }
-        }
-    }
-
-    foreach ($elenco as &$ator) {
-        if (!empty($ator['foto'])) {
-            $foto_id = upload_image_from_url($ator['foto']);
-            if (!is_wp_error($foto_id)) {
-                $ator['foto'] = wp_get_attachment_url($foto_id);
-            }
-        }
-    }
-
-    $fotos_id = [];
-    foreach ($fotos as $foto) {
-        if (!empty($foto['foto'])) {
-            $foto_id = upload_image_from_url($foto['foto']);
-            if (!is_wp_error($foto_id)) {
-                $fotos_id[] = $foto_id;
-            }
-        }
-    }
+    // Verifica se o post existe
+    $post_exists = $post_id ? get_post($post_id) : false;
 
     $post_data = [
         'post_type' => 'filmes',
@@ -351,12 +297,67 @@ function api_filmes_post($request) {
         'post_content' => $descricao
     ];
 
-    $post_id = wp_insert_post($post_data);
-  
+    // Se o post existe, atualiza. Caso contrário, cria um novo
+    if ($post_exists) {
+        $post_data['ID'] = $post_id;
+        $post_id = wp_update_post($post_data);
+        $message = 'Filme atualizado com sucesso!';
+    } else {
+        $post_id = wp_insert_post($post_data);
+        $message = 'Filme criado com sucesso!';
+    }
+
     if ($post_id) {
-        // Define a imagem destacada somente se o cartaz foi enviado
-        if ($cartaz_id) {
-            set_post_thumbnail($post_id, $cartaz_id);
+        // Upload e atualização de imagens
+        $cartaz_id = null;
+        if (!empty($cartaz)) {
+            $cartaz_id = upload_image_from_url($cartaz);
+            if (!is_wp_error($cartaz_id)) {
+                set_post_thumbnail($post_id, $cartaz_id);
+            }
+        }
+
+        $capa_id = null;
+        if (!empty($capa)) {
+            $capa_id = upload_image_from_url($capa);
+        }
+
+        // Upload fotos de direção, roteiro e elenco
+        foreach ($direcao as &$diretor) {
+            if (!empty($diretor['foto'])) {
+                $foto_id = upload_image_from_url($diretor['foto']);
+                if (!is_wp_error($foto_id)) {
+                    $diretor['foto'] = wp_get_attachment_url($foto_id);
+                }
+            }
+        }
+
+        foreach ($roteiro as &$roteirista) {
+            if (!empty($roteirista['foto'])) {
+                $foto_id = upload_image_from_url($roteirista['foto']);
+                if (!is_wp_error($foto_id)) {
+                    $roteirista['foto'] = wp_get_attachment_url($foto_id);
+                }
+            }
+        }
+
+        foreach ($elenco as &$ator) {
+            if (!empty($ator['foto'])) {
+                $foto_id = upload_image_from_url($ator['foto']);
+                if (!is_wp_error($foto_id)) {
+                    $ator['foto'] = wp_get_attachment_url($foto_id);
+                }
+            }
+        }
+
+        $fotos_id = [];
+        foreach ($fotos as $foto) {
+            if (!empty($foto['foto'])) {
+                $foto_id = upload_image_from_url($foto['foto']);
+                if (!is_wp_error($foto_id)) {
+                    $fotos_id[] = $foto_id;
+                }
+            }
         }
 
         $fotos_formatadas = array_map(fn($foto_id) => ['foto' => wp_get_attachment_url($foto_id)], $fotos_id);
@@ -383,12 +384,12 @@ function api_filmes_post($request) {
         CFS()->save($field_data, ['ID' => $post_id]);
 
         return rest_ensure_response([
-            'message' => 'Filme criado com sucesso!',
+            'message' => $message,
             'post_id' => $post_id,
         ]);
     }
 
-    return new WP_Error('filme_nao_criado', 'Erro ao criar o filme', ['status' => 500]);
+    return new WP_Error('filme_nao_atualizado', 'Erro ao atualizar/criar o filme', ['status' => 500]);
 }
 
 function register_filmes_api_endpoints()
