@@ -5,6 +5,7 @@ $filme = get_thursday_movies();
 
 $banner_estreia = CFS()->get('banner_estreia');
 $banner_lateral = CFS()->get('banner_lateral');
+$banner_lateral_estreia = CFS()->get('banner_lateral_estreia');
 $banner_skyscraper = CFS()->get('banner_skyscraper');
 
 $link_banner_estreia = CFS()->get('link_banner_estreia');
@@ -139,6 +140,7 @@ $recent_posts_query_banner = new WP_Query(array(
   </section>
   <section class="home-filmes">
     <h2>Lançamentos da semana</h2>
+    <?php if (!empty($banner_lateral_estreia) && esc_html($banner_lateral_estreia) == '1') { ?>
     <div class="grid-filmes">
       <div>
         <section id="filmesHome" class="owl-carousel">
@@ -173,7 +175,36 @@ $recent_posts_query_banner = new WP_Query(array(
         </a>
       </div>
     </div>
-
+    <?php } else { ?>
+    <div class="grid-filmes-full">
+      <div>
+        <section id="filmesHomeFull" class="owl-carousel">
+          <?php if ($filme->have_posts()) {
+        while ($filme->have_posts()) {
+          $filme->the_post();
+          $cartaz = CFS()->get('cartaz') ?? '';
+          $titulo = CFS()->get('titulo') ?? get_the_title();
+      ?>
+          <div class="item">
+            <?php if (esc_url($cartaz) == '') { ?>
+            <a href="<?php the_permalink(); ?>" class="card">
+              <h3><?php echo get_the_title(); ?></h3>
+              <p class="indisponivel">Poster não disponível</p>
+            </a>
+            <?php } else { ?>
+            <a href="<?php the_permalink(); ?>">
+              <img src="<?php echo esc_url($cartaz); ?>" alt="<?php echo esc_attr($titulo); ?>" />
+              <h3><?php echo get_the_title(); ?></h3>
+            </a>
+            <?php } ?>
+          </div>
+          <?php
+        }
+      } ?>
+        </section>
+      </div>
+    </div>
+    <?php } ?>
   </section>
   <section class="home_lista_noticias">
     <h2>Publicações recentes</h2>
@@ -294,7 +325,7 @@ endif; ?>
         <h2>Conheça o Boletim</h2>
         <p>Acompanhe de perto o mercado de cinema! Assine o Boletim Filme B e receba, toda semana, bilheterias,
           análises e as principais movimentações da indústria no Brasil e no mundo.</p>
-        <a href="<?php echo get_site_url(); ?>/assine/">Saiba Mais</a>
+        <a href="<?php echo get_site_url(); ?>/quem-somos/">Saiba Mais</a>
       </div>
     </div>
   </div>
@@ -322,6 +353,27 @@ document.addEventListener("DOMContentLoaded", function() {
         },
         1024: {
           items: 3
+        },
+      }
+    });
+    $('#filmesHomeFull').owlCarousel({
+      loop: true,
+      margin: 10,
+      nav: false,
+      dots: true,
+      mouseDrag: true,
+      autoplay: true,
+      autoplayTimeout: 6000,
+      navText: ["<i class='bi bi-chevron-left'></i>", "<i class='bi bi-chevron-right'></i>"],
+      responsive: {
+        0: {
+          items: 3
+        },
+        992: {
+          items: 4
+        },
+        1200: {
+          items: 8
         },
       }
     });

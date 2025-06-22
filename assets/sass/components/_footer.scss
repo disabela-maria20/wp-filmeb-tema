@@ -1,7 +1,7 @@
 .rodape {
   .home_newllater {
     background-color: $color-off-white-alt;
-    padding: 35px !important;
+    padding: 35px 0 !important;
     margin: 0 !important;
     .grid {
       padding: 0 !important;
@@ -23,7 +23,7 @@
     background: linear-gradient(180deg, $color-bright-red, $color-red-dark 90%);
 
     @include media(lg) {
-      padding: 60px 0;
+      padding: 45px 0;
     }
     img {
       display: block;
@@ -71,7 +71,7 @@
   }
 
   .area_links_rodape {
-    padding: 60px 0;
+    padding: 0 0 60px 0;
     background-color: $color-off-white-alt;
     .grid {
       @include media(lg) {
