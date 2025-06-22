@@ -168,7 +168,6 @@ $recent_posts_query_banner = new WP_Query(array(
       } ?>
         </section>
       </div>
-
       <div>
         <a href="<?php echo esc_url($link_banner_estreia ?? '#'); ?>">
           <img class="publi" src="<?php echo esc_url($banner_estreia ?? ''); ?>" alt="Banner de publicidade" />
@@ -376,6 +375,7 @@ document.addEventListener("DOMContentLoaded", function() {
         },
       }
     });
+    
     jQuery(document).ready(function($) {
       $('.slide').owlCarousel({
         loop: true,
