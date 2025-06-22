@@ -177,32 +177,31 @@ $recent_posts_query_banner = new WP_Query(array(
     </div>
     <?php } else { ?>
     <div class="grid-filmes-full">
-      <div>
-        <section id="filmesHomeFull" class="owl-carousel">
-          <?php if ($filme->have_posts()) {
+      <section id="filmesHomeFull" class="owl-carousel">
+        <?php if ($filme->have_posts()) {
+        echo  var_dump($filme);
         while ($filme->have_posts()) {
           $filme->the_post();
           $cartaz = CFS()->get('cartaz') ?? '';
           $titulo = CFS()->get('titulo') ?? get_the_title();
       ?>
-          <div class="item">
-            <?php if (esc_url($cartaz) == '') { ?>
-            <a href="<?php the_permalink(); ?>" class="card">
-              <h3><?php echo get_the_title(); ?></h3>
-              <p class="indisponivel">Poster não disponível</p>
-            </a>
-            <?php } else { ?>
-            <a href="<?php the_permalink(); ?>">
-              <img src="<?php echo esc_url($cartaz); ?>" alt="<?php echo esc_attr($titulo); ?>" />
-              <h3><?php echo get_the_title(); ?></h3>
-            </a>
-            <?php } ?>
-          </div>
-          <?php
+        <div class="item">
+          <?php if (esc_url($cartaz) == '') { ?>
+          <a href="<?php the_permalink(); ?>" class="card">
+            <h3><?php echo get_the_title(); ?></h3>
+            <p class="indisponivel">Poster não disponível</p>
+          </a>
+          <?php } else { ?>
+          <a href="<?php the_permalink(); ?>">
+            <img src="<?php echo esc_url($cartaz); ?>" alt="<?php echo esc_attr($titulo); ?>" />
+            <h3><?php echo get_the_title(); ?></h3>
+          </a>
+          <?php } ?>
+        </div>
+        <?php
         }
       } ?>
-        </section>
-      </div>
+      </section>
     </div>
     <?php } ?>
   </section>
