@@ -178,7 +178,6 @@ $recent_posts_query_banner = new WP_Query(array(
     <div class="grid-filmes-full">
       <section id="filmesHomeFull" class="owl-carousel">
         <?php if ($filme->have_posts()) {
-        echo  var_dump($filme);
         while ($filme->have_posts()) {
           $filme->the_post();
           $cartaz = CFS()->get('cartaz') ?? '';
@@ -375,7 +374,7 @@ document.addEventListener("DOMContentLoaded", function() {
         },
       }
     });
-    
+
     jQuery(document).ready(function($) {
       $('.slide').owlCarousel({
         loop: true,
