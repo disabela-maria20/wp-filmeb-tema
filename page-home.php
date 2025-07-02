@@ -322,14 +322,46 @@ endif; ?>
         <h2>Conheça o Boletim</h2>
         <p>Acompanhe de perto o mercado de cinema! Assine o Boletim Filme B e receba, toda semana, bilheterias,
           análises e as principais movimentações da indústria no Brasil e no mundo.</p>
-        <a href="<?php echo get_site_url(); ?>/quem-somos/">Saiba Mais</a>
+        <a id="assinar-filmeb-btn">
+          <span id="texto-assinar">Assine</span>
+        </a>
       </div>
     </div>
   </div>
 </div>
 <?php get_template_part('components/Footer/index'); ?>
 <?php get_footer(); ?>
+<script>
+document.getElementById('assinar-filmeb-btn').addEventListener('click', function(e) {
+  e.preventDefault();
 
+  const botao = this;
+  const spanTexto = document.getElementById('texto-assinar');
+  const productId = botao.getAttribute('data-product-id');
+
+  // Altera o texto do botão
+  spanTexto.textContent = 'Carregando...';
+  botao.classList.add('loading');
+
+  // Faz a requisição AJAX para adicionar ao carrinho
+  fetch(`<?php echo admin_url('admin-ajax.php'); ?>?action=add_to_cart_ajax&product_id=${productId}`)
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        window.location.href = "<?php echo get_site_url(); ?>/finalizar-compra/";
+      } else {
+        alert('Erro ao adicionar ao carrinho.');
+        spanTexto.textContent = 'Assine';
+        botao.classList.remove('loading');
+      }
+    })
+    .catch(() => {
+      alert('Erro de conexão.');
+      spanTexto.textContent = 'Assine';
+      botao.classList.remove('loading');
+    });
+});
+</script>
 
 <script>
 // Carrega o Splide plugin

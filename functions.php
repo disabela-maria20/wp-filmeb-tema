@@ -367,3 +367,30 @@ add_action('init', function() {
       }
   }
 }, 999);
+
+
+add_filter('cfs_field_relationship_query_args', 'filtrar_edicoes_do_ultimo_mes', 10, 2);
+
+function filtrar_edicoes_do_ultimo_mes($args, $context) {
+    // Verifica se é o campo 'edicao' do tipo relationship
+    if (!empty($context['field']) && $context['field']->name === 'edicao') {
+        // filtrar apenas posts do tipo 'edicoes'
+        $args['post_type'] = 'edicao';
+
+        // filtrar posts do último mês
+        $args['date_query'] = array(
+            array(
+                'after' => date('Y-m-d', strtotime('-1 month')),
+                'inclusive' => true,
+            ),
+        );
+
+        // Ordenar por data (opcional)
+        $args['orderby'] = 'date';
+        $args['order'] = 'DESC';
+
+        // Garante que só pegue publicados
+        $args['post_status'] = 'publish';
+    }
+    return $args;
+}

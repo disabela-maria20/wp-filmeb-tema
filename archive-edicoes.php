@@ -65,7 +65,7 @@ $banner_id = "78846";
       
 
       if ($boletim_query->have_posts()): ?>
-      <h1>Edições Anteriores</h1>
+      <h1>Edições anteriores</h1>
       <?php while ($boletim_query->have_posts()): $boletim_query->the_post(); ?>
       <div class="grid-semanal">
         <a href="<?php the_permalink(); ?>" class="link-post-semanal">

@@ -30,6 +30,31 @@ $link_big_stampr = CFS()->get('link_big_stamp', $banner_id);
 
 
 $post_id = get_the_ID();
+
+function abreviar_mes($texto) {
+    $meses = [
+        'janeiro' => 'jan',
+        'fevereiro' => 'fev',
+        'março' => 'mar',
+        'abril' => 'abr',
+        'maio' => 'mai',
+        'junho' => 'jun',
+        'julho' => 'jul',
+        'agosto' => 'ago',
+        'setembro' => 'set',
+        'outubro' => 'out',
+        'novembro' => 'nov',
+        'dezembro' => 'dez',
+    ];
+
+    foreach ($meses as $mesCompleto => $mesAbreviado) {
+        // Substitui o nome do mês completo pelo abreviado, respeitando letras minúsculas e acentuação
+        $texto = preg_replace('/\b' . preg_quote($mesCompleto, '/') . '\b/i', $mesAbreviado, $texto);
+    }
+
+    return $texto;
+}
+
 ?>
 
 <?php if (!empty($banner_superior)) : ?>
@@ -83,7 +108,8 @@ $post_id = get_the_ID();
       <?php if ($edicoes_query->have_posts()): ?>
 
       <?php while ($edicoes_query->have_posts()): $edicoes_query->the_post(); ?>
-      <h2 class="titulo-cinza"><?php the_title(); ?></h2>
+      <h2 class="titulo-cinza"><?php echo abreviar_mes(get_the_title()); ?></h2>
+
       <div class="posts">
         <?php
           $values = CFS()->get('edicao');
