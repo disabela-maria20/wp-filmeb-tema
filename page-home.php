@@ -212,10 +212,11 @@ $recent_posts_query_banner = new WP_Query(array(
       while ($recent_posts_query->have_posts()) {
         $recent_posts_query->the_post(); 
         $imagem_url = CFS()->get('imagem');
-        echo var_dump($imagem_url);
+        
         $titulo = CFS()->get('titulo') ?: get_the_title();
     ?>
         <div class="item">
+          <?php echo var_dump($imagem_url);?>
           <?php if (!empty($imagem_url) && is_string($imagem_url)) { ?>
           <img src="<?php echo esc_url($imagem_url); ?>" alt="<?php echo esc_attr($titulo); ?>" />
           <?php } ?>
