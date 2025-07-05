@@ -11,6 +11,7 @@ function handel_add_woocommerce_support()
 add_action('after_setup_theme', 'handel_add_woocommerce_support');
 
 
+
 require_once(get_template_directory() . "/api/banner.php");
 require_once(get_template_directory() . "/api/filmes.php");
 require_once(get_template_directory() . "/api/distribuidora.php");
