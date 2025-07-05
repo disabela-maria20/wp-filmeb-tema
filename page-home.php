@@ -210,6 +210,10 @@ $recent_posts_query_banner = new WP_Query(array(
       <div>
         <?php if ($recent_posts_query->have_posts()) {
       while ($recent_posts_query->have_posts()) {
+        
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
+
         $recent_posts_query->the_post(); 
         $imagem_url = CFS()->get('imagem');
         
@@ -219,6 +223,7 @@ $recent_posts_query_banner = new WP_Query(array(
           <?php echo var_dump($imagem_url);?>
           <?php if (!empty($imagem_url) && is_string($imagem_url)) { ?>
           <img src="<?php echo esc_url($imagem_url); ?>" alt="<?php echo esc_attr($titulo); ?>" />
+          kgskdjfhkdhf
           <?php } ?>
           <div>
             <a href="<?php the_permalink(); ?>">
