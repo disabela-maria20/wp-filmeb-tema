@@ -220,11 +220,8 @@ $recent_posts_query_banner = new WP_Query(array(
         $titulo = CFS()->get('titulo') ?: get_the_title();
     ?>
         <div class="item">
-          <?php echo var_dump($imagem_url);?>
-          <?php if (!empty($imagem_url) && is_string($imagem_url)) { ?>
-          <img src="<?php echo esc_url($imagem_url); ?>" alt="<?php echo esc_attr($titulo); ?>" />
-          kgskdjfhkdhf
-
+          <?php if (!empty($image_url)) {  ?>
+          <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($title); ?>" />
           <?php } ?>
           <div>
             <a href="<?php the_permalink(); ?>">
