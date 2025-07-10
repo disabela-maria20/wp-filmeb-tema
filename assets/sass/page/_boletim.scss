@@ -47,18 +47,6 @@
     margin: 35px 0;
   }
 
-  #breadcrumbs {
-    margin-bottom: 16px;
-
-    a,
-    span {
-      font-weight: normal;
-      font-size: 1.4rem;
-      line-height: 2.4rem;
-      text-align: left;
-      color: $color-darker-gray;
-    }
-  }
   .item {
     @include media(lg) {
       display: flex;
@@ -77,7 +65,8 @@
       object-fit: cover;
       height: 225px;
       margin-bottom: 20px;
-
+      border-radius: 6px;
+      padding: 0 !important;
       @include media(lg) {
         width: 269px;
         height: initial;

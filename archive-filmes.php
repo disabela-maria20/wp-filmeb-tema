@@ -391,7 +391,15 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
           </div>
         </form>
       </section>
-
+      <section class="grid-select">
+        <form method="GET" action="<?php echo home_url(); ?>/filmes/">
+          <div class="grid-form">
+            <input type="text" placeholder="Titulo">
+            <input type="text" placeholder="Titulo Original">
+            <button type="submit">Buscar</button>
+          </div>
+        </form>
+      </section>
       <?php
       function render_dia_filmes($data, $filmes_ids, $dias_semana) {
           $data_estreia = DateTime::createFromFormat('Y-m-d', $data);

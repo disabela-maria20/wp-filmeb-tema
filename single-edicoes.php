@@ -6,6 +6,7 @@ get_header();
 
 $banner_id = "78847";
 
+$author_id = get_the_author_meta('ID');
     $banner_superior = CFS()->get('banner_moldura', $banner_id);
     $banner_inferior = CFS()->get('mega_banner', $banner_id);
     $full_banner = CFS()->get('full_banner', $banner_id);
@@ -55,7 +56,9 @@ $banner_id = "78847";
       <a href="<?php echo esc_url($link_full_banner); ?>">
         <img src="<?php echo esc_url($full_banner); ?>" style="padding-bottom: 25px;" class="img-banner" alt="banner">
       </a>
-      <?php if (function_exists('yoast_breadcrumb')) {yoast_breadcrumb('<div id="breadcrumbs">', '</div>'); } ?>
+      <?php if ( function_exists('bcn_display') ) {
+          bcn_display();
+      } ?>
       <div class="post-content-semanal">
         <h1><?php the_title(); ?> -
           <?php echo date_i18n('d \d\e F \d\e Y', strtotime(CFS()->get('data'))) ?>
@@ -73,8 +76,8 @@ $banner_id = "78847";
             <img src="<?php echo esc_url($imagem); ?>"
               alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
             <?php } ?>
-
             <div>
+
               <a href="<?php the_permalink(); ?>" class="read-more">
                 <h2><?php echo $the_post->post_title; ?></h2>
               </a>

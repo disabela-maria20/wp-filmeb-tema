@@ -210,19 +210,14 @@ $recent_posts_query_banner = new WP_Query(array(
       <div>
         <?php if ($recent_posts_query->have_posts()) {
       while ($recent_posts_query->have_posts()) {
-        
-        error_reporting(E_ALL);
-        ini_set('display_errors', 1);
-
         $recent_posts_query->the_post(); 
         $imagem_url = CFS()->get('imagem');
-        
         $titulo = CFS()->get('titulo') ?: get_the_title();
     ?>
         <div class="item">
-          <?php if (!empty($image_url)) {  ?>
-          <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($title); ?>" />
-          <?php } ?>
+          <?php if (!empty($imagem_url)) : ?>
+          <img src="<?php echo esc_url($imagem_url); ?>" alt="<?php echo esc_attr($titulo); ?>" />
+          <?php endif; ?>
           <div>
             <a href="<?php the_permalink(); ?>">
               <h3><?php echo esc_html($titulo); ?></h3>
@@ -267,14 +262,12 @@ $recent_posts_query_banner = new WP_Query(array(
       $recent_posts_query->the_post();
      
       $imagem_url = CFS()->get('imagem');
-      $imagem_url = is_string($imagem) ? $imagem : '';
-
       $titulo = CFS()->get('titulo') ?: get_the_title();
   ?>
       <div class="item">
-        <?php if (!empty($imagem_url) && is_string($imagem_url)) { ?>
+        <?php if (!empty($imagem_url)) : ?>
         <img src="<?php echo esc_url($imagem_url); ?>" alt="<?php echo esc_attr($titulo); ?>" />
-        <?php } ?>
+        <?php endif; ?>
         <div>
           <a href="<?php the_permalink(); ?>">
             <h3><?php echo esc_html($titulo); ?></h3>
@@ -285,13 +278,13 @@ $recent_posts_query_banner = new WP_Query(array(
                 $data = strtotime($data_raw);
                 echo date('j', $data) . ' ' . mb_substr(strtolower(date_i18n('F', $data)), 0, 3) . ' ' . date('Y', $data);
               }
-            ?>
+              ?>
             </span>
           </a>
         </div>
       </div>
       <?php }
-  } ?>
+} ?>
     </div>
     <?php } ?>
 
@@ -327,9 +320,7 @@ endif; ?>
         <h2>Conheça o Boletim</h2>
         <p>Acompanhe de perto o mercado de cinema! Assine o Boletim Filme B e receba, toda semana, bilheterias,
           análises e as principais movimentações da indústria no Brasil e no mundo.</p>
-        <a id="assinar-filmeb-btn">
-          <span id="texto-assinar">Assine</span>
-        </a>
+        <a href="<?php echo get_site_url(); ?>/quem-somos/">Saiba mais</a>
       </div>
     </div>
   </div>

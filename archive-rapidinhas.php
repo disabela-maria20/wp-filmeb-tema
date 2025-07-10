@@ -22,6 +22,7 @@ $boletim_query = new WP_Query(array(
   'category_name' => 'Rapidinhas',
   'posts_per_page' => 10,
 ));
+$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
 
 ?>
 <a href="<?php echo esc_url($link_banner_superior)?>" target="_blank" rel="noopener noreferrer">
@@ -58,14 +59,18 @@ $boletim_query = new WP_Query(array(
       <a href="<?php echo esc_url($link_full_banner);?>">
         <img src="<?php echo esc_url($full_banner); ?>" class="img-banner" alt="banner">
       </a>
-      <?php if (function_exists('yoast_breadcrumb')) { yoast_breadcrumb('<div id="breadcrumbs">', '</div>'); } ?>
+      <?php if ( function_exists('bcn_display') ) {
+    bcn_display();
+} ?>
       <?php
           $boletim_query = new WP_Query(array(
             'post_type' => 'rapidinhas',
             'posts_per_page' => 10,
-            'orderby' => 'date',     
-            'order' => 'DESC' 
+            'orderby' => 'date',
+            'order' => 'DESC',
+            'paged' => $paged,
           ));
+
 
           if ($boletim_query->have_posts()): ?>
       <h1>Rapidinhas</h1>
@@ -93,13 +98,17 @@ $boletim_query = new WP_Query(array(
       </div>
       <div class="pagination">
         <?php
-              echo paginate_links(array(
-                'total' => $boletim_query->max_num_pages,
-                'type' => 'list',
-                'prev_text' => __('<'),
-                'next_text' => __('>'),
-                'mid_size' => 10, 
-              ));
+             echo paginate_links(array(
+              'base' => get_pagenum_link(1) . '%_%',
+              'format' => 'page/%#%/',
+              'current' => max(1, get_query_var('paged')),
+              'total' => $boletim_query->max_num_pages,
+              'prev_text' => __('<'),
+              'next_text' => __('>'),
+              'mid_size' => 2,
+              'type' => 'list', // pode ser 'plain' se preferir sem <ul>
+            ));
+
             ?>
       </div>
       <?php else: ?>

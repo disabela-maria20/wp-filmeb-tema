@@ -205,11 +205,13 @@ $banner_lateral = CFS()->get('banner_lateral', $banner_id);
         <?php if (is_array($roteiristas) && has_valid_items($roteiristas)) : ?>
         <div class="grid-fixa-tecnica">
           <h3>Roteiro</h3>
-          <?php foreach ($roteiristas as $roteirista) : ?>
-          <?php if (is_array($roteirista) && !empty($roteirista['nome'])) : ?>
-          <p><?php echo esc_html($roteirista['nome']); ?></p>
-          <?php endif; ?>
-          <?php endforeach; ?>
+          <div>
+            <?php foreach ($roteiristas as $roteirista) : ?>
+            <?php if (is_array($roteirista) && !empty($roteirista['nome'])) : ?>
+            <p><?php echo esc_html($roteirista['nome']); ?></p>
+            <?php endif; ?>
+            <?php endforeach; ?>
+          </div>
         </div>
         <?php endif; ?>
         <?php endif; ?>
@@ -220,11 +222,13 @@ $banner_lateral = CFS()->get('banner_lateral', $banner_id);
         <?php if (is_array($elenco) && has_valid_items($elenco)) : ?>
         <div class="grid-fixa-tecnica">
           <h3>Elenco</h3>
-          <?php foreach ($elenco as $ator) : ?>
-          <?php if (is_array($ator) && !empty($ator['nome'])) : ?>
-          <p><?php echo esc_html($ator['nome']); ?></p>
-          <?php endif; ?>
-          <?php endforeach; ?>
+          <div>
+            <?php foreach ($elenco as $ator) : ?>
+            <?php if (is_array($ator) && !empty($ator['nome'])) : ?>
+            <p><?php echo esc_html($ator['nome']); ?></p>
+            <?php endif; ?>
+            <?php endforeach; ?>
+          </div>
         </div>
         <?php endif; ?>
         <?php endif; ?>

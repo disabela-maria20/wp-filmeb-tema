@@ -5,7 +5,7 @@ get_header();
 
 $banner_id = "23243";
 
-
+$author_id = get_the_author_meta('ID');
 
 
     $banner_superior = CFS()->get('banner_moldura', $banner_id);
@@ -60,9 +60,9 @@ $banner_id = "23243";
     <div>
       <img src="<?php echo esc_url($full_banner); ?>" class="img-banner" alt="banner">
 
-      <?php if (function_exists('yoast_breadcrumb')) {
-        yoast_breadcrumb('<div id="breadcrumbs">', '</div>');
-      } ?>
+      <?php if ( function_exists('bcn_display') ) {
+        bcn_display();
+    } ?>
 
       <h1 class="search-title">Resultados para: "<?php echo get_search_query(); ?>"</h1>
 
@@ -74,13 +74,22 @@ $banner_id = "23243";
           <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
             alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
           <?php }?>
+          <span class="data">
+            <?php $data=strtotime(CFS()->get('data')); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
+          </span>
           <a href="<?php the_permalink(); ?>" class="read-more">
             <h2><?php the_title(); ?></h2>
           </a>
-          <span class="data">
-            <?php $data=strtotime(CFS()->get('data')); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
+          <div class="autor">
+            <img src="<?php echo get_avatar_url($author_id) ?>"
+              alt="<?php get_the_author_meta('display_name', $author_id) ?>">
+            <strong><?php
+                    echo (strtolower(get_the_author_meta('display_name', get_post_field('post_author', get_the_ID()))) === 'cineb') 
+                        ? 'Filme B' 
+                        : get_the_author_meta('display_name', get_post_field('post_author', get_the_ID()));
+                    ?></strong>
+          </div>
 
-          </span>
           <p><?php echo esc_html(CFS()->get('descricao') ?: get_the_excerpt()); ?></p>
         </div>
         <?php endwhile; ?>

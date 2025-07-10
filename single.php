@@ -7,7 +7,7 @@ $args = array(
   'post_type' => 'banner-post',
   'posts_per_page' => 1,
 );
-
+$author_id = get_the_author_meta('ID');
 $query = new WP_Query($args);
 
     $banner_superior = CFS()->get('banner_moldura', $banner_id);
@@ -63,12 +63,14 @@ $query = new WP_Query($args);
         <img src="<?php echo esc_url($full_banner); ?>" class="img-banner" alt="banner">
       </a>
 
-      <?php if (function_exists('yoast_breadcrumb')) { yoast_breadcrumb('<div id="breadcrumbs">', '</div>'); } ?>
+      <?php if ( function_exists('bcn_display') ) {
+    bcn_display();
+} ?>
       <section class="post">
         <div>
-          <span class="data">
-            <?php $data=strtotime(CFS()->get('data')); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
-          </span>
+          <!-- <span class="data">
+            <?php // $data=strtotime(CFS()->get('data')); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
+          </span> -->
           <?php 
             $imagem_url = CFS()->get('imagem');
             if (!empty($imagem_url)) {  
@@ -76,9 +78,19 @@ $query = new WP_Query($args);
           <img class="img-post" src="<?php echo esc_url($imagem_url); ?>"
             alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
           <?php } ?>
+
         </div>
         <div class="post-content">
           <h1><?php the_title(); ?></h1>
+          <div class="autor">
+            <img src="<?php echo get_avatar_url($author_id) ?>"
+              alt="<?php get_the_author_meta('display_name', $author_id) ?>">
+            <strong><?php
+                    echo (strtolower(get_the_author_meta('display_name', get_post_field('post_author', get_the_ID()))) === 'cineb') 
+                        ? 'Filme B' 
+                        : get_the_author_meta('display_name', get_post_field('post_author', get_the_ID()));
+                    ?></strong>
+          </div>
           <div class="post-text">
             <?php the_content(); ?>
           </div>

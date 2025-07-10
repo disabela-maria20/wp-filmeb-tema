@@ -55,9 +55,9 @@ $banner_id = "78915";
           alt="banner">
       </a>
 
-      <?php if (function_exists('yoast_breadcrumb')) {
-          yoast_breadcrumb('<div id="breadcrumbs">', '</div>');
-        } ?>
+      <?php if ( function_exists('bcn_display') ) {
+    bcn_display();
+} ?>
 
       <?php
         $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;

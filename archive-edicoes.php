@@ -54,8 +54,8 @@ $banner_id = "78846";
       <a href="<?php echo esc_url($link_full_banner); ?>">
         <img src="<?php echo esc_url($full_banner); ?>" class="img-banner" style="padding-bottom: 25px;" alt="banner">
       </a>
-      <?php if (function_exists('yoast_breadcrumb')) {
-        yoast_breadcrumb('<div id="breadcrumbs">', '</div>');
+      <?php if ( function_exists('bcn_display') ) {
+          bcn_display();
       } ?>
       <?php
       $boletim_query = new WP_Query(array(

@@ -19,6 +19,7 @@
   .grid-filtros-config {
     display: grid;
     justify-items: center;
+    align-items: center;
     gap: 20px;
     padding: 10px;
     @include media(md) {
@@ -111,6 +112,22 @@
         cursor: pointer;
         &:hover {
           background-color: darken(#f9b679, 10%);
+        }
+      }
+      a {
+        background-color: $color-bright-red;
+        color: $color-white;
+        width: 100%;
+        border: none;
+        border-radius: 5px;
+        font-size: 1.6rem;
+        padding: 7px 10px 6px;
+        transition: all 400ms ease;
+        cursor: pointer;
+        text-align: center;
+        display: block;
+        &:hover {
+          background-color: $color-red-dark;
         }
       }
     }

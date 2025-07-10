@@ -4,6 +4,9 @@ get_header();
 
 <?php
 $banner_id = "78847";
+
+$author_id = get_the_author_meta('ID');
+
 $banner_superior = CFS()->get('banner_moldura', $banner_id);
 $banner_inferior = CFS()->get('mega_banner', $banner_id);
 $full_banner = CFS()->get('full_banner', $banner_id);
@@ -61,19 +64,30 @@ $boletim_query = new WP_Query(array(
       <a href="<?php echo esc_url($link_full_banner); ?>">
         <img src="<?php echo esc_url($full_banner); ?>" class="img-banner" style="padding-bottom: 25px;" alt="banner">
       </a>
-      <?php if (function_exists('yoast_breadcrumb')) {
-        yoast_breadcrumb('<div id="breadcrumbs">', '</div>');
-      } ?>
+      <?php if ( function_exists('bcn_display') ) {
+    bcn_display();
+} ?>
+
       <?php if (has_post_thumbnail()): ?>
       <div class="post-thumbnail">
         <?php the_post_thumbnail('full'); ?>
       </div>
       <?php endif; ?>
+
       <div class="post-content">
         <strong class="data">
           <?php $data=strtotime(CFS()->get('data')); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
         </strong>
         <h1 class="opem"><?php echo get_post()->post_title;?></h1>
+        <div class="autor">
+          <img src="<?php echo get_avatar_url($author_id) ?>"
+            alt="<?php get_the_author_meta('display_name', $author_id) ?>">
+          <strong><?php
+                    echo (strtolower(get_the_author_meta('display_name', get_post_field('post_author', get_the_ID()))) === 'cineb') 
+                        ? 'Filme B' 
+                        : get_the_author_meta('display_name', get_post_field('post_author', get_the_ID()));
+                    ?></strong>
+        </div>
         <div class="post-text">
           <?php $id_rapidinha = get_the_ID(); ?>
           <?php the_content(); ?>

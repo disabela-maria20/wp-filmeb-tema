@@ -324,6 +324,7 @@ if ($filmes_query->have_posts()) {
         </select>
 
         <button type="submit">Filtrar</button>
+        <a href="<?php echo get_site_url(); ?>/filmes/" type="submit">Voltar</a>
       </div>
     </form>
   </section>

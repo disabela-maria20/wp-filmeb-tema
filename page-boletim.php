@@ -99,11 +99,9 @@ function abreviar_mes($texto) {
       </a>
       <?php endif; ?>
 
-      <?php
-          if (function_exists('yoast_breadcrumb')) {
-            yoast_breadcrumb('<div id="breadcrumbs">', '</div>');
-          } 
-      ?>
+      <?php if ( function_exists('bcn_display') ) {
+    bcn_display();
+} ?>
 
       <?php if ($edicoes_query->have_posts()): ?>
 
@@ -117,7 +115,7 @@ function abreviar_mes($texto) {
             $counter = 0;
             foreach ($values as $post_id) { 
               
-              if ($counter >= 3) break; // Limita a 3 edições
+             
               $the_post = get_post($post_id);
               $post_image = CFS()->get('imagem', $post_id) ?: '';
               $post_title = $the_post->post_title ?: '';
@@ -139,7 +137,8 @@ function abreviar_mes($texto) {
               <?php $data=strtotime(CFS()->get('data')); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
             </span> <i>&nbsp;⎸</i>
             <p class="paragrafo">
-              <?php echo wp_trim_words(esc_html($post_content ?: get_the_excerpt()), 20, '...'); ?></p>
+              <?php echo wp_trim_words($post_content ?: get_the_excerpt(), 20, '...'); ?>
+            </p>
             <?php endif; ?>
           </div>
         </div>

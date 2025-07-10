@@ -44,6 +44,7 @@
     align-items: center;
     gap: 2rem;
     margin: 2rem 0;
+    font-size: 1.4rem;
     img {
       width: 45px;
       height: 45px;
@@ -148,7 +149,7 @@
     }
   }
   .img-post {
-    padding: 20px 0;
+    // padding: 20px 0;
     border-radius: 10px;
   }
   ul {
@@ -184,5 +185,19 @@
     object-fit: cover !important;
     border-radius: 20px !important;
     height: inherit !important;
+  }
+}
+
+.autor {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin: 2rem 0;
+  font-size: 1.4rem;
+  img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
   }
 }
