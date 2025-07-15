@@ -234,7 +234,7 @@ header#desktop {
 
     .grid_institucinal {
       display: grid;
-      grid-template-columns: 0.6fr 3fr 1fr;
+      grid-template-columns: 0.1fr 1.4fr 1fr;
       align-items: center;
       padding: 30px 0;
 
@@ -267,7 +267,8 @@ header#desktop {
 
         ul.user {
           li {
-            a {
+            a,
+            span {
               display: flex;
               align-items: center;
               gap: 10px;
@@ -284,7 +285,8 @@ header#desktop {
           gap: 20px;
 
           li {
-            a {
+            a,
+            span {
               font-family: $font-family;
               font-weight: normal;
               font-size: 16px;

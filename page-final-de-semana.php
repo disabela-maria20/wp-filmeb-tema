@@ -53,9 +53,11 @@ $banner_id = "78847";
         <img src="<?php echo esc_url($full_banner); ?>" class="img-banner" alt="banner">
       </a>
 
-      <?php if ( function_exists('bcn_display') ) {
-    bcn_display();
-} ?>
+      <div id="breadcrumbs">
+        <?php if ( function_exists('bcn_display') ) {
+          bcn_display();
+      } ?>
+      </div>
 
       <div class="post">
         <div class="post-content">

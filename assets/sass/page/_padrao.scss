@@ -10,7 +10,6 @@
     line-height: 3.4rem;
     text-align: left;
     color: $color-bright-red;
-    padding-top: 20px;
     @include media(lg) {
       font-size: 4rem;
       line-height: 4.4rem;
@@ -233,6 +232,19 @@ strong.data {
   margin-bottom: 16px;
 
   a {
+    font-weight: normal;
+    font-size: 1.4rem;
+    line-height: 2.4rem;
+    text-align: left;
+    color: $color-darker-gray;
+  }
+}
+
+#breadcrumbs {
+  margin: 35px 0px 16px;
+
+  a,
+  span {
     font-weight: normal;
     font-size: 1.4rem;
     line-height: 2.4rem;

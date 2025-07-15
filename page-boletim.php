@@ -99,9 +99,11 @@ function abreviar_mes($texto) {
       </a>
       <?php endif; ?>
 
-      <?php if ( function_exists('bcn_display') ) {
-    bcn_display();
-} ?>
+      <div id="breadcrumbs">
+        <?php if ( function_exists('bcn_display') ) {
+          bcn_display();
+      } ?>
+      </div>
 
       <?php if ($edicoes_query->have_posts()): ?>
 

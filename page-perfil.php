@@ -11,9 +11,6 @@ get_header();?>
   while (have_posts()):
     the_post(); ?>
 <main class="container padrao">
-  <?php if ( function_exists('bcn_display') ) {
-    bcn_display();
-} ?>
   <h1 class="titulo center">Perfil</h1>
   <?php echo do_shortcode('[swpm_profile_form]'); ?>
 </main>

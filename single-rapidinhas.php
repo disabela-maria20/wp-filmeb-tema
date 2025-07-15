@@ -60,14 +60,15 @@ $boletim_query = new WP_Query(array(
 <div class="container">
   <div class="grid-list-post-rapidinhas gap-124">
     <div>
-
       <a href="<?php echo esc_url($link_full_banner); ?>">
         <img src="<?php echo esc_url($full_banner); ?>" class="img-banner" style="padding-bottom: 25px;" alt="banner">
       </a>
-      <?php if ( function_exists('bcn_display') ) {
-    bcn_display();
-} ?>
 
+      <div id="breadcrumbs">
+        <?php if ( function_exists('bcn_display') ) {
+          bcn_display();
+      } ?>
+      </div>
       <?php if (has_post_thumbnail()): ?>
       <div class="post-thumbnail">
         <?php the_post_thumbnail('full'); ?>
@@ -76,7 +77,7 @@ $boletim_query = new WP_Query(array(
 
       <div class="post-content">
         <strong class="data">
-          <?php $data=strtotime(CFS()->get('data')); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
+          <?php $data = strtotime(CFS()->get('data')); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
         </strong>
         <h1 class="opem"><?php echo get_post()->post_title;?></h1>
         <div class="autor">
@@ -112,13 +113,37 @@ $boletim_query = new WP_Query(array(
         <img src="<?php echo esc_url($skyscraper); ?>" class="img-banner" alt="banner">
       </a>
       <?php }?>
-      <h2>Boletins</h2>
-      <?php get_template_part('components/Aside/index'); ?>
-      <?php if ($big_stamp != '') { ?>
-      <a href="<?php echo esc_url($link_big_stampr); ?>">
-        <img src="<?php echo esc_url($big_stamp); ?>">
-      </a>
-      <?php } ?>
+      <h2>Rapidinha</h2>
+      <?php
+        $rapidinhas_posts_query = new WP_Query(array(
+          'post_type' => 'rapidinhas',
+          'posts_per_page' => 8,
+        ));
+        ?>
+
+      <?php if ($rapidinhas_posts_query->have_posts()) : ?>
+      <?php while ($rapidinhas_posts_query->have_posts()) : $rapidinhas_posts_query->the_post(); ?>
+      <div class="item-rapidinha">
+        <?php if (esc_url(CFS()->get('imagem')) != '') : ?>
+        <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
+          alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
+        <?php endif; ?>
+        <div>
+          <h3><?php echo get_the_title(); ?></h3>
+          <span class="data">
+            <?php
+            $data = strtotime(CFS()->get('data'));
+            echo date('j', $data) . ' ' . mb_substr(strtolower(date_i18n('F', $data)), 0, 3) . ' ' . date('Y', $data);
+          ?>
+          </span>
+          <a href="<?php the_permalink(); ?>">Leia mais</a>
+        </div>
+      </div>
+      <?php endwhile; ?>
+      <?php wp_reset_postdata(); ?>
+      <?php else : ?>
+      <p>Nenhuma rapidinha encontrada.</p>
+      <?php endif; ?>
     </aside>
   </div>
 </div>

@@ -14,6 +14,12 @@
           <?php if (is_user_logged_in()) { ?>
           <ul class="user">
             <li>
+              <?php if ( is_user_logged_in() ) {
+                  $current_user = wp_get_current_user();
+                  echo '<span>Olá, ' . esc_html( $current_user->display_name ) . '</span>';
+              }?>
+            </li>
+            <li>
               <a href="<?php echo get_site_url(); ?>/minha-conta/assinaturas/">
                 <span>Minha Conta</span>
               </a>
@@ -38,7 +44,7 @@
             </li>
             <li>
               <a href="<?php echo get_site_url(); ?>/minha-conta/assinaturas/">
-                <span>Minha Conta</span>
+                <span>Entrar</span>
               </a>
             </li>
           </ul>

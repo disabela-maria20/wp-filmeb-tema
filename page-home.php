@@ -7,6 +7,7 @@ $banner_estreia = CFS()->get('banner_estreia');
 $banner_lateral = CFS()->get('banner_lateral');
 $banner_lateral_estreia = CFS()->get('banner_lateral_estreia');
 $banner_skyscraper = CFS()->get('banner_skyscraper');
+$banner_link = CFS()->get('link_banner_skyscraper');
 
 $link_banner_estreia = CFS()->get('link_banner_estreia');
 
@@ -57,39 +58,41 @@ $recent_posts_query_banner = new WP_Query(array(
   </div>
 </section>
 
-<?php if (have_posts()): while (have_posts()):the_post(); ?>
+<?php if (have_posts()):
+  while (have_posts()):
+    the_post(); ?>
 <div class="container">
   <section class="owl-carousel slide">
-    <?php if ($recent_posts_query_banner->have_posts()) { 
-    while ($recent_posts_query_banner->have_posts()) { 
-      $recent_posts_query_banner->the_post(); 
+    <?php if ($recent_posts_query_banner->have_posts()) {
+          while ($recent_posts_query_banner->have_posts()) {
+            $recent_posts_query_banner->the_post();
 
-      $imagem = CFS()->get('imagem');
-      $imagem = is_string($imagem) ? $imagem : '';
-      
-      
-      $titulo = CFS()->get('titulo');
-      $titulo = is_string($titulo) ? $titulo : get_the_title();
+            $imagem = CFS()->get('imagem');
+            $imagem = is_string($imagem) ? $imagem : '';
 
-      $data_field = CFS()->get('data');
 
-      $descricao = CFS()->get('descricao');
-      $descricao = is_string($descricao) ? $descricao : get_the_excerpt();
-  ?>
+            $titulo = CFS()->get('titulo');
+            $titulo = is_string($titulo) ? $titulo : get_the_title();
+
+            $data_field = CFS()->get('data');
+
+            $descricao = CFS()->get('descricao');
+            $descricao = is_string($descricao) ? $descricao : get_the_excerpt();
+            ?>
     <div class="item">
       <?php if (!empty($imagem)) { ?>
       <img src="<?php echo esc_url($imagem); ?>" alt="<?php echo esc_attr($titulo); ?>" />
       <?php } ?>
-      <div>
+      <div class="info">
         <a href="<?php the_permalink(); ?>">
           <h2><?php echo esc_html((string) $titulo); ?></h2>
           <span class="data">
-            <?php 
-          if (!empty($data_field)) {
-              $data = strtotime($data_field); 
-              echo date('j', $data) . ' ' . mb_substr(strtolower(date_i18n('F', $data)), 0, 3) . ' ' . date('Y', $data); 
-          }
-          ?>
+            <?php
+                    if (!empty($data_field)) {
+                      $data = strtotime($data_field);
+                      echo date('j', $data) . ' ' . mb_substr(strtolower(date_i18n('F', $data)), 0, 3) . ' ' . date('Y', $data);
+                    }
+                    ?>
           </span> <i>&nbsp;⎸</i>
           <p class="paragrafo">
             <?php echo wp_trim_words(esc_html((string) $descricao), 100, '...'); ?>
@@ -98,10 +101,10 @@ $recent_posts_query_banner = new WP_Query(array(
       </div>
     </div>
     <?php }
-    wp_reset_postdata();
-  } else {
-    echo '<p>Nenhum post encontrado.</p>';
-  } ?>
+          wp_reset_postdata();
+        } else {
+          echo '<p>Nenhum post encontrado.</p>';
+        } ?>
   </section>
 
   <section class="home_table">
@@ -145,11 +148,11 @@ $recent_posts_query_banner = new WP_Query(array(
       <div>
         <section id="filmesHome" class="owl-carousel">
           <?php if ($filme->have_posts()) {
-        while ($filme->have_posts()) {
-          $filme->the_post();
-          $cartaz = CFS()->get('cartaz') ?? '';
-          $titulo = CFS()->get('titulo') ?? get_the_title();
-      ?>
+                  while ($filme->have_posts()) {
+                    $filme->the_post();
+                    $cartaz = CFS()->get('cartaz') ?? '';
+                    $titulo = CFS()->get('titulo') ?? get_the_title();
+                    ?>
           <div class="item">
             <?php if (esc_url($cartaz) == '') { ?>
             <a href="<?php the_permalink(); ?>" class="card">
@@ -164,8 +167,8 @@ $recent_posts_query_banner = new WP_Query(array(
             <?php } ?>
           </div>
           <?php
-        }
-      } ?>
+                  }
+                } ?>
         </section>
       </div>
       <div>
@@ -178,11 +181,11 @@ $recent_posts_query_banner = new WP_Query(array(
     <div class="grid-filmes-full">
       <section id="filmesHomeFull" class="owl-carousel">
         <?php if ($filme->have_posts()) {
-        while ($filme->have_posts()) {
-          $filme->the_post();
-          $cartaz = CFS()->get('cartaz') ?? '';
-          $titulo = CFS()->get('titulo') ?? get_the_title();
-      ?>
+                while ($filme->have_posts()) {
+                  $filme->the_post();
+                  $cartaz = CFS()->get('cartaz') ?? '';
+                  $titulo = CFS()->get('titulo') ?? get_the_title();
+                  ?>
         <div class="item">
           <?php if (esc_url($cartaz) == '') { ?>
           <a href="<?php the_permalink(); ?>" class="card">
@@ -197,8 +200,8 @@ $recent_posts_query_banner = new WP_Query(array(
           <?php } ?>
         </div>
         <?php
-        }
-      } ?>
+                }
+              } ?>
       </section>
     </div>
     <?php } ?>
@@ -206,16 +209,17 @@ $recent_posts_query_banner = new WP_Query(array(
   <section class="home_lista_noticias">
     <h2>Publicações recentes</h2>
     <?php if (!empty($banner_lateral) && esc_html($banner_lateral) == '1') { ?>
+
     <div class="grid-recentes">
       <div>
         <?php if ($recent_posts_query->have_posts()) {
-      while ($recent_posts_query->have_posts()) {
-        $recent_posts_query->the_post(); 
-        $imagem_url = CFS()->get('imagem');
-        $titulo = CFS()->get('titulo') ?: get_the_title();
-    ?>
+                while ($recent_posts_query->have_posts()) {
+                  $recent_posts_query->the_post();
+                  $imagem_url = CFS()->get('imagem');
+                  $titulo = CFS()->get('titulo') ?: get_the_title();
+                  ?>
         <div class="item">
-          <?php if (!empty($imagem_url)) : ?>
+          <?php if (!empty($imagem_url)): ?>
           <img src="<?php echo esc_url($imagem_url); ?>" alt="<?php echo esc_attr($titulo); ?>" />
           <?php endif; ?>
           <div>
@@ -223,28 +227,24 @@ $recent_posts_query_banner = new WP_Query(array(
               <h3><?php echo esc_html($titulo); ?></h3>
               <span class="data">
                 <?php
-              $data_raw = CFS()->get('data');
-              if (!empty($data_raw)) {
-                $data = strtotime($data_raw);
-                echo date('j', $data) . ' ' . mb_substr(strtolower(date_i18n('F', $data)), 0, 3) . ' ' . date('Y', $data);
-              }
-            ?>
+                          $data_raw = CFS()->get('data');
+                          if (!empty($data_raw)) {
+                            $data = strtotime($data_raw);
+                            echo date('j', $data) . ' ' . mb_substr(strtolower(date_i18n('F', $data)), 0, 3) . ' ' . date('Y', $data);
+                          }
+                          ?>
               </span>
             </a>
           </div>
         </div>
-        <?php }
-    } ?>
-      </div>
 
+        <?php }
+              } ?>
+      </div>
       <aside>
-        <?php $banner_link = CFS()->get('link_banner_skyscraper'); ?>
-        <?php if (!empty($banner_link) && !empty($banner_skyscraper)) { ?>
         <a href="<?php echo esc_url($banner_link); ?>">
           <img src="<?php echo esc_url($banner_skyscraper); ?>" alt="Banner">
         </a>
-        <?php } ?>
-
         <?php if (!empty($video)) { ?>
         <div class="video">
           <iframe width="560" height="315" src="<?php echo esc_url($video); ?>" title="YouTube video player"
@@ -258,14 +258,14 @@ $recent_posts_query_banner = new WP_Query(array(
     <?php } else { ?>
     <div class="grid grid-2-lg gap-32">
       <?php if ($recent_posts_query->have_posts()) {
-    while ($recent_posts_query->have_posts()) {
-      $recent_posts_query->the_post();
-     
-      $imagem_url = CFS()->get('imagem');
-      $titulo = CFS()->get('titulo') ?: get_the_title();
-  ?>
+              while ($recent_posts_query->have_posts()) {
+                $recent_posts_query->the_post();
+
+                $imagem_url = CFS()->get('imagem');
+                $titulo = CFS()->get('titulo') ?: get_the_title();
+                ?>
       <div class="item">
-        <?php if (!empty($imagem_url)) : ?>
+        <?php if (!empty($imagem_url)): ?>
         <img src="<?php echo esc_url($imagem_url); ?>" alt="<?php echo esc_attr($titulo); ?>" />
         <?php endif; ?>
         <div>
@@ -273,18 +273,18 @@ $recent_posts_query_banner = new WP_Query(array(
             <h3><?php echo esc_html($titulo); ?></h3>
             <span class="data">
               <?php
-              $data_raw = CFS()->get('data');
-              if (!empty($data_raw)) {
-                $data = strtotime($data_raw);
-                echo date('j', $data) . ' ' . mb_substr(strtolower(date_i18n('F', $data)), 0, 3) . ' ' . date('Y', $data);
-              }
-              ?>
+                        $data_raw = CFS()->get('data');
+                        if (!empty($data_raw)) {
+                          $data = strtotime($data_raw);
+                          echo date('j', $data) . ' ' . mb_substr(strtolower(date_i18n('F', $data)), 0, 3) . ' ' . date('Y', $data);
+                        }
+                        ?>
             </span>
           </a>
         </div>
       </div>
       <?php }
-} ?>
+            } ?>
     </div>
     <?php } ?>
 

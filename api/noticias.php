@@ -4,7 +4,7 @@ function api_noticia_post($request) {
 
     // Sanitização dos campos básicos
     $titulo = !empty($data['titulo']) ? sanitize_text_field($data['titulo']) : '';
-    $descricao = !empty($data['descricao']) ? sanitize_textarea_field($data['descricao']) : '';
+    $descricao = !empty($data['descricao']) ? wp_kses_post($data['descricao']) : '';
     $post_excerpt = !empty($data['post_excerpt']) ? sanitize_text_field($data['post_excerpt']) : '';
     $post_author = !empty($data['post_author']) ? intval($data['post_author']) : get_current_user_id();
     $cartaz = !empty($data['cartaz']) ? esc_url_raw($data['cartaz']) : '';

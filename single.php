@@ -62,10 +62,11 @@ $query = new WP_Query($args);
       <a href="<?php echo esc_url($link_full_banner); ?>">
         <img src="<?php echo esc_url($full_banner); ?>" class="img-banner" alt="banner">
       </a>
-
-      <?php if ( function_exists('bcn_display') ) {
-    bcn_display();
-} ?>
+      <div id="breadcrumbs">
+        <?php if ( function_exists('bcn_display') ) {
+          bcn_display();
+      } ?>
+      </div>
       <section class="post">
         <div>
           <!-- <span class="data">
@@ -81,6 +82,9 @@ $query = new WP_Query($args);
 
         </div>
         <div class="post-content">
+          <strong class="data">
+            <?php $data=strtotime(CFS()->get('data')); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
+          </strong>
           <h1><?php the_title(); ?></h1>
           <div class="autor">
             <img src="<?php echo get_avatar_url($author_id) ?>"

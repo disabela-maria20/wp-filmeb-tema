@@ -60,9 +60,11 @@ $author_id = get_the_author_meta('ID');
     <div>
       <img src="<?php echo esc_url($full_banner); ?>" class="img-banner" alt="banner">
 
-      <?php if ( function_exists('bcn_display') ) {
-        bcn_display();
-    } ?>
+      <div id="breadcrumbs">
+        <?php if ( function_exists('bcn_display') ) {
+          bcn_display();
+      } ?>
+      </div>
 
       <h1 class="search-title">Resultados para: "<?php echo get_search_query(); ?>"</h1>
 

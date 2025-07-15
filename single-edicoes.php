@@ -56,9 +56,12 @@ $author_id = get_the_author_meta('ID');
       <a href="<?php echo esc_url($link_full_banner); ?>">
         <img src="<?php echo esc_url($full_banner); ?>" style="padding-bottom: 25px;" class="img-banner" alt="banner">
       </a>
-      <?php if ( function_exists('bcn_display') ) {
+      <div id="breadcrumbs">
+        <?php if ( function_exists('bcn_display') ) {
           bcn_display();
       } ?>
+      </div>
+
       <div class="post-content-semanal">
         <h1><?php the_title(); ?> -
           <?php echo date_i18n('d \d\e F \d\e Y', strtotime(CFS()->get('data'))) ?>
