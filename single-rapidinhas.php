@@ -113,7 +113,7 @@ $boletim_query = new WP_Query(array(
         <img src="<?php echo esc_url($skyscraper); ?>" class="img-banner" alt="banner">
       </a>
       <?php }?>
-      <h2>Rapidinha</h2>
+      <h2>Últimas Rapidinhas</h2>
       <?php
         $rapidinhas_posts_query = new WP_Query(array(
           'post_type' => 'rapidinhas',

@@ -30,7 +30,6 @@ $recent_posts_query_banner = new WP_Query(array(
   'order' => 'DESC'
 ));
 
-
 ?>
 
 <a href="<?php echo CFS()->get('link_banner_superior'); ?>">
@@ -242,6 +241,7 @@ $recent_posts_query_banner = new WP_Query(array(
               } ?>
       </div>
       <aside>
+
         <a href="<?php echo esc_url($banner_link); ?>">
           <img src="<?php echo esc_url($banner_skyscraper); ?>" alt="Banner">
         </a>

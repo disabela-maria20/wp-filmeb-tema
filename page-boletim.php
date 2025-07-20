@@ -3,8 +3,8 @@
 get_header();
 
 // Configuração de erros (apenas para desenvolvimento)
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+// error_reporting(E_ALL);
+// ini_set('display_errors', 1);
 
 $edicoes_query = new WP_Query(array(
   'post_type' => 'edicoes',

@@ -2,8 +2,8 @@
 
 <?php
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+// error_reporting(E_ALL);
+// ini_set('display_errors', 1);
 
 $args = array(
   'post_type' => 'banner-post',
@@ -104,45 +104,119 @@ if ($selected_mes !== 'todos') {
   );
 }
 
+function filtrar_somente_titulo($where) {
+  global $wpdb;
+  if (!empty($_GET['titulo'])) {
+    $titulo = esc_sql(sanitize_text_field($_GET['titulo']));
+    $where = preg_replace(
+      "/\(\s*{$wpdb->posts}\.post_title\s+LIKE\s*(\'[^\']+\')\s*\)/",
+      "{$wpdb->posts}.post_title LIKE '%{$titulo}%'",
+      $where
+    );
+  }
+  return $where;
+}
+
 function apply_filters_to_args($args) {
+  $search_terms = [];
+  $busca_ativa = false;
+
+  if (isset($_GET['titulo']) && !empty($_GET['titulo'])) {
+    $search_terms['titulo'] = sanitize_text_field($_GET['titulo']);
+    $busca_ativa = true;
+  }
+
+  if (isset($_GET['titulo_original']) && !empty($_GET['titulo_original'])) {
+    $search_terms['titulo_original'] = sanitize_text_field($_GET['titulo_original']);
+    $busca_ativa = true;
+  }
+
+  if ($busca_ativa) {
+    // Remove filtro de data se for busca por título
+    unset($args['meta_query']);
+
+    $ids_encontrados = [];
+
+    // Busca por título (apenas no post_title)
+    if (!empty($search_terms['titulo'])) {
+      add_filter('posts_where', 'filtrar_somente_titulo');
+
+      $query_titulo = new WP_Query([
+        'post_type' => 'filmes',
+        'post_status' => 'publish',
+        's' => $search_terms['titulo'],
+        'posts_per_page' => -1,
+        'fields' => 'ids'
+      ]);
+
+      remove_filter('posts_where', 'filtrar_somente_titulo');
+
+      $ids_encontrados = array_merge($ids_encontrados, $query_titulo->posts);
+    }
+
+    // Busca por titulo_original (campo personalizado)
+    if (!empty($search_terms['titulo_original'])) {
+      $query_titulo_original = new WP_Query([
+        'post_type' => 'filmes',
+        'post_status' => 'publish',
+        'posts_per_page' => -1,
+        'meta_query' => [[
+          'key' => 'titulo_original',
+          'value' => $search_terms['titulo_original'],
+          'compare' => 'LIKE'
+        ]],
+        'fields' => 'ids'
+      ]);
+      $ids_encontrados = array_merge($ids_encontrados, $query_titulo_original->posts);
+    }
+
+    // Remover duplicatas
+    $ids_encontrados = array_unique($ids_encontrados);
+
+    // Aplica os IDs encontrados ao argumento principal
+    $args['post__in'] = empty($ids_encontrados) ? [0] : $ids_encontrados;
+  }
+
+  // Filtros adicionais
   if (!isset($args['meta_query'])) {
     $args['meta_query'] = array();
   }
 
   if (isset($_GET['origem']) && !empty($_GET['origem']) && $_GET['origem'] !== 'todos') {
-    $args['meta_query'][] = array(
+    $args['meta_query'][] = [
       'key' => 'paises',
       'value' => sanitize_text_field($_GET['origem']),
       'compare' => 'REGEXP',
-    );
+    ];
   }
 
   if (isset($_GET['distribuicao']) && !empty($_GET['distribuicao']) && $_GET['distribuicao'] !== 'todos') {
-    $args['meta_query'][] = array(
+    $args['meta_query'][] = [
       'key' => 'distribuicao',
       'value' => sanitize_text_field($_GET['distribuicao']),
       'compare' => '=',
-    );
+    ];
   }
 
   if (isset($_GET['genero']) && !empty($_GET['genero']) && $_GET['genero'] !== 'todos') {
-    $args['meta_query'][] = array(
+    $args['meta_query'][] = [
       'key' => 'generos',
       'value' => sanitize_text_field($_GET['genero']),
       'compare' => 'REGEXP',
-    );
+    ];
   }
 
   if (isset($_GET['tecnologia']) && !empty($_GET['tecnologia']) && $_GET['tecnologia'] !== 'todos') {
-    $args['meta_query'][] = array(
+    $args['meta_query'][] = [
       'key' => 'tecnologia',
       'value' => sanitize_text_field($_GET['tecnologia']),
       'compare' => 'REGEXP',
-    );
+    ];
   }
-  
+
   return $args;
 }
+
 
 $args_mes = apply_filters_to_args($args_mes);
 
@@ -394,8 +468,8 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
       <section class="grid-select">
         <form method="GET" action="<?php echo home_url(); ?>/filmes/">
           <div class="grid-form">
-            <input type="text" placeholder="Titulo">
-            <input type="text" placeholder="Titulo Original">
+            <input type="text" name="titulo" placeholder="Titulo">
+            <input type="text" name="titulo_original" placeholder="Titulo Original">
             <button type="submit">Buscar</button>
           </div>
         </form>
