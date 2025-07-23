@@ -69,13 +69,48 @@ $has_filters = isset($_GET['ano']) || isset($_GET['mes']) || isset($_GET['origem
 $mostrar_todos = isset($_GET['mes']) && $_GET['mes'] === 'todos';
 
 // Argumentos para buscar filmes
+// Argumentos para buscar filmes
 $args_mes = array(
-  'post_type' => 'filmes',
-  'posts_per_page' => -1,
-  'post_status' => 'publish',
-  'orderby' => 'meta_value',
-  'meta_key' => 'estreia',
-  'order' => 'ASC'
+    'post_type' => 'filmes',
+    'posts_per_page' => -1,
+    'post_status' => 'publish',
+    'orderby' => 'meta_value',
+    'meta_key' => 'estreia',
+    'order' => 'ASC',
+    'meta_query' => array(
+        'relation' => 'OR', // Inclui filmes COM data OU SEM data
+        array(
+            'relation' => 'AND',
+            array(
+                'key' => 'estreia',
+                'compare' => 'EXISTS', // Filmes que têm o campo 'estreia'
+            ),
+            // Filtros de data (apenas se não for "todos")
+            ($selected_mes !== 'todos') ? array(
+                'key' => 'estreia',
+                'value' => '^' . $selected_ano,
+                'compare' => 'REGEXP',
+            ) : array(), // Se for "todos", não aplica filtro de ano
+            ($selected_mes !== 'todos') ? array(
+                'key' => 'estreia',
+                'value' => '-' . $selected_mes . '-',
+                'compare' => 'REGEXP',
+            ) : array(), // Se for "todos", não aplica filtro de mês
+        ),
+        // Filmes SEM data (campo 'estreia' não existe ou está vazio)
+        array(
+            'relation' => 'OR',
+            array(
+                'key' => 'estreia',
+                'compare' => 'NOT EXISTS', // Filmes que não têm o campo
+            ),
+            array(
+                'key' => 'estreia',
+                'value' => '', // Filmes com campo vazio
+                'compare' => '=',
+            ),
+        ),
+    ),
 );
 
 // Apenas adicionar filtros de data se não for selecionado "todos" no mês
@@ -228,7 +263,7 @@ function agrupar_filmes_por_categoria($wp_query, $mostrar_todos = false) {
         'semana_atual' => array(),
         'proxima_semana' => array(),
         'semanas_seguintes' => array(),
-        'sem_data' => array(),
+        'sem_data' => array(), // Filmes sem data definida
         'semanas_passadas' => array(),
         'todos_ordenados' => array()
     );
@@ -249,56 +284,43 @@ function agrupar_filmes_por_categoria($wp_query, $mostrar_todos = false) {
             $wp_query->the_post();
             $post_id = get_the_ID();
             $data_estreia = CFS()->get('estreia', $post_id);
-            $tags = wp_get_post_tags($post_id);
-            $tem_tag_sem_data = false;
 
-            // Verificar se tem a tag "sem data"
-            foreach ($tags as $tag) {
-                if (strtolower($tag->name) === 'sem data') {
-                    $tem_tag_sem_data = true;
-                    break;
-                }
-            }
-
-            if ($tem_tag_sem_data) {
+            // Se NÃO tem data OU data é inválida (não segue YYYY-MM-DD)
+            if (empty($data_estreia) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $data_estreia)) {
                 $agrupados['sem_data'][] = $post_id;
-                $agrupados['todos_ordenados'][$post_id] = '9999-99-99';
-            } elseif ($data_estreia && preg_match('/^\d{4}-\d{2}-\d{2}$/', $data_estreia)) {
-                $data_obj = DateTime::createFromFormat('Y-m-d', $data_estreia);
-                
-                // Adicionar sempre ao array todos_ordenados
-                $agrupados['todos_ordenados'][$post_id] = $data_estreia;
-                
-                if (!$mostrar_todos) {
-                    if ($data_obj >= $semana_atual_inicio && $data_obj <= $semana_atual_fim) {
-                        $agrupados['semana_atual'][$data_estreia][] = $post_id;
-                    }
-                    elseif ($data_obj >= $proxima_semana_inicio && $data_obj <= $proxima_semana_fim) {
-                        $agrupados['proxima_semana'][$data_estreia][] = $post_id;
-                    } 
-                    elseif ($data_obj > $proxima_semana_fim) {
-                        $agrupados['semanas_seguintes'][$data_estreia][] = $post_id;
-                    }
-                    elseif ($data_obj < $semana_atual_inicio) {
-                        $agrupados['semanas_passadas'][$data_estreia][] = $post_id;
-                    }
+                $agrupados['todos_ordenados'][$post_id] = '9999-99-99'; // Data fictícia para ordenação
+                continue; // Pula para o próximo filme
+            }
+            
+            // Se tem data válida
+            $data_obj = DateTime::createFromFormat('Y-m-d', $data_estreia);
+            $agrupados['todos_ordenados'][$post_id] = $data_estreia;
+            
+            if (!$mostrar_todos) {
+                if ($data_obj >= $semana_atual_inicio && $data_obj <= $semana_atual_fim) {
+                    $agrupados['semana_atual'][$data_estreia][] = $post_id;
+                }
+                elseif ($data_obj >= $proxima_semana_inicio && $data_obj <= $proxima_semana_fim) {
+                    $agrupados['proxima_semana'][$data_estreia][] = $post_id;
+                } 
+                elseif ($data_obj > $proxima_semana_fim) {
+                    $agrupados['semanas_seguintes'][$data_estreia][] = $post_id;
+                }
+                elseif ($data_obj < $semana_atual_inicio) {
+                    $agrupados['semanas_passadas'][$data_estreia][] = $post_id;
                 }
             }
         }
         wp_reset_postdata();
     }
     
-    // Ordenar semanas seguintes em ordem crescente
+    // Ordenação dos filmes por data
     if (!empty($agrupados['semanas_seguintes'])) {
         ksort($agrupados['semanas_seguintes']);
     }
-    
-    // Ordenar semanas passadas em ordem decrescente
     if (!empty($agrupados['semanas_passadas'])) {
         krsort($agrupados['semanas_passadas']);
     }
-    
-    // Ordenar todos os filmes por data (do mais recente para o mais antigo)
     if (!empty($agrupados['todos_ordenados'])) {
         asort($agrupados['todos_ordenados']);
     }

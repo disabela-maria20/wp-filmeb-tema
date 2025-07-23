@@ -79,13 +79,19 @@ $banner_lateral = CFS()->get('banner_lateral', $banner_id);
     </h1>
     <h2>
       <?php
-    $estreia = CFS()->get('estreia');
-    if (!empty($estreia)) {
-      $dia_semana = date_i18n('l', strtotime($estreia));
-      $data_formatada = date_i18n('j \d\e F \d\e Y', strtotime($estreia));
-      echo '<p class="semana">' . esc_html($data_formatada).", ". esc_html($dia_semana) . '</p>';
-    }
-  ?>
+       // [sem_data] => 1 [mes] => Array ( [Julho] => Julho ) [ano] => 2025 
+        $sem_data = CFS()->get('sem_data');
+   
+        $estreia = CFS()->get('estreia');
+        if (!empty($estreia)) {
+          $dia_semana = date_i18n('l', strtotime($estreia));
+          $data_formatada = date_i18n('j \d\e F \d\e Y', strtotime($estreia));
+          echo '<p class="semana">' . 
+            ($sem_data == 1 ? '<span class="alterado">' . esc_html($data_formatada) . '</span>' : esc_html($data_formatada)) . 
+            ', ' . esc_html($dia_semana) . 
+            '</p>';
+        }
+      ?>
     </h2>
     <div class="grid-filmes <?php echo  ($banner_lateral == '1' ? 'grid-publi' : '')?>">
       <div>
@@ -189,12 +195,13 @@ $banner_lateral = CFS()->get('banner_lateral', $banner_id);
         <?php if (is_array($diretores) && has_valid_items($diretores)) : ?>
         <div class="grid-fixa-tecnica">
           <h3>Direção</h3>
-          <?php foreach ($diretores as $diretor) : ?>
-          <?php if (is_array($diretor) && !empty($diretor['nome'])) : ?>
-          <p><?php echo esc_html($diretor['nome']); ?></p>
-          <?php endif; ?>
-
-          <?php endforeach; ?>
+          <div>
+            <?php foreach ($diretores as $diretor) : ?>
+            <?php if (is_array($diretor) && !empty($diretor['nome'])) : ?>
+            <p><?php echo esc_html($diretor['nome']); ?></p>
+            <?php endif; ?>
+            <?php endforeach; ?>
+          </div>
         </div>
         <?php endif; ?>
         <?php endif; ?>

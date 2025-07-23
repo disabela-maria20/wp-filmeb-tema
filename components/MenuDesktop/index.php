@@ -16,6 +16,7 @@
             <li>
               <?php if ( is_user_logged_in() ) {
                   $current_user = wp_get_current_user();
+                  // echo var_dump($current_user);
                   echo '<span>Olá, ' . esc_html( $current_user->display_name ) . '</span>';
               }?>
             </li>

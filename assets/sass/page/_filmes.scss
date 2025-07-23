@@ -299,6 +299,9 @@
     background-color: $color-light-red;
     padding: 20px 0;
     text-align: center;
+    span {
+      background-color: $color-yellow;
+    }
   }
 
   .cartaz {

@@ -1,7 +1,13 @@
 <?php
 // Template Name: Home
+
+
 get_header();
 $filme = get_thursday_movies();
+
+$filmesCount = ($filme instanceof WP_Query) ? $filme->post_count : 0;
+// error_reporting(E_ALL);
+// ini_set('display_errors', 1);
 
 $banner_estreia = CFS()->get('banner_estreia');
 $banner_lateral = CFS()->get('banner_lateral');
@@ -198,9 +204,7 @@ $recent_posts_query_banner = new WP_Query(array(
           </a>
           <?php } ?>
         </div>
-        <?php
-                }
-              } ?>
+        <?php }} ?>
       </section>
     </div>
     <?php } ?>
@@ -361,6 +365,9 @@ document.getElementById('assinar-filmeb-btn').addEventListener('click', function
 
 <script>
 // Carrega o Splide plugin
+
+var filmesCount = <?php echo $filmesCount; ?>;
+
 document.addEventListener("DOMContentLoaded", function() {
   jQuery(document).ready(function($) {
     $('#filmesHome').owlCarousel({
@@ -383,13 +390,17 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     $('#filmesHomeFull').owlCarousel({
       loop: true,
+      autoHeight: false,
       margin: 10,
       nav: false,
       dots: true,
       mouseDrag: true,
-      autoplay: true,
+      autoplay: false,
       autoplayTimeout: 6000,
-      navText: ["<i class='bi bi-chevron-left'></i>", "<i class='bi bi-chevron-right'></i>"],
+      navText: [
+        "<i class='bi bi-chevron-left'></i>",
+        "<i class='bi bi-chevron-right'></i>"
+      ],
       responsive: {
         0: {
           items: 3
@@ -398,10 +409,11 @@ document.addEventListener("DOMContentLoaded", function() {
           items: 4
         },
         1200: {
-          items: 8
-        },
+          items: Math.min(8, Math.max(5, filmesCount))
+        }
       }
     });
+
 
     jQuery(document).ready(function($) {
       $('.slide').owlCarousel({

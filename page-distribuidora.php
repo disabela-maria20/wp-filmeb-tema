@@ -137,7 +137,7 @@ if ($filmes_query->have_posts()) {
 
     $filme = filme_scheme(get_post());
     $estreia = $filme->estreia ?? null;
-
+    $sem_data = CFS()->get('sem_data');
     if (!$estreia) {
       continue;
     }
@@ -185,6 +185,7 @@ if ($filmes_query->have_posts()) {
 
     // Dados do filme
     $filmeData = [
+      'ID' => get_the_ID(), // Adicione esta linha
       'link' => $filme->link ?? '',
       'title' => $filme->title ?? '',
       'titulo_original' => $filme->titulo_original ?? ''
@@ -521,8 +522,12 @@ function format_filmes($filmes) {
 
   $output = '<ul>';
   foreach ($filmes as $filme) {
+    // Obter o valor de sem_data para o filme atual
+    $sem_data = get_post_meta($filme['ID'], 'sem_data', true);
+    $classe = ($sem_data == 1) ? 'alterado' : '';
+
     $output .= '<li>';
-    $output .= '<a href="' . esc_url($filme['link'] ?? '#') . '" target="_blank">';
+    $output .= '<a href="' . esc_url($filme['link'] ?? '#') . '" target="_blank" class="' . esc_attr($classe) . '">';
     $output .= esc_html($filme['title'] ?? '');
 
     if (!empty($filme['titulo_original']) && $filme['titulo_original'] !== $filme['title']) {
@@ -536,7 +541,6 @@ function format_filmes($filmes) {
 
   return $output;
 }
-
 function traduzir_mes_para_portugues($mes_ingles) {
   $meses = [
     'January' => 'Janeiro',
