@@ -1,6 +1,5 @@
 <?php
 
-
 // error_reporting(E_ALL);
 // ini_set('display_errors', 1);
 function handel_add_woocommerce_support()
@@ -29,6 +28,7 @@ function use_scripts()
   }
 
   wp_enqueue_style('lite-yt-embed', 'https://cdnjs.cloudflare.com/ajax/libs/lite-youtube-embed/0.3.3/lite-yt-embed.min.css', array(), '1.0.0', 'all');
+    wp_enqueue_style('base-style', 'https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4', array(), '1.0.0', 'all');
 
   wp_enqueue_style('base-style', get_template_directory_uri() . '/assets/css/base.min.css', array(), '1.0.0', 'all');
   wp_enqueue_script('jquery');

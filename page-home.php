@@ -38,15 +38,13 @@ $recent_posts_query_banner = new WP_Query(array(
 
 ?>
 
-<a href="<?php echo CFS()->get('link_banner_superior'); ?>">
-  <img src="<?php echo CFS()->get('banner_superior'); ?>" class="w-full p-35 img-banner bannerMobile" alt="banner">
-</a>
+<div class="w-full p-35 img-banner bannerMobile">
+  <?php echo do_shortcode('[bm_banner id="399745"]');?>
+</div>
 
 <div class="container bannerDesktop">
   <div class="grid-banner-superior">
-    <a href="<?php echo CFS()->get('link_banner_inferior'); ?>">
-      <img src="<?php echo CFS()->get('banner_inferior'); ?>" class="img-banner " alt="banner">
-    </a>
+    <?php echo do_shortcode('[bm_banner id="399761"]');?>
   </div>
 </div>
 
@@ -56,9 +54,7 @@ $recent_posts_query_banner = new WP_Query(array(
 <section class="bg-gray">
   <div class="bannerMobile bg-gray padding-banner ">
     <div class="grid-banner-superior">
-      <a href="<?php echo CFS()->get('link_banner_inferior'); ?>">
-        <img src="<?php echo CFS()->get('banner_inferior'); ?>" class="img-banner " alt="banner">
-      </a>
+      <?php echo do_shortcode('[bm_banner id="399761"]');?>
     </div>
   </div>
 </section>
@@ -141,9 +137,7 @@ $recent_posts_query_banner = new WP_Query(array(
   </section>
   <section class="home_newllater">
     <div class="container">
-      <a href="<?php echo CFS()->get('link_banner_newsllater'); ?>">
-        <img src="<?php echo CFS()->get('banner_newsllater'); ?>" class="img-banner d-block m-auto" alt="banner">
-      </a>
+      <?php echo do_shortcode('[bm_banner id="399745"]');?>
     </div>
   </section>
   <section class="home-filmes">
@@ -177,9 +171,7 @@ $recent_posts_query_banner = new WP_Query(array(
         </section>
       </div>
       <div>
-        <a href="<?php echo esc_url($link_banner_estreia ?? '#'); ?>">
-          <img class="publi" src="<?php echo esc_url($banner_estreia ?? ''); ?>" alt="Banner de publicidade" />
-        </a>
+        <?php echo do_shortcode('[bm_banner id="399749"]');?>
       </div>
     </div>
     <?php } else { ?>
@@ -246,9 +238,7 @@ $recent_posts_query_banner = new WP_Query(array(
       </div>
       <aside>
 
-        <a href="<?php echo esc_url($banner_link); ?>">
-          <img src="<?php echo esc_url($banner_skyscraper); ?>" alt="Banner">
-        </a>
+        <?php echo do_shortcode('[bm_banner id="399753"]');?>
         <?php if (!empty($video)) { ?>
         <div class="video">
           <iframe width="560" height="315" src="<?php echo esc_url($video); ?>" title="YouTube video player"

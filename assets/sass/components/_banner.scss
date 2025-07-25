@@ -1,8 +1,14 @@
-.padding-banner{
+.padding-banner {
   padding: 35px;
   margin-bottom: 35px;
-  @include media(lg){
+  @include media(lg) {
     padding: initial;
     margin: inherit;
   }
+}
+
+.bm-banner {
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
 }

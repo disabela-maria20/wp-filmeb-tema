@@ -1,122 +1,123 @@
 <?php
-add_action('rest_api_init', function () {
-  register_rest_route('api/v1', '/add-user', [
-    'methods' => 'POST',
-    'callback' => 'register_customer_membership',
-    'permission_callback' => '__return_true'
-  ]);
-});
+add_action( 'rest_api_init', function() {
+    register_rest_route( 'api/v1', '/add-user', [
+        'methods'             => 'POST',
+        'callback'            => 'am_add_user_membership',
+        'permission_callback' => '__return_true',
+    ] );
+} );
 
-function register_customer_membership(WP_REST_Request $request)
-{
-  global $wpdb;
+/**
+ * Callback do endpoint
+ */
+function am_add_user_membership( WP_REST_Request $request ) {
+    error_log( '--- am_add_user_membership chamado ---' );
+    $params = $request->get_json_params();
+    error_log( 'Payload recebido: ' . print_r( $params, true ) );
 
-  $params = $request->get_json_params();
-
-  // Campos obrigatórios
-  $username = sanitize_text_field($params['username']);
-  $email = sanitize_email($params['email']);
-  $password = sanitize_text_field($params['password']);
-  $activation_date = sanitize_text_field($params['activation_date']);
-  $expiration_date = sanitize_text_field($params['expiration_date']);
-
-  // Verificação dos campos obrigatórios
-  if (empty($username) || empty($email) || empty($password) || empty($expiration_date)) {
-    return new WP_Error('missing_data', 'Os campos username, email, password e expiration_date são obrigatórios.', ['status' => 400]);
-  }
-
-  // Verifica se o usuário já existe
-  if (email_exists($email)) {
-    return new WP_Error('user_exists', 'Este email já está cadastrado.', ['status' => 400]);
-  }
-
-  // Criar usuário no WordPress e WooCommerce
-  $user_id = wp_create_user($username, $password, $email);
-  if (is_wp_error($user_id)) {
-    return new WP_Error('user_creation_failed', 'Erro ao criar usuário.', ['status' => 500]);
-  }
-
-  $user = new WP_User($user_id);
-  $user->set_role('customer'); // Define como Cliente no WooCommerce
-
-  // Adicionar informações ao WooCommerce (campos obrigatórios)
-  update_user_meta($user_id, 'billing_email', $email);
-  update_user_meta($user_id, 'membership_activation', $activation_date);
-  update_user_meta($user_id, 'membership_expiration', $expiration_date);
-
-  // Verificar se a data de expiração já passou
-  $current_date = current_time('mysql');
-  $is_paid = strtotime($expiration_date) > strtotime($current_date);
-
-  // Se ainda não expirou, é pago; caso contrário, é Free
-  $membership_level = $is_paid ? 2 : 3;
-  $account_state = $is_paid ? 'active' : 'inactive';
-  $status = $is_paid ? 'paid' : 'free';
-
-  // Inserir diretamente na tabela wp_swpm_members_tbl
-  $table = $wpdb->prefix . 'swpm_members_tbl';
-
-  // Dados para inserção na tabela SWPM
-  $swpm_data = [
-    'user_name' => $username,
-    'first_name' => sanitize_text_field($params['first_name'] ?? ''),
-    'last_name' => sanitize_text_field($params['last_name'] ?? ''),
-    'password' => $password,
-    'member_since' => $activation_date,
-    'membership_level' => $membership_level,
-    'account_state' => $account_state,
-    'email' => $email,
-    'phone' => sanitize_text_field($params['phone'] ?? ''),
-    'address_street' => sanitize_text_field($params['address_street'] ?? ''),
-    'address_city' => sanitize_text_field($params['address_city'] ?? ''),
-    'address_state' => sanitize_text_field($params['address_state'] ?? ''),
-    'address_zipcode' => sanitize_text_field($params['address_zipcode'] ?? ''),
-    'country' => sanitize_text_field($params['country'] ?? ''),
-    'gender' => sanitize_text_field($params['gender'] ?? 'not specified'),
-    'company_name' => sanitize_text_field($params['company_name'] ?? ''),
-    'profile_image' => sanitize_text_field($params['profile_image'] ?? ''),
-    'subscription_starts' => $activation_date,
-    'last_accessed' => current_time('mysql'),
-    'last_accessed_from_ip' => $_SERVER['REMOTE_ADDR'],
-  ];
-
-  $wpdb->insert($table, $swpm_data);
-
-  if (isset($params['address_street']) && isset($params['address_city']) && isset($params['address_state']) && isset($params['address_zipcode']) && isset($params['country'])) {
-    $order = wc_create_order(['customer_id' => $user_id]);
-
-    $product_id = 106;
-    $product = wc_get_product($product_id);
-
-    if ($product) {
-      $order->add_product($product, 1);
-    } else {
-      return new WP_Error('product_not_found', 'Produto não encontrado.', ['status' => 404]);
+    // Validação
+    if ( empty( $params['email'] ) || ! is_email( $params['email'] ) ) {
+        return new WP_Error( 'invalid_email', 'E-mail inválido ou ausente.', [ 'status' => 400 ] );
     }
 
-    $billing_address = [
-      'first_name' => sanitize_text_field($params['first_name'] ?? ''),
-      'last_name'  => sanitize_text_field($params['last_name'] ?? ''),
-      'email'      => $email,
-      'phone'      => sanitize_text_field($params['phone'] ?? ''),
-      'address_1'  => sanitize_text_field($params['address_street']),
-      'city'       => sanitize_text_field($params['address_city']),
-      'state'      => sanitize_text_field($params['address_state']),
-      'postcode'   => sanitize_text_field($params['address_zipcode']),
-      'country'    => sanitize_text_field($params['country']),
+    $email      = sanitize_email( $params['email'] );
+    $first_name = isset( $params['first_name'] ) ? sanitize_text_field( $params['first_name'] ) : '';
+    $last_name  = isset( $params['last_name'] )  ? sanitize_text_field( $params['last_name'] )  : '';
+
+    // Datas
+    $ts_start = strtotime( $params['start_date'] ?? '' );
+    if ( ! $ts_start ) {
+        return new WP_Error( 'invalid_start_date', 'start_date inválido. Use YYYY-MM-DD.', [ 'status' => 400 ] );
+    }
+    $start_date = date( 'Y-m-d H:i:s', $ts_start );
+
+    $end_date = '';
+    if ( ! empty( $params['end_date'] ) ) {
+        $ts_end = strtotime( $params['end_date'] );
+        if ( ! $ts_end ) {
+            return new WP_Error( 'invalid_end_date', 'end_date inválido. Use YYYY-MM-DD.', [ 'status' => 400 ] );
+        }
+        $end_date = date( 'Y-m-d H:i:s', $ts_end );
+    }
+
+    // Criação ou recuperação do usuário
+    $user = get_user_by( 'email', $email );
+    if ( ! $user ) {
+        $random_pass = wp_generate_password();
+        $user_id = wp_create_user( $email, $random_pass, $email );
+        if ( is_wp_error( $user_id ) ) {
+            error_log( 'Erro ao criar usuário: ' . $user_id->get_error_message() );
+            return new WP_Error( 'user_creation_failed', 'Não foi possível criar usuário.', [ 'status' => 500 ] );
+        }
+
+        $user = get_user_by( 'ID', $user_id );
+        wp_update_user([
+            'ID'         => $user_id,
+            'first_name' => $first_name,
+            'last_name'  => $last_name,
+        ]);
+
+        wp_mail(
+            $email,
+            'Bem-vindo(a)!',
+            "Olá {$first_name},\n\nSua conta foi criada com sucesso. Sua senha é: {$random_pass}"
+        );
+        error_log( "Usuário {$email} criado com ID {$user_id}" );
+    }
+
+    $user_id = $user->ID;
+
+    // Parâmetros da assinatura
+    $plan_id    = 399722; // ajuste conforme necessário
+    $product_id = 106;    // ajuste conforme necessário
+
+    $args = [
+        'plan_id'    => $plan_id,
+        'user_id'    => $user_id,
+        'product_id' => $product_id,
+        'start_date' => $start_date,
+        'status'     => 'active', // Garante que não use a data atual automaticamente
     ];
 
-    $order->set_address($billing_address, 'billing');
+    if ( $end_date ) {
+        $args['end_date'] = $end_date;
+    }
 
-    // Definir status do pedido (opcional)
-    $order->set_status('completed'); // Ou 'processing', 'pending', etc.
-    $order->save();
-  }
+    error_log( 'Chamando wc_memberships_create_user_membership com: ' . print_r( $args, true ) );
 
-  return rest_ensure_response([
-    'message' => 'Usuário registrado com sucesso!',
-    'user_id' => $user_id,
-    'status' => $status,
-    'expiration_date' => $expiration_date
-  ]);
+    // Criação da assinatura
+    try {
+    $membership = wc_memberships_create_user_membership( $args );
+    if ( is_wp_error( $membership ) ) {
+        throw new Exception( $membership->get_error_message() );
+    }
+
+    // Define manualmente datas, se necessário
+    $membership->set_start_date( $start_date );
+    if ( $end_date ) {
+        $membership->set_end_date( $end_date );
+    }
+    // REMOVA: $membership->update();
+
+    $membership_id = $membership->get_id();
+    error_log( "Membership criado com ID {$membership_id}" );
+} catch ( Throwable $e ) {
+    error_log( 'Exceção ao criar membership: ' . $e->getMessage() );
+    return new WP_Error(
+        'membership_error',
+        'Erro ao criar membership: ' . $e->getMessage(),
+        [ 'status' => 500 ]
+    );
+}
+
+    // Resposta final
+    return rest_ensure_response([
+        'success'        => true,
+        'message'        => 'Assinante adicionado com sucesso.',
+        'membership_id'  => $membership_id,
+        'user_id'        => $user_id,
+        'email'          => $email,
+        'start_date'     => $start_date,
+        'end_date'       => $end_date ?: null,
+    ]);
 }
