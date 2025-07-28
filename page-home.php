@@ -36,7 +36,9 @@ $recent_posts_query_banner = new WP_Query(array(
   'order' => 'DESC'
 ));
 
+
 ?>
+
 
 <div class="w-full p-35 img-banner bannerMobile">
   <?php echo do_shortcode('[bm_banner id="399745"]');?>

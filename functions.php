@@ -395,17 +395,3 @@ function filtrar_edicoes_do_ultimo_mes($args, $context) {
     }
     return $args;
 }
-
-
-add_action('wp_footer', function() {
-  if ( is_user_logged_in() ) {
-    $user = wp_get_current_user();
-    echo "<div style='position:fixed;bottom:0;left:0;background:#000;color:#fff;padding:10px;z-index:9999'>
-      Logado como: {$user->user_login} ({$user->ID})
-    </div>";
-  } else {
-    echo "<div style='position:fixed;bottom:0;left:0;background:red;color:#fff;padding:10px;z-index:9999'>
-      Usuário não logado
-    </div>";
-  }
-});

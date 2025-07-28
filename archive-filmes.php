@@ -375,32 +375,26 @@ $link_skyscraper = CFS()->get('link_skyscraper', $banner_id);
 $link_big_stampr = CFS()->get('link_big_stamp', $banner_id);
 $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_id);
 ?>
-<a href="<?php echo esc_url($link_banner_superior) ?>" target="_blank" rel="noopener noreferrer">
-  <img src="<?php echo esc_url($banner_superior); ?>" class="w-full p-35 img-banner bannerMobile " alt="banner">
-</a>
+<div class="w-full p-35 img-banner bannerMobile">
+  <?php echo do_shortcode('[bm_banner id="399779"]');?>
+</div>
 
 <div class="container bannerDesktop">
   <div class="grid-banner-superior">
-    <a href="<?php echo esc_url($link_banner_inferior); ?>" target="_blank" rel="noopener noreferrer">
-      <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
-    </a>
+    <?php echo do_shortcode('[bm_banner id="399761"]');?>
   </div>
 </div>
-
 
 <?php get_template_part('components/MenuMobile/index'); ?>
 <?php get_template_part('components/MenuDesktop/index'); ?>
 
-<section class="bg-gray padding-banner">
-  <div class="container bannerMobile">
+<section class="bg-gray">
+  <div class="bannerMobile bg-gray padding-banner ">
     <div class="grid-banner-superior">
-      <a href="<?php echo $link_banner_inferior; ?>" target="_blank" rel="noopener noreferrer">
-        <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
-      </a>
+      <?php echo do_shortcode('[bm_banner id="399761"]');?>
     </div>
   </div>
 </section>
-
 <div class="container page-filmes">
   <div id="app">
     <div class="page-filmes">
@@ -853,12 +847,8 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
           </section>
         </div>
         <aside>
-          <a href="<?php echo esc_url($link_skyscraper); ?>">
-            <img src="<?php echo esc_url($skyscraper); ?>">
-          </a>
-          <a href="<?php echo esc_url($link_big_stampr); ?>">
-            <img src="<?php echo esc_url($big_stamp); ?>">
-          </a>
+          <?php echo do_shortcode('[bm_banner id="399779"]');?>
+          <?php echo do_shortcode('[bm_banner id="399749"]');?>
         </aside>
       </div>
       <?php else: ?>
@@ -868,9 +858,9 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
         </div>
       </section>
       <section class="tabela-filme" v-if="ativoItem === 'tabela'">
-        <a href="<?php echo esc_url($link_banner_moldura_casado); ?>">
-          <img src="<?php echo esc_url($banner_moldura_casado); ?>">
-        </a>
+        <div class="w-full p-35 img-banner bannerMobile">
+          <?php echo do_shortcode('[bm_banner id="399745"]');?>
+        </div>
         <?php render_filmes_tabela($filmes_agrupados, $dias_semana, $has_filters, $mostrar_todos); ?>
       </section>
       <?php endif; ?>

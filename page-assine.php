@@ -2,8 +2,26 @@
 // Template Name: Assine
 get_header();
 ?>
+<div class="w-full p-35 img-banner bannerMobile">
+  <?php echo do_shortcode('[bm_banner id="399779"]');?>
+</div>
+
+<div class="container bannerDesktop">
+  <div class="grid-banner-superior">
+    <?php echo do_shortcode('[bm_banner id="399761"]');?>
+  </div>
+</div>
+
 <?php get_template_part('components/MenuMobile/index'); ?>
 <?php get_template_part('components/MenuDesktop/index'); ?>
+
+<section class="bg-gray">
+  <div class="bannerMobile bg-gray padding-banner ">
+    <div class="grid-banner-superior">
+      <?php echo do_shortcode('[bm_banner id="399761"]');?>
+    </div>
+  </div>
+</section>
 <main class="page-assine">
   <section class="bg1"
     style="background: linear-gradient(180deg, #ffffff00, #221115), url('<?php echo get_template_directory_uri(); ?>/assets/images/banner/bg-hero-pagina-de-vendas-1024x450.jpg');">

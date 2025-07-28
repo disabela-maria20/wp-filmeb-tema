@@ -13,20 +13,6 @@ $edicoes_query = new WP_Query(array(
   'order' => 'DESC',
 ));
 
-// Tratamento seguro para os banners
-$banner_id = "78919";
-$banner_superior = CFS()->get('banner_moldura', $banner_id) ?: '';
-$banner_inferior = CFS()->get('mega_banner', $banner_id) ?: '';
-$full_banner = CFS()->get('full_banner', $banner_id) ?: '';
-$skyscraper = CFS()->get('skyscraper', $banner_id) ?: '';
-
-$link_banner_superior = CFS()->get('link_banner_moldura', $banner_id) ?: '#';
-$link_banner_inferior = CFS()->get('link_mega_banner', $banner_id) ?: '#';
-$link_full_banner = CFS()->get('link_full_banner', $banner_id) ?: '#';
-$link_skyscraper = CFS()->get('link_skyscraper', $banner_id) ?: '#';
-
-$big_stamp = CFS()->get('big_stamp', $banner_id);
-$link_big_stampr = CFS()->get('link_big_stamp', $banner_id);
 
 
 $post_id = get_the_ID();
@@ -57,33 +43,24 @@ function abreviar_mes($texto) {
 
 ?>
 
-<?php if (!empty($banner_superior)) : ?>
-<a href="<?php echo esc_url($link_banner_superior); ?>" target="_blank" rel="noopener noreferrer">
-  <img src="<?php echo esc_url($banner_superior); ?>" class="w-full p-35 img-banner bannerMobile" alt="banner">
-</a>
-<?php endif; ?>
+
+<div class="w-full p-35 img-banner bannerMobile">
+  <?php echo do_shortcode('[bm_banner id="399779"]');?>
+</div>
 
 <div class="container bannerDesktop">
   <div class="grid-banner-superior">
-    <?php if (!empty($banner_inferior)) : ?>
-    <a href="<?php echo esc_url($link_banner_inferior); ?>" target="_blank" rel="noopener noreferrer">
-      <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
-    </a>
-    <?php endif; ?>
+    <?php echo do_shortcode('[bm_banner id="399761"]');?>
   </div>
 </div>
 
 <?php get_template_part('components/MenuMobile/index'); ?>
 <?php get_template_part('components/MenuDesktop/index'); ?>
 
-<section class="bg-gray padding-banner">
-  <div class="container bannerMobile">
+<section class="bg-gray">
+  <div class="bannerMobile bg-gray padding-banner ">
     <div class="grid-banner-superior">
-      <?php if (!empty($banner_inferior)) : ?>
-      <a href="<?php echo esc_url($link_banner_inferior); ?>" target="_blank" rel="noopener noreferrer">
-        <img src="<?php echo esc_url($banner_inferior); ?>" class="img-banner" alt="banner">
-      </a>
-      <?php endif; ?>
+      <?php echo do_shortcode('[bm_banner id="399761"]');?>
     </div>
   </div>
 </section>
@@ -93,11 +70,9 @@ function abreviar_mes($texto) {
 <div class="container">
   <div class="grid-list-post-boletim gap-64-md">
     <div>
-      <?php if (!empty($full_banner)) : ?>
-      <a href="<?php echo esc_url($link_full_banner); ?>">
-        <img src="<?php echo esc_url($full_banner); ?>" class="img-banner" style="padding-bottom: 25px;" alt="banner">
-      </a>
-      <?php endif; ?>
+      <div style="padding-bottom: 25px;">
+        <?php echo do_shortcode('[bm_banner id="399750"]');?>
+      </div>
 
       <div id="breadcrumbs">
         <?php if ( function_exists('bcn_display') ) {
@@ -155,11 +130,9 @@ function abreviar_mes($texto) {
 
       <?php wp_reset_postdata(); ?>
 
-      <?php if (!empty($super_banner)) : ?>
-      <a href="<?php echo esc_url($link_super_banner); ?>">
-        <img src="<?php echo esc_url($super_banner); ?>" class="img-banner" alt="banner">
-      </a>
-      <?php endif; ?>
+      <div style="padding-bottom: 25px;">
+        <?php echo do_shortcode('[bm_banner id="399785"]');?>
+      </div>
 
       <h3 class="titulo">Rapidinha</h3>
       <!-- Carousel Mobile -->
@@ -176,11 +149,7 @@ function abreviar_mes($texto) {
       </section>
     </div>
     <aside class="aside-info">
-      <?php if (!empty($skyscraper)) : ?>
-      <a href="<?php echo esc_url($link_skyscraper); ?>" target="_blank" rel="noopener noreferrer">
-        <img src="<?php echo esc_url($skyscraper); ?>" class="img-banner" alt="banner">
-      </a>
-      <?php endif; ?>
+      <?php echo do_shortcode('[bm_banner id="399753"]');?>
 
       <h2>Notícias recentes</h2>
       <?php
@@ -220,11 +189,7 @@ if ($recent_posts_query->have_posts()) {
           echo '<p>Nenhum post encontrado.</p>';
       }
       ?>
-      <?php if ($big_stamp != '') { ?>
-      <a href="<?php echo esc_url($link_big_stampr); ?>">
-        <img src="<?php echo esc_url($big_stamp); ?>">
-      </a>
-      <?php } ?>
+      <?php echo do_shortcode('[bm_banner id="399749"]');?>
 
     </aside>
   </div>
