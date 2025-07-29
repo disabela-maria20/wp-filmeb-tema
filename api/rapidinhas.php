@@ -116,14 +116,45 @@ function api_rapidinhas_post($request) {
         'data' => $data_rapidinha
     ]);
 }
+function formatar_data_portugues($data) {
+        $meses = [
+            '01' => 'jan', '02' => 'fev', '03' => 'mar', '04' => 'abr',
+            '05' => 'mai', '06' => 'jun', '07' => 'jul', '08' => 'ago',
+            '09' => 'set', '10' => 'out', '11' => 'nov', '12' => 'dez'
+        ];
+        
+        $timestamp = strtotime($data);
+        if ($timestamp === false) {
+            return '';
+        }
+        
+        $dia = date('d', $timestamp);
+        $mes = date('m', $timestamp);
+        $ano = date('Y', $timestamp);
+        
+        return $dia . ' de ' . $meses[$mes] . ' de ' . $ano;
+    }
+    
 function api_edicoes_post($request)
 {
     $data = $request->get_json_params();
     $titulo = isset($data['titulo']) ? sanitize_text_field($data['titulo']) : '';
     $data_lancamento = isset($data['data']) ? sanitize_text_field($data['data']) : '';
-
+    
+    // Função para formatar data em português
+    
+    
+    // Criar título com data formatada
+    $data_formatada = !empty($data_lancamento) ? formatar_data_portugues($data_lancamento) : '';
+    $titulo_completo = !empty($data_formatada) ? $titulo . ' - ' . $data_formatada : $titulo;
 
     $edicao = isset($data['edicao']) ? (array) $data['edicao'] : [];
+    $rapidinha = isset($data['rapidinha']) ? (array) $data['rapidinha'] : [];
+
+    if (empty($rapidinha)) {
+        return new WP_Error('no_rapidinha_data', 'Nenhuma rapidinha fornecida.', ['status' => 400]);
+    }
+    
     if (empty($edicao)) {
         return new WP_Error('no_edicao_data', 'Nenhuma edição fornecida.', ['status' => 400]);
     }
@@ -133,50 +164,83 @@ function api_edicoes_post($request)
         return new WP_Error('invalid_edicao_ids', 'IDs de edição inválidos fornecidos.', ['status' => 400]);
     }
 
+    $rapidinha_ids = array_map('intval', $rapidinha);
+    if (empty($rapidinha_ids) || in_array(0, $rapidinha_ids, true)) {
+        return new WP_Error('invalid_rapidinha_ids', 'IDs de rapidinha inválidos fornecidos.', ['status' => 400]);
+    }
+
     global $wpdb;
+    
+    // Verificar edições
     $placeholders = implode(',', array_fill(0, count($edicao_ids), '%d'));
     $query = $wpdb->prepare(
         "SELECT ID FROM {$wpdb->posts} WHERE post_status = 'publish' AND ID IN ($placeholders)",
         ...$edicao_ids
     );
-    $rapidinhas = $wpdb->get_col($query);
+    $posts_edicao = $wpdb->get_col($query);
 
-    if (empty($rapidinhas)) {
+    // Verificar rapidinhas
+    $placeholders_rapidinha = implode(',', array_fill(0, count($rapidinha_ids), '%d'));
+    $query_rapidinha = $wpdb->prepare(
+        "SELECT ID FROM {$wpdb->posts} WHERE post_status = 'publish' AND ID IN ($placeholders_rapidinha)",
+        ...$rapidinha_ids
+    );
+    $posts_rapidinha = $wpdb->get_col($query_rapidinha);
+
+    if (empty($posts_rapidinha)) {
         return new WP_Error('no_rapidinhas_found', 'Nenhuma rapidinha encontrada para os IDs fornecidos.', ['status' => 400]);
     }
 
+    if (empty($posts_edicao)) {
+        return new WP_Error('no_edicoes_found', 'Nenhuma edição encontrada para os IDs fornecidos.', ['status' => 400]);
+    }
 
     $post_data = [
         'post_type' => 'edicoes',
-        'post_title' => $titulo,
+        'post_title' => $titulo_completo,
         'post_status' => 'publish',
     ];
 
     $post_id = wp_insert_post($post_data);
 
     if ($post_id) {
-
+        // Salvar taxonomia de edições
         $edicao_ids_terms = obter_term_ids($edicao_ids, 'edicao');
         wp_set_object_terms($post_id, $edicao_ids_terms, 'edicao');
 
-        update_post_meta($post_id, 'rapidinhas_relacionadas', $rapidinhas);
+        // CORREÇÃO: Salvar rapidinhas no meta (não edições)
+        update_post_meta($post_id, 'rapidinhas_relacionadas', $posts_rapidinha);
+        
+        // Opcional: Salvar edições também se necessário
+        update_post_meta($post_id, 'edicoes_relacionadas', $posts_edicao);
 
+        // Dados para CFS
         $field_data = [
-            'edicao' => $rapidinhas,
+            'edicao' => $posts_edicao,
+            'rapidinha' => $posts_rapidinha, 
             'data' => $data_lancamento
         ];
-        CFS()->save($field_data, ['ID' => $post_id]);
+        
+        // Salvar via CFS
+        $cfs_result = CFS()->save($field_data, ['ID' => $post_id]);
+        
+        // Debug: Verificar se CFS salvou corretamente
+        error_log('CFS Result: ' . print_r($cfs_result, true));
+        error_log('Field Data: ' . print_r($field_data, true));
 
         return rest_ensure_response([
             'message' => 'Edição criada com sucesso!',
             'post_id' => $post_id,
-            'data' => $field_data
+            'data' => $field_data,
+            'posts_encontrados' => [
+                'edicoes' => $posts_edicao,
+                'rapidinhas' => $posts_rapidinha
+            ]
         ]);
     }
 
-    return new WP_Error('filme_nao_criado', 'Erro ao criar a edição', ['status' => 500]);
+    return new WP_Error('edicao_nao_criada', 'Erro ao criar a edição', ['status' => 500]);
 }
-
 
 function register_api_rapidinhas_post()
 {

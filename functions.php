@@ -221,10 +221,6 @@ add_filter('the_title', 'formatar_data_personalizada');
 
 add_filter('the_content', 'formatar_data_personalizada');
 
-
-
-
-
 function format_products($products, $img_size = 'medium')
 {
   $products_final = [];
