@@ -1,0 +1,159 @@
+.page-quemsomos {
+  .bg-gray {
+    background-color: #f4f4f4 !important;
+    border-radius: 15px;
+  }
+  h1 {
+    margin-bottom: 30px;
+  }
+  .grid {
+    align-items: center;
+    margin-top: 30px;
+  }
+  .sub {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    @include media(lg) {
+      font-size: 1.8rem;
+    }
+  }
+  .mb40 {
+    margin-bottom: 30px;
+  }
+  p {
+    font-size: 1.4rem;
+    line-height: 1.6;
+    margin: 0;
+    @include media(lg) {
+      font-size: 1.8rem;
+    }
+  }
+
+  .area {
+    margin: 45px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    h2 {
+      color: #707070;
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      @include media(lg) {
+        font-size: 3.1rem;
+      }
+    }
+
+    button {
+      text-decoration: none;
+      font-weight: 700;
+      transition: color 0.3s ease;
+      background-color: #f20030;
+      border: none;
+      padding: 7px 20px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      font-size: 1.4rem;
+      color: #fff !important;
+      cursor: pointer;
+      @include media(lg) {
+        font-size: 1.8rem;
+      }
+      &:hover {
+        background-color: darken(#e60000, 10%);
+      }
+    }
+  }
+
+  .card-assine {
+    background: #f4f4f4;
+    border-radius: 15px;
+    padding: 25px;
+    height: 100%;
+    .flex {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      align-items: center;
+      img {
+        margin: 0 !important;
+      }
+      > h3 {
+        font-size: 1.4rem;
+        font-weight: 700;
+
+        @include media(lg) {
+          font-size: 1.8rem;
+        }
+      }
+    }
+    h4 {
+      font-size: 1.4rem;
+      font-weight: 400;
+      margin-bottom: 10px;
+      @include media(lg) {
+        font-size: 1.8rem;
+      }
+    }
+    ul {
+      li {
+        margin: 0 !important;
+        font-size: 1.4rem !important;
+        font-weight: 400;
+        margin-bottom: 10px;
+        @include media(lg) {
+          font-size: 1.8rem !important;
+        }
+      }
+    }
+  }
+
+  .area-box {
+    background: linear-gradient(90deg, #f20030 0%, #c90043 100%);
+    color: #fff !important;
+
+    h2 {
+      margin-bottom: 15px;
+      color: #fff !important;
+    }
+
+    p {
+      font-size: 1.4rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      color: #fff !important;
+      @include media(lg) {
+        font-size: 1.8rem;
+      }
+    }
+
+    .btn-assine {
+      text-decoration: none;
+      font-weight: 700;
+      transition: color 0.3s ease;
+      background-color: #ee8131;
+      border: none;
+      color: #fff !important;
+      padding: 7px 20px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+      font-size: 1.4rem;
+      cursor: pointer;
+      @include media(lg) {
+        font-size: 1.8rem;
+      }
+      &:hover {
+        background-color: darken(#ee8131, 10%);
+      }
+    }
+  }
+}
+
+.mx-485 {
+  max-width: 485px;
+  display: block;
+  margin: 0 auto;
+  margin-top: 30px;
+}

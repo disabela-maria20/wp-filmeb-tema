@@ -110,11 +110,6 @@
 }
 
 .table-over {
-  max-width: 714px;
-  overflow: auto;
-  @include media(xxl) {
-    max-width: 100%;
-  }
   h2 {
     font-weight: bold;
     font-size: 1.8rem;

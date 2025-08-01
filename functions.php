@@ -391,3 +391,11 @@ function filtrar_edicoes_do_ultimo_mes($args, $context) {
     }
     return $args;
 }
+
+function custom_translate_search_results($translated, $text, $domain) {
+    if ($text === 'Search results for "%s"') {
+        return 'Resultados da busca por "%s"';
+    }
+    return $translated;
+}
+add_filter('gettext', 'custom_translate_search_results', 20, 3);

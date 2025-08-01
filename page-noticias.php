@@ -64,7 +64,7 @@ get_header();
           <div class="item">
             <?php $imagem = CFS()->get('imagem') ?: ''; ?>
             <?php if( $imagem !== '' ) { ?>
-            <img src="<?php echo esc_url($imagem); ?>"
+            <img src="<?php echo esc_url($imagem); ?>" class="img-post-archive"
               alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
             <?php } ?>
             <div>
@@ -74,7 +74,14 @@ get_header();
                   <?php $data=strtotime(CFS()->get('data')); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
                 </span> <i>&nbsp;⎸</i>
                 <p class="paragrafo">
-                  <?php echo wp_trim_words(esc_html(CFS()->get('descricao') ?: get_the_excerpt()), 20, '...'); ?></p>
+                  <?php
+                    if (has_excerpt()) {
+                       echo wp_trim_words(get_the_excerpt(), 20, '...');
+                    } else {
+                         echo wp_trim_words(esc_html(CFS()->get('descricao') ?: get_the_excerpt()), 20, '...');  
+                    }
+                    ?>
+                </p>
               </a>
             </div>
           </div>

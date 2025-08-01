@@ -98,7 +98,13 @@ $recent_posts_query_banner = new WP_Query(array(
                     ?>
           </span> <i>&nbsp;⎸</i>
           <p class="paragrafo">
-            <?php echo wp_trim_words(wp_kses_post((string) $descricao), 100, '...'); ?>
+            <?php
+              if (has_excerpt()) {
+                  the_excerpt();
+              } else {
+                  echo wp_trim_words(wp_kses_post((string) $descricao), 100, '...'); 
+              }
+              ?>
           </p>
         </a>
       </div>

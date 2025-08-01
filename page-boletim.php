@@ -149,6 +149,18 @@ function abreviar_mes($texto) {
       </section>
     </div>
     <aside class="aside-info">
+      <h3>Buscar Edições</h3>
+      <form role="search" method="get" action="<?php echo home_url('/'); ?>" class="search">
+        <label for="s" class="screen-reader-text">Buscar:</label>
+        <input type="search" id="s" name="s" placeholder="Buscar Edições" value="<?php echo get_search_query(); ?>" />
+
+        <!-- Inclui os tipos de post que serão pesquisados -->
+        <input type="hidden" name="post_type[]" value="post">
+        <input type="hidden" name="post_type[]" value="rapidinhas">
+        <input type="hidden" name="post_type[]" value="edicoes">
+        <button type="submit">Buscar</button>
+      </form>
+
       <?php echo do_shortcode('[bm_banner id="399753"]');?>
 
       <h2>Notícias recentes</h2>

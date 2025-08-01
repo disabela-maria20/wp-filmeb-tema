@@ -24,67 +24,124 @@ get_header();
   </div>
 </section>
 
-<section class="padrao page-vendas">
+<section class="padrao page-quemsomos">
   <div class="container">
-    <h1>QUEM SOMOS</h1>
+    <div class="grid grid-2-md gap-22">
+      <div>
+        <h1>Quem somos</h1>
+        <h2 class="sub">A Empresa</h2>
+        <p class="mb40">Fundada em 1997, a Filme B nasceu para reunir, analisar e traduzir em conhecimento tudo aquilo
+          que movimenta
+          o mercado cinematográfico brasileiro. Ao longo de quase três décadas, tornou-se referência nacional em dados
+          de
+          bilheteria, tendências de exibição, políticas públicas e inteligência de negócios para distribuidores,
+          exibidores, produtores, instituições públicas e privadas, e imprensa especializada.</p>
+        <h2 class="sub">Sobre o portal Filme B</h2>
+        <p>O portal Filme B oferece uma visão panorâmica do setor, permitindo que distribuidores,
+          exibidores,
+          produtores, investidores e pesquisadores enxerguem, em detalhes, como cada filme performa e como o mercado
+          brasileiro se
+          movimenta.</p>
+      </div>
+      <div>
+        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/banner-quem-somos.png"
+          alt="Banner Quem Somos" class="img-fluid">
+      </div>
+    </div>
 
-    <h2>A empresa</h2>
-    <p>Fundada em 1997, a Filme B nasceu para reunir, analisar e traduzir em conhecimento tudo aquilo que movimenta o
-      mercado cinematográfico brasileiro. Ao longo de quase três décadas, tornou-se referência nacional em dados de
-      bilheteria, tendências de exibição, políticas públicas e inteligência de negócios para distribuidores, exibidores,
-      produtores, instituições públicas e privadas, e imprensa especializada.</p>
+    <div class="area">
+      <h2>Conheça e <button class="btn-assine assinar-filmeb" data-product-id="106">Assine</button> os
+        nossos produtos:</h2>
+    </div>
 
-    <h2>Sobre o portal Filme B</h2>
-    <p>O portal Filme B oferece uma visão panorâmica do setor, permitindo que distribuidores, exibidores, produtores,
-      investidores e pesquisadores enxerguem, em detalhes, como cada filme performa e como o mercado brasileiro se
-      movimenta.</p>
+    <div class="grid grid-2-md gap-22">
+      <div class="card-assine">
+        <div class="flex">
+          <img src="<?php echo get_template_directory_uri(); ?>/assets/images/icon/estatisticas.png"
+            alt="Ícone Estatísticas">
+          <h3>Boletim Filme B</h3>
+        </div>
+        <h4>Com publicação semanal, oferece ao assinante:</h4>
+        <ul>
+          <li>As maiores bilheterias do fim de semana no país</li>
+          <li><strong>Top 10 EUA:</strong> panorama do mercado norte-americano</li>
+          <li>As 10 maiores bilheterias do ano até o momento</li>
+          <li>Análise dos resultados - Brasil e mundo</li>
+          <li><strong>Opinião:</strong> comentários exclusivos de especialistas</li>
+          <li><strong>Rapidinhas:</strong> flashes de informações do setor</li>
+        </ul>
+      </div>
+      <div class="card-assine">
+        <div class="flex">
+          <img src="<?php echo get_template_directory_uri(); ?>/assets/images/icon/boletim-de-noticias.png"
+            alt="Ícone Boletim de Notícias">
+          <h3>Notícias Exclusivas</h3>
+        </div>
+        <h4>Com publicações diárias, oferece ao assinante:</h4>
+        <ul>
+          <li>Tendências e indicadores do mercado cinematográfico</li>
+          <li>Line-ups das distribuidoras e estreias da semana</li>
+          <li>Políticas públicas e leis de incentivo ao audiovisual brasileiro</li>
+          <li>Festivais e eventos nacionais e internacionais</li>
+          <li>Mercados de streaming e televisão</li>
+        </ul>
+      </div>
+    </div>
 
-    <h2>Conteúdo exclusivo para assinantes</h2>
-    <br>
-    <br>
-    <button class="btn-assine assinar-filmeb" data-product-id="106">ASSINE</button>
-    <br>
-    <br>
-    <br>
-    <h3>Boletim Filme B</h3>
-    <p>Com publicação semanal, oferece ao assinante:</p>
-    <ul>
-      <li>As maiores bilheterias do fim de semana no país</li>
-      <li>Top 10 EUA: panorama do mercado norte-americano</li>
-      <li>As 10 maiores bilheterias do ano até o momento</li>
-      <li>Análises dos resultados - Brasil e mundo</li>
-      <li>Opinião: comentários exclusivos de especialistas</li>
-      <li>Rapidinhas: flashes de informações do setor</li>
-    </ul>
+    <div class="mx-485 ">
+      <div class="card-assine">
+        <div class="flex">
+          <img src="<?php echo get_template_directory_uri(); ?>/assets/images/icon/boletim-de-noticias.png"
+            alt="Ícone Rapidinhas">
+          <h3>Rapidinhas</h3>
+        </div>
+        <h4>Pílulas informativas:</h4>
+        <p>Mudanças de data, contratações, aquisições, bastidores e curiosidades que afetam o dia a dia do setor.</p>
+      </div>
+    </div>
 
-    <h3>Notícias exclusivas</h3>
-    <p>Com publicações diárias, oferece ao assinante:</p>
-    <ul>
-      <li>Tendências e indicadores do mercado cinematográfico</li>
-      <li>Line-ups das distribuidoras e estreias da semana</li>
-      <li>Políticas públicas e leis de incentivo ao audiovisual brasileiro</li>
-      <li>Festivais e eventos nacionais e internacionais</li>
-      <li>Mercados de streaming e televisão</li>
-    </ul>
-
-    <h3>Rapidinhas</h3>
-    <p>Pílulas informativas: mudanças de data, contratações, aquisições, bastidores e curiosidades que afetam o dia
-      a
-      dia do setor.</p>
-
-    <h2>Conteúdos de livre acesso</h2>
-
-    <h3>Lançamentos</h3>
-    <p>Calendário permanentemente atualizado dos próximos lançamentos cinematográficos, com diferentes filtros,
-      oferecendo
-      visão rápida para planejamento de distribuição e programação de salas.</p>
-
-    <h3>Notícias</h3>
-    <p>Cobertura diária das principais movimentações - exibição, leis de incentivo, tecnologia, regulamentação, entre
-      outros assuntos de interesse do setor - no Brasil e no mundo.</p>
-
-    <button class="btn-assine assinar-filmeb" data-product-id="106 ">ASSINE</button>
+    <div class="area">
+      <h2>Conteúdos de livre acesso:</h2>
+    </div>
+    <div class="grid grid-2-md gap-22 bg-gray">
+      <div class="card-assine">
+        <div class="flex">
+          <img src="<?php echo get_template_directory_uri(); ?>/assets/images/icon/estrela.png"
+            alt="Ícone Estatísticas">
+          <h3>Calendário de Lançamentos</h3>
+        </div>
+        <p>Calendário permanentemente atualizado dos próximos lançamentos cinematográficos, com diferentes filtros,
+          oferecendo visão rápida para planejamento de distribuição e programação de salas.</p>
+      </div>
+      <div class="card-assine">
+        <div class="flex">
+          <img src="<?php echo get_template_directory_uri(); ?>/assets/images/icon/boletim-de-noticias.png"
+            alt="Ícone Boletim de Notícias">
+          <h3>Notícias Exclusivas</h3>
+        </div>
+        <p>Cobertura diária das principais movimentações - exibição, leis de incentivo, tecnologia, regulamentação,
+          entre outros assuntos de interesse do setor - no Brasil e no mundo.</p>
+      </div>
+    </div>
   </div>
+  <section class="area-box">
+    <div class="grid grid-2-md gap-22">
+      <div>
+        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/icon/box-office-brasil.png"
+          alt="Ícone Boletim de Notícias">
+      </div>
+      <div>
+        <h2>Conheça também</h2>
+        <p>Banco de dados atualizado diariamente que reúne
+          bilheterias de todos os filmes exibidos no país, com
+          detalhes por público, renda, regiões e cinemas.</p>
+        <div>
+          <button class="btn-assine assinar-filmeb" data-product-id="106"><span>Assine</span></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
 </section>
 
 <?php get_template_part('components/Footer/index'); ?>
@@ -92,7 +149,6 @@ get_header();
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-
   // Verifica se os botões existem
   var assinarButtons = document.querySelectorAll('.assinar-filmeb');
 
@@ -103,7 +159,6 @@ document.addEventListener('DOMContentLoaded', function() {
       pagination: false,
     });
     splide.mount();
-
   }
 
   assinarButtons.forEach(function(button) {
@@ -123,26 +178,23 @@ document.addEventListener('DOMContentLoaded', function() {
           },
         })
         .then(response => {
-
           if (!response.ok) {
             throw new Error('Erro na rede: ' + response.statusText);
           }
           return response.json();
         })
         .then(data => {
-
           if (data.success) {
-
             window.location.href = "<?php echo get_site_url(); ?>/finalizar-compra/";
           } else {
             console.error('Erro no servidor:', data.message || 'Erro desconhecido');
-            alert('Erro ao adicionar ao carrinho: ' + (data.message || ''));
+            alert('Erro ao adicionar ao carrinho: ' + (data.message || 'Erro desconhecido'));
             button.disabled = false;
             button.textContent = 'ASSINE';
           }
         })
         .catch(error => {
-          console.error('Erro no fetch:', error); // Mostra erros no console
+          console.error('Erro no fetch:', error);
           alert('Ocorreu um erro ao processar sua solicitação: ' + error.message);
           button.disabled = false;
           button.textContent = 'ASSINE';
