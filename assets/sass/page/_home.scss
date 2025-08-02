@@ -9,6 +9,9 @@
     @include media(lg) {
       width: 100%;
     }
+    .woocommerce {
+      display: none;
+    }
   }
   .item {
     @include media(lg) {

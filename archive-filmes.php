@@ -2,8 +2,8 @@
 
 <?php
 
-// error_reporting(E_ALL);
-// ini_set('display_errors', 1);
+ error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 $args = array(
   'post_type' => 'banner-post',
@@ -68,8 +68,7 @@ $has_filters = isset($_GET['ano']) || isset($_GET['mes']) || isset($_GET['origem
 // Verificar se foi selecionado "Todos" no mês
 $mostrar_todos = isset($_GET['mes']) && $_GET['mes'] === 'todos';
 
-// Argumentos para buscar filmes
-// Argumentos para buscar filmes
+
 $args_mes = array(
     'post_type' => 'filmes',
     'posts_per_page' => -1,
@@ -78,41 +77,47 @@ $args_mes = array(
     'meta_key' => 'estreia',
     'order' => 'ASC',
     'meta_query' => array(
-        'relation' => 'OR', // Inclui filmes COM data OU SEM data
+        'relation' => 'OR',
         array(
             'relation' => 'AND',
             array(
                 'key' => 'estreia',
-                'compare' => 'EXISTS', // Filmes que têm o campo 'estreia'
+                'compare' => 'EXISTS',
             ),
-            // Filtros de data (apenas se não for "todos")
+            array(
+                'key' => 'sem_data',
+                'compare' => '=',
+                'value' => '1',
+            ),
             ($selected_mes !== 'todos') ? array(
                 'key' => 'estreia',
                 'value' => '^' . $selected_ano,
                 'compare' => 'REGEXP',
-            ) : array(), // Se for "todos", não aplica filtro de ano
+            ) : array(),
             ($selected_mes !== 'todos') ? array(
                 'key' => 'estreia',
                 'value' => '-' . $selected_mes . '-',
                 'compare' => 'REGEXP',
-            ) : array(), // Se for "todos", não aplica filtro de mês
+            ) : array(),
         ),
-        // Filmes SEM data (campo 'estreia' não existe ou está vazio)
         array(
-            'relation' => 'OR',
-            array(
-                'key' => 'estreia',
-                'compare' => 'NOT EXISTS', // Filmes que não têm o campo
-            ),
-            array(
-                'key' => 'estreia',
-                'value' => '', // Filmes com campo vazio
-                'compare' => '=',
-            ),
+           'relation' => 'OR',
+array(
+    'key' => 'sem_data',
+    'compare' => '!=',
+    'value' => '1',
+),
+array(
+    'key' => 'sem_data',
+    'compare' => 'EXISTS',
+),
+array(
+    'key' => 'sem_data',
+    'compare' => 'NOT EXISTS',
+),
         ),
     ),
 );
-
 // Apenas adicionar filtros de data se não for selecionado "todos" no mês
 if ($selected_mes !== 'todos') {
   $args_mes['meta_query'] = array(
@@ -284,15 +289,16 @@ function agrupar_filmes_por_categoria($wp_query, $mostrar_todos = false) {
             $wp_query->the_post();
             $post_id = get_the_ID();
             $data_estreia = CFS()->get('estreia', $post_id);
+            $sem_data = CFS()->get('sem_data', $post_id);
 
-            // Se NÃO tem data OU data é inválida (não segue YYYY-MM-DD)
-            if (empty($data_estreia) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $data_estreia)) {
+            // Se NÃO tem data OU data é inválida OU sem_data = '1'
+            if ( $sem_data == '1') {
                 $agrupados['sem_data'][] = $post_id;
                 $agrupados['todos_ordenados'][$post_id] = '9999-99-99'; // Data fictícia para ordenação
                 continue; // Pula para o próximo filme
             }
             
-            // Se tem data válida
+            // Se tem data válida e sem_data não está marcado
             $data_obj = DateTime::createFromFormat('Y-m-d', $data_estreia);
             $agrupados['todos_ordenados'][$post_id] = $data_estreia;
             
@@ -309,6 +315,9 @@ function agrupar_filmes_por_categoria($wp_query, $mostrar_todos = false) {
                 elseif ($data_obj < $semana_atual_inicio) {
                     $agrupados['semanas_passadas'][$data_estreia][] = $post_id;
                 }
+                elseif( $sem_data == '1'){
+                  $agrupados['sem_data'][$data_estreia][] = $post_id;
+                } 
             }
         }
         wp_reset_postdata();
@@ -623,7 +632,7 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
 
               // Filmes sem data
               if (!empty($filmes_agrupados['sem_data'])) {
-                  echo '<h2 class="section-title">Filmes sem data definida</h2>';
+                  echo '<h2 class="section-title" style="margin-bottom: 15px;">Filmes sem data definida</h2>';
                   echo '<div class="grid-filmes">';
                   foreach ($filmes_agrupados['sem_data'] as $post_id) {
                       render_card_filme($post_id);
@@ -790,23 +799,23 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
 
               // Filmes sem data
               if (!empty($filmes_agrupados['sem_data'])) {
-                  echo '<h2 class="section-title">Filmes sem data definida</h2>';
-                  echo '<table>';
-                  echo '<thead><tr>
-                      <th colspan="2" style="width: 20%;">Título</th>
-                      <th>Distribuição</th>
-                      <th>Direção</th>
-                      <th>País</th>
-                      <th>Gênero</th>
-                      <th style="width: 5%;">Duração</th>
-                      <th>Elenco</th>
-                  </tr></thead>';
-                  echo '<tbody>';
-                  foreach ($filmes_agrupados['sem_data'] as $post_id) {
-                      render_linha_tabela($post_id);
-                  }
-                  echo '</tbody></table>';
-              }
+                echo '<h2 class="section-title">Filmes sem data definida</h2>';
+                echo '<table>';
+                echo '<thead><tr>
+                    <th colspan="2" style="width: 20%;">Título</th>
+                    <th>Distribuição</th>
+                    <th>Direção</th>
+                    <th>País</th>
+                    <th>Gênero</th>
+                    <th style="width: 5%;">Duração</th>
+                    <th>Elenco</th>
+                </tr></thead>';
+                echo '<tbody>';
+                foreach ($filmes_agrupados['sem_data'] as $post_id) {
+                    render_linha_tabela($post_id);
+                }
+                echo '</tbody></table>';
+            }
 
               // Semanas que já passaram
               if (!empty($filmes_agrupados['semanas_passadas'])) {
