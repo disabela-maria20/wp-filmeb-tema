@@ -80,92 +80,6 @@
     }
   }
 
-  .grid-select {
-    padding: 20px 0;
-
-    .select-itens {
-      width: 100%;
-      display: flex;
-      gap: 22px;
-      flex-direction: column;
-      align-items: center;
-
-      @include media(lg) {
-        flex-direction: row;
-      }
-
-      select {
-        border: 1px solid $color-bright-red;
-        padding: 5px 10px;
-        border-radius: 5px;
-        font-size: 1.4rem;
-        color: $color-darker-gray;
-        width: 100%;
-
-        @include media(lg) {
-          width: 75%;
-        }
-      }
-      button {
-        background-color: #f9b679;
-        color: $color-black;
-        text-transform: uppercase;
-        width: 100%;
-        border: none;
-        border-radius: 5px;
-        font-size: 1.6rem;
-        padding: 5px 3px;
-        transition: all 400ms ease;
-        display: block;
-        text-align: center;
-        cursor: pointer;
-        &:hover {
-          background-color: darken(#f9b679, 10%);
-        }
-      }
-      a {
-        font-size: 2rem;
-        color: $color-black;
-        text-transform: uppercase;
-      }
-    }
-
-    .grid-form {
-      display: grid;
-      gap: 10px;
-      @include media(lg) {
-        grid-template-columns: 1fr 1fr 1fr;
-        max-width: 550px;
-        margin: 0 auto;
-      }
-      input {
-        width: 100%;
-        padding: 5px;
-        border-radius: 5px;
-        border: 1px solid $color-bright-red;
-        font-size: 1.4rem;
-        color: $color-darker-gray;
-        &::placeholder {
-          color: $color-light-gray;
-        }
-      }
-      button {
-        background-color: $color-bright-red;
-        color: $color-white;
-        border: none;
-        border-radius: 5px;
-        font-size: 1.4rem;
-        padding: 5px 10px;
-        transition: all 400ms ease;
-        cursor: pointer;
-
-        &:hover {
-          background-color: $color-red-dark;
-        }
-      }
-    }
-  }
-
   .area-filmes {
     max-width: 850px;
     display: block;
@@ -272,6 +186,10 @@
 
 .page-filmes-aberta {
   h1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
     font-size: 2.2rem;
     color: $color-red-dark;
@@ -281,7 +199,6 @@
       font-size: 3.1rem;
     }
     span {
-      display: block;
       font-size: 1.4rem;
       font-weight: 400;
       margin-top: 15px;
@@ -299,9 +216,9 @@
     background-color: $color-light-red;
     padding: 20px 0;
     text-align: center;
-    span {
-      background-color: $color-yellow;
-    }
+    // span {
+    //   background-color: $color-yellow;
+    // }
   }
 
   .cartaz {
@@ -550,8 +467,93 @@
 #fotos {
   margin-top: 20px;
   img {
-    height: 100px;
-    object-fit: cover;
+    height: 350px;
+    object-fit: contain;
     border-radius: 5px;
+  }
+}
+.grid-select {
+  padding: 20px 0;
+
+  .select-itens {
+    width: 100%;
+    display: flex;
+    gap: 22px;
+    flex-direction: column;
+    align-items: center;
+
+    @include media(lg) {
+      flex-direction: row;
+    }
+
+    select {
+      border: 1px solid $color-bright-red;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 1.4rem;
+      color: $color-darker-gray;
+      width: 100%;
+
+      @include media(lg) {
+        width: 75%;
+      }
+    }
+    button {
+      background-color: #f9b679;
+      color: $color-black;
+      text-transform: uppercase;
+      width: 100%;
+      border: none;
+      border-radius: 5px;
+      font-size: 1.6rem;
+      padding: 5px 3px;
+      transition: all 400ms ease;
+      display: block;
+      text-align: center;
+      cursor: pointer;
+      &:hover {
+        background-color: darken(#f9b679, 10%);
+      }
+    }
+    a {
+      font-size: 2rem;
+      color: $color-black;
+      text-transform: uppercase;
+    }
+  }
+
+  .grid-form {
+    display: grid;
+    gap: 10px;
+    @include media(lg) {
+      grid-template-columns: 1fr 1fr 1fr;
+      max-width: 550px;
+      margin: 0 auto;
+    }
+    input {
+      width: 100%;
+      padding: 5px;
+      border-radius: 5px;
+      border: 1px solid $color-bright-red;
+      font-size: 1.4rem;
+      color: $color-darker-gray;
+      &::placeholder {
+        color: $color-light-gray;
+      }
+    }
+    button {
+      background-color: $color-bright-red;
+      color: $color-white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1.4rem;
+      padding: 5px 10px;
+      transition: all 400ms ease;
+      cursor: pointer;
+
+      &:hover {
+        background-color: $color-red-dark;
+      }
+    }
   }
 }

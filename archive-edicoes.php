@@ -14,7 +14,7 @@ get_header();
 
 <div class="container bannerDesktop">
   <div class="grid-banner-superior">
-    <?php echo do_shortcode('[bm_banner id="399761"]');?>
+    <?php echo do_shortcode('[bm_banner id="400027"]');?>
   </div>
 </div>
 
@@ -24,7 +24,7 @@ get_header();
 <section class="bg-gray">
   <div class="bannerMobile bg-gray padding-banner ">
     <div class="grid-banner-superior">
-      <?php echo do_shortcode('[bm_banner id="399761"]');?>
+      <?php echo do_shortcode('[bm_banner id="400027"]');?>
     </div>
   </div>
 </section>

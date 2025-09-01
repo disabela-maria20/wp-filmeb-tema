@@ -132,6 +132,13 @@
     width: 100%;
     height: initial;
   }
+
+  * {
+    color: $color-darker-gray;
+    font-size: 1.6rem;
+    line-height: 1.61;
+    margin: 20px 0;
+  }
 }
 
 p {
@@ -224,7 +231,7 @@ strong.data {
   font-size: 1.2rem !important;
   line-height: 1.61 !important;
   color: $color-dark-gray !important;
-  text-align: center !important;
+  text-align: initial !important;
   margin: 5px 0 !important;
 }
 
@@ -251,4 +258,9 @@ strong.data {
     text-align: left;
     color: $color-darker-gray;
   }
+}
+
+iframe[loading="lazy"] {
+  width: 100%;
+  aspect-ratio: 16/9;
 }

@@ -1,6 +1,8 @@
 <?php get_header(); ?>
 
 <?php
+$sem_data_definida_alterada = CFS()->get('data_alterada');
+$sem_data_definida_definida = CFS()->get('sem_data_definida');
 
  error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -85,7 +87,7 @@ $args_mes = array(
                 'compare' => 'EXISTS',
             ),
             array(
-                'key' => 'sem_data',
+                'key' => 'sem_data_definida',
                 'compare' => '=',
                 'value' => '1',
             ),
@@ -103,16 +105,16 @@ $args_mes = array(
         array(
            'relation' => 'OR',
 array(
-    'key' => 'sem_data',
+    'key' => 'sem_data_definida',
     'compare' => '!=',
     'value' => '1',
 ),
 array(
-    'key' => 'sem_data',
+    'key' => 'sem_data_definida',
     'compare' => 'EXISTS',
 ),
 array(
-    'key' => 'sem_data',
+    'key' => 'sem_data_definida',
     'compare' => 'NOT EXISTS',
 ),
         ),
@@ -268,7 +270,7 @@ function agrupar_filmes_por_categoria($wp_query, $mostrar_todos = false) {
         'semana_atual' => array(),
         'proxima_semana' => array(),
         'semanas_seguintes' => array(),
-        'sem_data' => array(), // Filmes sem data definida
+        'sem_data_definida' => array(), // Filmes sem data definida
         'semanas_passadas' => array(),
         'todos_ordenados' => array()
     );
@@ -289,16 +291,16 @@ function agrupar_filmes_por_categoria($wp_query, $mostrar_todos = false) {
             $wp_query->the_post();
             $post_id = get_the_ID();
             $data_estreia = CFS()->get('estreia', $post_id);
-            $sem_data = CFS()->get('sem_data', $post_id);
+            $sem_data_definida = CFS()->get('sem_data_definida', $post_id);
 
-            // Se NÃO tem data OU data é inválida OU sem_data = '1'
-            if ( $sem_data == '1') {
-                $agrupados['sem_data'][] = $post_id;
+            // Se NÃO tem data OU data é inválida OU sem_data_definida = '1'
+            if ( $sem_data_definida == '1') {
+                $agrupados['sem_data_definida'][] = $post_id;
                 $agrupados['todos_ordenados'][$post_id] = '9999-99-99'; // Data fictícia para ordenação
                 continue; // Pula para o próximo filme
             }
             
-            // Se tem data válida e sem_data não está marcado
+            // Se tem data válida e sem_data_definida não está marcado
             $data_obj = DateTime::createFromFormat('Y-m-d', $data_estreia);
             $agrupados['todos_ordenados'][$post_id] = $data_estreia;
             
@@ -315,8 +317,8 @@ function agrupar_filmes_por_categoria($wp_query, $mostrar_todos = false) {
                 elseif ($data_obj < $semana_atual_inicio) {
                     $agrupados['semanas_passadas'][$data_estreia][] = $post_id;
                 }
-                elseif( $sem_data == '1'){
-                  $agrupados['sem_data'][$data_estreia][] = $post_id;
+                elseif( $sem_data_definida == '1'){
+                  $agrupados['sem_data_definida'][$data_estreia][] = $post_id;
                 } 
             }
         }
@@ -390,7 +392,7 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
 
 <div class="container bannerDesktop">
   <div class="grid-banner-superior">
-    <?php echo do_shortcode('[bm_banner id="399761"]');?>
+    <?php echo do_shortcode('[bm_banner id="400027"]');?>
   </div>
 </div>
 
@@ -400,7 +402,7 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
 <section class="bg-gray">
   <div class="bannerMobile bg-gray padding-banner ">
     <div class="grid-banner-superior">
-      <?php echo do_shortcode('[bm_banner id="399761"]');?>
+      <?php echo do_shortcode('[bm_banner id="400027"]');?>
     </div>
   </div>
 </section>
@@ -533,7 +535,9 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
 
         <div class="info">
           <ul>
-            <li><span>Título:</span><strong><?= get_the_title($post_id); ?></strong></li>
+            <li><span>Título:</span><strong
+                class="<?php echo (CFS()->get('data_alterada', $post_id) == '1' ? 'alterado' : ''); ?>"><?= get_the_title($post_id); ?></strong>
+            </li>
             <?php if ($d = render_terms('distribuicao', $post_id)) : ?>
             <li><span>Distribuição:</span><strong><?= $d; ?></strong></li>
             <?php endif; ?>
@@ -631,10 +635,10 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
               }
 
               // Filmes sem data
-              if (!empty($filmes_agrupados['sem_data'])) {
+              if (!empty($filmes_agrupados['sem_data_definida'])) {
                   echo '<h2 class="section-title" style="margin-bottom: 15px;">Filmes sem data definida</h2>';
                   echo '<div class="grid-filmes">';
-                  foreach ($filmes_agrupados['sem_data'] as $post_id) {
+                  foreach ($filmes_agrupados['sem_data_definida'] as $post_id) {
                       render_card_filme($post_id);
                   }
                   echo '</div>';
@@ -654,7 +658,7 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
           if ($has_filters && empty($filmes_agrupados['semana_atual']) && 
               empty($filmes_agrupados['proxima_semana']) && 
               empty($filmes_agrupados['semanas_seguintes']) && 
-              empty($filmes_agrupados['sem_data']) && 
+              empty($filmes_agrupados['sem_data_definida']) && 
               empty($filmes_agrupados['semanas_passadas']) &&
               empty($filmes_agrupados['todos_ordenados'])) {
               echo '<div class="no-results">';
@@ -697,12 +701,16 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
 
       function render_linha_tabela($post_id) {
           $filme = get_post($post_id);
+
           ?>
       <tr>
         <td class="titulo" colspan="2">
           <a href="<?= get_permalink($post_id); ?>">
-            <h4><?= get_the_title($post_id); ?></h4>
-            <span><?= esc_html(CFS()->get('titulo_original', $post_id)); ?></span>
+            <h4 class="<?php echo (CFS()->get('data_alterada', $post_id) == '1' ? 'alterado' : ''); ?>">
+              <?= get_the_title($post_id); ?>
+            </h4>
+            <span
+              class="<?php echo (CFS()->get('data_alterada', $post_id) == '1' ? 'alterado' : ''); ?>"><?= esc_html(CFS()->get('titulo_original', $post_id)); ?></span>
           </a>
         </td>
         <td><?= render_terms('distribuicao', $post_id); ?></td>
@@ -798,7 +806,7 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
               }
 
               // Filmes sem data
-              if (!empty($filmes_agrupados['sem_data'])) {
+              if (!empty($filmes_agrupados['sem_data_definida'])) {
                 echo '<h2 class="section-title">Filmes sem data definida</h2>';
                 echo '<table>';
                 echo '<thead><tr>
@@ -811,7 +819,7 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
                     <th>Elenco</th>
                 </tr></thead>';
                 echo '<tbody>';
-                foreach ($filmes_agrupados['sem_data'] as $post_id) {
+                foreach ($filmes_agrupados['sem_data_definida'] as $post_id) {
                     render_linha_tabela($post_id);
                 }
                 echo '</tbody></table>';
@@ -831,7 +839,7 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
           if ($has_filters && empty($filmes_agrupados['semana_atual']) && 
               empty($filmes_agrupados['proxima_semana']) && 
               empty($filmes_agrupados['semanas_seguintes']) && 
-              empty($filmes_agrupados['sem_data']) && 
+              empty($filmes_agrupados['sem_data_definida']) && 
               empty($filmes_agrupados['semanas_passadas']) &&
               empty($filmes_agrupados['todos_ordenados'])) {
               echo '<div class="no-results">';
@@ -882,6 +890,9 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
 
 <script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.title = "Lançamentos | Filme b";
+});
 new Vue({
   el: "#app",
   data: {

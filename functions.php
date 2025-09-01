@@ -399,3 +399,12 @@ function custom_translate_search_results($translated, $text, $domain) {
     return $translated;
 }
 add_filter('gettext', 'custom_translate_search_results', 20, 3);
+
+
+add_filter( 'document_title_parts', function( $title ) {
+    if ( is_post_type_archive( 'filmes' ) ) {
+        $title['title'] = 'Lançamentos de Filmes';
+    }
+    echo "teste";
+    return $title;
+}, 1);

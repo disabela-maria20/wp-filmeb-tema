@@ -137,7 +137,7 @@ if ($filmes_query->have_posts()) {
 
     $filme = filme_scheme(get_post());
     $estreia = $filme->estreia ?? null;
-    $sem_data = CFS()->get('sem_data');
+    $data_alterada = CFS()->get('data_alterada');
     if (!$estreia) {
       continue;
     }
@@ -265,7 +265,7 @@ if ($filmes_query->have_posts()) {
 
 <div class="container bannerDesktop">
   <div class="grid-banner-superior">
-    <?php echo do_shortcode('[bm_banner id="399761"]');?>
+    <?php echo do_shortcode('[bm_banner id="400027"]');?>
   </div>
 </div>
 
@@ -275,7 +275,7 @@ if ($filmes_query->have_posts()) {
 <section class="bg-gray">
   <div class="bannerMobile bg-gray padding-banner ">
     <div class="grid-banner-superior">
-      <?php echo do_shortcode('[bm_banner id="399761"]');?>
+      <?php echo do_shortcode('[bm_banner id="400027"]');?>
     </div>
   </div>
 </section>
@@ -541,9 +541,9 @@ function format_filmes($filmes) {
 
   $output = '<ul>';
   foreach ($filmes as $filme) {
-    // Obter o valor de sem_data para o filme atual
-    $sem_data = get_post_meta($filme['ID'], 'sem_data', true);
-    $classe = ($sem_data == 1) ? 'alterado' : '';
+    // Obter o valor de data_alterada para o filme atual
+    $data_alterada = get_post_meta($filme['ID'], 'data_alterada', true);
+    $classe = ($data_alterada == 1) ? 'alterado' : '';
 
     $output .= '<li>';
     $output .= '<a href="' . esc_url($filme['link'] ?? '#') . '" target="_blank" class="' . esc_attr($classe) . '">';
