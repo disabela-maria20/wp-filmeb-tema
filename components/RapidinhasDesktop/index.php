@@ -13,7 +13,7 @@ if ($recent_posts_query->have_posts()) {
     $title = CFS()->get('titulo') ?: get_the_title();
     $post_date = CFS()->get('data');
     ?>
-<div class="item-rapidinha">
+<a href="<?php the_permalink(); ?>" class="item-rapidinha">
   <?php if (!empty($image_url)) {  ?>
   <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($title); ?>" />
   <?php } ?>
@@ -30,10 +30,10 @@ if ($recent_posts_query->have_posts()) {
         }
         ?>
       </span>
-      <a href="<?php the_permalink(); ?>">Leia mais</a>
+      <span class="leia-mais">Leia mais</span>
     </span>
   </div>
-</div>
+</a>
 <?php
   }
   wp_reset_postdata();

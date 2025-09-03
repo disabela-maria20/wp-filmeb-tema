@@ -264,3 +264,222 @@ iframe[loading="lazy"] {
   width: 100%;
   aspect-ratio: 16/9;
 }
+
+.edicoes {
+  .item {
+    color: $color-darker-gray;
+    font-size: 1.4rem;
+    line-height: 1.61;
+    margin: 20px 0;
+
+    @include media(lg) {
+      font-size: 1.6rem;
+    }
+    .titulo {
+      padding: 25px 0;
+    }
+
+    h1 {
+      font-weight: bold;
+      font-size: 3rem;
+      line-height: 3.4rem;
+      text-align: left;
+      color: $color-bright-red;
+      @include media(lg) {
+        font-size: 4rem;
+        line-height: 4.4rem;
+      }
+    }
+
+    h2 {
+      font-weight: bold;
+      font-size: 2.5rem;
+      line-height: 3.5rem;
+      text-align: left;
+      color: $color-bright-red;
+
+      @include media(md) {
+        font-size: 3.5rem;
+        line-height: 4.4rem;
+      }
+    }
+
+    h3 {
+      font-weight: bold;
+      font-size: 1.8rem;
+      line-height: 3.5rem;
+      text-align: left;
+      color: $color-bright-red;
+
+      @include media(lg) {
+        font-size: 3.1rem;
+        line-height: 4.4rem;
+      }
+    }
+
+    h4,
+    h5,
+    h6 {
+      font-weight: bold;
+      font-size: 2.1rem;
+      line-height: 2.5rem;
+      text-align: left;
+      color: $color-bright-red;
+
+      @include media(lg) {
+        font-size: 2.8rem;
+        line-height: 3.4rem;
+      }
+    }
+    a {
+      font-weight: normal;
+      font-size: 1.7rem;
+      line-height: 2.1rem;
+      text-align: left;
+      color: $color-bright-red;
+      transition: all 200ms ease-in;
+
+      &:hover {
+        color: $color-black;
+      }
+    }
+    p,
+    address {
+      color: $color-darker-gray;
+      font-size: 1.4rem;
+      line-height: 1.61;
+      margin: 20px 0;
+
+      @include media(lg) {
+        font-size: 1.6rem;
+      }
+    }
+
+    img {
+      max-height: initial !important;
+      max-width: 100% !important;
+    }
+    .bg-banner {
+      width: 100%;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+    ul {
+      padding-inline-start: 20px;
+
+      li {
+        color: $color-darker-gray;
+        font-size: 1.4rem;
+        line-height: 1.61;
+        margin: 20px 0;
+        list-style-type: disc;
+        @include media(lg) {
+          font-size: 1.6rem;
+        }
+        &::marker {
+          color: $color-bright-red;
+        }
+
+        a {
+          font-weight: normal;
+          font-size: 1.7rem;
+          line-height: 2.1rem;
+          text-align: left;
+          color: $color-darker-gray;
+          transition: all 200ms ease-in;
+
+          &:hover {
+            color: $color-black;
+          }
+        }
+      }
+    }
+    .p-center {
+      @include media(lg) {
+        padding: 0 25px;
+      }
+    }
+  }
+  .title-rapidinha {
+    font-weight: bold;
+    font-size: 2rem;
+    line-height: 2.4rem;
+    text-align: left;
+    color: $color-bright-red;
+    padding: 35px 0;
+    @include media(md) {
+      font-size: 2.5rem;
+      line-height: 3rem;
+    }
+  }
+  .posts-rapidinhas {
+    .item {
+      a.item-rapidinha {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+
+        img {
+          width: 100% !important;
+          height: 100% !important;
+          max-width: 115px !important;
+          max-height: 65px !important;
+          object-fit: cover !important;
+          border-radius: 6px !important;
+
+          @include media(lg) {
+            max-height: 100px !important;
+          }
+        }
+
+        a {
+          display: block;
+          font-size: 1.2rem;
+          color: $color-darker-gray;
+        }
+
+        h3 {
+          color: $color-darker-gray;
+          font-size: 1.6rem;
+          line-height: normal !important;
+          @include media(lg) {
+            font-size: 1.8rem;
+          }
+        }
+
+        .data {
+          color: $color-bright-red;
+          font-size: 1.5rem;
+          display: block;
+        }
+        .leia-mais {
+          display: block;
+          font-size: 1.2rem;
+          color: #221115;
+        }
+      }
+    }
+  }
+}
+
+.alignleft {
+  float: left;
+  margin-right: 15px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.aligncenter {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.alignright {
+  float: right;
+  margin-left: 15px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}

@@ -49,13 +49,15 @@ $query = new WP_Query($args);
       </div>
       <section class="post">
         <div>
-          <!-- <span class="data">
-            <?php // $data=strtotime(CFS()->get('data')); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
-          </span> -->
+
+          <?php $chapel = CFS()->get('chapel'); // $data=strtotime(CFS()->get('data')); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
+          <?php $imagem = CFS()->get('imagem') ?: ''; ?>
           <?php 
+           
             $imagem_url = CFS()->get('imagem');
             if (!empty($imagem_url)) {  
             ?>
+          <?php if ($chapel) echo  '<span>' . $chapel . '</span>'; ?>
           <img class="img-post" src="<?php echo esc_url($imagem_url); ?>"
             alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
           <?php } ?>

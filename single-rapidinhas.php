@@ -115,7 +115,7 @@ $boletim_query = new WP_Query(array(
 
       <?php if ($rapidinhas_posts_query->have_posts()) : ?>
       <?php while ($rapidinhas_posts_query->have_posts()) : $rapidinhas_posts_query->the_post(); ?>
-      <div class="item-rapidinha">
+      <a href="<?php the_permalink(); ?>" class="item-rapidinha">
         <?php if (esc_url(CFS()->get('imagem')) != '') : ?>
         <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
           alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
@@ -128,9 +128,9 @@ $boletim_query = new WP_Query(array(
             echo date('j', $data) . ' ' . mb_substr(strtolower(date_i18n('F', $data)), 0, 3) . ' ' . date('Y', $data);
           ?>
           </span>
-          <a href="<?php the_permalink(); ?>">Leia mais</a>
+          <span class="leia-mais">Leia mais</span>
         </div>
-      </div>
+      </a>
       <?php endwhile; ?>
       <?php wp_reset_postdata(); ?>
       <?php else : ?>

@@ -59,24 +59,20 @@ $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
       <h1>Rapidinhas</h1>
       <div class="posts">
         <?php while ($boletim_query->have_posts()): $boletim_query->the_post(); ?>
-        <div class="item-rapidinha">
+        <a href="<?php the_permalink(); ?>" class="item-rapidinha">
           <?php $imagem = CFS()->get('imagem') ?: ''; ?>
           <?php if( $imagem !== '' ) { ?>
           <img src="<?php echo esc_url($imagem); ?>"
             alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
           <?php } ?>
           <div>
-            <a href="<?php the_permalink(); ?>" class="read-more">
-              <h2><?php echo get_post()->post_title;?></h2>
-            </a>
+            <h2><?php echo get_post()->post_title;?></h2>
             <span class="data">
               <?php $data=strtotime(CFS()->get('data')); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
             </span>
-            <a href="<?php the_permalink(); ?>">
-              Leia mais
-            </a>
+            <span class="leia-mais">Leia mais</span>
           </div>
-        </div>
+        </a>
         <?php endwhile; ?>
       </div>
       <div class="pagination">

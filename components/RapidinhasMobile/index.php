@@ -21,7 +21,7 @@ if ($rapidinhas_posts_query->have_posts()) {
     }
 
 ?>
-<div class="item-rapidinha">
+<a href="<?php the_permalink(); ?>" class="item-rapidinha">
   <?php if (esc_url(CFS()->get('imagem')) != '') {  ?>
   <img src="<?php echo esc_url(CFS()->get('imagem')); ?>"
     alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
@@ -32,9 +32,9 @@ if ($rapidinhas_posts_query->have_posts()) {
       <?php $data=strtotime(CFS()->get('data')); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
 
     </span>
-    <a href="<?php the_permalink(); ?>">Leia mais</a>
+    <span class="leia-mais">Leia mais</span>
   </div>
-</div>
+</a>
 <?php $post_count++;
   }
 

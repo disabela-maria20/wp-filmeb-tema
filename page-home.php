@@ -66,55 +66,65 @@ $recent_posts_query_banner = new WP_Query(array(
     the_post(); ?>
 <div class="container">
   <section class="owl-carousel slide">
-    <?php if ($recent_posts_query_banner->have_posts()) {
-          while ($recent_posts_query_banner->have_posts()) {
-            $recent_posts_query_banner->the_post();
+    <?php
+    $values = CFS()->get('noticia');
+    if (!empty($values) && is_array($values)) {
+      foreach ($values as $post_id) {
+        $the_post = get_post($post_id);
 
-            $imagem = CFS()->get('imagem');
-            $imagem = is_string($imagem) ? $imagem : '';
+        if ($the_post) {
+          $titulo = get_the_title($the_post);
+          $link   = get_permalink($the_post);
+          $imagem = CFS()->get('imagem', $post_id);
+          $data_field = CFS()->get('data', $post_id);
+          $descricao  = CFS()->get('descricao', $post_id);
+          $chapel = CFS()->get('chapel', $post_id);
+          ?>
 
-
-            $titulo = CFS()->get('titulo');
-            $titulo = is_string($titulo) ? $titulo : get_the_title();
-
-            $data_field = CFS()->get('data');
-
-            $descricao = CFS()->get('descricao');
-            $descricao = is_string($descricao) ? $descricao : get_the_excerpt();
-            ?>
     <div class="item">
       <?php if (!empty($imagem)) { ?>
       <img src="<?php echo esc_url($imagem); ?>" alt="<?php echo esc_attr($titulo); ?>" />
       <?php } ?>
+
       <div class="info">
-        <a href="<?php the_permalink(); ?>">
-          <h2><?php echo esc_html((string) $titulo); ?></h2>
+        <a href="<?php echo esc_url($link); ?>">
+          <?php if ($chapel) echo  '<span>' . $chapel . '</span>'; ?>
+          <h2><?php echo esc_html($titulo); ?></h2>
           <span class="data">
             <?php
                     if (!empty($data_field)) {
                       $data = strtotime($data_field);
                       echo date('j', $data) . ' ' . mb_substr(strtolower(date_i18n('F', $data)), 0, 3) . ' ' . date('Y', $data);
                     }
-                    ?>
+                  ?>
           </span> <i>&nbsp;⎸</i>
           <p class="paragrafo">
             <?php
-              if (has_excerpt()) {
-                  the_excerpt();
+              if (!empty($the_post->post_excerpt)) {
+                echo esc_html($the_post->post_excerpt);
               } else {
-                  echo wp_trim_words(wp_kses_post((string) $descricao), 100, '...'); 
+                echo wp_trim_words(
+                  wp_strip_all_tags($the_post->post_content),
+                  50, // limite em palavras
+                  '...'
+                );
               }
               ?>
           </p>
         </a>
       </div>
     </div>
-    <?php }
-          wp_reset_postdata();
-        } else {
-          echo '<p>Nenhum post encontrado.</p>';
-        } ?>
+
+    <?php
+        } // fim if $the_post
+      } // fim foreach
+    } // fim if values
+  ?>
   </section>
+
+
+
+
 
   <section class="home_table">
     <div class="home_table grid grid-2-lg gap-32">

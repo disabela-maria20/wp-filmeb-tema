@@ -1,4 +1,11 @@
 .grid-list-post {
+  span {
+    font-weight: bold;
+    font-size: 1.4rem;
+    line-height: 2.4rem;
+    text-align: left;
+    color: $color-darker-gray;
+  }
   @include media(lg) {
     display: grid;
     margin-top: 35px;
@@ -73,6 +80,13 @@
       display: flex;
       gap: 35px;
       align-items: center;
+    }
+    span {
+      font-weight: bold;
+      font-size: 1.4rem;
+      line-height: 2.4rem;
+      text-align: left;
+      color: $color-darker-gray;
     }
   }
   .posts {
