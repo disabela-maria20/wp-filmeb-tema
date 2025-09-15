@@ -132,6 +132,7 @@
     width: 100%;
     @include media(lg) {
       max-width: 320px;
+      height: 230px;
     }
   }
   img {

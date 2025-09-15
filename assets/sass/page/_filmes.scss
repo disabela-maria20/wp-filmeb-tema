@@ -81,7 +81,7 @@
   }
 
   .area-filmes {
-    max-width: 850px;
+    max-width: 1200px;
     display: block;
     margin: 0 auto;
     .lista-filmes {
@@ -102,6 +102,9 @@
 
       @include media(lg) {
         grid-template-columns: 1fr 1fr 1fr 1fr;
+      }
+      @include media(xl) {
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
       }
       .activa {
         grid-template-columns: 1fr 1fr 1fr;
@@ -126,6 +129,9 @@
         }
         @include media(lg) {
           height: 279px;
+        }
+        @include media(xl) {
+          height: 340px;
         }
         ul {
           li {
@@ -268,6 +274,9 @@
     &.grid-publi {
       @include media(lg) {
         grid-template-columns: 1fr 1fr 1fr;
+      }
+      @include media(xl) {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
       }
     }
     .item {

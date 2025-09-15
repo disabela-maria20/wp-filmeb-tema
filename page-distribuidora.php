@@ -281,7 +281,7 @@ if ($filmes_query->have_posts()) {
 </section>
 
 <div class="container page-distribuidora">
-  <h1>Lançamentos por Distribuidora</h1>
+  <h1>Quadro de lançamentos</h1>
   <section class="grid-select">
     <form method="GET" action="<?php echo home_url(); ?>/lancamentos-por-distribuidora/">
       <div class="grid grid-7-xl gap-22 select-itens">
@@ -342,11 +342,20 @@ if ($filmes_query->have_posts()) {
           </option>
           <?php } ?>
         </select>
-
         <button type="submit">Filtrar</button>
-        <a href="<?php echo get_site_url(); ?>/filmes/" type="submit">Voltar</a>
+        <a href="<?php echo get_site_url(); ?>/lancamentos-por-distribuidora/" @click.prevent="resetFilters">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill"
+            viewBox="0 0 16 16">
+            <path
+              d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5" />
+          </svg>
+        </a>
       </div>
     </form>
+    <div class="flex-filtro">
+      <a class="voltar" href="<?php echo get_site_url(); ?>/filmes/" type="submit">Voltar</a>
+      <button id="btn-export-excel">Exportar para Excel</button>
+    </div>
   </section>
 </div>
 <?php if (!empty($resultData)) : ?>
@@ -407,6 +416,18 @@ if ($filmes_query->have_posts()) {
 <p>Nenhum filme encontrado para o período selecionado.</p>
 <?php endif; ?>
 
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+<script>
+document.getElementById('btn-export-excel').addEventListener('click', function() {
+  var table = document.querySelector('.tabela-distribuidora');
+
+  var wb = XLSX.utils.table_to_book(table, {
+    sheet: "Lançamentos"
+  });
+
+  XLSX.writeFile(wb, 'lancamentos.xlsx');
+});
+</script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

@@ -418,8 +418,9 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
         </div>
         <div></div>
         <div class="lancamento">
-          <a href="<?php echo home_url(); ?>/lancamentos-por-distribuidora/" id="distribuidora">Ver lançamentos por
-            distribuidora</a>
+          <a href="<?php echo home_url(); ?>/lancamentos-por-distribuidora/" id="distribuidora">
+            Quadro de lançamentos
+          </a>
         </div>
       </div>
       <section class="grid-select">
@@ -482,7 +483,7 @@ $link_banner_moldura_casado = CFS()->get('link_banner_moldura_casado', $banner_i
               <?php } ?>
             </select>
             <button type="submit">Filtrar</button>
-            <a href="<?php echo get_site_url(); ?>/filmes/" @click.prevent="resetFilters">
+            <a class="resetar" href="<?php echo get_site_url(); ?>/filmes/" @click.prevent="resetFilters">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                 class="bi bi-trash3-fill" viewBox="0 0 16 16">
                 <path

@@ -134,7 +134,7 @@ function abreviar_mes($texto) {
         <?php echo do_shortcode('[bm_banner id="399785"]');?>
       </div>
 
-      <h3 class="titulo">Rapidinha</h3>
+      <h3 class="titulo">Rapidinhas</h3>
       <!-- Carousel Mobile -->
       <section class="home_lista_rapinhas bannerMobile">
         <div class="owl-carousel rapidinhas">
@@ -172,6 +172,7 @@ function abreviar_mes($texto) {
           'order'          => 'DESC',  // Do mais recente para o mais antigo
           'post_status'    => 'publish', 
           'no_found_rows'  => true, // Garante que só pegue posts publicados
+          'category__not_in' => array( get_cat_ID('boletim') ), 
       ));
 
 if ($recent_posts_query->have_posts()) {
