@@ -205,7 +205,7 @@ function apply_filters_to_args($args) {
         'meta_query' => [[
           'key' => 'titulo_original',
           'value' => $search_terms['titulo_original'],
-          'compare' => 'LIKE'
+          'compare' => 'REGEXP'
         ]],
         'fields' => 'ids'
       ]);

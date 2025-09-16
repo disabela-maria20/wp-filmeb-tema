@@ -247,6 +247,7 @@ $recent_posts_query_banner = new WP_Query(array(
                           }
                           ?>
               </span>
+              <span class="leia-mais">Leia mais</span>
             </a>
           </div>
         </div>
@@ -292,6 +293,7 @@ $recent_posts_query_banner = new WP_Query(array(
                         }
                         ?>
             </span>
+            <span class="leia-mais">Leia mais</span>
           </a>
         </div>
       </div>

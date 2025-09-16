@@ -1,6 +1,13 @@
 <?php // Template Name: Distribuidora
 get_header();
-
+function filtrar_somente_titulo( $where ) {
+    global $wpdb;
+    if ( isset($_GET['titulo']) && !empty($_GET['titulo']) ) {
+        $titulo = esc_sql( $_GET['titulo'] );
+        $where .= " AND {$wpdb->posts}.post_title LIKE '%{$titulo}%'";
+    }
+    return $where;
+}
 // Obter informações da data atual
 $mes_atual_num = date('m');
 $mes_atual_nome = date('F');
@@ -22,25 +29,103 @@ $ultimo_dia = date("$ano_selecionado-$mes_selecionado-t");
 // Argumentos base da query
 $args = array(
   'post_type' => 'filmes',
-  'posts_per_page' => -1, // Traz todos os posts de uma vez
+  'posts_per_page' => -1,
   'meta_key' => 'estreia',
   'orderby' => 'meta_value',
   'order' => 'ASC',
-  'meta_query' => array(
-    array(
-      'key' => 'estreia',
-      'value' => array($primeiro_dia, $ultimo_dia),
-      'compare' => 'BETWEEN',
-      'type' => 'DATE'
-    )
-  ),
+  'meta_query' => array(),
   'tax_query' => array(
     'relation' => 'AND'
   )
 );
 
+$search_terms = [];
+  $busca_ativa = false;
+
+  if (isset($_GET['titulo']) && !empty($_GET['titulo'])) {
+    $search_terms['titulo'] = sanitize_text_field($_GET['titulo']);
+    $busca_ativa = true;
+  }
+
+  if (isset($_GET['titulo_original']) && !empty($_GET['titulo_original'])) {
+    $search_terms['titulo_original'] = sanitize_text_field($_GET['titulo_original']);
+    $busca_ativa = true;
+  }
+
+  if ($busca_ativa) {
+    // Remove filtro de data se for busca por título
+    unset($args['meta_query']);
+
+    $ids_encontrados = [];
+
+    // Busca por título (apenas no post_title)
+    if (!empty($search_terms['titulo'])) {
+      add_filter('posts_where', 'filtrar_somente_titulo');
+
+      $query_titulo = new WP_Query([
+        'post_type' => 'filmes',
+        'post_status' => 'publish',
+        's' => $search_terms['titulo'],
+        'posts_per_page' => -1,
+        'fields' => 'ids'
+      ]);
+
+      remove_filter('posts_where', 'filtrar_somente_titulo');
+
+      $ids_encontrados = array_merge($ids_encontrados, $query_titulo->posts);
+    }
+
+    // Busca por titulo_original (campo personalizado)
+     if (!empty($search_terms['titulo_original'])) {
+      $query_titulo_original = new WP_Query([
+        'post_type' => 'filmes',
+        'post_status' => 'publish',
+        'posts_per_page' => -1,
+        'meta_query' => [[
+          'key' => 'titulo_original',
+          'value' => $search_terms['titulo_original'],
+          'compare' => 'REGEXP'
+        ]],
+        'fields' => 'ids'
+      ]);
+      $ids_encontrados = array_merge($ids_encontrados, $query_titulo_original->posts);
+    }
+
+    // Remover duplicatas
+    $ids_encontrados = array_unique($ids_encontrados);
+
+    // Aplica os IDs encontrados ao argumento principal
+    $args['post__in'] = empty($ids_encontrados) ? [0] : $ids_encontrados;
+  }
+
 // Adicionar filtros de taxonomia
-if (isset($_GET['origem']) && !empty($_GET['origem'])) {
+if ($ano_selecionado !== 'todos' && $mes_selecionado !== 'todos') {
+  // Ano e mês específicos
+  $primeiro_dia = date("$ano_selecionado-$mes_selecionado-01");
+  $ultimo_dia   = date("$ano_selecionado-$mes_selecionado-t");
+
+  $args['meta_query'][] = array(
+    'key'     => 'estreia',
+    'value'   => array($primeiro_dia, $ultimo_dia),
+    'compare' => 'BETWEEN',
+    'type'    => 'DATE'
+  );
+} elseif ($ano_selecionado !== 'todos') {
+  // Apenas o ano
+  $primeiro_dia = date("$ano_selecionado-01-01");
+  $ultimo_dia   = date("$ano_selecionado-12-31");
+
+  $args['meta_query'][] = array(
+    'key'     => 'estreia',
+    'value'   => array($primeiro_dia, $ultimo_dia),
+    'compare' => 'BETWEEN',
+    'type'    => 'DATE'
+  );
+}
+// se ano = todos e mes = todos → não filtra por data
+
+// Filtro de origem
+if (isset($_GET['origem']) && !empty($_GET['origem']) && $_GET['origem'] !== 'todos') {
   $args['meta_query'][] = array(
     'key' => 'paises',
     'value' => sanitize_text_field($_GET['origem']),
@@ -48,7 +133,8 @@ if (isset($_GET['origem']) && !empty($_GET['origem'])) {
   );
 }
 
-if (isset($_GET['distribuicao']) && !empty($_GET['distribuicao'])) {
+// Filtro de distribuidora
+if (isset($_GET['distribuicao']) && !empty($_GET['distribuicao']) && $_GET['distribuicao'] !== 'todos') {
   $args['meta_query'][] = array(
     'key' => 'distribuicao',
     'value' => sanitize_text_field($_GET['distribuicao']),
@@ -56,7 +142,8 @@ if (isset($_GET['distribuicao']) && !empty($_GET['distribuicao'])) {
   );
 }
 
-if (isset($_GET['genero']) && !empty($_GET['genero'])) {
+// Filtro de gênero
+if (isset($_GET['genero']) && !empty($_GET['genero']) && $_GET['genero'] !== 'todos') {
   $args['meta_query'][] = array(
     'key' => 'generos',
     'value' => sanitize_text_field($_GET['genero']),
@@ -64,14 +151,14 @@ if (isset($_GET['genero']) && !empty($_GET['genero'])) {
   );
 }
 
-if (isset($_GET['tecnologia']) && !empty($_GET['tecnologia'])) {
+// Filtro de tecnologia
+if (isset($_GET['tecnologia']) && !empty($_GET['tecnologia']) && $_GET['tecnologia'] !== 'todos') {
   $args['meta_query'][] = array(
     'key' => 'tecnologia',
     'value' => sanitize_text_field($_GET['tecnologia']),
     'compare' => 'REGEXP',
   );
 }
-
 
 // Criar a query
 $filmes_query = new WP_Query($args);
@@ -287,6 +374,7 @@ if ($filmes_query->have_posts()) {
       <div class="grid grid-7-xl gap-22 select-itens">
         <select id="ano" name="ano">
           <option disabled value="">Ano</option>
+          <option value="todos">Todos os anos</option>
           <?php foreach ($anos as $key => $value) { ?>
           <option value="<?php echo esc_attr($value); ?>" <?php echo ($value == $ano_selecionado) ? 'selected' : ''; ?>>
             <?php echo esc_html($value); ?>
@@ -296,6 +384,7 @@ if ($filmes_query->have_posts()) {
 
         <select name="mes" id="mes">
           <option disabled value="">Mês</option>
+          <option value="todos">Todos os meses</option>
           <?php foreach ($meses as $key => $value) { ?>
           <option value="<?php echo esc_attr($key); ?>" <?php echo ($key == $mes_selecionado) ? 'selected' : ''; ?>>
             <?php echo esc_html($value); ?>
@@ -305,6 +394,7 @@ if ($filmes_query->have_posts()) {
 
         <select name="origem" id="origem">
           <option disabled selected value="">Origem</option>
+          <option value="todos">Todas as origens</option>
           <?php foreach ($paises as $paise) { ?>
           <option value="<?php echo esc_attr($paise->term_id); ?>"
             <?php echo (isset($_GET['origem']) && $_GET['origem'] == $paise->term_id) ? 'selected' : ''; ?>>
@@ -315,6 +405,7 @@ if ($filmes_query->have_posts()) {
 
         <select name="distribuicao" id="distribuidoras">
           <option disabled selected value="">Distribuidor</option>
+          <option value="todos">Todas as distribuidoras</option>
           <?php foreach ($distribuidoras as $distribuidora) { ?>
           <option value="<?php echo esc_attr($distribuidora->term_id); ?>"
             <?php echo (isset($_GET['distribuicao']) && $_GET['distribuicao'] == $distribuidora->term_id) ? 'selected' : ''; ?>>
@@ -325,6 +416,7 @@ if ($filmes_query->have_posts()) {
 
         <select name="genero" id="genero">
           <option disabled selected value="">Gênero</option>
+          <option value="todos">Todos os gêneros</option>
           <?php foreach ($termos as $termo) { ?>
           <option value="<?php echo esc_attr($termo->term_id); ?>"
             <?php echo (isset($_GET['genero']) && $_GET['genero'] == $termo->term_id) ? 'selected' : ''; ?>>
@@ -335,6 +427,7 @@ if ($filmes_query->have_posts()) {
 
         <select name="tecnologia" id="tecnologia">
           <option disabled selected value="">Tecnologia</option>
+          <option value="todos">Todas as tecnologias</option>
           <?php foreach ($tecnologias as $tecnologia) { ?>
           <option value="<?php echo esc_attr($tecnologia->term_id); ?>"
             <?php echo (isset($_GET['tecnologia']) && $_GET['tecnologia'] == $tecnologia->term_id) ? 'selected' : ''; ?>>
@@ -342,6 +435,8 @@ if ($filmes_query->have_posts()) {
           </option>
           <?php } ?>
         </select>
+
+
         <button type="submit">Filtrar</button>
         <a href="<?php echo get_site_url(); ?>/lancamentos-por-distribuidora/" @click.prevent="resetFilters">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill"
@@ -353,10 +448,21 @@ if ($filmes_query->have_posts()) {
       </div>
     </form>
     <div class="flex-filtro">
-      <a class="voltar" href="<?php echo get_site_url(); ?>/filmes/" type="submit">Voltar</a>
-      <button id="btn-export-excel">Exportar para Excel</button>
+      <form method="GET" action="<?php echo home_url(); ?>/lancamentos-por-distribuidora/">
+        <div class="grid-form">
+          <input type="text" name="titulo" placeholder="Titulo">
+          <input type="text" name="titulo_original" placeholder="Titulo Original">
+          <button type="submit">Buscar</button>
+        </div>
+      </form>
+      <div>
+        <a class="voltar" href="<?php echo get_site_url(); ?>/filmes/" type="submit">Voltar</a>
+        <button id="btn-export-excel">Exportar para Excel</button>
+      </div>
+
     </div>
   </section>
+
 </div>
 <?php if (!empty($resultData)) : ?>
 <section class="area-tabela">
