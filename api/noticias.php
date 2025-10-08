@@ -9,7 +9,7 @@ function api_noticia_post($request) {
     $post_author = !empty($data['post_author']) ? intval($data['post_author']) : get_current_user_id();
     $cartaz = !empty($data['cartaz']) ? esc_url_raw($data['cartaz']) : '';
     $data_filme = !empty($data['data_filme']) ? sanitize_text_field($data['data_filme']) : '';
-    $chapel = !empty($data['chapel']) ? sanitize_text_field($data['chapel']) : '';
+    $chapeu = !empty($data['chapeu']) ? sanitize_text_field($data['chapeu']) : '';
     $edicao = !empty($data['edicao']) ? sanitize_text_field($data['edicao']) : '';
 
     // Processamento das categorias (agora aceita array)
@@ -80,7 +80,7 @@ function api_noticia_post($request) {
 
         // Salva os campos personalizados
         $custom_fields = [
-            'chapeu' => $chapel,
+            'chapeu' => $chapeu,
             'edicao' => $edicao,
             'data' => $data_filme
         ];
@@ -92,7 +92,7 @@ function api_noticia_post($request) {
             'post_id' => $post_id,
             'category_ids' => $category_ids,
             'data_filme' => $data_filme,
-            'chapel' => $chapel,
+            'chapeu' => $chapeu,
             'edicao' => $edicao,
             'cartaz_url' => !empty($cartaz_id) ? wp_get_attachment_url($cartaz_id) : null,
         ]);

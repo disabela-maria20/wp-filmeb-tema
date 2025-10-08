@@ -34,7 +34,7 @@
           <ul class="user">
             <li>
               <!-- Botão com span que será alterado -->
-              <a href="#" id="assinar-filmeb" data-product-id="106">
+              <a href="#" id="assinar-filmeb" data-product-id="77471">
                 <span id="texto-assinar">Assine</span>
               </a>
             </li>

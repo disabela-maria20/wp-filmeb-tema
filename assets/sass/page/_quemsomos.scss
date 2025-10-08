@@ -1,4 +1,15 @@
 .page-quemsomos {
+  h1 {
+    font-weight: bold;
+    font-size: 3rem !important;
+    line-height: 3.4rem !important;
+    text-align: left;
+    color: $color-bright-red !important;
+    @include media(lg) {
+      font-size: 4rem;
+      line-height: 4.4rem;
+    }
+  }
   .bg-gray {
     background-color: #f4f4f4 !important;
     border-radius: 15px;

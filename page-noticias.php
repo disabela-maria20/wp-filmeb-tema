@@ -60,7 +60,7 @@ get_header();
           if ($boletim_query->have_posts()): ?>
       <div class="posts">
         <?php while ($boletim_query->have_posts()): $boletim_query->the_post(); ?>
-        <?php $chapel = CFS()->get('chapel'); ?>
+        <?php $chapeu = CFS()->get('chapeu'); ?>
         <div class="post">
           <div class="item">
             <?php $imagem = CFS()->get('imagem') ?: ''; ?>
@@ -70,7 +70,7 @@ get_header();
             <?php } ?>
             <div>
               <a href="<?php the_permalink(); ?>" class="read-more">
-                <?php if ($chapel) echo  '<span>' . $chapel . '</span>'; ?>
+                <?php if ($chapeu) echo  '<span>' . $chapeu . '</span>'; ?>
                 <h2><?php the_title(); ?></h2>
                 <span class="data">
                   <?php $data=strtotime(CFS()->get('data')); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>

@@ -50,7 +50,7 @@ get_header();
     </div>
 
     <div class="area">
-      <h2>Conheça e <button class="btn-assine assinar-filmeb" data-product-id="106">Assine</button> os
+      <h2>Conheça e <button class="btn-assine assinar-filmeb" data-product-id="77471">Assine</button> os
         nossos produtos:</h2>
     </div>
 
@@ -136,7 +136,7 @@ get_header();
           bilheterias de todos os filmes exibidos no país, com
           detalhes por público, renda, regiões e cinemas.</p>
         <div>
-          <a href="http://www.filmebboxofficebrasil.com.br/Login" target="_blank" class="btn-assine"><span>acesse
+          <a href="http://www.filmebboxofficebrasil.com.br/Login" target="_blank" class="btn-assine"><span>Assine
             </span></a>
         </div>
       </div>

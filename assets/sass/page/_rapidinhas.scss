@@ -11,7 +11,7 @@
     display: grid;
     margin-top: 35px;
     margin-top: 60px;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: minmax(0, 700px) 1fr;
   }
 
   h1 {
@@ -33,18 +33,17 @@
     .item-rapidinha {
       display: flex;
       gap: 22px;
-
+      flex-direction: column;
+      @include media(lg) {
+        flex-direction: row;
+      }
       img:not(.edicoes .item-rapidinha img) {
         width: 100%;
-        height: 100%;
-        max-width: 115px;
-        max-height: 65px;
-        object-fit: cover;
         border-radius: 6px;
-
+        object-fit: cover;
         @include media(lg) {
-          max-height: 90px;
           max-width: 115px;
+          max-height: 65px;
         }
       }
 
@@ -98,7 +97,7 @@
     line-height: 3.4rem;
     text-align: left;
     color: $color-bright-red;
-    margin-bottom: 35px;
+    margin: 0 !important;
     @include media(lg) {
       font-size: 4rem;
       line-height: 4.4rem;
@@ -106,6 +105,7 @@
   }
 
   .aside-info {
+    margin-bottom: 25%;
     .item-rapidinha {
       display: flex;
       align-items: center;

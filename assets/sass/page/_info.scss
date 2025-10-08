@@ -10,7 +10,7 @@
     display: grid;
     margin-top: 35px;
     margin-top: 60px;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: minmax(0, 700px) 1fr;
   }
 
   .img-banner-opinião {

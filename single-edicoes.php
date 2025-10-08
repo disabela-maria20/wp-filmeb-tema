@@ -58,10 +58,10 @@ $author_id = get_the_author_meta('ID');
           if (!empty($values) && is_array($values)) {
             foreach ($values as $post_id) {
               $the_post = get_post($post_id);
-               $chapel = CFS()->get('chapel');
+               $chapeu = CFS()->get('chapeu');
               ?>
           <div class="item">
-            <?php if ($chapel) echo  '<span>' . $chapel . '</span>'; ?>
+            <?php if ($chapeu) echo  '<span>' . $chapeu . '</span>'; ?>
 
             <?php if (!empty(CFS()->get('imagem', $post_id))) { ?>
             <img class="bg-banner" src="<?php echo esc_url(CFS()->get('imagem', $post_id)); ?>"

@@ -127,7 +127,7 @@ get_header();
           R$ 700,00/ano
         </p>
         <div class="btn-center">
-          <a href="#" id="assinar-filmeb" data-product-id="106">
+          <a href="#" id="assinar-filmeb" data-product-id="77471">
             Assine o FilmeB
           </a>
         </div>

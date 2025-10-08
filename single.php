@@ -50,14 +50,14 @@ $query = new WP_Query($args);
       <section class="post">
         <div>
 
-          <?php $chapel = CFS()->get('chapel'); // $data=strtotime(CFS()->get('data')); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
+          <?php $chapeu = CFS()->get('chapeu'); // $data=strtotime(CFS()->get('data')); echo date('j', $data).' '.mb_substr(strtolower(date_i18n('F', $data)), 0, 3).' '.date('Y', $data); ?>
           <?php $imagem = CFS()->get('imagem') ?: ''; ?>
           <?php 
            
             $imagem_url = CFS()->get('imagem');
             if (!empty($imagem_url)) {  
             ?>
-          <?php if ($chapel) echo  '<span>' . $chapel . '</span>'; ?>
+          <?php if ($chapeu) echo  '<span>' . $chapeu . '</span>'; ?>
           <img class="img-post" src="<?php echo esc_url($imagem_url); ?>"
             alt="<?php echo esc_attr(CFS()->get('titulo') ?: get_the_title()); ?>" />
           <?php } ?>
@@ -69,13 +69,11 @@ $query = new WP_Query($args);
           </strong>
           <h1><?php the_title(); ?></h1>
           <div class="autor">
-            <img src="<?php echo get_avatar_url($author_id) ?>"
-              alt="<?php get_the_author_meta('display_name', $author_id) ?>">
-            <strong><?php
-                      echo (strtolower(get_the_author_meta('display_name', get_post_field('post_author', get_the_ID()))) === 'cineb') 
-                          ? 'Filme B' 
-                          : get_the_author_meta('display_name', get_post_field('post_author', get_the_ID()));
-                      ?></strong>
+            <img
+              src="<?php echo esc_url(!empty(CFS()->get('imagem_autor')) ? CFS()->get('imagem_autor') : get_template_directory_uri() . '/assets/images/logo.png'); ?>"
+              alt="<?php echo esc_attr(!empty(CFS()->get('nome_autor')) ? CFS()->get('nome_autor') : 'Filme B'); ?>">
+            <strong><?php echo empty(CFS()->get('nome_autor')) ? 
+            'Filme B' : CFS()->get('nome_autor'); ?></strong>
           </div>
           <div class="post-text">
             <?php the_content(); ?>

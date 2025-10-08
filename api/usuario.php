@@ -69,7 +69,7 @@ function am_add_user_membership( WP_REST_Request $request ) {
 
     // Parâmetros da assinatura
     $plan_id    = 399722; // ajuste conforme necessário
-    $product_id = 106;    // ajuste conforme necessário
+    $product_id = 77471 ;    // ajuste conforme necessário
 
     $args = [
         'plan_id'    => $plan_id,

@@ -408,3 +408,34 @@ add_filter( 'document_title_parts', function( $title ) {
     echo "teste";
     return $title;
 }, 1);
+
+// Remove o metabox padrão de autores
+add_action('admin_menu', function() {
+    remove_meta_box('authordiv', 'rapidinhas', 'normal');
+});
+
+// Adiciona um metabox personalizado com input text
+add_action('add_meta_boxes', function() {
+    add_meta_box(
+        'autor_texto',
+        'Autor',
+        function($post) {
+            $valor = get_post_meta($post->ID, '_autor_texto', true);
+            wp_nonce_field('salvar_autor_texto', 'autor_texto_nonce');
+            echo '<input type="text" name="autor_texto" value="' . esc_attr($valor) . '" style="width:100%" />';
+        },
+        'rapidinhas',
+        'side',
+        'default'
+    );
+});
+
+// Salva o campo
+add_action('save_post', function($post_id) {
+    if (!isset($_POST['autor_texto_nonce']) || !wp_verify_nonce($_POST['autor_texto_nonce'], 'salvar_autor_texto')) {
+        return;
+    }
+    if (isset($_POST['autor_texto'])) {
+        update_post_meta($post_id, '_autor_texto', sanitize_text_field($_POST['autor_texto']));
+    }
+});
