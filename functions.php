@@ -2,6 +2,12 @@
 
 // error_reporting(E_ALL);
 // ini_set('display_errors', 1);
+
+// define('WP_DEBUG', true);
+// define('WP_DEBUG_LOG', true);
+// define('WP_DEBUG_DISPLAY', false);
+// define('WP_CACHE', false);
+wp_cache_flush();
 function handel_add_woocommerce_support()
 {
   add_theme_support('woocommerce');
@@ -55,6 +61,7 @@ function register_my_menu()
 {
   register_nav_menu('menu-principal', __('Menu Principal'));
   register_nav_menu('institucional', __('Menu Institucional'));
+register_nav_menu('institucional-rodape', __('Institucional Rodapé'));
 }
 add_action('init', 'register_my_menu');
 

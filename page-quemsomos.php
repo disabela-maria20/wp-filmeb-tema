@@ -176,7 +176,7 @@ get_header();
           <?php
 					$args = array(
 						'menu' => 'institucinal rodape',
-						'theme_location' => 'institucinal-rodape',
+						'theme_location' => 'institucional-rodape',
 						'container' => false
 					);
 					wp_nav_menu($args); ?>

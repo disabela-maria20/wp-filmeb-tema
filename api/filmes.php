@@ -66,107 +66,86 @@ function registrar_cpt_filmes()
 }
 add_action('init', 'registrar_cpt_filmes');
 
-function filme_scheme($post)
-{
+function filme_scheme($post) {
+    // 🔒 Garante que $post é um objeto válido do tipo WP_Post
+    if (!$post) {
+        return null;
+    }
+
+    $post = get_post($post);
+    if (!$post || !is_a($post, 'WP_Post')) {
+        return null;
+    }
+
     $filme = new stdClass();
+
+    // 🧱 Dados básicos do post
+    $filme->id = $post->ID;
     $filme->title = get_the_title($post);
     $filme->link = get_permalink($post);
-    $filme->descricao = get_the_content(null, false, $post);
-    $filme->titulo_original = cfs()->get('titulo_original', $post->ID);
+    $filme->descricao = apply_filters('the_content', $post->post_content);
+
+    // 🎬 Campos personalizados (CFS)
+    $filme->titulo_original = sanitize_text_field(cfs()->get('titulo_original', $post->ID));
     $filme->trailer = esc_url(cfs()->get('trailer', $post->ID));
     $filme->cartaz = esc_url(cfs()->get('cartaz', $post->ID));
     $filme->capa = esc_url(cfs()->get('capa', $post->ID));
 
-    $fotos = cfs()->get('fotos', $post->ID);
-
+    // 📸 Galeria de fotos
     $filme->fotos = [];
-
-    if ($fotos) {
+    $fotos = cfs()->get('fotos', $post->ID);
+    if (is_array($fotos)) {
         foreach ($fotos as $foto) {
-            $filme->fotos[] = [
-                'foto' => esc_url($foto['foto'] ?? ''),
-            ];
+            if (!empty($foto['foto'])) {
+                $filme->fotos[] = ['foto' => esc_url($foto['foto'])];
+            }
         }
     }
 
+    // 🎥 Equipe técnica
     $filme->direcao = sanitize_text_field(cfs()->get('direcao', $post->ID));
     $filme->roteiro = sanitize_text_field(cfs()->get('roteiro', $post->ID));
     $filme->elenco = sanitize_text_field(cfs()->get('elenco', $post->ID));
+
+    // ⏰ Datas
     $filme->estreia = sanitize_text_field(cfs()->get('estreia', $post->ID));
     $filme->duracao_minutos = intval(cfs()->get('duracao_minutos', $post->ID));
 
-
-    $data_estreia = $filme->estreia;
-    if (!empty($data_estreia)) {
-        $ano_estreia = date('Y', strtotime($data_estreia));
-        $mes_estreia = date('F', strtotime($data_estreia));
-
-        $filme->ano = (int) $ano_estreia;
-        $filme->mes = $mes_estreia;
+    if (!empty($filme->estreia)) {
+        $timestamp = strtotime($filme->estreia);
+        $filme->ano = (int) date('Y', $timestamp);
+        $filme->mes = date_i18n('F', $timestamp);
     } else {
-
         $filme->ano = null;
         $filme->mes = null;
     }
 
+    // 🏷️ Taxonomias relacionadas (com checagem de segurança)
+    $taxonomias = [
+        'distribuidoras' => 'distribuicao',
+        'paises'         => 'paises',
+        'generos'        => 'generos',
+        'classificacoes' => 'classificacao',
+        'tecnologias'    => 'tecnologias',
+    ];
 
-    $distribuidoras = cfs()->get('distribuicao', $post->ID);
-    $filme->distribuidoras = [];
-    if (is_array($distribuidoras)) {
-        foreach ($distribuidoras as $distribuidora) {
-            $term = get_term($distribuidora);
-            if ($term && !is_wp_error($term)) {
-                $filme->distribuidoras[] = $term->name;
-            }
-        }
-    }
+    foreach ($taxonomias as $tax_slug => $cfs_key) {
+        $filme->{$tax_slug} = [];
+        $ids = cfs()->get($cfs_key, $post->ID);
 
-    $paises = cfs()->get('paises', $post->ID);
-    $filme->paises = [];
-    if (is_array($paises)) {
-        foreach ($paises as $pais) {
-            $term = get_term($pais);
-            if ($term && !is_wp_error($term)) {
-                $filme->paises[] = $term->name;
-            }
-        }
-    }
-
-    $generos = cfs()->get('generos', $post->ID);
-    $filme->generos = [];
-    if (is_array($generos)) {
-        foreach ($generos as $genero) {
-            $term = get_term($genero);
-            if ($term && !is_wp_error($term)) {
-                $filme->generos[] = $term->name;
-            }
-        }
-    }
-
-    $classificacoes = cfs()->get('classificacao', $post->ID);
-    $filme->classificacoes = [];
-    if (is_array($classificacoes)) {
-        foreach ($classificacoes as $classificacao) {
-            $term = get_term($classificacao);
-            if ($term && !is_wp_error($term)) {
-                $filme->classificacoes[] = $term->name;
-            }
-        }
-    }
-
-    $tecnologias = cfs()->get('tecnologias', $post->ID);
-    $filme->tecnologias = [];
-    if (is_array($tecnologias)) {
-        foreach ($tecnologias as $tecnologia) {
-            $term = get_term($tecnologia);
-            if ($term && !is_wp_error($term)) {
-                $filme->tecnologias[] = $term->name;
+        if (is_array($ids)) {
+            foreach ($ids as $id) {
+                $term = get_term($id);
+                if ($term && !is_wp_error($term)) {
+                    $filme->{$tax_slug}[] = $term->name;
+                }
             }
         }
     }
 
     return $filme;
 }
+
 
 function api_filmes_get($request)
 {

@@ -28,11 +28,11 @@
         <nav>
           <h2>Institucional</h2>
           <?php
-					$args = array(
-						'menu' => 'institucinal rodape',
-						'theme_location' => 'institucinal-rodape',
-						'container' => false
-					);
+          $args = array(
+            'menu' => 'institucional-rodape',
+            'theme_location' => 'institucional-rodape',
+            'container' => false
+          );
 					wp_nav_menu($args); ?>
         </nav>
         <nav>

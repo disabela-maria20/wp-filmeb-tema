@@ -4,8 +4,8 @@
 $sem_data_definida_alterada = CFS()->get('data_alterada');
 $sem_data_definida_definida = CFS()->get('sem_data_definida');
 
- error_reporting(E_ALL);
-ini_set('display_errors', 1);
+//  error_reporting(E_ALL);
+// ini_set('display_errors', 1);
 
 $args = array(
   'post_type' => 'banner-post',

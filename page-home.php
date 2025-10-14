@@ -37,7 +37,7 @@ $recent_posts_query_banner = new WP_Query(array(
 
 
 <div class="w-full p-35 img-banner bannerMobile">
-  <?php echo do_shortcode('[bm_banner id="399745"]');?>
+  <?php echo do_shortcode('[bm_banner id="163"]');?>
 </div>
 
 <div class="container bannerDesktop">

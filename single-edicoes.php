@@ -47,9 +47,7 @@ $author_id = get_the_author_meta('ID');
       </div>
 
       <div class="post-content-semanal">
-        <h1><?php the_title(); ?> -
-          <?php echo date_i18n('d \d\e F \d\e Y', strtotime(CFS()->get('data'))) ?>
-        </h1>
+        <h1><?php the_title(); ?> </h1>
         <div class="posts">
           <?php
           $values = CFS()->get('edicao');
